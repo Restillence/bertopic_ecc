@@ -21,7 +21,6 @@ index_file_path = index_file_ecc_folder+"list_earnings_call_transcripts.csv"
 index_file = pd.read_csv(index_file_path)
 print(index_file.head(5))
 
-
 def locate_file():
     pass
 
@@ -38,3 +37,11 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
+
+
+
+
+
