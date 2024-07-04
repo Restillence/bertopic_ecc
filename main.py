@@ -5,6 +5,7 @@ I use BERTtopic to analyze ECC data.
 """
 #imports
 import pandas as pd
+import numpy as np
 
 #variables
 folderpath_ecc = "daten_masterarbeit/Transcripts_Masterarbeit/"   
