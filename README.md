@@ -8,9 +8,10 @@ Steps to get ready:
 2)Open repository in your IDE of choice
 
 3)Install Python and create a virtual environment (optional):
-python -m venv env
+conda create --name myenv
 
 4)Install packages from requirements
+pip install -r "(path)/.requirements.txt"
 
 
 
@@ -22,4 +23,4 @@ https://www.youtube.com/watch?v=5a5Dfft-rWc
 python >3.9
 pandas 
 numpy 
-bertopic ...
+bertopic 
