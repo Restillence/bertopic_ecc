@@ -45,7 +45,7 @@ def main():
     # Example paths and sample size
     index_file_path = '/mnt/data/list_earnings_call_transcripts.csv'
     folderpath_ecc = '/mnt/data/earnings_calls/'
-    sample_size = 10  # Adjust sample size as needed
+    sample_size = 5  # Adjust sample size as needed, only needed at first run
     
     # Read the index file
     index_file = read_index_file(index_file_path)

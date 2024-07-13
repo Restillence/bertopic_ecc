@@ -6,12 +6,13 @@ I use BERTtopic to analyze ECC data.
 #imports
 import pandas as pd
 import numpy as np
+import os
 from file_handling import read_index_file, create_ecc_sample # Import the file_handling module
 
 #variables
-folderpath_ecc = "D:/daten_masterarbeit/Transcripts_Masterarbeit/"   
+folderpath_ecc = "D:/daten_masterarbeit/Transcripts_Masterarbeit_full/"   
 index_file_ecc_folder = "D:/daten_masterarbeit/"
-samplesize = 10 # number of unique companies to be analyzed, max is 1729
+sample_size = 10 # number of unique companies to be analyzed, max is 1729
 
 #constants
 #nothing to change here
@@ -46,9 +47,18 @@ def main():
     # Compute and display descriptive statistics of index file
     compute_descriptive_statistics(index_file)
 
-    # Create ECC sample
+    # Create sample of earnings conference calls
     ecc_sample = create_ecc_sample(sample_size, index_file, folderpath_ecc)
-
+    
+    # Display the sample (for demonstration)
+    print("\nHere is the sample of earnings conference calls:")
+    for i, (key, value) in enumerate(ecc_sample.items()):
+        if i >= 5:
+            break
+        print(f"Key: {key}")
+        print(f"Company Info: {value[0]}")
+        print(f"Text Content: {value[1][:100]}...")  # Displaying first 100 characters of text
+        print()
 
 
 
