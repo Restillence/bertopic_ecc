@@ -56,7 +56,7 @@ def main():
         # Create sample of earnings conference calls
         ecc_sample = create_ecc_sample(sample_size, index_file, folderpath_ecc)
         
-        # Display the sample (for demonstration)
+        # Display the first items of the sample (for demonstration)
         print("\nHere is the sample of earnings conference calls:")
         for key, value in ecc_sample.items():
             print(f"Key: {key}")

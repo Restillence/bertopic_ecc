@@ -50,7 +50,7 @@ def main():
     # Create sample of earnings conference calls
     ecc_sample = create_ecc_sample(sample_size, index_file, folderpath_ecc)
     
-    # Display the sample (for demonstration)
+    # Display the first 5 items of the sample (for demonstration)
     print("\nHere is the sample of earnings conference calls:")
     for i, (key, value) in enumerate(ecc_sample.items()):
         if i >= 5:
