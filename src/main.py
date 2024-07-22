@@ -15,7 +15,7 @@ from file_handling import read_index_file, create_ecc_sample  # Import the file_
 #variables
 folderpath_ecc = "D:/daten_masterarbeit/Transcripts_Masterarbeit_full/"
 index_file_ecc_folder = "D:/daten_masterarbeit/"
-sample_size = 3  # number of unique companies to be analyzed, max is 1729
+sample_size = 2  # number of unique companies to be analyzed, max is 1729
 document_split = "sentences"
 
 #constants
@@ -61,17 +61,23 @@ def main():
 
     # Display the first 5 items of the sample (for demonstration)
     print("\nHere is the sample of earnings conference calls:")
-    for i, (key, value) in enumerate(ecc_sample.items()):
+    for i, (permco, calls) in enumerate(ecc_sample.items()):
         if i >= 5:
             break
-        print(f"Permco_Key: {key}")
-        print(f"Company Name: {value[0]}")
-        print(f"Text Content: {value[1][:100]}...")  # Displaying first 100 characters of text
-        print()
-
-    # Extract texts for BERTopic analysis
-    texts = [value[1] for value in ecc_sample.values()]
+        for key, value in calls.items():
+            print(f"Permco_Key: {key}")
+            print(f"Company Name: {value[0]}")
+            print(f"Date: {value[1]}")
+            print(f"Text Content: {value[2][1000:1100]}...")  # Displaying some letters from the Text.
+            print()
     
+
+    
+    #print(ecc_sample.values()) #prints all values in ecc_sample
+    # Extract texts for BERTopic analysis
+    texts = [value for value in ecc_sample.values()]
+    return texts
+    """
     # Initialize BERTopic with KeyBERTInspired representation
     representation_model = KeyBERTInspired()
     topic_model = BERTopic(representation_model=representation_model)
@@ -100,6 +106,8 @@ def main():
 
     end_time = time.time()
     print(f"Total execution time: {end_time - start_time:.2f} seconds.")
+    
+    """
 
 if __name__ == "__main__":
-    main()
+    test_output=main()
