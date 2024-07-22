@@ -11,12 +11,13 @@ import time
 from bertopic import BERTopic
 from bertopic.representation import KeyBERTInspired
 from file_handling import read_index_file, create_ecc_sample  # Import the file_handling module
+from text_splitting import split_text
 
 #variables
 folderpath_ecc = "D:/daten_masterarbeit/Transcripts_Masterarbeit_full/"
 index_file_ecc_folder = "D:/daten_masterarbeit/"
 sample_size = 2  # number of unique companies to be analyzed, max is 1729
-document_split = "sentences"
+document_split = "sentences" #TODO right now it is only working for 'sentences', 'paragraphs' is not possible, fix it!
 
 #constants
 #nothing to change here
@@ -43,6 +44,14 @@ def compute_descriptive_statistics(df):
     else:
         print("Failed to load index file.")
 
+def process_texts(company, call_id, company_info, date, text):
+    print(f"Splitting text for company: {company}, call ID: {call_id}")
+    split_texts = split_text(text, document_split)
+    topic_model = BERTopic(representation_model=KeyBERTInspired())
+    topics, probabilities = topic_model.fit_transform(split_texts)
+    print("Fitting model...")
+    return topics
+
 def main():
     start_time = time.time()
     
@@ -59,7 +68,7 @@ def main():
     sample_end_time = time.time()
     print(f"Sample creation took {sample_end_time - sample_start_time:.2f} seconds.")
 
-    # Display the first 5 items of the sample (for demonstration)
+    # Display the first 5 Companies of the sample (for demonstration)
     print("\nHere is the sample of earnings conference calls:")
     for i, (permco, calls) in enumerate(ecc_sample.items()):
         if i >= 5:
@@ -73,10 +82,33 @@ def main():
     
 
     
-    #print(ecc_sample.values()) #prints all values in ecc_sample
-    # Extract texts for BERTopic analysis
-    texts = [value for value in ecc_sample.values()]
-    return texts
+    # Process each text with BERTopic
+    # Initialize the result dictionary
+    result_dict = {}
+    
+    # Process each text with BERTopic for only the first 5 calls 
+    bertopic_start_time = time.time()
+    processed_calls = 0  # Counter to keep track of the number of processed calls #TODO this has to be removed!!!
+    
+    for permco, calls in ecc_sample.items():
+        for call_id, value in calls.items():
+            if processed_calls >= 3:
+                break
+            company_info, date, text = value
+            topics = process_texts(permco, call_id, company_info, date, text)
+            if permco not in result_dict:
+                result_dict[permco] = {}
+            result_dict[permco][call_id] = (company_info, date, text, topics)
+            processed_calls += 1
+    
+        if processed_calls >= 3:
+            break
+    
+    bertopic_end_time = time.time()
+    print(f"BERTopic fitting took {bertopic_end_time - bertopic_start_time:.2f} seconds.")
+
+    return result_dict
+
     """
     # Initialize BERTopic with KeyBERTInspired representation
     representation_model = KeyBERTInspired()
