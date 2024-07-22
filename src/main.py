@@ -44,10 +44,10 @@ def compute_descriptive_statistics(df):
     else:
         print("Failed to load index file.")
 
-def process_texts(company, call_id, company_info, date, text):
+
+def process_texts(topic_model, company, call_id, company_info, date, text):
     print(f"Splitting text for company: {company}, call ID: {call_id}")
     split_texts = split_text(text, document_split)
-    topic_model = BERTopic(representation_model=KeyBERTInspired())
     topics, probabilities = topic_model.fit_transform(split_texts)
     print("Fitting model...")
     return topics
@@ -85,6 +85,9 @@ def main():
     # Process each text with BERTopic
     # Initialize the result dictionary
     result_dict = {}
+
+    # Initialize BERTopic with KeyBERTInspired representation
+    topic_model = BERTopic(representation_model=KeyBERTInspired())
     
     # Process each text with BERTopic for only the first 5 calls 
     bertopic_start_time = time.time()
@@ -95,7 +98,7 @@ def main():
             if processed_calls >= 3:
                 break
             company_info, date, text = value
-            topics = process_texts(permco, call_id, company_info, date, text)
+            topics = process_texts(topic_model, permco, call_id, company_info, date, text)
             if permco not in result_dict:
                 result_dict[permco] = {}
             result_dict[permco][call_id] = (company_info, date, text, topics)
@@ -107,39 +110,31 @@ def main():
     bertopic_end_time = time.time()
     print(f"BERTopic fitting took {bertopic_end_time - bertopic_start_time:.2f} seconds.")
 
-    return result_dict
-
-    """
-    # Initialize BERTopic with KeyBERTInspired representation
-    representation_model = KeyBERTInspired()
-    topic_model = BERTopic(representation_model=representation_model)
-
-    # Fit the model on the texts
-    bertopic_start_time = time.time()
-    topics, probabilities = topic_model.fit_transform(texts)
-    bertopic_end_time = time.time()
-    print(f"BERTopic fitting took {bertopic_end_time - bertopic_start_time:.2f} seconds.")
-
-    # Create a DataFrame to store the results
-    results_df = pd.DataFrame({
-        'key': list(ecc_sample.keys()),
-        'company_info': [value[0] for value in ecc_sample.values()],
-        'text': texts,
-        'topic': topics
-    })
-
+    # Convert the results to a DataFrame and save it
+    records = []
+    for permco, calls in result_dict.items():
+        for call_id, values in calls.items():
+            company_info, date, text, topics = values
+            records.append({
+                'permco': permco,
+                'call_id': call_id,
+                'company_info': company_info,
+                'date': date,
+                'text': text,
+                'topics': topics
+            })
+    
     # Save the results
+    results_df = pd.DataFrame(records)
     results_output_path = os.path.join(index_file_ecc_folder, 'topics_output.csv')
     results_df.to_csv(results_output_path, index=False)
     print(f"Results saved to {results_output_path}")
-
+    
     # Visualize topics
     topic_model.visualize_topics().show()
-
+    
     end_time = time.time()
     print(f"Total execution time: {end_time - start_time:.2f} seconds.")
-    
-    """
 
 if __name__ == "__main__":
-    test_output=main()
+    main()
