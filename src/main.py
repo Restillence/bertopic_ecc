@@ -33,7 +33,7 @@ def match_ecc_financial_data(): #this function might go to a submodule
 
 def compute_descriptive_statistics(df):
     if df is not None:
-        print("Here are some Descriptive Statistics:")
+        print("Here are some Descriptive Statistics of the index file:")
         print(df.head(5))
         print(df.columns)
         print("Number of unique companies:")
@@ -64,8 +64,8 @@ def main():
     for i, (key, value) in enumerate(ecc_sample.items()):
         if i >= 5:
             break
-        print(f"Key: {key}")
-        print(f"Company Info: {value[0]}")
+        print(f"Permco_Key: {key}")
+        print(f"Company Name: {value[0]}")
         print(f"Text Content: {value[1][:100]}...")  # Displaying first 100 characters of text
         print()
 

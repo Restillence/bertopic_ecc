@@ -13,18 +13,19 @@ from bertopic import BERTopic
 from bertopic.representation import KeyBERTInspired
 from file_handling import read_index_file, create_ecc_sample  # Import the file_handling module
 from text_splitting import split_text  # Import the text_splitting module
+from multiprocessing import Pool, cpu_count  # Added missing imports
 
 #variables
 folderpath_ecc = "D:/daten_masterarbeit/Transcripts_Masterarbeit_full/"
 index_file_ecc_folder = "D:/daten_masterarbeit/"
-sample_size = 2  # number of unique companies to be analyzed, max is 1729
-text_splitting_method = 'sentences'  # Choose between 'sentences', 'paragraphs', or 'custom'
+sample_size = 1  # number of unique companies to be analyzed, max is 1729
+document_split = "sentences"  # Choose between 'sentences', 'paragraphs', or 'custom'
 
 #constants
 #nothing to change here
 index_file_path = index_file_ecc_folder + "list_earnings_call_transcripts.csv"
 
-def locate_file():
+def split_document(): #this function might go to a submodule
     pass
 
 def build_data_pipeline_ecc():   #this function might go to a submodule
@@ -35,7 +36,7 @@ def match_ecc_financial_data(): #this function might go to a submodule
 
 def compute_descriptive_statistics(df):
     if df is not None:
-        print("Here are some Descriptive Statistics:")
+        print("Here are some Descriptive Statistics of the index file:")
         print(df.head(5))
         print(df.columns)
         print("Number of unique companies:")
@@ -44,6 +45,14 @@ def compute_descriptive_statistics(df):
         print(df.describe())
     else:
         print("Failed to load index file.")
+
+def process_texts(data):
+    company, call_id, company_info, date, text = data
+    print(f"Splitting text for company: {company}, call ID: {call_id}")
+    split_texts = split_text(text, document_split)
+    topic_model = BERTopic(representation_model=KeyBERTInspired())
+    topics, probabilities = topic_model.fit_transform(split_texts)
+    return (company, call_id, topics)
 
 def main():
     start_time = time.time()
@@ -67,26 +76,28 @@ def main():
         if i >= 5:
             break
         for key, value in calls.items():
-            print(f"Key: {key}")
-            print(f"Company Info: {value[0]}")
+            print(f"Permco_Key: {key}")
+            print(f"Company Name: {value[0]}")
             print(f"Text Content: {value[2][:100]}...")  # Displaying first 100 characters of text
             print()
 
-    # Initialize BERTopic with KeyBERTInspired representation
-    representation_model = KeyBERTInspired()
-    topic_model = BERTopic(representation_model=representation_model)
+    # Prepare data for multiprocessing
+    print("Preparing data for multiprocessing...")
+    data = [(str(company), call_id, company_info, date, text) for company, calls in ecc_sample.items() for call_id, (company_info, date, text) in calls.items()]
 
-    # Analyze the texts with BERTopic after splitting
-    result_dict = {}
+    # Analyze the texts with BERTopic using multiprocessing
     bertopic_start_time = time.time()
-    for company, data in ecc_sample.items():
-        result_dict[company] = {}
-        for call_id, (company_info, date, text) in data.items():
-            split_texts = split_text(text, text_splitting_method)
-            topics, probabilities = topic_model.fit_transform(split_texts)
-            result_dict[company][call_id] = topics
+    with Pool(cpu_count()) as pool:
+        results = pool.map(process_texts, data)
     bertopic_end_time = time.time()
     print(f"BERTopic fitting took {bertopic_end_time - bertopic_start_time:.2f} seconds.")
+
+    # Collect results into result_dict
+    result_dict = {}
+    for company, call_id, topics in results:
+        if company not in result_dict:
+            result_dict[company] = {}
+        result_dict[company][str(call_id)] = topics
 
     # Save the results
     results_output_path = os.path.join(index_file_ecc_folder, 'topics_output.json')
@@ -96,6 +107,7 @@ def main():
 
     end_time = time.time()
     print(f"Total execution time: {end_time - start_time:.2f} seconds.")
+    return result_dict
 
 if __name__ == "__main__":
-    main()
+    results_dict = main()
