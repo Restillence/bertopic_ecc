@@ -1,4 +1,4 @@
-# file_handling.py
+import re
 import pandas as pd
 import numpy as np
 import os
@@ -17,22 +17,16 @@ def read_index_file(index_file_path):
     index_file = pd.read_csv(index_file_path, sep=";")
     return index_file
 
-
-# Function to create sample of earnings conference calls
 def create_ecc_sample(sample_size, index_file, folderpath_ecc):
     ecc_sample = {}
 
     # Ensure sample size does not exceed number of unique companies (permco)
     unique_companies = index_file['permco'].unique()
     random_companies = np.random.choice(unique_companies, size=sample_size, replace=False)
-    
-    """"IF NO RANDOM SAMPLE IS NEEDED, COMMENT OUT THE FOLLOWING LINE"""
-    #random_companies = [37,82,116,176,211]
+    # random_companies = [37,82,116,176,211]  # For debugging; remove or comment out for actual random sampling
 
-    print(f"Random companies: {random_companies}")
-    
     all_files = os.listdir(folderpath_ecc)
-    #print("First 10 files in directory:", all_files[:10])  # Print the first 10 files for debugging, can be included if neccessary
+    print("All files in directory:", all_files[:10])  # Print the first 10 files for debugging
     
     for permco in random_companies:
         # Get company details from index file
@@ -50,7 +44,7 @@ def create_ecc_sample(sample_size, index_file, folderpath_ecc):
             se_id = ecc_file.split('_')[3].replace('.txt', '')  # Extract SE_ID from filename
             ecc_key = f"earnings_call_{permco}_{se_id}"
 
-            #print(f"Processing file: {ecc_file}, SE_ID: {se_id}")  # Debugging line, can be included if neccessary
+            print(f"Processing file: {ecc_file}, SE_ID: {se_id}")  # Debugging line
 
             # Get the specific date for this earnings call
             specific_row = company_rows[company_rows['SE_ID'] == int(se_id)]
@@ -65,6 +59,8 @@ def create_ecc_sample(sample_size, index_file, folderpath_ecc):
                 text_content = file.read()
 
             # Construct the dictionary entry
-            ecc_sample[ecc_key] = ((company_name, date), text_content)
+            if permco not in ecc_sample:
+                ecc_sample[permco] = {}
+            ecc_sample[permco][ecc_key] = (company_name, date, text_content)
 
     return ecc_sample
