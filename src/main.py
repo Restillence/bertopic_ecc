@@ -18,6 +18,7 @@ folderpath_ecc = "D:/daten_masterarbeit/Transcripts_Masterarbeit_full/"
 index_file_ecc_folder = "D:/daten_masterarbeit/"
 sample_size = 2  # number of unique companies to be analyzed, max is 1729
 document_split = "sentences" #TODO right now it is only working for 'sentences', 'paragraphs' is not possible, fix it!
+random_seed = 42  # Set a random seed for reproducibility
 
 #constants
 #nothing to change here
@@ -54,7 +55,8 @@ def process_texts(topic_model, company, call_id, company_info, date, text):
 
 def main():
     start_time = time.time()
-    
+    #set random seed
+    np.random.seed(random_seed)
     # Read the index file
     index_file = read_index_file(index_file_path)
     print("Index file loaded successfully.")

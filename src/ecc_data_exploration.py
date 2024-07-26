@@ -8,17 +8,22 @@ import pandas as pd
 import os
 import matplotlib.pyplot as plt
 import seaborn as sns
+import numpy as np
 
 #variables
 folderpath_ecc = "D:/daten_masterarbeit/Transcripts_Masterarbeit_full/"
 index_file_ecc_folder = "D:/daten_masterarbeit/"
-sample_size = 20  # number of unique companies where we want to create our sample from
+sample_size = 100  # number of unique companies where we want to create our sample from
+random_seed = 42  # Set a random seed for reproducibility
 
 #constants
 #nothing to change here
 index_file_path = index_file_ecc_folder + "list_earnings_call_transcripts.csv"
 
-def load_data(index_file_path, sample_size, folderpath_ecc):
+def load_data(index_file_path, sample_size, folderpath_ecc, random_seed):
+    # Set the random seed for reproducibility
+    np.random.seed(random_seed)
+
     # Read the index file
     index_file = read_index_file(index_file_path)
     print("Index file loaded successfully.")
@@ -65,10 +70,13 @@ def plot_ecc_length_distribution(results_df):
     plt.grid(True)
     plt.show()
 
-def plot_ecc_length_by_company(results_df):
+def plot_ecc_length_by_company(results_df, top_n=20):
+    top_companies = results_df['company_info'].value_counts().nlargest(top_n).index
+    top_results_df = results_df[results_df['company_info'].isin(top_companies)]
+
     plt.figure(figsize=(12, 8))
-    sns.boxplot(x='company_info', y='text_length', data=results_df)
-    plt.title('ECC Length Distribution by Company')
+    sns.boxplot(x='company_info', y='text_length', data=top_results_df)
+    plt.title(f'ECC Length Distribution by Top {top_n} Companies')
     plt.xlabel('Company')
     plt.ylabel('ECC Length (Number of Words)')
     plt.xticks(rotation=90)
@@ -87,6 +95,38 @@ def plot_ecc_length_over_time(results_df):
     plt.grid(True)
     plt.show()
 
+def plot_files_per_permco(results_df):
+    plt.figure(figsize=(12, 8))
+    sns.countplot(x='permco', data=results_df, order=results_df['permco'].value_counts().index)
+    plt.title('Number of Files per Permco')
+    plt.xlabel('Permco')
+    plt.ylabel('Number of Files')
+    plt.xticks(rotation=90)
+    plt.grid(True)
+    plt.show()
+
+def plot_average_ecc_length_per_company(results_df):
+    avg_length_per_company = results_df.groupby('company_info')['text_length'].mean().sort_values(ascending=False).head(20)
+    plt.figure(figsize=(12, 8))
+    avg_length_per_company.plot(kind='bar')
+    plt.title('Average ECC Length by Top 20 Companies')
+    plt.xlabel('Company')
+    plt.ylabel('Average ECC Length (Number of Words)')
+    plt.xticks(rotation=90)
+    plt.grid(True)
+    plt.show()
+
+def plot_ecc_length_distribution_by_year(results_df):
+    results_df['year'] = results_df['date'].dt.year
+    plt.figure(figsize=(12, 8))
+    sns.boxplot(x='year', y='text_length', data=results_df)
+    plt.title('ECC Length Distribution by Year')
+    plt.xlabel('Year')
+    plt.ylabel('ECC Length (Number of Words)')
+    plt.xticks(rotation=90)
+    plt.grid(True)
+    plt.show()
+
 def additional_descriptive_statistics(results_df):
     print("Basic Descriptive Statistics:")
     print(results_df.describe())
@@ -101,12 +141,15 @@ def additional_descriptive_statistics(results_df):
     print(results_df.groupby('company_info')['text_length'].mean().sort_values(ascending=False).head(5))
 
 def main():
-    ecc_sample = load_data(index_file_path, sample_size, folderpath_ecc)
+    ecc_sample = load_data(index_file_path, sample_size, folderpath_ecc, random_seed)
     display_sample(ecc_sample)
     results_df = convert_to_dataframe(ecc_sample)
     plot_ecc_length_distribution(results_df)
     plot_ecc_length_by_company(results_df)
     plot_ecc_length_over_time(results_df)
+    plot_files_per_permco(results_df)
+    plot_average_ecc_length_per_company(results_df)
+    plot_ecc_length_distribution_by_year(results_df)
     additional_descriptive_statistics(results_df)
 
 if __name__ == "__main__":
