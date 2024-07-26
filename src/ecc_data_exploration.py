@@ -9,11 +9,13 @@ import os
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
+from sklearn.feature_extraction.text import CountVectorizer
+from wordcloud import WordCloud, STOPWORDS
 
 #variables
 folderpath_ecc = "D:/daten_masterarbeit/Transcripts_Masterarbeit_full/"
 index_file_ecc_folder = "D:/daten_masterarbeit/"
-sample_size = 100  # number of unique companies where we want to create our sample from
+sample_size = 30  # number of unique companies where we want to create our sample from
 random_seed = 42  # Set a random seed for reproducibility
 
 #constants
@@ -127,18 +129,106 @@ def plot_ecc_length_distribution_by_year(results_df):
     plt.grid(True)
     plt.show()
 
+def plot_files_distribution(results_df):
+    file_counts = results_df['permco'].value_counts()
+    plt.figure(figsize=(12, 8))
+    sns.histplot(file_counts, bins=30, kde=True)
+    plt.title('Distribution of Files per Permco')
+    plt.xlabel('Number of Files')
+    plt.ylabel('Frequency')
+    plt.grid(True)
+    plt.show()
+
+def plot_bag_of_words(results_df):
+    # Combine all texts
+    combined_text = " ".join(results_df['text'].tolist())
+
+    # Create a CountVectorizer
+    vectorizer = CountVectorizer(max_features=20, stop_words='english')
+    X = vectorizer.fit_transform([combined_text])
+    words = vectorizer.get_feature_names_out()
+    counts = X.toarray().flatten()
+
+    # Sort words by count
+    word_counts = sorted(zip(words, counts), key=lambda x: x[1], reverse=True)
+    sorted_words = [wc[0] for wc in word_counts]
+    sorted_counts = [wc[1] for wc in word_counts]
+
+    # Plot Bag of Words
+    plt.figure(figsize=(12, 8))
+    sns.barplot(x=sorted_counts, y=sorted_words)
+    plt.title('Top 20 Words in ECCs')
+    plt.xlabel('Frequency')
+    plt.ylabel('Words')
+    plt.grid(True)
+    plt.show()
+
+def plot_wordcloud(results_df):
+    # Combine all texts in chunks to manage memory
+    chunk_size = 1000
+    combined_text = " ".join(results_df['text'].iloc[:chunk_size].tolist())
+
+    # Create and plot WordCloud
+    wordcloud = WordCloud(width=800, height=400, background_color='white', stopwords=STOPWORDS).generate(combined_text)
+    plt.figure(figsize=(12, 8))
+    plt.imshow(wordcloud, interpolation='bilinear')
+    plt.title('Word Cloud of ECCs')
+    plt.axis('off')
+    plt.show()
+
 def additional_descriptive_statistics(results_df):
-    print("Basic Descriptive Statistics:")
-    print(results_df.describe())
+    num_unique_companies = results_df['company_info'].nunique()
 
-    print("\nNumber of unique companies:")
-    print(results_df['company_info'].nunique())
+    calls_per_company = results_df['company_info'].value_counts().to_frame().reset_index()
+    calls_per_company.columns = ['Company', 'Number of Calls']
 
+    top5_avg_length = results_df.groupby('company_info')['text_length'].mean().sort_values(ascending=False).head(5).to_frame().reset_index()
+    top5_avg_length.columns = ['Company', 'Average ECC Length']
+
+    # Create tables
+    summary_stats = results_df.describe().transpose()
+    summary_stats_table = pd.DataFrame(summary_stats)
+
+    return num_unique_companies, calls_per_company, top5_avg_length, summary_stats_table
+
+def display_tables(num_unique_companies, calls_per_company, top5_avg_length, summary_stats_table, output_html_path):
+    html_content = f"""
+    <html>
+    <head>
+        <title>ECC Descriptive Statistics</title>
+        <style>
+            body {{ font-family: Arial, sans-serif; }}
+            table {{ border-collapse: collapse; width: 100%; }}
+            th, td {{ text-align: left; padding: 8px; border: 1px solid #ddd; }}
+            th {{ background-color: #f2f2f2; }}
+            tr:nth-child(even) {{ background-color: #f2f2f2; }}
+            h1 {{ text-align: center; }}
+        </style>
+    </head>
+    <body>
+        <h1>Summary Statistics</h1>
+        {summary_stats_table.to_html(classes='table')}
+        <h1>Number of Calls per Company</h1>
+        {calls_per_company.to_html(index=False, classes='table')}
+        <h1>Top 5 Companies by Average ECC Length</h1>
+        {top5_avg_length.to_html(index=False, classes='table')}
+        <h1>Number of Unique Companies</h1>
+        <p>{num_unique_companies}</p>
+    </body>
+    </html>
+    """
+
+    with open(output_html_path, "w") as file:
+        file.write(html_content)
+
+    print("\nSummary Statistics:")
+    print(summary_stats_table)
+    print(f"\nNumber of unique companies: {num_unique_companies}")
     print("\nNumber of calls per company:")
-    print(results_df['company_info'].value_counts())
-
+    print(calls_per_company.head(10).to_string(index=False))  # Displaying top 10 for brevity
     print("\nTop 5 companies by average ECC length:")
-    print(results_df.groupby('company_info')['text_length'].mean().sort_values(ascending=False).head(5))
+    print(top5_avg_length.to_string(index=False))
+    print(f"\nTables have been saved to {output_html_path}")
 
 def main():
     ecc_sample = load_data(index_file_path, sample_size, folderpath_ecc, random_seed)
@@ -150,7 +240,14 @@ def main():
     plot_files_per_permco(results_df)
     plot_average_ecc_length_per_company(results_df)
     plot_ecc_length_distribution_by_year(results_df)
-    additional_descriptive_statistics(results_df)
+    plot_files_distribution(results_df)
+    plot_bag_of_words(results_df)
+    plot_wordcloud(results_df)
+
+    num_unique_companies, calls_per_company, top5_avg_length, summary_stats_table = additional_descriptive_statistics(results_df)
+    output_html_path = os.path.join(index_file_ecc_folder, 'ecc_statistics_tables.html')
+    display_tables(num_unique_companies, calls_per_company, top5_avg_length, summary_stats_table, output_html_path)
+    print(f"HTML report has been saved to {output_html_path}")
 
 if __name__ == "__main__":
     main()

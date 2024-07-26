@@ -5,3 +5,6 @@ nltk
 re
 matplotlib 
 seaborn
+scikit-learn 
+wordcloud
+openpyxl
