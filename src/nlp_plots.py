@@ -13,15 +13,17 @@ import spacy
 from collections import Counter
 import networkx as nx
 from textblob import TextBlob
+import pandas as pd
 
 
-#!!!DOWNLOAD THE FOLLOWING LINES AFTER INSTALLING SPACY BEFORE RUNNING!!!
+#!!!DOWNLOAD THE FOLLOWING LINE AFTER INSTALLING SPACY BEFORE RUNNING!!!
 #python -m spacy download en_core_web_sm
 
 # Load Spacy model for Named Entity Recognition (NER)
 nlp = spacy.load("en_core_web_sm")
 
 def plot_tfidf_top_terms(results_df, top_n=20):
+    print("computing TF-IDF...")
     vectorizer = TfidfVectorizer(stop_words='english', max_features=top_n)
     X = vectorizer.fit_transform(results_df['text'])
     tfidf_scores = np.asarray(X.mean(axis=0)).flatten()
@@ -40,6 +42,7 @@ def plot_tfidf_top_terms(results_df, top_n=20):
     plt.show()
 
 def plot_topics_tsne_pca(results_df):
+    print("computing PCA and t-SNE...")
     vectorizer = TfidfVectorizer(stop_words='english')
     X = vectorizer.fit_transform(results_df['text'])
     
@@ -65,13 +68,14 @@ def plot_topics_tsne_pca(results_df):
     plt.show()
 
 #TODO From here on the code is getting very slow. Fix it later.
-def plot_ner(results_df, chunk_size=100):
+def plot_ner(results_df, chunk_size=50):
+    print("computing named entity recognition...")
     all_ents = []
     num_chunks = len(results_df) // chunk_size + 1
 
     for i in range(num_chunks):
         chunk = results_df['text'].iloc[i*chunk_size:(i+1)*chunk_size]
-        for doc in nlp.pipe(chunk, batch_size=50):
+        for doc in nlp.pipe(chunk, batch_size=10):
             all_ents.extend([ent.label_ for ent in doc.ents])
     
     ent_counts = Counter(all_ents)
@@ -88,6 +92,7 @@ def plot_ner(results_df, chunk_size=100):
 
 
 def plot_ngram_frequencies(results_df, n=2, top_n=20):
+    print("creating n-grams plot...")
     vectorizer = CountVectorizer(ngram_range=(n, n), stop_words='english', max_features=top_n)
     X = vectorizer.fit_transform(results_df['text'])
     ngram_counts = np.asarray(X.sum(axis=0)).flatten()
@@ -106,6 +111,7 @@ def plot_ngram_frequencies(results_df, n=2, top_n=20):
     plt.show()
 
 def plot_sentiment_analysis(results_df):
+    print("computing sentiment analysis...")
     results_df['sentiment'] = results_df['text'].apply(lambda x: TextBlob(x).sentiment.polarity)
     
     plt.figure(figsize=(10, 6))
@@ -117,6 +123,7 @@ def plot_sentiment_analysis(results_df):
     plt.show()
 
 def plot_keyword_cooccurrence(results_df, top_n=20):
+    print("computing keyword co-occurrence network...")
     vectorizer = CountVectorizer(max_features=top_n, stop_words='english')
     X = vectorizer.fit_transform(results_df['text'])
     terms = vectorizer.get_feature_names_out()
@@ -126,14 +133,17 @@ def plot_keyword_cooccurrence(results_df, top_n=20):
     cooccurrence_df = pd.DataFrame(cooccurrence_matrix.toarray(), index=terms, columns=terms)
 
     G = nx.from_pandas_adjacency(cooccurrence_df)
-    
-    plt.figure(figsize=(12, 12))
+
+    plt.figure(figsize=(12, 12), facecolor='white')
     pos = nx.spring_layout(G, k=0.3)
-    nx.draw(G, pos, with_labels=True, node_size=20, font_size=10, node_color="skyblue", font_color="black", edge_color="gray")
+    nx.draw_networkx_edges(G, pos, edge_color="gray")
+    nx.draw_networkx_nodes(G, pos, node_size=3000, node_color="skyblue", alpha=0.7)
+    nx.draw_networkx_labels(G, pos, font_size=12, font_color="black")
     plt.title('Keyword Co-occurrence Network')
     plt.show()
 
 def plot_word_length_distribution(results_df):
+    print("computing word length distribution...")
     word_lengths = [len(word) for text in results_df['text'] for word in text.split()]
     
     plt.figure(figsize=(10, 6))
@@ -145,6 +155,7 @@ def plot_word_length_distribution(results_df):
     plt.show()
 
 def plot_pos_tagging_distribution(results_df):
+    print("computing POS tagging distribution...")
     pos_tags = [token.pos_ for doc in nlp.pipe(results_df['text'], batch_size=50) for token in doc]
     pos_counts = Counter(pos_tags)
     
@@ -160,6 +171,7 @@ def plot_pos_tagging_distribution(results_df):
     plt.show()
 
 def plot_bag_of_words(results_df):
+    print("computing bag of words...")
     # Combine all texts
     combined_text = " ".join(results_df['text'].tolist())
 
@@ -184,6 +196,7 @@ def plot_bag_of_words(results_df):
     plt.show()
 
 def plot_wordcloud(results_df):
+    print("computing wordcloud...")
     # Combine all texts in chunks to manage memory
     chunk_size = 1000
     combined_text = " ".join(results_df['text'].iloc[:chunk_size].tolist())

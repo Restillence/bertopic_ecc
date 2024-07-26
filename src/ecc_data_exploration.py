@@ -26,7 +26,7 @@ from nlp_plots import (
 #variables
 folderpath_ecc = "D:/daten_masterarbeit/Transcripts_Masterarbeit_full/"
 index_file_ecc_folder = "D:/daten_masterarbeit/"
-sample_size = 5  # number of unique companies where we want to create our sample from
+sample_size = 25  # number of unique companies where we want to create our sample from
 random_seed = 42  # Set a random seed for reproducibility
 
 #constants
@@ -214,17 +214,17 @@ def main():
     plot_files_distribution(results_df)
     plot_average_ecc_length_per_company(results_df)
     plot_ecc_length_distribution_by_year(results_df)
-    plot_bag_of_words(results_df)
-    plot_wordcloud(results_df)
+    #plot_bag_of_words(results_df) #add it back later
+    #plot_wordcloud(results_df) #add it back later
     plot_tfidf_top_terms(results_df)
     plot_topics_tsne_pca(results_df)
-    plot_ner(results_df)
+    #plot_ner(results_df) #very computational intensive!
     plot_ngram_frequencies(results_df, n=2)
     plot_ngram_frequencies(results_df, n=3)
-    plot_sentiment_analysis(results_df)
+    #plot_sentiment_analysis(results_df) #add it back later
     plot_keyword_cooccurrence(results_df)
     plot_word_length_distribution(results_df)
-    plot_pos_tagging_distribution(results_df)
+    #plot_pos_tagging_distribution(results_df) #very computational intensive!
     
     num_unique_companies, calls_per_company, top5_avg_length, summary_stats_table = additional_descriptive_statistics(results_df)
     output_html_path = os.path.join(index_file_ecc_folder, 'ecc_statistics.html')
