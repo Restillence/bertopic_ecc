@@ -3,3 +3,5 @@ numpy
 bertopic
 nltk
 re
+matplotlib 
+seaborn
