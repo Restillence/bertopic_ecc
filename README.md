@@ -29,3 +29,6 @@ python >3.9
 pandas 
 numpy 
 bertopic 
+
+Additionally, for the Named Entity Recognition (NER) function, you'll need to download the Spacy English model:
+python -m spacy download en_core_web_sm
