@@ -15,7 +15,7 @@ from text_splitting import split_text
 folderpath_ecc = "D:/daten_masterarbeit/Transcripts_Masterarbeit_full/"
 index_file_ecc_folder = "D:/daten_masterarbeit/"
 sample_size = 2  # number of unique companies to be analyzed, max is 1729
-document_split = "sentences"  # TODO right now it is only working for 'sentences', 'paragraphs' is not possible, fix it!
+document_split = "paragraphs"  # TODO right now it is only working for 'sentences', 'paragraphs' is not possible, fix it!
 
 # constants
 # nothing to change here
@@ -68,14 +68,15 @@ def main():
                 "date": date,
                 "split_texts": split_texts
             }
-"""
-    # Save the results to a file
-    results_df = pd.DataFrame.from_dict(result_dict, orient='index')
-    results_df.to_csv(index_file_ecc_folder + "split_texts_results.csv")
-    print("Results saved to split_texts_results.csv")
-"""
+    """
+        # Save the results to a file
+        results_df = pd.DataFrame.from_dict(result_dict, orient='index')
+        results_df.to_csv(index_file_ecc_folder + "split_texts_results.csv")
+        print("Results saved to split_texts_results.csv"
+    """
     end_time = time.time()
     print(f"Total execution time: {end_time - start_time:.2f} seconds.")
+    return result_dict
 
 if __name__ == "__main__":
     test_output = main()
