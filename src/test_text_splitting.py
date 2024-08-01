@@ -1,4 +1,3 @@
-
 """
 This file tests the text splitting functionality
 """
@@ -9,27 +8,30 @@ import numpy as np
 import os
 import time
 from file_handling import read_index_file, create_ecc_sample  # Import the file_handling module
-from text_splitting import split_text
+from text_splitting import split_text, process_texts, split_text_by_visual_cues
 
 # variables
 folderpath_ecc = "D:/daten_masterarbeit/Transcripts_Masterarbeit_full/"
 index_file_ecc_folder = "D:/daten_masterarbeit/"
 sample_size = 2  # number of unique companies to be analyzed, max is 1729
 document_split = "paragraphs"  # TODO right now it is only working for 'sentences', 'paragraphs' is not possible, fix it!
+random_seed = 42  # Set a random seed for reproducibility
+#section_to_analyze = "Presentation" #can be "Presentation" or "Q&A"; right now still hardcoded, should be changed later
 
 # constants
 # nothing to change here
 index_file_path = index_file_ecc_folder + "list_earnings_call_transcripts.csv"
 
-
+"""
 def process_texts(company, call_id, company_info, date, text):
     print(f"Splitting text for company: {company}, call ID: {call_id}")
     split_texts = split_text(text, document_split)
     return split_texts
-
+"""
 
 def main():
     start_time = time.time()
+    np.random.seed(random_seed)
 
     # Read the index file
     index_file = read_index_file(index_file_path)
@@ -62,21 +64,23 @@ def main():
             company = details[0]
             date = details[1]
             text = details[2]
-            split_texts = process_texts(company, call_id, details, date, text)
+            extract_relevant_section = process_texts(company, call_id, details, date, text, document_split) #right now extracts the "Presentation" section
+            split_section = split_text_by_visual_cues(extract_relevant_section)
             result_dict[(permco, call_id)] = {
                 "company": company,
                 "date": date,
-                "split_texts": split_texts
+                "split_texts": split_section
             }
-    """
-        # Save the results to a file
-        results_df = pd.DataFrame.from_dict(result_dict, orient='index')
-        results_df.to_csv(index_file_ecc_folder + "split_texts_results.csv")
-        print("Results saved to split_texts_results.csv"
-    """
+    
+    # Save the results to a file
+    results_df = pd.DataFrame.from_dict(result_dict, orient='index')
+    results_df.to_csv(index_file_ecc_folder + "split_texts_results.csv")
+    print("Results saved to split_texts_results.csv")
+
     end_time = time.time()
     print(f"Total execution time: {end_time - start_time:.2f} seconds.")
     return result_dict
 
 if __name__ == "__main__":
     test_output = main()
+

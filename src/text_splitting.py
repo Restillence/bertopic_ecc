@@ -1,14 +1,12 @@
 import re
-import nltk
-#nltk.download('punkt')
 from nltk.tokenize import sent_tokenize
 
 def split_text(text, method):
     print("Splitting text using method:", method)
     if method == 'sentences':
         return sent_tokenize(text)
-    elif method == 'paragraphs': #currently this splits each ecc into a list of 3 items. 1st and 2nd item are
-        #participant info, 3rd item is the text
+    elif method == 'paragraphs':
+        # Split based on a specific pattern that identifies paragraphs, e.g., double newlines
         paragraphs = re.split(r'\n{2,}', text)
         return [para.strip() for para in paragraphs if para.strip()]
     elif method == 'custom':
@@ -18,4 +16,53 @@ def split_text(text, method):
     else:
         raise ValueError("Invalid text splitting method. Choose 'sentences', 'paragraphs', or 'custom'.")
 
-def remove_unnecessary_sections(text):
+def process_texts(company, call_id, company_info, date, text, document_split):
+    #right now extracts the "Presentation" section
+    print(f"Splitting text for company: {company}, call ID: {call_id}")
+    split_texts = split_text(text, document_split)
+    
+    # Find the first element containing the word "Presentation"
+    for i, element in enumerate(split_texts):
+        if "Presentation" in element:
+            return element
+    
+    return None  # Return None if "Presentation" is not found in any element
+
+
+
+def split_text_by_visual_cues(text):
+    #complex splitting pattern
+    # Define a pattern to split based on multiple newlines, lines containing only "=", "-", or more spaces followed by a new line,
+    # as well as periods followed by a newline or a space and a newline
+    pattern = r'\n\s*\n|\n[=]+\n|\n[-]+\n|\n\s{2,}\n|(?:^|\n)(?=[A-Z][a-z]+, [a-zA-Z\s]*[-]*[0-9]*)|\.\s*\n'
+
+    
+    # Split the text based on the pattern
+    paragraphs = re.split(pattern, text)
+    
+    # Clean up and return non-empty paragraphs
+    paragraphs = [para.strip() for para in paragraphs if para.strip()]
+    
+    return paragraphs
+
+
+
+
+
+# Example usage
+company = "ExampleCorp"
+call_id = 12345
+company_info = "Example company information"
+date = "2023-07-15"
+text = """
+This is an example text document. It has several parts.
+
+Presentation is in this part of the text.
+
+Another paragraph without the keyword.
+"""
+
+document_split = 'paragraphs'  # or 'sentences' or 'custom'
+
+result = process_texts(company, call_id, company_info, date, text, document_split)
+print("First element containing 'Presentation':", result)
