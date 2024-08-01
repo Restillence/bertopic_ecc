@@ -49,20 +49,4 @@ def split_text_by_visual_cues(text):
 
 
 
-# Example usage
-company = "ExampleCorp"
-call_id = 12345
-company_info = "Example company information"
-date = "2023-07-15"
-text = """
-This is an example text document. It has several parts.
 
-Presentation is in this part of the text.
-
-Another paragraph without the keyword.
-"""
-
-document_split = 'paragraphs'  # or 'sentences' or 'custom'
-
-result = process_texts(company, call_id, company_info, date, text, document_split)
-print("First element containing 'Presentation':", result)

@@ -16,7 +16,7 @@ index_file_ecc_folder = "D:/daten_masterarbeit/"
 sample_size = 2  # number of unique companies to be analyzed, max is 1729
 document_split = "paragraphs"  # TODO right now it is only working for 'sentences', 'paragraphs' is not possible, fix it!
 random_seed = 42  # Set a random seed for reproducibility
-#section_to_analyze = "Presentation" #can be "Presentation" or "Q&A"; right now still hardcoded, should be changed later
+section_to_analyze = "Presentation" #can be "Presentation" or "Q&A"; right now still hardcoded, should be changed later
 
 # constants
 # nothing to change here
