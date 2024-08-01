@@ -8,26 +8,18 @@ import numpy as np
 import os
 import time
 from file_handling import read_index_file, create_ecc_sample  # Import the file_handling module
-from text_splitting import split_text, process_texts, split_text_by_visual_cues
+from text_splitting import extract_and_split_section
 
 # variables
 folderpath_ecc = "D:/daten_masterarbeit/Transcripts_Masterarbeit_full/"
 index_file_ecc_folder = "D:/daten_masterarbeit/"
 sample_size = 2  # number of unique companies to be analyzed, max is 1729
-document_split = "paragraphs"  # TODO right now it is only working for 'sentences', 'paragraphs' is not possible, fix it!
+document_split = "sentences"  # Options are 'sentences', 'paragraphs', 'custom'; default is "paragraphs"
 random_seed = 42  # Set a random seed for reproducibility
-section_to_analyze = "Presentation" #can be "Presentation" or "Q&A"; right now still hardcoded, should be changed later
+section_to_analyze = "Questions and Answers" # Can be "Presentation" or "Questions and Answers"; default is "Presentation"
 
 # constants
-# nothing to change here
 index_file_path = index_file_ecc_folder + "list_earnings_call_transcripts.csv"
-
-"""
-def process_texts(company, call_id, company_info, date, text):
-    print(f"Splitting text for company: {company}, call ID: {call_id}")
-    split_texts = split_text(text, document_split)
-    return split_texts
-"""
 
 def main():
     start_time = time.time()
@@ -64,18 +56,24 @@ def main():
             company = details[0]
             date = details[1]
             text = details[2]
-            extract_relevant_section = process_texts(company, call_id, details, date, text, document_split) #right now extracts the "Presentation" section
-            split_section = split_text_by_visual_cues(extract_relevant_section)
+            split_section = extract_and_split_section(company, call_id, details, date, text, document_split, section_to_analyze)
+            if split_section is None:
+                print(f"Skipping company: {company}, call ID: {call_id} due to missing relevant section")
+                continue  # Skip if the relevant section is not found
             result_dict[(permco, call_id)] = {
                 "company": company,
                 "date": date,
                 "split_texts": split_section
             }
-    
+            print(f"Processed company: {company}, call ID: {call_id}")
+
     # Save the results to a file
-    results_df = pd.DataFrame.from_dict(result_dict, orient='index')
-    results_df.to_csv(index_file_ecc_folder + "split_texts_results.csv")
-    print("Results saved to split_texts_results.csv")
+    if result_dict:
+        results_df = pd.DataFrame.from_dict(result_dict, orient='index')
+        results_df.to_csv(index_file_ecc_folder + "split_texts_results.csv")
+        print("Results saved to split_texts_results.csv")
+    else:
+        print("No results to save.")
 
     end_time = time.time()
     print(f"Total execution time: {end_time - start_time:.2f} seconds.")
@@ -83,4 +81,3 @@ def main():
 
 if __name__ == "__main__":
     test_output = main()
-
