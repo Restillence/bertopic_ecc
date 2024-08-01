@@ -16,7 +16,7 @@ index_file_ecc_folder = "D:/daten_masterarbeit/"
 sample_size = 2  # number of unique companies to be analyzed, max is 1729
 document_split = "sentences"  # Options are 'sentences', 'paragraphs', 'custom'; default is "paragraphs"
 random_seed = 42  # Set a random seed for reproducibility
-section_to_analyze = "Questions and Answers" # Can be "Presentation" or "Questions and Answers"; default is "Presentation"
+section_to_analyze = "Presentation" # Can be "Presentation" or "Questions and Answers"; default is "Presentation"
 
 # constants
 index_file_path = index_file_ecc_folder + "list_earnings_call_transcripts.csv"
