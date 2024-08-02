@@ -11,21 +11,25 @@ import time
 from bertopic import BERTopic
 from bertopic.representation import KeyBERTInspired
 from file_handling import read_index_file, create_ecc_sample  # Import the file_handling module
-from text_splitting import split_text
+from text_splitting import extract_and_split_section  # Ensure split_text is not imported
 
 #variables
 folderpath_ecc = "D:/daten_masterarbeit/Transcripts_Masterarbeit_full/"
 index_file_ecc_folder = "D:/daten_masterarbeit/"
 sample_size = 2  # number of unique companies to be analyzed, max is 1729
-document_split = "sentences" #TODO right now it is only working for 'sentences', 'paragraphs' is not possible, fix it!
+document_split = "paragraphs"  # Options are 'sentences', 'paragraphs', 'custom'; default is "paragraphs"
 random_seed = 42  # Set a random seed for reproducibility
+section_to_analyze = "Presentation" # Can be "Presentation" or "Questions and Answers"; default is "Presentation"
 
 #constants
-#nothing to change here
 index_file_path = index_file_ecc_folder + "list_earnings_call_transcripts.csv"
 
-def split_document(): #this function might go to a submodule
-    pass
+def split_document(company, call_id, company_info, date, text, section_to_analyze, document_split):
+    return extract_and_split_section(company, call_id, company_info, date, text, document_split, section_to_analyze)
+
+def fit_bertopic_model(topic_model, texts):
+    print("Fitting BERTopic...")
+    return topic_model.fit_transform(texts)
 
 def build_data_pipeline_ecc():   #this function might go to a submodule
     pass
@@ -45,13 +49,13 @@ def compute_descriptive_statistics(df):
     else:
         print("Failed to load index file.")
 
-
-def process_texts(topic_model, company, call_id, company_info, date, text):
-    print(f"Splitting text for company: {company}, call ID: {call_id}")
-    split_texts = split_text(text, document_split)
-    topics, probabilities = topic_model.fit_transform(split_texts)
-    print("Fitting model...")
-    return topics
+def process_texts(permco, call_id, company_info, date, text, section_to_analyze, document_split):
+    print(f"Starting analysis for company: {permco}, call ID: {call_id}")
+    relevant_section = split_document(permco, call_id, company_info, date, text, section_to_analyze, document_split)
+    if not relevant_section or len(relevant_section) == 0:
+        print(f"Skipping company: {permco}, call ID: {call_id} due to missing or empty relevant section")
+        return None
+    return relevant_section
 
 def main():
     start_time = time.time()
@@ -82,35 +86,40 @@ def main():
             print(f"Text Content: {value[2][1000:1100]}...")  # Displaying some letters from the Text.
             print()
     
-
-    
-    # Process each text with BERTopic
-    # Initialize the result dictionary
+    # Process each text to get the relevant sections
+    all_relevant_sections = []
     result_dict = {}
+    
+    for permco, calls in ecc_sample.items():
+        for call_id, value in calls.items():
+            company_info, date, text = value
+            relevant_section = process_texts(permco, call_id, company_info, date, text, section_to_analyze, document_split)
+            if relevant_section is not None:
+                if isinstance(relevant_section, list):
+                    all_relevant_sections.extend(relevant_section)
+                else:
+                    all_relevant_sections.append(relevant_section)
+                if permco not in result_dict:
+                    result_dict[permco] = {}
+                result_dict[permco][call_id] = (company_info, date, text, relevant_section)
+
+    # Ensure all elements in all_relevant_sections are strings
+    all_relevant_sections = [str(section) for section in all_relevant_sections]
 
     # Initialize BERTopic with KeyBERTInspired representation
     topic_model = BERTopic(representation_model=KeyBERTInspired())
     
-    # Process each text with BERTopic for only the first 5 calls 
+    # Fit the BERTopic model once on all the relevant sections
     bertopic_start_time = time.time()
-    processed_calls = 0  # Counter to keep track of the number of processed calls #TODO this has to be removed!!!
-    
-    for permco, calls in ecc_sample.items():
-        for call_id, value in calls.items():
-            if processed_calls >= 3:
-                break
-            company_info, date, text = value
-            topics = process_texts(topic_model, permco, call_id, company_info, date, text)
-            if permco not in result_dict:
-                result_dict[permco] = {}
-            result_dict[permco][call_id] = (company_info, date, text, topics)
-            processed_calls += 1
-    
-        if processed_calls >= 3:
-            break
-    
+    if all_relevant_sections:
+        topics, probabilities = fit_bertopic_model(topic_model, all_relevant_sections)
     bertopic_end_time = time.time()
     print(f"BERTopic fitting took {bertopic_end_time - bertopic_start_time:.2f} seconds.")
+
+    # Update the result_dict with topics for each section
+    for i, (permco, calls) in enumerate(result_dict.items()):
+        for call_id in calls.keys():
+            result_dict[permco][call_id] = (*result_dict[permco][call_id][:-1], topics[i])
 
     # Convert the results to a DataFrame and save it
     records = []
@@ -133,10 +142,17 @@ def main():
     print(f"Results saved to {results_output_path}")
     
     # Visualize topics
-    topic_model.visualize_topics().show()
+    try:
+        if len(all_relevant_sections) > 0:
+            topic_model.visualize_topics().show()
+        else:
+            print("No topics to visualize.")
+    except ValueError as ve:
+        print(f"Visualization error: {ve}")
     
     end_time = time.time()
     print(f"Total execution time: {end_time - start_time:.2f} seconds.")
+    return results_df
 
 if __name__ == "__main__":
-    main()
+    results_output = main()
