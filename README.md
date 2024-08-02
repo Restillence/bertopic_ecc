@@ -32,3 +32,7 @@ bertopic
 
 Additionally, for the Named Entity Recognition (NER) function, you'll need to download the Spacy English model:
 python -m spacy download en_core_web_sm
+
+
+###NOTE###
+I used Visual Studio Code as IDE. Some part of the code might not work using another IDE (e.g. Spyder)
