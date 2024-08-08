@@ -2,6 +2,7 @@
 In this file the BERTopic model is trained
 """
 import os
+import time
 import numpy as np
 from bertopic import BERTopic
 from bertopic.representation import KeyBERTInspired
@@ -10,7 +11,7 @@ from file_handling import read_index_file, create_ecc_sample  # Ensure this is p
 # Define variables at the top of the script
 index_file_path = "D:/daten_masterarbeit/list_earnings_call_transcripts.csv"
 folderpath_ecc = "D:/daten_masterarbeit/Transcripts_Masterarbeit_full/"
-sample_size = 10  # Number of companies to train on
+sample_size = 50  # Number of companies to train on
 document_split = "paragraphs"
 section_to_analyze = "Presentation"
 random_seed = 42
@@ -53,9 +54,13 @@ def train_bertopic_model_on_companies(index_file_path, folderpath_ecc, sample_si
     # Fit the BERTopic model once on all the relevant sections
     if all_relevant_sections:
         print("Fitting BERTopic...")
+        start_time = time.time()  # Start timing the training process
         topics, probabilities = topic_model.fit_transform(all_relevant_sections)
+        end_time = time.time()  # End timing the training process
+        training_time = end_time - start_time
         print(f"BERTopic model trained on {len(all_relevant_sections)} sections.")
         print(f"Number of topics generated: {len(set(topics))}")
+        print(f"Training time: {training_time:.2f} seconds")
 
         # Save the trained model
         topic_model.save(model_save_path)
