@@ -9,11 +9,11 @@ from bertopic_training import load_bertopic_model
 # variables
 folderpath_ecc = "D:/daten_masterarbeit/Transcripts_Masterarbeit_full/"
 index_file_ecc_folder = "D:/daten_masterarbeit/"
-sample_size = 10  # Adjusted for testing; number of unique companies to be analyzed, max is 1729
+sample_size = 3  # Adjusted for testing; number of unique companies to be analyzed, max is 1729
 document_split = "paragraphs"  # Options are 'sentences', 'paragraphs', 'custom'; default is "paragraphs"
 random_seed = 43  # Set a random seed for reproducibility
 section_to_analyze = "Presentation"  # Can be "Presentation" or "Questions and Answers"; default is "Presentation"
-max_documents = 30  # Limit the number of documents processed for testing
+max_documents = 200  # Limit the number of documents processed for testing
 model_save_path = "D:/daten_masterarbeit/bertopic_model.pkl"  # Ensure consistent filename
 
 # constants
@@ -139,15 +139,23 @@ def main():
             else:
                 company_info, date, text, sections = values
                 section_topics = ['No topics found'] * len(sections)
+            
+            # Ensure 'sections' is a list of strings
+            if not isinstance(sections, list) or not all(isinstance(section, str) for section in sections):
+                raise ValueError(f"Sections should be a list of strings, but got {type(sections)} with elements {type(sections[0]) if sections else 'N/A'}")
+            
+            # Assign the sections directly to text_list
+            text_list = sections
+            
             records.append({
                 'permco': permco,
                 'call_id': call_id,
                 'company_info': company_info,
                 'date': date,
-                'text': sections,
+                'text': text_list,  # Assign the list of strings directly
                 'topics': section_topics
             })
-    
+
     # Save the results
     results_df = pd.DataFrame(records)
     results_output_path = os.path.join(index_file_ecc_folder, 'topics_output.csv')
@@ -178,7 +186,6 @@ def main():
 
     end_time = time.time()
     print(f"Total execution time: {end_time - start_time:.2f} seconds.")
-    return results_df
-
+    
 if __name__ == "__main__":
-    results_output = main()
+    main()
