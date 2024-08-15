@@ -22,8 +22,12 @@ for filing in text_list:
     print(filing[0][:500])  # Print the first 500 characters of the first element
 
 
-with open("evalfile_splitting_functionality.txt", "w", encoding="utf-8") as f:
-    for filing in text_list:
-        f.write("##################################NEW FILING####################################\n")
-        for element in filing:
-            f.write(element + "\n\n")
+try:
+    with open("evalfile_splitting_functionality.txt", "w", encoding="utf-8") as f:
+        for filing in text_list:
+            f.write("##################################NEW FILING####################################\n")
+            for element in filing:
+                f.write(element + "\n\n")
+    print("File created successfully!")
+except Exception as e:
+    print(f"An error occurred: {e}")

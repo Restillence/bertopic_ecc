@@ -16,6 +16,11 @@ document_split = "paragraphs"
 section_to_analyze = "Presentation"
 random_seed = 42
 model_save_path = "D:/daten_masterarbeit/bertopic_model.pkl"  # Include filename
+#TODO test also on other settings
+
+# BERTopic parameters to adjust the number of topics
+n_gram_range = (1, 2)  # Use bigrams to capture more context
+min_topic_size = 50  # Increase to reduce the number of small topics
 
 def split_document(company, call_id, company_info, date, text, section_to_analyze, document_split):
     from text_splitting import extract_and_split_section  # Import here to avoid circular imports
@@ -48,8 +53,10 @@ def train_bertopic_model_on_companies(index_file_path, folderpath_ecc, sample_si
     # Ensure all elements in all_relevant_sections are strings
     all_relevant_sections = [str(section) for section in all_relevant_sections]
 
-    # Initialize BERTopic with KeyBERTInspired representation
-    topic_model = BERTopic(representation_model=KeyBERTInspired(), n_gram_range=(1, 2), min_topic_size=5)
+    # Initialize BERTopic with adjusted parameters
+    topic_model = BERTopic(representation_model=KeyBERTInspired(), 
+                           n_gram_range=n_gram_range, 
+                           min_topic_size=min_topic_size)
     
     # Fit the BERTopic model once on all the relevant sections
     if all_relevant_sections:

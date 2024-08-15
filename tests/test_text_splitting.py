@@ -7,6 +7,11 @@ import pandas as pd
 import numpy as np
 import os
 import time
+import sys
+
+# Add the src directory to the system path
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'src'))
+
 from file_handling import read_index_file, create_ecc_sample  # Import the file_handling module
 from text_splitting import extract_and_split_section
 
