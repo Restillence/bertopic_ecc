@@ -2,6 +2,7 @@ import re
 from nltk.tokenize import sent_tokenize
 
 def split_text(text, method):
+    #TODO probably this function can be shortened. it is mainly used in extract_and_split_section for the splitting into sections
     print("Splitting text using method:", method)
     if method == 'sentences':
         return sent_tokenize(text)

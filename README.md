@@ -35,12 +35,11 @@ python -m spacy download en_core_web_sm
 
 
 ###NOTE###
-I used Visual Studio Code as IDE. Some part of the code might not work using another IDE (e.g. Spyder)
+I used Visual Studio Code as IDE. Some part of the code might not work using another IDE (e.g. Spyder: intertopic distance map is not popping up in browser)
 
 ###splitting methods have been checked manually on a sample###
-TODO paragraphs+presentation section: remove: 42, ebay passt; random seed 43: passt ebenfalls (außer siehe unten)
 
-TODO in tests sind am anfang 1-2 "falsche paragraphen drin, später beheben!
+TODO SAGA and SHAW Communications Problem, check if it appears again on different permcos
 
 ###BERTopic functioning###
-for every paragraph or sentence a topic is assigned. 
+for every paragraph (default) or sentence a topic is assigned. 

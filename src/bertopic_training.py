@@ -11,7 +11,7 @@ from file_handling import read_index_file, create_ecc_sample  # Ensure this is p
 # Define variables at the top of the script
 index_file_path = "D:/daten_masterarbeit/list_earnings_call_transcripts.csv"
 folderpath_ecc = "D:/daten_masterarbeit/Transcripts_Masterarbeit_full/"
-sample_size = 50  # Number of companies to train on
+sample_size = 70  # Number of companies to train on
 document_split = "paragraphs"
 section_to_analyze = "Presentation"
 random_seed = 42
@@ -20,7 +20,7 @@ model_save_path = "D:/daten_masterarbeit/bertopic_model.pkl"  # Include filename
 
 # BERTopic parameters to adjust the number of topics
 n_gram_range = (1, 2)  # Use bigrams to capture more context
-min_topic_size = 50  # Increase to reduce the number of small topics
+min_topic_size = 70  # Increase to reduce the number of small topics
 
 def split_document(company, call_id, company_info, date, text, section_to_analyze, document_split):
     from text_splitting import extract_and_split_section  # Import here to avoid circular imports
