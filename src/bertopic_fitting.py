@@ -9,7 +9,7 @@ from bertopic_training import load_bertopic_model
 # variables
 folderpath_ecc = "D:/daten_masterarbeit/Transcripts_Masterarbeit_full/"
 index_file_ecc_folder = "D:/daten_masterarbeit/"
-sample_size = 70  # Adjusted for testing; number of unique companies to be analyzed, max is 1729
+sample_size = 40  # Adjusted for testing; number of unique companies to be analyzed, max is 1729
 document_split = "paragraphs"  # Options are 'sentences', 'paragraphs', 'custom'; default is "paragraphs"
 random_seed = 43  # Set a random seed for reproducibility
 section_to_analyze = "Presentation"  # Can be "Presentation" or "Questions and Answers"; default is "Presentation"

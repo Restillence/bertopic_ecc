@@ -23,7 +23,7 @@ for filing in text_list:
 
 
 try:
-    with open("evalfile_splitting_functionality.txt", "w", encoding="utf-8") as f:
+    with open("testfile_splitting_functionality.txt", "w", encoding="utf-8") as f:
         for filing in text_list:
             f.write("##################################NEW FILING####################################\n")
             for element in filing:

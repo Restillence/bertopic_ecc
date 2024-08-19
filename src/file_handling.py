@@ -23,6 +23,7 @@ def create_ecc_sample(sample_size, index_file, folderpath_ecc):
 
     # Ensure sample size does not exceed number of unique companies (permco)
     unique_companies = index_file['permco'].unique()
+    sample_size = min(sample_size, len(unique_companies))
     random_companies = np.random.choice(unique_companies, size=sample_size, replace=False)
     # random_companies = [37,82,116,176,211]  # For debugging; remove or comment out for actual random sampling
 
