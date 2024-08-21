@@ -1,7 +1,6 @@
 import os
 import numpy as np
 from bertopic import BERTopic
-from bertopic.representation import KeyBERTInspired
 from umap import UMAP
 from hdbscan import HDBSCAN
 from sklearn.feature_extraction.text import CountVectorizer
@@ -48,13 +47,14 @@ class BERTopicTrainer:
         self.vectorizer_model = vectorizer_model
         self.model_save_path = model_save_path
 
+        # Initialize BERTopic without a representation model, since we're using precomputed embeddings
         self.topic_model = BERTopic(
-            representation_model=KeyBERTInspired(),
             umap_model=self.umap_model,
             hdbscan_model=self.hdbscan_model,
             vectorizer_model=self.vectorizer_model,
             min_topic_size=config["min_topic_size"],
-            nr_topics=config["nr_topics"]
+            nr_topics=config["nr_topics"],
+            representation_model=None  # Disable the representation model
         )
 
     def train(self):
@@ -70,7 +70,7 @@ class BERTopicTrainer:
         
         all_relevant_sections = self.text_processor.extract_all_relevant_sections(ecc_sample, max_documents)
         
-        # Fit the BERTopic model with custom embeddings
+        # Fit the BERTopic model with precomputed embeddings
         if all_relevant_sections:
             print("Fitting BERTopic...")
             start_time = time.time()

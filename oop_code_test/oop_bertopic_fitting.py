@@ -4,9 +4,8 @@ import os
 import time
 from file_handling import FileHandler  # Import the FileHandler class
 from text_processing import TextProcessor  # Import the TextProcessor class
-from bertopic_training import load_bertopic_model
 import json
-from utils import print_configuration
+from utils import print_configuration, load_bertopic_model
 
 # Load configuration
 with open('config.json', 'r') as config_file:
@@ -28,7 +27,7 @@ print_configuration(config)
 
 # Initialize FileHandler and TextProcessor
 file_handler = FileHandler(index_file_path=index_file_path, folderpath_ecc=folderpath_ecc)
-text_processor = TextProcessor(document_split=document_split, section_to_analyze=section_to_analyze)
+text_processor = TextProcessor(method=document_split, section_to_analyze=section_to_analyze)
 
 def compute_descriptive_statistics(df):
     if df is not None:
@@ -44,7 +43,7 @@ def compute_descriptive_statistics(df):
 
 def process_texts(permco, call_id, company_info, date, text):
     print(f"Starting analysis for company: {permco}, call ID: {call_id}")
-    relevant_section = text_processor.extract_and_split_section(company_info, call_id, company_info, date, text)
+    relevant_section = text_processor.extract_and_split_section(permco, call_id, company_info, date, text)
     if not relevant_section or len(relevant_section) == 0:
         print(f"Skipping company: {permco}, call ID: {call_id} due to missing or empty relevant section")
         return None
@@ -61,7 +60,7 @@ def main():
     # Compute and display descriptive statistics of index file
     compute_descriptive_statistics(index_file)
 
-    # Create sample of earnings conference calls
+    # Create a sample of earnings conference calls
     sample_start_time = time.time()
     ecc_sample = file_handler.create_ecc_sample(sample_size)
     sample_end_time = time.time()
@@ -100,21 +99,17 @@ def main():
     # Load the trained BERTopic model
     topic_model = load_bertopic_model(model_save_path)
 
-    # Fit the BERTopic model once on all the relevant sections
-    bertopic_start_time = time.time()
-    if all_relevant_sections:
-        print("Transforming documents with the BERTopic model...")
-        topics, probabilities = topic_model.transform(all_relevant_sections)
+    # Load the embeddings
+    embeddings = np.load(embeddings_path)
 
-    # Fit the BERTopic model once on all the relevant sections
+    # Transform the documents with the BERTopic model using precomputed embeddings
     bertopic_start_time = time.time()
     if all_relevant_sections:
         print("Transforming documents with the BERTopic model...")
-        topics, probabilities = topic_model.transform(all_relevant_sections)
-        end_time = time.time()  # End timing the BERTopic transformation process
-        print(f"Topics generated: {topics}")
-        print(f"Number of topics: {len(set(topics))}")
-        print(f"BERTopic transformation took {end_time - bertopic_start_time:.2f} seconds.")
+        topics, probabilities = topic_model.transform(all_relevant_sections, embeddings=embeddings)
+        end_time = time.time()
+        print(f"BERTopic model transformed {len(all_relevant_sections)} sections.")
+        print(f"Transformation time: {end_time - bertopic_start_time:.2f} seconds.")
     else:
         print("No relevant sections found to transform with BERTopic.")
         return
@@ -187,6 +182,6 @@ def main():
 
     end_time = time.time()
     print(f"Total execution time: {end_time - start_time:.2f} seconds.")
-    
+
 if __name__ == "__main__":
     main()
