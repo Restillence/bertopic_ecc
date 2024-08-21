@@ -1,0 +1,41 @@
+{
+    "index_file_ecc_folder": "D:/daten_masterarbeit/",
+    "folderpath_ecc": "D:/daten_masterarbeit/Transcripts_Masterarbeit_full/",
+    "model_save_path": "D:/daten_masterarbeit/bertopic_model.pkl",
+    "index_file_path": "D:/daten_masterarbeit/list_earnings_call_transcripts.csv",
+    "embeddings_path": "D:/daten_masterarbeit/finbert_embeddings.npy",
+
+
+    "sample_size": 2,
+    "document_split": "paragraphs",
+    "random_seed": 42,
+    "section_to_analyze": "Presentation",
+    "max_documents": 3000,
+
+    
+    "n_gram_range": [1, 2],
+    "min_topic_size": 100,
+    "nr_topics": 50,
+    
+    "umap_model_params": {
+      "n_neighbors": 20,
+      "n_components": 5,
+      "min_dist": 0.2,
+      "metric": "cosine"
+    },
+    
+    "hdbscan_model_params": {
+      "min_cluster_size": 100,
+      "metric": "euclidean",
+      "cluster_selection_method": "eom",
+      "prediction_data": true
+    },
+    
+    "vectorizer_model_params": {
+      "ngram_range": [1, 2],
+      "stop_words": ["operator", "another_common_term"],
+      "max_df": 0.8,
+      "min_df": 2
+    }
+  }
+  

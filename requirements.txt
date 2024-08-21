@@ -10,3 +10,5 @@ wordcloud
 openpyxl
 textblob 
 networkx
+transformers
+torch
