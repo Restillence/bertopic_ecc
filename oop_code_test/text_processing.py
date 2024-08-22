@@ -19,7 +19,7 @@ class TextProcessor:
             raise ValueError("Invalid text splitting method. Choose 'sentences', 'paragraphs', or 'custom'.")
 
     def extract_and_split_section(self, company, call_id, company_info, date, text):
-        print(f"Processing text for company: {company_info} with permco: {company}, call ID: {call_id}")
+        #print(f"Processing text for company: {company_info} with permco: {company}, call ID: {call_id}") # debugging line
         paragraphs = self.split_text(text)
 
         section_patterns = {
@@ -80,5 +80,5 @@ class TextProcessor:
                     document_count += 1
             if document_count >= max_documents:
                 break
-        
+        print(f"Extracted {len(all_relevant_sections)} relevant sections.")
         return all_relevant_sections
