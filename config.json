@@ -6,9 +6,9 @@
     "embeddings_path": "D:/daten_masterarbeit/finbert_embeddings.npy",
 
 
-    "sample_size": 3,
+    "sample_size": 2,
     "document_split": "paragraphs",
-    "random_seed": 43,
+    "random_seed": 42,
     "section_to_analyze": "Presentation",
     "max_documents": 3000,
 
