@@ -38,7 +38,6 @@ print("Reading index file and creating ECC sample...")
 index_file = file_handler.read_index_file()
 ecc_sample = file_handler.create_ecc_sample(sample_size)
 all_relevant_sections = text_processor.extract_all_relevant_sections(ecc_sample, max_documents)
-print(f"Extracted {len(all_relevant_sections)} relevant sections for analysis.")
 
 # Initialize the SentenceTransformer model
 print("Loading SentenceTransformer model...")
@@ -53,7 +52,6 @@ if not os.path.exists(model_path):
 model = SentenceTransformer(model_path)
 
 # Initialize BERTopic with the custom SentenceTransformer model
-print("Initializing BERTopic model...")
 topic_model = BERTopic(embedding_model=model)
 
 # Check if there are relevant sections to fit

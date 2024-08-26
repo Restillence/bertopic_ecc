@@ -43,3 +43,9 @@ TODO SAGA and SHAW Communications Problem, check if it appears again on differen
 
 ###BERTopic functioning###
 for every paragraph (default) or sentence a topic is assigned. 
+
+
+
+
+Other things: config:
+// Options: "regular", "iterative", "zeroshot", or "iterative_zeroshot"

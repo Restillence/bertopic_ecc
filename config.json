@@ -1,48 +1,114 @@
 {
-  "index_file_ecc_folder": "D:/daten_masterarbeit/",
-  "folderpath_ecc": "D:/daten_masterarbeit/Transcripts_Masterarbeit_full/",
-  "model_save_path": "D:/daten_masterarbeit/bertopic_model.pkl",
-  "index_file_path": "D:/daten_masterarbeit/list_earnings_call_transcripts.csv",
-  "embeddings_path": "D:/daten_masterarbeit/finbert_embeddings.npy",
-  "finbert_model_path": "D:/daten_masterarbeit/finbert-sentence-transformer",
-
-  "sample_size": 10,
-  "document_split": "paragraphs",
-  "random_seed": 42,
-  "section_to_analyze": "Presentation",
-  "max_documents": 3000,
-
-  "n_gram_range": [1, 2],
-  "min_topic_size": 50,
-  "nr_topics": 50,
-
-  "umap_model_params": {
+    "index_file_ecc_folder": "D:/daten_masterarbeit/",
+    "folderpath_ecc": "D:/daten_masterarbeit/Transcripts_Masterarbeit_full/",
+    "model_save_path": "D:/daten_masterarbeit/bertopic_model.pkl",
+    "index_file_path": "D:/daten_masterarbeit/list_earnings_call_transcripts.csv",
+    "embeddings_path": "D:/daten_masterarbeit/finbert_embeddings.npy",
+    "finbert_model_path": "D:/daten_masterarbeit/finbert-sentence-transformer",
+  
+    "sample_size": 10,
+    "document_split": "paragraphs",
+    "random_seed": 42,
+    "section_to_analyze": "Presentation",
+    "max_documents": 3000,
+  
+    "n_gram_range": [1, 2],
+    "min_topic_size": 50,
+    "nr_topics": 50,
+  
+    "umap_model_params": {
       "n_neighbors": 20,
       "n_components": 5,
       "min_dist": 0.2,
       "metric": "cosine"
-  },
-  
-  "hdbscan_model_params": {
+    },
+    
+    "hdbscan_model_params": {
       "min_cluster_size": 50,
       "metric": "euclidean",
       "cluster_selection_method": "eom",
       "prediction_data": true
-  },
-  
-  "vectorizer_model_params": {
+    },
+    
+    "vectorizer_model_params": {
       "ngram_range": [1, 2],
       "stop_words": ["operator", "another_common_term"],
       "max_df": 0.8,
       "min_df": 2
-  },
-  
-  "keybert_params": {
+    },
+    
+    "keybert_params": {
       "keyphrase_ngram_range": [1, 2],
       "stop_words": "english",
       "use_maxsum": false,
       "use_mmr": true,
       "diversity": 0.7,
       "top_n": 4
-  }
-}
+    },
+  
+    "modeling_type": "zeroshot",  
+    "zeroshot_topic_list": [
+      "Financial Performance",
+      "Revenue and Profit Margins",
+      "Earnings per Share (EPS)",
+      "Operating Costs and Expenses",
+      "Cash Flow and Capital Expenditures",
+      "Product Development and Innovation",
+      "New Product Launches",
+      "Research and Development (R&D) Investments",
+      "Product Roadmap and Future Offerings",
+      "Market and Geographical Expansion",
+      "Growth in Key Markets",
+      "International Sales",
+      "Geographic Expansion Strategies",
+      "Market Penetration and Sales Channels",
+      "Operational Challenges",
+      "Supply Chain and Delivery Issues",
+      "Workforce Management and Reductions",
+      "Impact of Political or Environmental Factors",
+      "Contractor and Subcontractor Issues",
+      "Strategic Initiatives",
+      "Mergers and Acquisitions",
+      "Strategic Partnerships and Alliances",
+      "Long-Term Growth Strategies",
+      "Shareholder Value Enhancement (Dividends, Share Buybacks)",
+      "Regulatory and Legal Issues",
+      "Intellectual Property (IP) Disputes",
+      "Regulatory Compliance and Government Contracts",
+      "Legal Proceedings and Settlements",
+      "Customer Relations and Service",
+      "Customer Satisfaction and Service Contracts",
+      "Renewal Rates and Customer Retention",
+      "Managed Services and Multi-Vendor Service Agreements",
+      "Industry and Market Trends",
+      "Competition and Market Positioning",
+      "Impact of Economic Conditions",
+      "Industry-Specific Trends",
+      "Risk Management",
+      "Risk Factors and Mitigation Strategies",
+      "Impact of Unforeseen Events",
+      "Insurance and Risk Coverage",
+      "Investor Relations",
+      "Earnings Calls and Investor Presentations",
+      "Shareholder Communications",
+      "Dividend Policies and Stock Repurchase Programs"
+    ],
+    "zeroshot_min_similarity": 0.85,
+    "embedding_model": "D:/daten_masterarbeit/finbert-sentence-transformer",
+    "min_topic_size": 15,
+    "doc_chunk_size": 500,
+    
+    "zeroshot_topic_list_small": [
+      "Financial Performance",
+      "Product Development",
+      "Market Expansion",
+      "Operational Challenges",
+      "Strategic Initiatives",
+      "Regulatory Compliance",
+      "Customer Relations",
+      "Market Trends",
+      "Risk Management",
+      "Investor Relations"
+    ]
+}  
+  
