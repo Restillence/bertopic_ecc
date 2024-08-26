@@ -35,6 +35,10 @@ class TextProcessor:
         # Final step to ensure the specific string "TEXT version of Transcript" is removed
         return text.replace("TEXT version of Transcript", "").strip()
 
+    def remove_separator_line(self, text):
+        # Remove lines that are just a series of "=" characters
+        return text.replace("================================================================================", "").strip()
+
     def split_text(self, text):
         if self.method == 'sentences':
             return sent_tokenize(text)
@@ -47,17 +51,7 @@ class TextProcessor:
             raise ValueError("Invalid text splitting method. Choose 'sentences', 'paragraphs', or 'custom'.")
 
     def extract_and_split_section(self, company, call_id, company_info, date, text):
-        # Remove the "TEXT version of Transcript" and other unwanted sections first
-        text = self.remove_unwanted_sections(text)
-        # Then, remove everything from "Questions and Answers" onward
-        text = self.remove_questions_and_answers_and_beyond(text)
-        # Then, remove concluding statements if any
-        text = self.remove_concluding_statements(text)
-        # Finally, remove patterns like "---- some text ----"
-        text = self.remove_pattern(text)
-        # Final cleanup: Remove any remaining "TEXT version of Transcript" strings
-        text = self.remove_specific_string(text)
-
+        # Identify the relevant section first
         paragraphs = self.split_text(text)
 
         section_patterns = {
@@ -86,10 +80,25 @@ class TextProcessor:
             if qa_match:
                 combined_text = combined_text[:qa_match.start()]
 
+        # Proceed with cleaning the text
+        combined_text = self.remove_unwanted_sections(combined_text)
+        combined_text = self.remove_questions_and_answers_and_beyond(combined_text)
+        combined_text = self.remove_concluding_statements(combined_text)
+        combined_text = self.remove_pattern(combined_text)
+        combined_text = self.remove_specific_string(combined_text)
+
         if self.method == 'sentences':
-            return self.split_text(combined_text)
-        
-        return self.split_text_by_visual_cues(combined_text)
+            combined_text = self.split_text(combined_text)
+        else:
+            combined_text = self.split_text_by_visual_cues(combined_text)
+
+        # Final cleanup: Remove any remaining separator lines
+        if isinstance(combined_text, list):
+            combined_text = [self.remove_separator_line(para) for para in combined_text]
+        else:
+            combined_text = self.remove_separator_line(combined_text)
+
+        return combined_text
 
     def split_text_by_visual_cues(self, text):
         # Define the pattern for splitting text by visual cues and removing unnecessary paragraphs

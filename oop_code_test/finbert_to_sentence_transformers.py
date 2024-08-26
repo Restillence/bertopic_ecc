@@ -1,12 +1,26 @@
+import os
+import json
 from transformers import BertTokenizer, BertModel
 from sentence_transformers import SentenceTransformer, models
 
-# Step 1: Load the BERT model and tokenizer from the Hugging Face hub
+# Step 1: Load the configuration file where the model path is defined
+config_path = 'C:/Users/nikla/OneDrive/Dokumente/winfoMaster/Masterarbeit/bertopic_ecc/config.json'  # Update with the actual path to your config.json
+
+with open(config_path, 'r') as f:
+    config = json.load(f)
+
+# Step 2: Get the model path from the config
+model_path = config.get("finbert_model_path")
+
+if model_path is None:
+    raise ValueError("Model path not found in the configuration file.")
+
+# Step 3: Load the BERT model and tokenizer from the Hugging Face hub
 model_name = 'yiyanghkust/finbert-pretrain'
 tokenizer = BertTokenizer.from_pretrained(model_name)
 bert_model = BertModel.from_pretrained(model_name)
 
-# Step 2: Create a SentenceTransformer model from the BERT model
+# Step 4: Create a SentenceTransformer model from the BERT model
 word_embedding_model = models.Transformer(model_name_or_path=model_name)
 
 # Add a pooling layer to the model
@@ -20,19 +34,5 @@ pooling_model = models.Pooling(
 # Combine the transformer and pooling model into a SentenceTransformer model
 sentence_transformer_model = SentenceTransformer(modules=[word_embedding_model, pooling_model])
 
-# Step 3: Save the SentenceTransformer model
-sentence_transformer_model.save('finbert-sentence-transformer')
-
-"""
-# Step 4: Load the SentenceTransformer model (optional, for verification)
-model = SentenceTransformer('finbert-sentence-transformer')
-
-# Example sentences
-sentences = ["The market is going up.", "The financial report was released."]
-
-# Step 5: Encode sentences to get sentence embeddings
-embeddings = model.encode(sentences)
-
-# Print the embeddings
-print(embeddings)
-"""
+# Step 5: Save the SentenceTransformer model to the specified path in the config
+sentence_transformer_model.save(model_path)
