@@ -4,9 +4,10 @@
     "model_save_path": "D:/daten_masterarbeit/bertopic_model.pkl",
     "index_file_path": "D:/daten_masterarbeit/list_earnings_call_transcripts.csv",
     "embeddings_path": "D:/daten_masterarbeit/finbert_embeddings.npy",
+    "finbert_model_path": "D:/daten_masterarbeit/finbert-sentence-transformer",
 
 
-    "sample_size": 2,
+    "sample_size": 10,
     "document_split": "paragraphs",
     "random_seed": 42,
     "section_to_analyze": "Presentation",
