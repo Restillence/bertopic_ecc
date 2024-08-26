@@ -1,5 +1,7 @@
 pandas
 numpy
+os 
+json
 bertopic
 nltk
 re
@@ -12,3 +14,4 @@ textblob
 networkx
 transformers
 torch
+
