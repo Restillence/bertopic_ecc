@@ -2,7 +2,9 @@ pandas
 numpy
 os 
 json
+time
 bertopic
+KeyBERT
 nltk
 re
 matplotlib 
@@ -14,4 +16,4 @@ textblob
 networkx
 transformers
 torch
-
+sentence_transformers

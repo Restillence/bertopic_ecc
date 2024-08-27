@@ -6,7 +6,6 @@ from bertopic.representation import KeyBERTInspired
 from file_handling import FileHandler  # Import the FileHandler class
 from text_processing import TextProcessor  # Import the TextProcessor class
 from sentence_transformers import SentenceTransformer
-from keybert import KeyBERT  # Import KeyBERT
 from utils import print_configuration
 
 
@@ -14,8 +13,8 @@ class BertopicModel:
     def __init__(self, config):
         self.config = config
         self.model_save_path = config["model_save_path"]
-        self.modeling_type = config.get("modeling_type", "regular") #default
-        self.doc_chunk_size = config.get("doc_chunk_size", 5000) #default
+        self.modeling_type = config.get("modeling_type", "regular") #default, options: ["regular", "iterative", "iterative_zeroshot", "zeroshot"]
+        self.doc_chunk_size = config.get("doc_chunk_size", 5000) #default, only used for iterative training
         self.topic_model = None
         self.model = self._load_sentence_transformer(config["finbert_model_path"])
 
@@ -95,32 +94,11 @@ class BertopicModel:
         self.topic_model.save(self.model_save_path)
         print(f"Final BERTopic model saved to {self.model_save_path}.")
 
-    def extract_keywords(self):
-        print("Initializing KeyBERT for keyword extraction...")
-        kw_model = KeyBERT(model=self.model)
-
-        print("Extracting keywords for each topic...")
-        for topic in range(len(self.topic_model.get_topics())):
-            topic_words = self.topic_model.get_topic(topic)
-            if topic_words:
-                topic_keywords = kw_model.extract_keywords(
-                    " ".join([word[0] for word in topic_words]), 
-                    keyphrase_ngram_range=tuple(self.config["keybert_params"]["keyphrase_ngram_range"]),
-                    stop_words=self.config["keybert_params"]["stop_words"],
-                    use_maxsum=self.config["keybert_params"]["use_maxsum"],
-                    use_mmr=self.config["keybert_params"]["use_mmr"],
-                    diversity=self.config["keybert_params"]["diversity"],
-                    top_n=self.config["keybert_params"]["top_n"]
-                )
-                print(f"Topic {topic}: {topic_keywords}")
-            else:
-                print(f"Topic {topic} has no significant words.")
-
 
 def main():
     # Load configuration from config.json  
     print("Loading configuration...")
-    with open('C:/Users/nikla/OneDrive/Dokumente/winfoMaster/Masterarbeit/bertopic_ecc/config.json', 'r') as config_file:
+    with open('config.json', 'r') as config_file:
         config = json.load(config_file)
     print_configuration(config)
 
@@ -150,9 +128,6 @@ def main():
     # Instantiate and train the BERTopic model
     bertopic_model = BertopicModel(config)
     bertopic_model.train(all_relevant_sections)
-
-    # Extract and print keywords
-    bertopic_model.extract_keywords()
 
 
 if __name__ == "__main__":

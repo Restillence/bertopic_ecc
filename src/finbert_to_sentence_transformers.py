@@ -4,9 +4,8 @@ from transformers import BertTokenizer, BertModel
 from sentence_transformers import SentenceTransformer, models
 
 # Step 1: Load the configuration file where the model path is defined
-config_path = 'C:/Users/nikla/OneDrive/Dokumente/winfoMaster/Masterarbeit/bertopic_ecc/config.json'  # Update with the actual path to your config.json
 
-with open(config_path, 'r') as f:
+with open('config.json', 'r') as f:
     config = json.load(f)
 
 # Step 2: Get the model path from the config

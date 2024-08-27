@@ -10,7 +10,7 @@
     "document_split": "paragraphs",
     "random_seed": 42,
     "section_to_analyze": "Presentation",
-    "max_documents": 3000,
+    "max_documents": 1000000,
   
     "n_gram_range": [1, 2],
     "min_topic_size": 50,
