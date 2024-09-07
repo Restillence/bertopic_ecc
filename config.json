@@ -6,11 +6,11 @@
     "embeddings_path": "D:/daten_masterarbeit/finbert_embeddings.npy",
     "finbert_model_path": "D:/daten_masterarbeit/finbert-sentence-transformer",
   
-    "sample_size": 10,
+    "sample_size": 1729,
     "document_split": "paragraphs",
     "random_seed": 42,
     "section_to_analyze": "Presentation",
-    "max_documents": 1000000,
+    "max_documents": 1000000000,
   
     "n_gram_range": [1, 2],
     "min_topic_size": 50,
@@ -47,7 +47,7 @@
     },
   
     "modeling_type": "zeroshot",  
-    "zeroshot_topic_list": [
+    "zeroshot_topic_list_long": [
       "Financial Performance",
       "Revenue and Profit Margins",
       "Earnings per Share (EPS)",
@@ -98,7 +98,7 @@
     "min_topic_size": 15,
     "doc_chunk_size": 500,
     
-    "zeroshot_topic_list_small": [
+    "zeroshot_topic_list": [
       "Financial Performance",
       "Product Development",
       "Market Expansion",
