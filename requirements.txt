@@ -8,6 +8,7 @@ KeyBERT
 nltk
 re
 matplotlib 
+plotly
 seaborn
 scikit-learn 
 wordcloud

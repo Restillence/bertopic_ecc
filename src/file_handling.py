@@ -29,7 +29,7 @@ class FileHandler:
         random_companies = np.random.choice(unique_companies, size=sample_size, replace=False)
 
         all_files = os.listdir(self.folderpath_ecc)
-        print("All files in directory:", all_files[:10])
+        print("First 10 files in directory:", all_files[:10])
 
         print("Starting to create ECC sample...")
         for permco in random_companies:

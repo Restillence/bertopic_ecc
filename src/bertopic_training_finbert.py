@@ -1,45 +1,109 @@
 import os
 import json
 import time
+import numpy as np
+import torch  # For checking if GPU is available
 from bertopic import BERTopic
-from bertopic.representation import KeyBERTInspired
+from bertopic.representation import KeyBERTInspired, MaximalMarginalRelevance
 from file_handling import FileHandler  # Import the FileHandler class
 from text_processing import TextProcessor  # Import the TextProcessor class
 from sentence_transformers import SentenceTransformer
+from sklearn.feature_extraction.text import CountVectorizer
+from umap import UMAP
+from hdbscan import HDBSCAN
 from utils import print_configuration
-
+from transformers import pipeline, AutoTokenizer
 
 class BertopicModel:
     def __init__(self, config):
         self.config = config
         self.model_save_path = config["model_save_path"]
-        self.modeling_type = config.get("modeling_type", "regular") #default, options: ["regular", "iterative", "iterative_zeroshot", "zeroshot"]
-        self.doc_chunk_size = config.get("doc_chunk_size", 5000) #default, only used for iterative training
+        self.modeling_type = config.get("modeling_type", "regular")  # default, options: ["regular", "iterative", "iterative_zeroshot", "zeroshot"]
+        self.doc_chunk_size = config.get("doc_chunk_size", 5000)  # default, this variable is only used for iterative training
+        self.device = self._select_device()  # Add device selection here
         self.topic_model = None
-        self.model = self._load_sentence_transformer(config["finbert_model_path"])
+        #self.model = "all-MiniLM-L6-v2"
+        #self.model = self._load_finbert_pipeline() # from HuggingFace pipeline
+        self.model = self._load_sentence_transformer(config["finbert_model_path"]) # Load the SentenceTransformer embedding model from local folder
+
+    def _select_device(self):
+        # Check if GPU is available and return the correct device
+        if torch.cuda.is_available():
+            print("GPU is available. Using GPU...")
+            return "cuda"
+        else:
+            print("GPU not available. Falling back to CPU...")
+            return "cpu"
+    
+    def _load_finbert_pipeline(self):
+        print(f"Loading FinBERT model pipeline from HuggingFace on {self.device}...")
+        
+        # Load the tokenizer
+        tokenizer = AutoTokenizer.from_pretrained("yiyanghkust/finbert-pretrain")
+        
+        # Force tokenizer to truncate inputs at 512 tokens
+        tokenizer.model_max_length = 512
+        tokenizer.truncation = True
+
+        # Set up the pipeline with the model and tokenizer
+        pipe = pipeline("feature-extraction",
+                        model="yiyanghkust/finbert-pretrain",
+                        tokenizer=tokenizer,
+                        device=0 if self.device == "cuda" else -1)
+        return pipe
 
     def _load_sentence_transformer(self, model_path):
-        print("Loading SentenceTransformer model...")
+        print(f"Loading SentenceTransformer model from {model_path} on {self.device}...")
         if not os.path.exists(model_path):
             raise ValueError(f"The specified model path does not exist: {model_path}")
-        return SentenceTransformer(model_path)
+        
+        # Load the SentenceTransformer model and set the device
+        return SentenceTransformer(model_path, device=self.device)
 
     def _initialize_bertopic_model(self):
-        
+        print(f"Embedding Model used: {self.model}...")
+        # Initialize CountVectorizer
+        vectorizer_model = CountVectorizer(ngram_range=tuple(self.config["vectorizer_model_params"]["ngram_range"]),
+                                           stop_words=self.config["vectorizer_model_params"]["stop_words"],
+                                           min_df=self.config["vectorizer_model_params"]["min_df"])
+
+        # Initialize UMAP
+        umap_model = UMAP(n_neighbors=self.config["umap_model_params"]["n_neighbors"],
+                          n_components=self.config["umap_model_params"]["n_components"],
+                          min_dist=self.config["umap_model_params"]["min_dist"],
+                          metric=self.config["umap_model_params"]["metric"],
+                          random_state=42)
+
+        # Initialize HDBSCAN
+        hdbscan_model = HDBSCAN(min_cluster_size=self.config["hdbscan_model_params"]["min_cluster_size"],
+                                metric=self.config["hdbscan_model_params"]["metric"],
+                                cluster_selection_method=self.config["hdbscan_model_params"]["cluster_selection_method"],
+                                prediction_data=self.config["hdbscan_model_params"]["prediction_data"])
+
+        # Initialize KeyBERTInspired and MaximalMarginalRelevance using the parameters from config
+        keybert_model = KeyBERTInspired(top_n_words=self.config["keybert_params"]["top_n_words"])
+        mmr_model = MaximalMarginalRelevance(diversity=self.config["mmr_params"]["diversity"])
+
+        # Initialize BERTopic with both representation models (KeyBERTInspired and MaximalMarginalRelevance)
         if self.modeling_type in ["zeroshot", "iterative_zeroshot"]:
             print("Initializing zeroshot BERTopic model...")
             return BERTopic(
-                embedding_model=self.config["finbert_model_path"],
-                min_topic_size=self.config["min_topic_size"],
+                embedding_model=self.model,
+                umap_model=umap_model,
+                hdbscan_model=hdbscan_model,
+                vectorizer_model=vectorizer_model,
                 zeroshot_topic_list=self.config["zeroshot_topic_list"],
                 zeroshot_min_similarity=self.config["zeroshot_min_similarity"],
-                representation_model=KeyBERTInspired()
+                representation_model=[keybert_model, mmr_model]
             )
         else:
+            print("Initializing regular BERTopic model...")
             return BERTopic(
                 embedding_model=self.model,
-                min_topic_size=self.config["min_topic_size"],
-                representation_model=KeyBERTInspired()
+                umap_model=umap_model,
+                hdbscan_model=hdbscan_model,
+                vectorizer_model=vectorizer_model,
+                representation_model=[keybert_model, mmr_model]  # Combined representation
             )
 
     def train(self, docs):
@@ -50,7 +114,7 @@ class BertopicModel:
 
     def _train_regular(self, docs):
         self.topic_model = self._initialize_bertopic_model()
-        print("Training BERTopic model...")
+        print(f"Training BERTopic model using the following modeling type: {self.modeling_type}...")
         start_time = time.time()
 
         # Fit the BERTopic model
@@ -63,9 +127,10 @@ class BertopicModel:
         print(f"Number of topics generated: {len(set(topics))}")
         print(f"Training time: {end_time - start_time:.2f} seconds.")
 
-        # Save the BERTopic model to the specified path
+        # Save the BERTopic model using safetensors
         print("Saving BERTopic model...")
-        self.topic_model.save(self.model_save_path)
+        embedding_model = self.config["finbert_model_path"]
+        self.topic_model.save(self.model_save_path, serialization="safetensors", save_ctfidf=True, save_embedding_model=embedding_model)
         print(f"BERTopic model saved to {self.model_save_path}.")
 
     def _train_iterative(self, docs):
@@ -90,17 +155,22 @@ class BertopicModel:
 
         self.topic_model = base_model
 
-        print("Saving the final merged BERTopic model...")
-        self.topic_model.save(self.model_save_path)
+        print("Saving the final merged BERTopic model using safetensors...")
+        embedding_model = self.config["finbert_model_path"]
+        self.topic_model.save(self.model_save_path, serialization="safetensors", save_ctfidf=True, save_embedding_model=embedding_model)
         print(f"Final BERTopic model saved to {self.model_save_path}.")
 
 
 def main():
-    # Load configuration from config.json  
+    # Load configuration from config.json
     print("Loading configuration...")
     with open('config.json', 'r') as config_file:
         config = json.load(config_file)
     print_configuration(config)
+
+    # Set random seed
+    random_seed = config["random_seed"]
+    np.random.seed(random_seed)
 
     # Extract variables from the config
     index_file_ecc_folder = config["index_file_ecc_folder"]
@@ -128,6 +198,8 @@ def main():
     # Instantiate and train the BERTopic model
     bertopic_model = BertopicModel(config)
     bertopic_model.train(all_relevant_sections)
+
+    print("BERTopic model training and saving completed.")
 
 
 if __name__ == "__main__":

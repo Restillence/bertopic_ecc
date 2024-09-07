@@ -13,11 +13,13 @@ conda create --name myenv
 4) Install packages from requirements
 pip install -r "(path)/.requirements.txt"
 
-5) Change the following Variables in the main script:
+5) Change the following Variables in the config file:
 folderpath_ecc = "D:/daten_masterarbeit/Transcripts_Masterarbeit_full/"   
 index_file_ecc_folder = "D:/daten_masterarbeit/"
 sample_size = 10 # number of unique companies to be analyzed, max is 1729
 
+Note: If the Config file is not found, you need to set its filepath manually
+in the file which you are attempting to run.
 
 
 #useful videos to get started with bertopic:
@@ -35,16 +37,12 @@ python -m spacy download en_core_web_sm
 
 
 ###NOTE###
-I used Visual Studio Code as IDE. Some part of the code might not work using another IDE (e.g. Spyder: intertopic distance map is not popping up in browser)
+I used Visual Studio Code as IDE. Some part of the code might not work using another IDE 
 
 ###splitting methods have been checked manually on a sample###
 
-TODO SAGA and SHAW Communications Problem, check if it appears again on different permcos
-
 ###BERTopic functioning###
 for every paragraph (default) or sentence a topic is assigned. 
-
-
 
 
 Other things: config:
