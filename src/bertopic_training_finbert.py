@@ -164,7 +164,7 @@ class BertopicModel:
 def main():
     # Load configuration from config.json
     print("Loading configuration...")
-    with open('config.json', 'r') as config_file:
+    with open('config_hlr.json', 'r') as config_file:
         config = json.load(config_file)
     print_configuration(config)
 
