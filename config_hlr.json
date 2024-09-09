@@ -1,11 +1,11 @@
 {
-    "index_file_ecc_folder": "data/",
-    "folderpath_ecc": "data/Transcripts_Masterarbeit/",
-    "model_save_path": "data/bertopic_model_dir",
-    "model_load_path": "data/bertopic_model_dir_20_60_finbert_tone_pipeline",
-    "index_file_path": "data/list_earnings_call_transcripts.csv",
+    "index_file_ecc_folder": "../data/",
+    "folderpath_ecc": "../data/Transcripts_Masterarbeit/",
+    "model_save_path": "../data/bertopic_model_dir",
+    "model_load_path": "../data/bertopic_model_dir_20_60_finbert_tone_pipeline",
+    "index_file_path": "../data/list_earnings_call_transcripts.csv",
     "embedding_model_choice": "all-MiniLM-L12-v2",
-    "finbert_model_path": "data/finbert-sentence-transformer"
+    "finbert_model_path": "../data/finbert-sentence-transformer"
   
     "modeling_type": "regular",  
     "sample_size": 20,
