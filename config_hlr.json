@@ -28,7 +28,7 @@
     },
     
     "hdbscan_model_params": {
-      "min_cluster_size": 50,
+      "min_cluster_size": 200,
       "metric": "euclidean",
       "cluster_selection_method": "eom",
       "prediction_data": true

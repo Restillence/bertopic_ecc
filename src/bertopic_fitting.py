@@ -9,17 +9,48 @@ from text_processing import TextProcessor  # Import the TextProcessor class
 from utils import print_configuration, load_bertopic_model
 
 class BertopicFitting:
+    """
+    Class to fit and save BERTopic models for a given ECC sample.
+
+    Attributes:
+        config (dict): Configuration dictionary containing parameters for the BERTopic model.
+        model_load_path (str): Filepath to the pre-trained BERTopic model.
+        topic_model (BERTopic): Pre-trained BERTopic model loaded from the given filepath.
+        index_file_ecc_folder (str): Folderpath to the ECC index file.
+    """
+
     def __init__(self, config, model_load_path):
+        """
+        Initialize the BertopicFitting class.
+
+        Args:
+            config (dict): Configuration dictionary containing parameters for the BERTopic model.
+            model_load_path (str): Filepath to the pre-trained BERTopic model.
+        """
         self.config = config
         self.model_load_path = model_load_path
         self.topic_model = self._load_bertopic_model()
         self.index_file_ecc_folder = config["index_file_ecc_folder"]
 
     def _load_bertopic_model(self):
+        """
+        Load the pre-trained BERTopic model from the given filepath.
+
+        Returns:
+            BERTopic: Pre-trained BERTopic model loaded from the given filepath.
+        """
         print(f"Loading BERTopic model from {self.model_load_path}...")
         return BERTopic.load(self.model_load_path)
 
     def save_results(self, all_relevant_sections, topics, ecc_sample):
+        """
+        Save the results of the BERTopic model to a CSV file.
+
+        Args:
+            all_relevant_sections (list): List of all relevant sections from the ECC sample.
+            topics (numpy.ndarray): Array of topics assigned to each section.
+            ecc_sample (dict): Dictionary containing the ECC sample data.
+        """
         result_dict = {}
         topic_idx = 0
 
@@ -64,6 +95,13 @@ class BertopicFitting:
         print(f"Results saved to {results_output_path}.")
 
     def fit_and_save(self, all_relevant_sections, ecc_sample):
+        """
+        Fit the BERTopic model and save the results to a CSV file.
+
+        Args:
+            all_relevant_sections (list): List of all relevant sections from the ECC sample.
+            ecc_sample (dict): Dictionary containing the ECC sample data.
+        """
         bertopic_start_time = time.time()
         print("Transforming documents with the BERTopic model...")
         topics, probabilities = self.topic_model.transform(all_relevant_sections)
@@ -73,6 +111,17 @@ class BertopicFitting:
         self.save_results(all_relevant_sections, topics, ecc_sample)
 
 def main():
+    """
+    Main entry point of the script.
+
+    This function loads the configuration from `config.json`, sets the random seed, and extracts the necessary variables from the config.
+    Then, it initializes the `FileHandler` and `TextProcessor` classes with the imported configuration, creates the ECC sample, and extracts the relevant sections.
+    Finally, it fits the BERTopic model and saves the results to a CSV file, where each section can be mapped to its assigned topic.
+
+    Returns
+    -------
+    None
+    """
     # Load configuration from config.json
     print("Loading configuration...")
     with open('config.json', 'r') as f:
