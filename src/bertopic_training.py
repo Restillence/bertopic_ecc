@@ -23,8 +23,6 @@ class BertopicModel:
         self.device = self._select_device()  # Add device selection here
         self.topic_model = None
         self.model = self._select_embedding_model(config)  # Load the appropriate embedding model based on config
-        #change in config:   "embedding_model_choice": "finbert-pretrain",  # Choose between "all-MiniLM-L6-v2", "finbert-local", or "finbert-pretrain"
-
 
     def _select_device(self):
         # Check if GPU is available and return the correct device
@@ -37,11 +35,11 @@ class BertopicModel:
 
     def _select_embedding_model(self, config):
         # Select the embedding model based on the config setting
-        embedding_choice = config.get("embedding_model_choice", "all-MiniLM-L6-v2")
+        embedding_choice = config.get("embedding_model_choice", "all-MiniLM-L12-v2")
         
-        if embedding_choice == "all-MiniLM-L6-v2":
-            print("Loading SentenceTransformer model: all-MiniLM-L6-v2...")
-            return SentenceTransformer("all-MiniLM-L6-v2", device=self.device)
+        if embedding_choice == "all-MiniLM-L12-v2":
+            print("Loading SentenceTransformer model: all-MiniLM-L12-v2...")
+            return SentenceTransformer("sentence-transformers/all-MiniLM-L12-v2", device=self.device)
         
         elif embedding_choice == "finbert-local":
             model_path = config["finbert_model_path"]
@@ -73,6 +71,7 @@ class BertopicModel:
                         tokenizer=tokenizer,
                         device=0 if self.device == "cuda" else -1)
         return pipe
+
 
     def _initialize_bertopic_model(self):
         print(f"Embedding Model used: {self.model}...")
