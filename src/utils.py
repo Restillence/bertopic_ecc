@@ -3,6 +3,12 @@ import json
 from bertopic import BERTopic
 
 def print_configuration(config):
+    """
+    Print the configuration dictionary.
+
+    Parameters:
+    - config (dict): The configuration dictionary to be printed.
+    """
     print("Configuration:")
     for key, value in config.items():
         print(f"{key}: {value}")
