@@ -74,7 +74,11 @@ class BertopicModel:
     def _select_embedding_model(self, config):
         # Select the embedding model based on the config setting
         """
-        Select the embedding model based on the config setting.
+        Select the embedding model based on the config setting. Possible choices are:
+
+        - "all-MiniLM-L12-v2": SentenceTransformer model: all-MiniLM-L12-v2
+        - "finbert-local": FinBERT model from local path
+        - "finbert-pretrain": FinBERT model from HuggingFace pipeline
 
         Parameters
         ----------
