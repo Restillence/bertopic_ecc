@@ -22,8 +22,6 @@ class BertopicModel:
         self.doc_chunk_size = config.get("doc_chunk_size", 5000)  # default, this variable is only used for iterative training
         self.device = self._select_device()  # Add device selection here
         self.topic_model = None
-        #self.model = "all-MiniLM-L6-v2"
-        #self.model = self._load_finbert_pipeline() # from HuggingFace pipeline
         self.model = self._load_sentence_transformer(config["finbert_model_path"]) # Load the SentenceTransformer embedding model from local folder
 
     def _select_device(self):
@@ -35,23 +33,6 @@ class BertopicModel:
             print("GPU not available. Falling back to CPU...")
             return "cpu"
     
-    def _load_finbert_pipeline(self):
-        print(f"Loading FinBERT model pipeline from HuggingFace on {self.device}...")
-        
-        # Load the tokenizer
-        tokenizer = AutoTokenizer.from_pretrained("yiyanghkust/finbert-pretrain")
-        
-        # Force tokenizer to truncate inputs at 512 tokens
-        tokenizer.model_max_length = 512
-        tokenizer.truncation = True
-
-        # Set up the pipeline with the model and tokenizer
-        pipe = pipeline("feature-extraction",
-                        model="yiyanghkust/finbert-pretrain",
-                        tokenizer=tokenizer,
-                        device=0 if self.device == "cuda" else -1)
-        return pipe
-
     def _load_sentence_transformer(self, model_path):
         print(f"Loading SentenceTransformer model from {model_path} on {self.device}...")
         if not os.path.exists(model_path):
@@ -118,7 +99,16 @@ class BertopicModel:
         start_time = time.time()
 
         # Fit the BERTopic model
-        topics, probs = self.topic_model.fit_transform(docs)
+        try:
+            topics, probs = self.topic_model.fit_transform(docs)
+
+            # Print document count per topic for debugging
+            topic_doc_count = {topic: topics.count(topic) for topic in set(topics)}
+            print("Document count per topic:", topic_doc_count)
+
+        except Exception as e:
+            print(f"An error occurred during ctf-idf transformation: {e}")
+            return
 
         end_time = time.time()
 
@@ -128,10 +118,13 @@ class BertopicModel:
         print(f"Training time: {end_time - start_time:.2f} seconds.")
 
         # Save the BERTopic model using safetensors
-        print("Saving BERTopic model...")
-        embedding_model = self.config["finbert_model_path"]
-        self.topic_model.save(self.model_save_path, serialization="safetensors", save_ctfidf=True, save_embedding_model=embedding_model)
-        print(f"BERTopic model saved to {self.model_save_path}.")
+        try:
+            print("Saving BERTopic model...")
+            embedding_model = self.config["finbert_model_path"]
+            self.topic_model.save(self.model_save_path, serialization="safetensors", save_ctfidf=True, save_embedding_model=embedding_model)
+            print(f"BERTopic model saved to {self.model_save_path}.")
+        except Exception as e:
+            print(f"An error occurred while saving the model: {e}")
 
     def _train_iterative(self, docs):
         print("Initializing iterative BERTopic model...")
@@ -164,7 +157,7 @@ class BertopicModel:
 def main():
     # Load configuration from config.json
     print("Loading configuration...")
-    with open('config_hlr.json', 'r') as config_file:
+    with open('config.json', 'r') as config_file:
         config = json.load(config_file)
     print_configuration(config)
 
