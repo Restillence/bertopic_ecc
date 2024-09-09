@@ -4,7 +4,7 @@
     "model_save_path": "D:/daten_masterarbeit/bertopic_model_dir", 
     "model_load_path": "D:/daten_masterarbeit/bertopic_model_dir_20_60_finbert_tone_pipeline", 
     "index_file_path": "D:/daten_masterarbeit/list_earnings_call_transcripts.csv",
-    "embeddings_path": "D:/daten_masterarbeit/finbert_embeddings.npy",
+    "embedding_model_choice": "finbert-local",
     "finbert_model_path": "D:/daten_masterarbeit/finbert-sentence-transformer",
   
     "modeling_type": "regular",  

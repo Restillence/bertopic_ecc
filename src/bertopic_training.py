@@ -22,7 +22,9 @@ class BertopicModel:
         self.doc_chunk_size = config.get("doc_chunk_size", 5000)  # default, this variable is only used for iterative training
         self.device = self._select_device()  # Add device selection here
         self.topic_model = None
-        self.model = self._load_sentence_transformer(config["finbert_model_path"]) # Load the SentenceTransformer embedding model from local folder
+        self.model = self._select_embedding_model(config)  # Load the appropriate embedding model based on config
+        #change in config:   "embedding_model_choice": "finbert-pretrain",  # Choose between "all-MiniLM-L6-v2", "finbert-local", or "finbert-pretrain"
+
 
     def _select_device(self):
         # Check if GPU is available and return the correct device
@@ -32,14 +34,45 @@ class BertopicModel:
         else:
             print("GPU not available. Falling back to CPU...")
             return "cpu"
-    
-    def _load_sentence_transformer(self, model_path):
-        print(f"Loading SentenceTransformer model from {model_path} on {self.device}...")
-        if not os.path.exists(model_path):
-            raise ValueError(f"The specified model path does not exist: {model_path}")
+
+    def _select_embedding_model(self, config):
+        # Select the embedding model based on the config setting
+        embedding_choice = config.get("embedding_model_choice", "all-MiniLM-L6-v2")
         
-        # Load the SentenceTransformer model and set the device
-        return SentenceTransformer(model_path, device=self.device)
+        if embedding_choice == "all-MiniLM-L6-v2":
+            print("Loading SentenceTransformer model: all-MiniLM-L6-v2...")
+            return SentenceTransformer("all-MiniLM-L6-v2", device=self.device)
+        
+        elif embedding_choice == "finbert-local":
+            model_path = config["finbert_model_path"]
+            print(f"Loading FinBERT model from local path: {model_path} on {self.device}...")
+            if not os.path.exists(model_path):
+                raise ValueError(f"The specified model path does not exist: {model_path}")
+            return SentenceTransformer(model_path, device=self.device)
+
+        elif embedding_choice == "finbert-pretrain":
+            print("Loading FinBERT model from HuggingFace pipeline...")
+            return self._load_finbert_pipeline()
+        
+        else:
+            raise ValueError(f"Unknown embedding model choice: {embedding_choice}")
+    
+    def _load_finbert_pipeline(self):
+        print(f"Loading FinBERT model pipeline from HuggingFace on {self.device}...")
+        
+        # Load the tokenizer
+        tokenizer = AutoTokenizer.from_pretrained("yiyanghkust/finbert-pretrain")
+        
+        # Force tokenizer to truncate inputs at 512 tokens
+        tokenizer.model_max_length = 512
+        tokenizer.truncation = True
+
+        # Set up the pipeline with the model and tokenizer
+        pipe = pipeline("feature-extraction",
+                        model="yiyanghkust/finbert-pretrain",
+                        tokenizer=tokenizer,
+                        device=0 if self.device == "cuda" else -1)
+        return pipe
 
     def _initialize_bertopic_model(self):
         print(f"Embedding Model used: {self.model}...")
