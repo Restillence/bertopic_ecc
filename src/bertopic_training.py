@@ -28,10 +28,10 @@ class BertopicModel:
         # Check if GPU is available and return the correct device
         if torch.cuda.is_available():
             print("GPU is available. Using GPU...")
-            return "cuda"
+            return torch.device("cuda")
         else:
             print("GPU not available. Falling back to CPU...")
-            return "cpu"
+            return torch.device("cpu")
 
     def _select_embedding_model(self, config):
         # Select the embedding model based on the config setting
