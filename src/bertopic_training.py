@@ -1,3 +1,4 @@
+print("starting bertopic_training.py...")
 import os
 import json
 import time
