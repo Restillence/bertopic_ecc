@@ -196,7 +196,7 @@ class BertopicModel:
                 umap_model=umap_model,
                 hdbscan_model=hdbscan_model,
                 vectorizer_model=vectorizer_model,
-                zeroshot_topic_list=self.config["zeroshot_topic_list"],
+                zeroshot_topic_list=self.config["zeroshot_topic_list_long"],
                 zeroshot_min_similarity=self.config["zeroshot_min_similarity"],
                 representation_model=[keybert_model, mmr_model]
             )

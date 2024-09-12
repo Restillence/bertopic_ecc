@@ -93,7 +93,8 @@
       "Investor Relations",
       "Earnings Calls and Investor Presentations",
       "Shareholder Communications",
-      "Dividend Policies and Stock Repurchase Programs"
+      "Dividend Policies and Stock Repurchase Programs",
+      "outliers"
     ],
     "zeroshot_min_similarity": 0.00,
     "embedding_model": "D:/daten_masterarbeit/finbert-sentence-transformer",
