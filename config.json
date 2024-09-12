@@ -2,12 +2,12 @@
     "index_file_ecc_folder": "D:/daten_masterarbeit/",
     "folderpath_ecc": "D:/daten_masterarbeit/Transcripts_Masterarbeit_full/",
     "model_save_path": "D:/daten_masterarbeit/bertopic_model_dir", 
-    "model_load_path": "D:/daten_masterarbeit/bertopic_model_dir", 
+    "model_load_path": "D:/daten_masterarbeit/bertopic_model_dir_regular_1729_300_l12", 
     "index_file_path": "D:/daten_masterarbeit/list_earnings_call_transcripts.csv",
     "embedding_model_choice": "all-MiniLM-L12-v2", 
     "finbert_model_path": "D:/daten_masterarbeit/finbert-sentence-transformer",
   
-    "modeling_type": "regular",  
+    "modeling_type": "zeroshot",  
     "sample_size": 1729,
     "document_split": "paragraphs",
     "random_seed": 43,
@@ -95,13 +95,25 @@
       "Shareholder Communications",
       "Dividend Policies and Stock Repurchase Programs"
     ],
-    "zeroshot_min_similarity": 0.85,
+    "zeroshot_min_similarity": 0.00,
     "embedding_model": "D:/daten_masterarbeit/finbert-sentence-transformer",
     "min_topic_size": 15,
     "doc_chunk_size": 500,
-    
+
     "zeroshot_topic_list": [
+      "Welcome",
+      "Revenue",
+      "Cost",
+      "Earnings",
+      "Marketing",
+      "Outlook",
+      "outliers"
+    ],
+    
+    "zeroshot_topic_list_middle_length": [
+      "Opening",
       "Introduction",
+      "Welcome",
       "Revenue",
       "Cost",
       "Earnings",
@@ -114,7 +126,8 @@
       "Regulatory Compliance",
       "Customer Relations",
       "Risk Management",
-      "Investor Relations"
+      "Investor Relations",
+      "outliers"
     ]
 }  
   
