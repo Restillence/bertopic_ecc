@@ -7,8 +7,8 @@
     "embedding_model_choice": "all-MiniLM-L12-v2",
     "finbert_model_path": "../data/finbert-sentence-transformer",
   
-    "modeling_type": "regular",  
-    "sample_size": 200,
+    "modeling_type": "zeroshot",  
+    "sample_size": 300,
     "document_split": "paragraphs",
     "random_seed": 43,
     "section_to_analyze": "Presentation",
@@ -28,7 +28,7 @@
     },
     
     "hdbscan_model_params": {
-      "min_cluster_size": 200,
+      "min_cluster_size": 100,
       "metric": "euclidean",
       "cluster_selection_method": "eom",
       "prediction_data": true
