@@ -7,6 +7,8 @@ from bertopic import BERTopic
 from file_handling import FileHandler  # Import the FileHandler class
 from text_processing import TextProcessor  # Import the TextProcessor class
 from utils import print_configuration, load_bertopic_model
+from sentence_transformers import SentenceTransformer
+import torch
 
 class BertopicFitting:
     """
@@ -34,13 +36,20 @@ class BertopicFitting:
 
     def _load_bertopic_model(self):
         """
-        Load the pre-trained BERTopic model from the given filepath.
-
-        Returns:
-            BERTopic: Pre-trained BERTopic model loaded from the given filepath.
+        Load the pre-trained BERTopic model from the given filepath and use GPU for the embedding model if available,
+        otherwise fall back to CPU.
         """
         print(f"Loading BERTopic model from {self.model_load_path}...")
-        return BERTopic.load(self.model_load_path)
+        
+        # Check if a GPU is available, otherwise use CPU
+        device = "cuda" if torch.cuda.is_available() else "cpu"
+        
+        # Load the embedding model on the selected device
+        embedding_model = SentenceTransformer(self.config["embedding_model_choice"], device=device)
+        print(f"Embedding model loaded successfully. On device: {device}")
+        
+        # Load the BERTopic model with the embedding model
+        return BERTopic.load(self.model_load_path, embedding_model=embedding_model)
 
     def save_results(self, all_relevant_sections, topics, ecc_sample):
         """
@@ -97,17 +106,35 @@ class BertopicFitting:
     def fit_and_save(self, all_relevant_sections, ecc_sample):
         """
         Fit the BERTopic model and save the results to a CSV file.
-
+        Save the BERTopic model with the transformed documents and original untransformed documents.
+        
         Args:
             all_relevant_sections (list): List of all relevant sections from the ECC sample.
             ecc_sample (dict): Dictionary containing the ECC sample data.
         """
         bertopic_start_time = time.time()
         print("Transforming documents with the BERTopic model...")
+        
+        # Transform documents
         topics, probabilities = self.topic_model.transform(all_relevant_sections)
+        
         end_time = time.time()
         print(f"BERTopic model transformed {len(all_relevant_sections)} sections.")
         print(f"Transformation time: {end_time - bertopic_start_time:.2f} seconds.")
+        
+        # Save the topics and probabilities to the BERTopic model
+        self.topic_model.topics_ = topics
+        self.topic_model.probabilities_ = probabilities
+        
+        # Save both the original (untransformed) documents and the transformed documents
+        self.topic_model.original_documents_ = all_relevant_sections
+        
+        # Save the model with transformed data and original documents
+        model_save_path_with_data = os.path.join(self.model_load_path, 'bertopic_model_with_data_and_docs')
+        self.topic_model.save(model_save_path_with_data)
+        print(f"Model with transformed data and original documents saved to {model_save_path_with_data}.")
+        
+        # Save the results to CSV as before
         self.save_results(all_relevant_sections, topics, ecc_sample)
 
 def main():
