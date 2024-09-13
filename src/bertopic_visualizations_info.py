@@ -3,6 +3,7 @@ from bertopic import BERTopic
 from sentence_transformers import SentenceTransformer
 import matplotlib.pyplot as plt
 import os
+import time
 
 # Load configuration from config.json
 with open("config_hlr.json", 'r') as f:
@@ -12,11 +13,18 @@ with open("config_hlr.json", 'r') as f:
 model_load_path_with_data = config["model_load_path_with_data"]
 print(f"Model load path with data: {model_load_path_with_data}")
 
+# Start tracking time for loading the model
+start_time = time.time()
+
 # Load the embedding model to GPU
 embedding_model = SentenceTransformer(config["embedding_model_choice"], device="cuda")
 
 # Load the BERTopic model from the local path onto the GPU
 topic_model = BERTopic.load(model_load_path_with_data, embedding_model=embedding_model)
+
+# End tracking time for loading the model
+end_time = time.time()
+print(f"Model loaded in {end_time - start_time:.2f} seconds")
 
 # Directory to save outputs
 output_dir = "model_outputs"
@@ -24,6 +32,7 @@ os.makedirs(output_dir, exist_ok=True)
 
 # Save basic info about the model
 def save_basic_info(topic_model, output_file):
+    start_time = time.time()
     print("Saving basic information...")
     with open(output_file, 'w') as f:
         # Get the number of topics
@@ -43,17 +52,22 @@ def save_basic_info(topic_model, output_file):
         for word, score in top_words:
             f.write(f"  - {word}: {score}\n")
 
-    print(f"Basic information saved to {output_file}")
+    end_time = time.time()
+    print(f"Basic information saved to {output_file} in {end_time - start_time:.2f} seconds")
 
 # Save the reduced topics and info
 def save_reduced_topics(topic_model, nr_topics, output_file):
+    start_time = time.time()
     print("Reducing topics...")
     reduced_model = topic_model.reduce_topics(topic_model.original_documents_, nr_topics=nr_topics)
     save_basic_info(reduced_model, output_file)
+    end_time = time.time()
+    print(f"Topics reduced to {nr_topics} and info saved in {end_time - start_time:.2f} seconds")
     return reduced_model
 
 # Save a plot of the topic distribution
 def save_topics_distribution(topic_model, output_file):
+    start_time = time.time()
     print("Saving topic distribution...")
     topic_info = topic_model.get_topic_info()
     plt.figure()
@@ -63,21 +77,26 @@ def save_topics_distribution(topic_model, output_file):
     plt.title('Topic Distribution')
     plt.savefig(output_file)
     plt.close()
-    print(f"Topic distribution saved to {output_file}")
+    end_time = time.time()
+    print(f"Topic distribution saved to {output_file} in {end_time - start_time:.2f} seconds")
 
 # Save a visualization from BERTopic's built-in visualizations
 def save_visualization(fig, output_file, file_format="png"):
+    start_time = time.time()
     print(f"Saving visualization to {output_file}...")
     if file_format == "html":
         fig.write_html(output_file)
     else:
         fig.write_image(output_file)
-    print(f"Visualization saved to {output_file}")
-
+    end_time = time.time()
+    print(f"Visualization saved to {output_file} in {end_time - start_time:.2f} seconds")
 
 # Generate and save additional visualizations
 def generate_additional_visualizations(topic_model):
     print("Generating additional visualizations...")
+    
+    start_time = time.time()
+    
     # Visualize Topics
     print("Visualizing topics...")
     fig = topic_model.visualize_topics()
@@ -125,6 +144,12 @@ def generate_additional_visualizations(topic_model):
         fig = topic_model.visualize_distribution(probabilities[0])
         save_visualization(fig, os.path.join(output_dir, "topic_distribution.html"), file_format="html")
 
+    end_time = time.time()
+    print(f"All visualizations generated and saved in {end_time - start_time:.2f} seconds")
+
+# Start tracking overall script time
+script_start_time = time.time()
+
 # Save basic info about the model
 save_basic_info(topic_model, os.path.join(output_dir, "basic_info.txt"))
 
@@ -140,4 +165,6 @@ save_topics_distribution(reduced_model, os.path.join(output_dir, "reduced_topic_
 # Generate and save the additional visualizations
 generate_additional_visualizations(topic_model)
 
-print("All outputs saved.")
+# End tracking overall script time
+script_end_time = time.time()
+print(f"Total script execution time: {script_end_time - script_start_time:.2f} seconds")
