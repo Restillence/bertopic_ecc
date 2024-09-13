@@ -10,7 +10,7 @@
     "ecc_plots_folder": "/plots/ecc_plots",
   
     "modeling_type": "zeroshot",  
-    "sample_size": 300,
+    "sample_size": 30,
     "document_split": "paragraphs",
     "random_seed": 43,
     "section_to_analyze": "Presentation",
