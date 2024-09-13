@@ -5,11 +5,12 @@ import matplotlib.pyplot as plt
 import os
 
 # Load configuration from config.json
-with open(config_hlr.json, 'r') as f:
+with open("config_hlr.json", 'r') as f:
     config = json.load(f)
 
 # Get the correct model path from the config
 model_load_path_with_data = config["model_load_path_with_data"]
+print(f"Model load path with data: {model_load_path_with_data}")
 
 # Load the embedding model to GPU
 embedding_model = SentenceTransformer(config["embedding_model_choice"], device="cuda")
@@ -23,6 +24,7 @@ os.makedirs(output_dir, exist_ok=True)
 
 # Save basic info about the model
 def save_basic_info(topic_model, output_file):
+    print("Saving basic information...")
     with open(output_file, 'w') as f:
         # Get the number of topics
         num_topics = len(topic_model.get_topic_info())
@@ -45,12 +47,14 @@ def save_basic_info(topic_model, output_file):
 
 # Save the reduced topics and info
 def save_reduced_topics(topic_model, nr_topics, output_file):
+    print("Reducing topics...")
     reduced_model = topic_model.reduce_topics(topic_model.original_documents_, nr_topics=nr_topics)
     save_basic_info(reduced_model, output_file)
     return reduced_model
 
 # Save a plot of the topic distribution
 def save_topics_distribution(topic_model, output_file):
+    print("Saving topic distribution...")
     topic_info = topic_model.get_topic_info()
     plt.figure()
     plt.bar(topic_info['Topic'], topic_info['Count'])
@@ -63,11 +67,13 @@ def save_topics_distribution(topic_model, output_file):
 
 # Save a visualization from BERTopic's built-in visualizations
 def save_visualization(fig, output_file):
+    print("Saving visualization...")
     fig.write_image(output_file)
     print(f"Visualization saved to {output_file}")
 
 # Generate and save additional visualizations
 def generate_additional_visualizations(topic_model):
+    print("Generating additional visualizations...")
     # Visualize Topics
     fig = topic_model.visualize_topics()
     save_visualization(fig, os.path.join(output_dir, "topics.html"))
