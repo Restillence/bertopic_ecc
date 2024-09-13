@@ -79,81 +79,51 @@ def save_visualization(fig, output_file, file_format="png"):
 def generate_additional_visualizations(topic_model):
     print("Generating additional visualizations...")
     # Visualize Topics
+    print("Visualizing topics...")
     fig = topic_model.visualize_topics()
     save_visualization(fig, os.path.join(output_dir, "topics.html"), file_format="html")
 
     # Visualize Documents
+    print("Visualizing documents...")
     fig = topic_model.visualize_documents(topic_model.original_documents_)
     save_visualization(fig, os.path.join(output_dir, "documents.html"), file_format="html")
 
     # Visualize Document with DataMapPlot
+    print("Visualizing document with datamapplot...")
     fig = topic_model.visualize_document_datamap(topic_model.original_documents_)
     save_visualization(fig, os.path.join(output_dir, "document_datamap.html"), file_format="html")
 
     # Visualize Document Hierarchy
+    print("Visualizing document hierarchy...")
     fig = topic_model.visualize_hierarchical_documents(topic_model.original_documents_)
     save_visualization(fig, os.path.join(output_dir, "hierarchical_documents.html"), file_format="html")
 
     # Visualize Topic Hierarchy
+    print("Visualizing topic hierarchy...")
     fig = topic_model.visualize_hierarchy()
     save_visualization(fig, os.path.join(output_dir, "topic_hierarchy.html"), file_format="html")
 
     # Visualize Topic Terms (BarChart)
+    print("Visualizing topic terms...")
     fig = topic_model.visualize_barchart()
     save_visualization(fig, os.path.join(output_dir, "topic_barchart.html"), file_format="html")
 
     # Visualize Topic Similarity (Heatmap)
+    print("Visualizing topic similarity...")
     fig = topic_model.visualize_heatmap()
     save_visualization(fig, os.path.join(output_dir, "topic_heatmap.html"), file_format="html")
 
     # Visualize Term Score Decline (Term Rank)
+    print("Visualizing term rank...")
     fig = topic_model.visualize_term_rank()
     save_visualization(fig, os.path.join(output_dir, "term_rank.html"), file_format="html")
 
     # Visualize Topic Probability Distribution
+    print("Visualizing topic distribution...")
     probabilities = topic_model.probabilities_  # Assuming we visualize the first document's probabilities
     if probabilities is not None:
         fig = topic_model.visualize_distribution(probabilities[0])
         save_visualization(fig, os.path.join(output_dir, "topic_distribution.html"), file_format="html")
-
-    print("Generating additional visualizations...")
-    # Visualize Topics
-    fig = topic_model.visualize_topics()
-    save_visualization(fig, os.path.join(output_dir, "topics.html"))
-
-    # Visualize Documents
-    fig = topic_model.visualize_documents(topic_model.original_documents_)
-    save_visualization(fig, os.path.join(output_dir, "documents.html"))
-
-    # Visualize Document with DataMapPlot
-    fig = topic_model.visualize_document_datamap(topic_model.original_documents_)
-    save_visualization(fig, os.path.join(output_dir, "document_datamap.html"))
-
-    # Visualize Document Hierarchy
-    fig = topic_model.visualize_hierarchical_documents(topic_model.original_documents_)
-    save_visualization(fig, os.path.join(output_dir, "hierarchical_documents.html"))
-
-    # Visualize Topic Hierarchy
-    fig = topic_model.visualize_hierarchy()
-    save_visualization(fig, os.path.join(output_dir, "topic_hierarchy.html"))
-
-    # Visualize Topic Terms (BarChart)
-    fig = topic_model.visualize_barchart()
-    save_visualization(fig, os.path.join(output_dir, "topic_barchart.html"))
-
-    # Visualize Topic Similarity (Heatmap)
-    fig = topic_model.visualize_heatmap()
-    save_visualization(fig, os.path.join(output_dir, "topic_heatmap.html"))
-
-    # Visualize Term Score Decline (Term Rank)
-    fig = topic_model.visualize_term_rank()
-    save_visualization(fig, os.path.join(output_dir, "term_rank.html"))
-
-    # Visualize Topic Probability Distribution
-    probabilities = topic_model.probabilities_  # Assuming we visualize the first document's probabilities
-    if probabilities is not None:
-        fig = topic_model.visualize_distribution(probabilities[0])
-        save_visualization(fig, os.path.join(output_dir, "topic_distribution.html"))
 
 # Save basic info about the model
 save_basic_info(topic_model, os.path.join(output_dir, "basic_info.txt"))
