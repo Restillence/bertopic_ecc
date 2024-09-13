@@ -66,13 +66,56 @@ def save_topics_distribution(topic_model, output_file):
     print(f"Topic distribution saved to {output_file}")
 
 # Save a visualization from BERTopic's built-in visualizations
-def save_visualization(fig, output_file):
-    print("Saving visualization...")
-    fig.write_image(output_file)
+def save_visualization(fig, output_file, file_format="png"):
+    print(f"Saving visualization to {output_file}...")
+    if file_format == "html":
+        fig.write_html(output_file)
+    else:
+        fig.write_image(output_file)
     print(f"Visualization saved to {output_file}")
+
 
 # Generate and save additional visualizations
 def generate_additional_visualizations(topic_model):
+    print("Generating additional visualizations...")
+    # Visualize Topics
+    fig = topic_model.visualize_topics()
+    save_visualization(fig, os.path.join(output_dir, "topics.html"), file_format="html")
+
+    # Visualize Documents
+    fig = topic_model.visualize_documents(topic_model.original_documents_)
+    save_visualization(fig, os.path.join(output_dir, "documents.html"), file_format="html")
+
+    # Visualize Document with DataMapPlot
+    fig = topic_model.visualize_document_datamap(topic_model.original_documents_)
+    save_visualization(fig, os.path.join(output_dir, "document_datamap.html"), file_format="html")
+
+    # Visualize Document Hierarchy
+    fig = topic_model.visualize_hierarchical_documents(topic_model.original_documents_)
+    save_visualization(fig, os.path.join(output_dir, "hierarchical_documents.html"), file_format="html")
+
+    # Visualize Topic Hierarchy
+    fig = topic_model.visualize_hierarchy()
+    save_visualization(fig, os.path.join(output_dir, "topic_hierarchy.html"), file_format="html")
+
+    # Visualize Topic Terms (BarChart)
+    fig = topic_model.visualize_barchart()
+    save_visualization(fig, os.path.join(output_dir, "topic_barchart.html"), file_format="html")
+
+    # Visualize Topic Similarity (Heatmap)
+    fig = topic_model.visualize_heatmap()
+    save_visualization(fig, os.path.join(output_dir, "topic_heatmap.html"), file_format="html")
+
+    # Visualize Term Score Decline (Term Rank)
+    fig = topic_model.visualize_term_rank()
+    save_visualization(fig, os.path.join(output_dir, "term_rank.html"), file_format="html")
+
+    # Visualize Topic Probability Distribution
+    probabilities = topic_model.probabilities_  # Assuming we visualize the first document's probabilities
+    if probabilities is not None:
+        fig = topic_model.visualize_distribution(probabilities[0])
+        save_visualization(fig, os.path.join(output_dir, "topic_distribution.html"), file_format="html")
+
     print("Generating additional visualizations...")
     # Visualize Topics
     fig = topic_model.visualize_topics()
