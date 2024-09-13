@@ -1,6 +1,7 @@
 from ecc_data_exploration import ECCDataExplorer
 from nlp_plots import NLPPlotter
 import os
+import torch
 
 def main():
     # Initialize ECCDataExplorer
@@ -31,6 +32,16 @@ def main():
 
     # Initialize NLPPlotter
     nlp_plotter = NLPPlotter(config_path="config.json")
+    
+    # If you're using torch for processing, move data to the GPU
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print(f"Using device: {device}")
+    
+    # Example of moving a tensor to GPU for processing
+    # Assuming you have some tensors or models
+    # model = YourModel().to(device)
+    # input_tensor = input_tensor.to(device)
+    # output = model(input_tensor)
     
     # Generate NLP-related plots
     nlp_plotter.plot_tfidf_top_terms(results_df)
