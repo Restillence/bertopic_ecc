@@ -102,7 +102,7 @@ def generate_additional_visualizations(topic_model):
     fig = topic_model.visualize_topics()
     save_visualization(fig, os.path.join(output_dir, "topics.html"), file_format="html")
 
-    # Visualize Documents
+    # Visualize Documents    #takes very long atm!!!
     print("Visualizing documents...")
     fig = topic_model.visualize_documents(topic_model.original_documents_)
     save_visualization(fig, os.path.join(output_dir, "documents.html"), file_format="html")

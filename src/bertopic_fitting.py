@@ -128,9 +128,14 @@ class BertopicFitting:
         
         # Save both the original (untransformed) documents and the transformed documents
         self.topic_model.original_documents_ = all_relevant_sections
-        
+
+        # Ensure the model is saved in a CPU-friendly format
+        print("Moving model to CPU for saving...")
+        device = torch.device('cpu')
+        self.topic_model.embedding_model.to(device)  # Move the embedding model to CPU
+
         # Save the model with transformed data and original documents
-        model_save_path_with_data = os.path.join(self.model_load_path, 'bertopic_model_with_data_and_docs')
+        model_save_path_with_data = os.path.join(self.model_load_path, 'bertopic_model_with_data_and_docs_cpu')
         self.topic_model.save(model_save_path_with_data)
         print(f"Model with transformed data and original documents saved to {model_save_path_with_data}.")
         
