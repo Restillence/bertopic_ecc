@@ -1,62 +1,47 @@
-"""
-This file creates descriptive statistics of the ecc data.
-"""
-
-#imports
-from file_handling import read_index_file, create_ecc_sample  # Import the file_handling module
-import pandas as pd
-import os
+#ecc_data_exploration.py
+import json
 import matplotlib.pyplot as plt
 import seaborn as sns
+import os
+import pandas as pd
 import numpy as np
 from nlp_plots import (
     plot_tfidf_top_terms,
     plot_topics_tsne_pca,
-    plot_ner,
     plot_ngram_frequencies,
     plot_sentiment_analysis,
     plot_keyword_cooccurrence,
     plot_word_length_distribution,
-    plot_pos_tagging_distribution,
     plot_bag_of_words,
-    plot_wordcloud
+    plot_wordcloud,
+    plot_pos_tagging_distribution,
+    plot_ner
 )
+from file_handling import FileHandler
+from text_processing import TextProcessor
 
+# Load the config.json
+with open("config.json", "r") as config_file:
+    config = json.load(config_file)
 
-#variables
-folderpath_ecc = "D:/daten_masterarbeit/Transcripts_Masterarbeit_full/"
-index_file_ecc_folder = "D:/daten_masterarbeit/"
-sample_size = 50  # number of unique companies where we want to create our sample from
-random_seed = 42  # Set a random seed for reproducibility
+# Extract variables from config.json
+folderpath_ecc = config["folderpath_ecc"]
+index_file_ecc_folder = config["index_file_ecc_folder"]
+ecc_plots_folder = config["ecc_plots_folder"]  # Add plot folder path
+sample_size = config["sample_size"]
+random_seed = config["random_seed"]
+index_file_path = os.path.join(index_file_ecc_folder, config["index_file_path"])
 
-#constants
-#nothing to change here
-index_file_path = index_file_ecc_folder + "list_earnings_call_transcripts.csv"
+# Assuming TextProcessor is initialized with method and section from config.json
+text_processor = TextProcessor(method=config["document_split"], section_to_analyze=config["section_to_analyze"])
 
-def load_data(index_file_path, sample_size, folderpath_ecc, random_seed):
-    # Set the random seed for reproducibility
+# Assuming FileHandler is initialized with the paths from config.json
+file_handler = FileHandler(index_file_path=index_file_path, folderpath_ecc=folderpath_ecc)
+
+def load_data(file_handler, sample_size, random_seed):
     np.random.seed(random_seed)
-
-    # Read the index file
-    index_file = read_index_file(index_file_path)
-    print("Index file loaded successfully.")
-
-    # Create sample of earnings conference calls
-    ecc_sample = create_ecc_sample(sample_size, index_file, folderpath_ecc)
+    ecc_sample = file_handler.create_ecc_sample(sample_size)
     return ecc_sample
-
-def display_sample(ecc_sample):
-    # Display the first 5 Companies of the sample (for demonstration)
-    print("\nHere is the sample of earnings conference calls:")
-    for i, (permco, calls) in enumerate(ecc_sample.items()):
-        if i >= 5:
-            break
-        for key, value in calls.items():
-            print(f"Permco_Key: {key}")
-            print(f"Company Name: {value[0]}")
-            print(f"Date: {value[1]}")
-            print(f"Text Content: {value[2][1000:1100]}...")  # Displaying some letters from the Text.
-            print()
 
 def convert_to_dataframe(ecc_sample):
     records = []
@@ -71,19 +56,44 @@ def convert_to_dataframe(ecc_sample):
                 'text': text,
                 'text_length': len(text.split())
             })
-    results_df = pd.DataFrame(records)
-    return results_df
+    return pd.DataFrame(records)
+
+def plot_paragraph_length_distribution(text_processor, results_df):
+    print("Computing paragraph word length distribution...")
+    paragraph_lengths = []
+
+    for _, row in results_df.iterrows():
+        paragraphs = text_processor.split_text(row['text'])  
+        paragraph_lengths.extend([len(paragraph.split()) for paragraph in paragraphs])
+
+    plt.figure(figsize=(10, 6))
+    sns.histplot(paragraph_lengths, bins=30, kde=True)
+    plt.title('Distribution of Paragraph Word Lengths')
+    plt.xlabel('Paragraph Length (Number of Words)')
+    plt.ylabel('Frequency')
+    plt.grid(True)
+
+    # Save plot
+    plot_path = os.path.join(ecc_plots_folder, 'paragraph_word_length_distribution.png')
+    plt.savefig(plot_path)
+    plt.close()
 
 def plot_ecc_length_distribution(results_df):
+    print("Computing ECC length distribution...")
     plt.figure(figsize=(10, 6))
     sns.histplot(results_df['text_length'], bins=30, kde=True)
     plt.title('Distribution of ECC Lengths')
     plt.xlabel('ECC Length (Number of Words)')
     plt.ylabel('Frequency')
     plt.grid(True)
-    plt.show()
+
+    # Save plot
+    plot_path = os.path.join(ecc_plots_folder, 'ecc_length_distribution.png')
+    plt.savefig(plot_path)
+    plt.close()
 
 def plot_ecc_length_by_company(results_df, top_n=20):
+    print("Computing ECC length by company...")
     top_companies = results_df['company_info'].value_counts().nlargest(top_n).index
     top_results_df = results_df[results_df['company_info'].isin(top_companies)]
 
@@ -94,9 +104,14 @@ def plot_ecc_length_by_company(results_df, top_n=20):
     plt.ylabel('ECC Length (Number of Words)')
     plt.xticks(rotation=90)
     plt.grid(True)
-    plt.show()
+
+    # Save plot
+    plot_path = os.path.join(ecc_plots_folder, 'ecc_length_by_company.png')
+    plt.savefig(plot_path)
+    plt.close()
 
 def plot_ecc_length_over_time(results_df):
+    print("Computing ECC length over time...")
     results_df['date'] = pd.to_datetime(results_df['date'])
     results_df = results_df.sort_values(by='date')
 
@@ -106,20 +121,32 @@ def plot_ecc_length_over_time(results_df):
     plt.xlabel('Date')
     plt.ylabel('ECC Length (Number of Words)')
     plt.grid(True)
-    plt.show()
 
-def plot_files_per_permco(results_df):
+    # Save plot
+    plot_path = os.path.join(ecc_plots_folder, 'ecc_length_over_time.png')
+    plt.savefig(plot_path)
+    plt.close()
+
+def plot_files_distribution(results_df):
+    print("Computing files distribution...")
+    file_counts = results_df['permco'].value_counts()
+
     plt.figure(figsize=(12, 8))
-    sns.countplot(x='permco', data=results_df, order=results_df['permco'].value_counts().index)
-    plt.title('Number of Files per Permco')
-    plt.xlabel('Permco')
-    plt.ylabel('Number of Files')
-    plt.xticks(rotation=90)
+    sns.histplot(file_counts, bins=30, kde=True)
+    plt.title('Distribution of Files per Permco')
+    plt.xlabel('Number of Files')
+    plt.ylabel('Frequency')
     plt.grid(True)
-    plt.show()
+
+    # Save plot
+    plot_path = os.path.join(ecc_plots_folder, 'files_distribution.png')
+    plt.savefig(plot_path)
+    plt.close()
 
 def plot_average_ecc_length_per_company(results_df):
+    print("Computing average ECC length per company...")
     avg_length_per_company = results_df.groupby('company_info')['text_length'].mean().sort_values(ascending=False).head(20)
+
     plt.figure(figsize=(12, 8))
     avg_length_per_company.plot(kind='bar')
     plt.title('Average ECC Length by Top 20 Companies')
@@ -127,10 +154,15 @@ def plot_average_ecc_length_per_company(results_df):
     plt.ylabel('Average ECC Length (Number of Words)')
     plt.xticks(rotation=90)
     plt.grid(True)
-    plt.show()
+
+    # Save plot
+    plot_path = os.path.join(ecc_plots_folder, 'average_ecc_length_per_company.png')
+    plt.savefig(plot_path)
+    plt.close()
 
 def plot_ecc_length_distribution_by_year(results_df):
-    results_df['year'] = results_df['date'].dt.year
+    print("Computing ECC length distribution by year...")
+    results_df['year'] = pd.to_datetime(results_df['date']).dt.year  # Convert date to year
     plt.figure(figsize=(12, 8))
     sns.boxplot(x='year', y='text_length', data=results_df)
     plt.title('ECC Length Distribution by Year')
@@ -138,34 +170,35 @@ def plot_ecc_length_distribution_by_year(results_df):
     plt.ylabel('ECC Length (Number of Words)')
     plt.xticks(rotation=90)
     plt.grid(True)
-    plt.show()
 
-def plot_files_distribution(results_df):
-    file_counts = results_df['permco'].value_counts()
-    plt.figure(figsize=(12, 8))
-    sns.histplot(file_counts, bins=30, kde=True)
-    plt.title('Distribution of Files per Permco')
-    plt.xlabel('Number of Files')
-    plt.ylabel('Frequency')
-    plt.grid(True)
-    plt.show()
+    # Save plot
+    plot_path = os.path.join(ecc_plots_folder, 'ecc_length_distribution_by_year.png')
+    plt.savefig(plot_path)
+    plt.close()
+
 
 def additional_descriptive_statistics(results_df):
+    print("Computing additional descriptive statistics...")
+    # Calculate the number of unique companies
     num_unique_companies = results_df['company_info'].nunique()
 
+    # Calculate calls per company
     calls_per_company = results_df['company_info'].value_counts().to_frame().reset_index()
     calls_per_company.columns = ['Company', 'Number of Calls']
 
+    # Calculate the top 5 companies by average ECC length
     top5_avg_length = results_df.groupby('company_info')['text_length'].mean().sort_values(ascending=False).head(5).to_frame().reset_index()
     top5_avg_length.columns = ['Company', 'Average ECC Length']
 
-    # Create tables
+    # Create summary statistics table
     summary_stats = results_df.describe().transpose()
     summary_stats_table = pd.DataFrame(summary_stats)
 
     return num_unique_companies, calls_per_company, top5_avg_length, summary_stats_table
 
+
 def display_tables(num_unique_companies, calls_per_company, top5_avg_length, summary_stats_table, output_html_path):
+    # Display tables in HTML
     html_content = f"""
     <html>
     <head>
@@ -192,6 +225,7 @@ def display_tables(num_unique_companies, calls_per_company, top5_avg_length, sum
     </html>
     """
 
+    # Save HTML content to file
     with open(output_html_path, "w") as file:
         file.write(html_content)
 
@@ -204,32 +238,41 @@ def display_tables(num_unique_companies, calls_per_company, top5_avg_length, sum
     print(top5_avg_length.to_string(index=False))
     print(f"\nTables have been saved to {output_html_path}")
 
+
+
 def main():
-    ecc_sample = load_data(index_file_path, sample_size, folderpath_ecc, random_seed)
-    display_sample(ecc_sample)
+    ecc_sample = load_data(file_handler, sample_size, random_seed)
     results_df = convert_to_dataframe(ecc_sample)
+
+    # Plotting different statistics
+    plot_paragraph_length_distribution(text_processor, results_df)
     plot_ecc_length_distribution(results_df)
     plot_ecc_length_by_company(results_df)
     plot_ecc_length_over_time(results_df)
     plot_files_distribution(results_df)
     plot_average_ecc_length_per_company(results_df)
-    plot_ecc_length_distribution_by_year(results_df)
-    plot_bag_of_words(results_df) #add it back later
-    plot_wordcloud(results_df) #add it back later
-    plot_tfidf_top_terms(results_df)
+    plot_ecc_length_distribution_by_year(results_df)  # Ensure this is included
+
+    # Add NLP-related plots
+    plot_bag_of_words(results_df)
+    plot_wordcloud(results_df)
+    #plot_tfidf_top_terms(results_df)
     plot_topics_tsne_pca(results_df)
-    #plot_ner(results_df) #very computational intensive!
-    plot_ngram_frequencies(results_df, n=2)
-    plot_ngram_frequencies(results_df, n=3)
-    plot_sentiment_analysis(results_df) #add it back later
+    #plot_ngram_frequencies(results_df, n=2)  # Bigrams
+    #plot_ngram_frequencies(results_df, n=3)  # Trigrams
+    plot_sentiment_analysis(results_df)
     plot_keyword_cooccurrence(results_df)
     plot_word_length_distribution(results_df)
-    #plot_pos_tagging_distribution(results_df) #very computational intensive!
-    
+    #plot_pos_tagging_distribution(results_df)
+    #plot_ner(results_df)
+
+    # Descriptive statistics and saving tables
     num_unique_companies, calls_per_company, top5_avg_length, summary_stats_table = additional_descriptive_statistics(results_df)
-    output_html_path = os.path.join(index_file_ecc_folder, 'ecc_statistics.html')
+    output_html_path = os.path.join(ecc_plots_folder, 'ecc_statistics.html')  # Save in ecc_plots_folder
     display_tables(num_unique_companies, calls_per_company, top5_avg_length, summary_stats_table, output_html_path)
-    print(f"HTML report has been saved to {output_html_path}")
+
+    print(f"All plots and reports have been saved in: {ecc_plots_folder}")
+
 
 if __name__ == "__main__":
     main()
