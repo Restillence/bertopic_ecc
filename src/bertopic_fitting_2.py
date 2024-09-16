@@ -115,17 +115,17 @@ class BertopicFitting:
         print("Transforming documents with the BERTopic model...")
 
         # Transform documents and get topics and probabilities
-        topics, probabilities = self.topic_model.fit_transform(all_relevant_sections)
+        topics, probabilities = self.topic_model.transform(all_relevant_sections)
 
         # Save the transformed topics and probabilities to the model
         self.topic_model.topics_ = topics
         self.topic_model.probabilities_ = probabilities
-
+        """
         # Reduce the number of topics if specified
         if self.nr_topics is not None:
             print(f"Reducing the number of topics to {self.nr_topics}...")
             self.topic_model = self.topic_model.reduce_topics(docs=all_relevant_sections, nr_topics=self.nr_topics)
-
+        """
         end_time = time.time()
         print(f"BERTopic model transformed{' and reduced topics' if self.nr_topics else ''} for {len(all_relevant_sections)} sections in {end_time - bertopic_start_time:.2f} seconds.")
 
