@@ -114,8 +114,12 @@ class BertopicFitting:
         bertopic_start_time = time.time()
         print("Transforming documents with the BERTopic model...")
 
-        # Transform documents
+        # Transform documents and get topics and probabilities
         topics, probabilities = self.topic_model.transform(all_relevant_sections)
+
+        # Save the transformed topics and probabilities to the model
+        self.topic_model.topics_ = topics
+        self.topic_model.probabilities_ = probabilities
 
         # Reduce the number of topics if specified
         if self.nr_topics is not None:
