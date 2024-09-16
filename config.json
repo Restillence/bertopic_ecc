@@ -12,12 +12,12 @@
     "finbert_model_path": "D:/daten_masterarbeit/finbert-sentence-transformer",
 
 
-    "modeling_type": "zeroshot",  
-    "sample_size": 1729,
+    "modeling_type": "regular",  
+    "sample_size": 5,
     "document_split": "paragraphs",
     "random_seed": 43,
     "section_to_analyze": "Presentation",
-    "max_documents": 30000000000,
+    "max_documents": 300000000,
   
     "vectorizer_model_params": {
       "ngram_range": [1, 3],
