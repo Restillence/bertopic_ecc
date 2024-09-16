@@ -109,7 +109,7 @@ class BertopicFitting:
 
     def fit_and_save(self, all_relevant_sections, ecc_sample):
         """
-        Fit the BERTopic model, reduce the number of topics, save results, and generate visualizations.
+        Fit the BERTopic model, save results, and generate visualizations.
         """
         bertopic_start_time = time.time()
         print("Transforming documents with the BERTopic model...")
@@ -120,14 +120,12 @@ class BertopicFitting:
         # Save the transformed topics and probabilities to the model
         self.topic_model.topics_ = topics
         self.topic_model.probabilities_ = probabilities
-        """
-        # Reduce the number of topics if specified
-        if self.nr_topics is not None:
-            print(f"Reducing the number of topics to {self.nr_topics}...")
-            self.topic_model = self.topic_model.reduce_topics(docs=all_relevant_sections, nr_topics=self.nr_topics)
-        """
+
+        # Ensure original documents are saved for visualization
+        self.topic_model.original_documents_ = all_relevant_sections
+
         end_time = time.time()
-        print(f"BERTopic model transformed{' and reduced topics' if self.nr_topics else ''} for {len(all_relevant_sections)} sections in {end_time - bertopic_start_time:.2f} seconds.")
+        print(f"BERTopic model transformed for {len(all_relevant_sections)} sections in {end_time - bertopic_start_time:.2f} seconds.")
 
         # Save the results to CSV and store results_df
         self.save_results(all_relevant_sections, self.topic_model.topics_, ecc_sample)
