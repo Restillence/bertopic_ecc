@@ -1,0 +1,21 @@
+Number of Topics: 310
+
+Top 5 Topics by Frequency:
+   Topic    Count                                        Name                                                                                                Representation  Representative_Docs
+0     -1  1699758      -1_earnings_revenues_revenue_financial                 [earnings, revenues, revenue, financial, expenses, sales, expense, income, company, business]                  NaN
+1      0    41247  0_cash flow_cash_balance sheet_investments               [cash flow, cash, balance sheet, investments, capital, leverage, fiscal, pay, company, quarter]                  NaN
+2      1    23519       1_open_questions_closing_look forward                           [open, questions, closing, look forward, calls, question, close, sure, begin, come]                  NaN
+3      2    18485  2_strategic_success_profitability_business        [strategic, success, profitability, business, strategy, businesses, improving, company, plan, focused]                  NaN
+4      3    15369     3_financial results_future_risk_results  [financial results, future, risk, results, anticipated, financial, earnings, remarks, press release, report]                  NaN
+
+Top words for Topic 0:
+  - cash flow: 0.7351816892623901
+  - cash: 0.48618969321250916
+  - balance sheet: 0.4468240737915039
+  - investments: 0.4163258671760559
+  - capital: 0.34441938996315
+  - leverage: 0.3266236186027527
+  - fiscal: 0.30603617429733276
+  - pay: 0.2496534138917923
+  - company: 0.2420915961265564
+  - quarter: 0.24194665253162384

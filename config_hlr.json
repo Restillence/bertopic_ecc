@@ -11,7 +11,7 @@
     "ecc_plots_folder": "/plots/ecc_plots",
   
     "modeling_type": "regular",  
-    "sample_size": 1729,
+    "sample_size": 30,
     "document_split": "paragraphs",
     "random_seed": 43,
     "section_to_analyze": "Presentation",

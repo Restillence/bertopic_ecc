@@ -13,7 +13,7 @@
 
 
     "modeling_type": "regular",  
-    "sample_size": 5,
+    "sample_size": 2,
     "document_split": "paragraphs",
     "random_seed": 43,
     "section_to_analyze": "Presentation",
