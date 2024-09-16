@@ -109,11 +109,7 @@ class BertopicFitting:
 
     def fit_and_save(self, all_relevant_sections, ecc_sample):
         """
-        Fit the BERTopic model, save results, and generate visualizations.
-
-        Args:
-            all_relevant_sections (list): List of all relevant sections from the ECC sample.
-            ecc_sample (dict): Dictionary containing the ECC sample data.
+        Fit the BERTopic model, reduce the number of topics, save results, and generate visualizations.
         """
         bertopic_start_time = time.time()
         print("Transforming documents with the BERTopic model...")
@@ -121,10 +117,15 @@ class BertopicFitting:
         # Transform documents
         topics, probabilities = self.topic_model.transform(all_relevant_sections)
 
+        # Save the topics and probabilities to the BERTopic model
+        self.topic_model.topics_ = topics
+        self.topic_model.probabilities_ = probabilities
+        self.topic_model.original_documents_ = all_relevant_sections
+
         # Reduce the number of topics if specified
         if self.nr_topics is not None:
             print(f"Reducing the number of topics to {self.nr_topics}...")
-            self.topic_model.reduce_topics(all_relevant_sections, nr_topics=self.nr_topics)
+            self.topic_model.reduce_topics(nr_topics=self.nr_topics)
 
             # Get the updated topics and probabilities
             topics = self.topic_model.topics_
@@ -132,11 +133,6 @@ class BertopicFitting:
 
         end_time = time.time()
         print(f"BERTopic model transformed{' and reduced topics' if self.nr_topics else ''} for {len(all_relevant_sections)} sections in {end_time - bertopic_start_time:.2f} seconds.")
-
-        # Save the topics and probabilities to the BERTopic model
-        self.topic_model.topics_ = topics
-        self.topic_model.probabilities_ = probabilities
-        self.topic_model.original_documents_ = all_relevant_sections
 
         # Save the results to CSV and store results_df
         self.save_results(all_relevant_sections, topics, ecc_sample)
