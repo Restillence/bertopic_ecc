@@ -4,20 +4,24 @@ from sentence_transformers import SentenceTransformer
 import matplotlib.pyplot as plt
 import os
 import time
+import torch
 
 # Load configuration from config.json
 with open("config_hlr.json", 'r') as f:
     config = json.load(f)
 
 # Get the correct model path from the config
-model_load_path_with_data = config["model_load_path_with_data"]
+model_load_path_with_data = os.path.abspath(config["model_load_path_with_data"])
 print(f"Model load path with data: {model_load_path_with_data}")
 
 # Start tracking time for loading the model
 start_time = time.time()
 
+# Load the embedding model to GPU if available
+device = "cuda" if torch.cuda.is_available() else "cpu"
+
 # Load the embedding model to GPU
-embedding_model = SentenceTransformer(config["embedding_model_choice"], device="cuda")
+embedding_model = SentenceTransformer(config["embedding_model_choice"], device=device)
 
 # Load the BERTopic model from the local path onto the GPU
 topic_model = BERTopic.load(model_load_path_with_data, embedding_model=embedding_model)
