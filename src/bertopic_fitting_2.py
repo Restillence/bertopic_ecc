@@ -115,7 +115,7 @@ class BertopicFitting:
         print("Transforming documents with the BERTopic model...")
 
         # Transform documents and get topics and probabilities
-        topics, probabilities = self.topic_model.transform(all_relevant_sections)
+        topics, probabilities = self.topic_model.fit_transform(all_relevant_sections)
 
         # Save the transformed topics and probabilities to the model
         self.topic_model.topics_ = topics
