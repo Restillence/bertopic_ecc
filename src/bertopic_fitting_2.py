@@ -30,6 +30,7 @@ class BertopicFitting:
         self.index_file_ecc_folder = config["index_file_ecc_folder"]
         self.output_dir = "model_outputs"
         os.makedirs(self.output_dir, exist_ok=True)
+        self.nr_topics = config.get("nr_topics", None)  # Get the number of topics from config
 
     def _load_bertopic_model(self):
         """
@@ -120,8 +121,17 @@ class BertopicFitting:
         # Transform documents
         topics, probabilities = self.topic_model.transform(all_relevant_sections)
 
+        # Reduce the number of topics if specified
+        if self.nr_topics is not None:
+            print(f"Reducing the number of topics to {self.nr_topics}...")
+            self.topic_model.reduce_topics(all_relevant_sections, nr_topics=self.nr_topics)
+
+            # Get the updated topics and probabilities
+            topics = self.topic_model.topics_
+            probabilities = self.topic_model.probabilities_
+
         end_time = time.time()
-        print(f"BERTopic model transformed {len(all_relevant_sections)} sections in {end_time - bertopic_start_time:.2f} seconds.")
+        print(f"BERTopic model transformed{' and reduced topics' if self.nr_topics else ''} for {len(all_relevant_sections)} sections in {end_time - bertopic_start_time:.2f} seconds.")
 
         # Save the topics and probabilities to the BERTopic model
         self.topic_model.topics_ = topics
@@ -247,59 +257,59 @@ class BertopicFitting:
         end_time = time.time()
         print(f"All visualizations generated and saved in {end_time - start_time:.2f} seconds.")
 
-def visualize_topics_over_time(self):
-    """
-    Generate and save the Topics over Time visualization.
-    """
-    try:
-        start_time = time.time()
+    def visualize_topics_over_time(self):
+        """
+        Generate and save the Topics over Time visualization.
+        """
+        try:
+            start_time = time.time()
 
-        # Prepare the data
-        timestamps = []
-        documents = []
+            # Prepare the data
+            timestamps = []
+            documents = []
 
-        for index, row in self.results_df.iterrows():
-            date = row['date']  # The date of the conference call
-            sections = json.loads(row['text'])  # List of sections (paragraphs)
-            num_sections = len(sections)
-            timestamps.extend([date] * num_sections)
-            documents.extend(sections)
+            for index, row in self.results_df.iterrows():
+                date = row['date']  # The date of the conference call
+                sections = json.loads(row['text'])  # List of sections (paragraphs)
+                num_sections = len(sections)
+                timestamps.extend([date] * num_sections)
+                documents.extend(sections)
 
-        # Convert timestamps to datetime objects
-        timestamps = pd.to_datetime(timestamps)
+            # Convert timestamps to datetime objects
+            timestamps = pd.to_datetime(timestamps)
 
-        # Ensure that the number of timestamps matches the number of documents
-        if len(timestamps) != len(documents):
-            raise ValueError("Number of timestamps does not match the number of documents.")
+            # Ensure that the number of timestamps matches the number of documents
+            if len(timestamps) != len(documents):
+                raise ValueError("Number of timestamps does not match the number of documents.")
 
-        # Set the number of bins to a value lower than 100
-        nr_bins = 50  # Adjust as needed
+            # Set the number of bins to a value lower than 100
+            nr_bins = 50  # Adjust as needed
 
-        # Generate topics over time with the specified number of bins
-        topics_over_time = self.topic_model.topics_over_time(
-            documents,
-            timestamps,
-            nr_bins=nr_bins
-        )
+            # Generate topics over time with the specified number of bins
+            topics_over_time = self.topic_model.topics_over_time(
+                documents,
+                timestamps,
+                nr_bins=nr_bins
+            )
 
-        # Check if topics_over_time is empty
-        if topics_over_time.empty:
-            print("No data available for topics over time visualization.")
-            return
+            # Check if topics_over_time is empty
+            if topics_over_time.empty:
+                print("No data available for topics over time visualization.")
+                return
 
-        # Visualize topics over time
-        fig = self.topic_model.visualize_topics_over_time(topics_over_time)
-        self.save_visualization(
-            fig,
-            os.path.join(self.output_dir, "topics_over_time.html"),
-            file_format="html"
-        )
+            # Visualize topics over time
+            fig = self.topic_model.visualize_topics_over_time(topics_over_time)
+            self.save_visualization(
+                fig,
+                os.path.join(self.output_dir, "topics_over_time.html"),
+                file_format="html"
+            )
 
-        end_time = time.time()
-        print(f"Topics over time visualization saved in {end_time - start_time:.2f} seconds.")
+            end_time = time.time()
+            print(f"Topics over time visualization saved in {end_time - start_time:.2f} seconds.")
 
-    except Exception as e:
-        print(f"An error occurred in visualize_topics_over_time: {e}")
+        except Exception as e:
+            print(f"An error occurred in visualize_topics_over_time: {e}")
 
     def visualize_documents(self):
         """
@@ -318,13 +328,13 @@ def main():
     """
     Main entry point of the script.
 
-    This function loads the configuration from `config_hlr.json`, sets the random seed, and extracts the necessary variables from the config.
+    This function loads the configuration from `config.json`, sets the random seed, and extracts the necessary variables from the config.
     Then, it initializes the `FileHandler` and `TextProcessor` classes with the imported configuration, creates the ECC sample, and extracts the relevant sections.
     Finally, it fits the BERTopic model, saves the results, and generates visualizations.
     """
-    # Load configuration from config_hlr.json
+    # Load configuration from config.json
     print("Loading configuration...")
-    with open('config_hlr.json', 'r') as f:
+    with open('config.json', 'r') as f:
         config = json.load(f)
     print_configuration(config)
 
