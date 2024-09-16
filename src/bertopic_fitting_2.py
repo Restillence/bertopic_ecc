@@ -247,48 +247,59 @@ class BertopicFitting:
         end_time = time.time()
         print(f"All visualizations generated and saved in {end_time - start_time:.2f} seconds.")
 
-    def visualize_topics_over_time(self):
-        """
-        Generate and save the Topics over Time visualization.
-        """
-        try:
-            start_time = time.time()
+def visualize_topics_over_time(self):
+    """
+    Generate and save the Topics over Time visualization.
+    """
+    try:
+        start_time = time.time()
 
-            # Prepare the data
-            timestamps = []
-            documents = []
+        # Prepare the data
+        timestamps = []
+        documents = []
 
-            for index, row in self.results_df.iterrows():
-                date = row['date']  # The date of the conference call
-                sections = json.loads(row['text'])  # List of sections (paragraphs)
-                num_sections = len(sections)
-                timestamps.extend([date] * num_sections)
-                documents.extend(sections)
+        for index, row in self.results_df.iterrows():
+            date = row['date']  # The date of the conference call
+            sections = json.loads(row['text'])  # List of sections (paragraphs)
+            num_sections = len(sections)
+            timestamps.extend([date] * num_sections)
+            documents.extend(sections)
 
-            # Convert timestamps to datetime objects
-            timestamps = pd.to_datetime(timestamps)
+        # Convert timestamps to datetime objects
+        timestamps = pd.to_datetime(timestamps)
 
-            # Ensure that the number of timestamps matches the number of documents
-            if len(timestamps) != len(documents):
-                raise ValueError("Number of timestamps does not match the number of documents.")
+        # Ensure that the number of timestamps matches the number of documents
+        if len(timestamps) != len(documents):
+            raise ValueError("Number of timestamps does not match the number of documents.")
 
-            # Generate topics over time
-            topics_over_time = self.topic_model.topics_over_time(documents, timestamps)
+        # Set the number of bins to a value lower than 100
+        nr_bins = 50  # Adjust as needed
 
-            # Check if topics_over_time is empty
-            if topics_over_time.empty:
-                print("No data available for topics over time visualization.")
-                return
+        # Generate topics over time with the specified number of bins
+        topics_over_time = self.topic_model.topics_over_time(
+            documents,
+            timestamps,
+            nr_bins=nr_bins
+        )
 
-            # Visualize topics over time
-            fig = self.topic_model.visualize_topics_over_time(topics_over_time)
-            self.save_visualization(fig, os.path.join(self.output_dir, "topics_over_time.html"), file_format="html")
+        # Check if topics_over_time is empty
+        if topics_over_time.empty:
+            print("No data available for topics over time visualization.")
+            return
 
-            end_time = time.time()
-            print(f"Topics over time visualization saved in {end_time - start_time:.2f} seconds.")
+        # Visualize topics over time
+        fig = self.topic_model.visualize_topics_over_time(topics_over_time)
+        self.save_visualization(
+            fig,
+            os.path.join(self.output_dir, "topics_over_time.html"),
+            file_format="html"
+        )
 
-        except Exception as e:
-            print(f"An error occurred in visualize_topics_over_time: {e}")
+        end_time = time.time()
+        print(f"Topics over time visualization saved in {end_time - start_time:.2f} seconds.")
+
+    except Exception as e:
+        print(f"An error occurred in visualize_topics_over_time: {e}")
 
     def visualize_documents(self):
         """
