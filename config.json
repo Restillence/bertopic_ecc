@@ -18,8 +18,6 @@
     "section_to_analyze": "Presentation",
     "max_documents": 300000000,
 
-    "nr_topics": 30,  
-  
     "vectorizer_model_params": {
       "ngram_range": [1, 3],
       "stop_words": "english",

@@ -30,7 +30,7 @@ class BertopicFitting:
         self.index_file_ecc_folder = config["index_file_ecc_folder"]
         self.output_dir = "model_outputs"
         os.makedirs(self.output_dir, exist_ok=True)
-        self.nr_topics = config.get("nr_topics", None)  # Get the number of topics from config
+        #self.nr_topics = config.get("nr_topics", None)  # Get the number of topics from config
 
     def _load_bertopic_model(self):
         """
