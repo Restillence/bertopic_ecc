@@ -109,33 +109,25 @@
     "doc_chunk_size": 500,
 
     "zeroshot_topic_list": [
-      "Welcome",
-      "Revenue",
-      "Cost",
-      "Earnings",
+      "Welcome and Introduction",
+      "Revenue and Sales",
+      "Expenses and Costs",
+      "Earnings and Profit",
       "Marketing",
-      "Outlook",
-      "outliers"
+      "Outlook and Forward Looking statements"
     ],
     
     "zeroshot_topic_list_middle_length": [
-      "Opening",
-      "Introduction",
-      "Welcome",
-      "Revenue",
-      "Cost",
-      "Earnings",
+      "Welcome and Introduction",
+      "Revenue and Sales",
+      "Expenses and Costs",
+      "Earnings and Profit",
       "Marketing",
-      "Outlook",
-      "Product Development",
-      "Market Expansion",
-      "Operational Challenges",
-      "Strategic Initiatives",
-      "Regulatory Compliance",
-      "Customer Relations",
-      "Risk Management",
-      "Investor Relations",
-      "outliers"
+      "Strategy",
+      "Operations",
+      "Guidance and Financial Projections",
+      "Capital Allocation",
+      "Risk Management"
     ]
 }  
   
