@@ -18,7 +18,7 @@
   "vectorizer_model_params": {
       "ngram_range": [1, 3],
       "stop_words": "english",
-      "min_df": 0.1
+      "min_df": 0.01
   },
   "umap_model_params": {
       "n_neighbors": 15,
@@ -95,17 +95,18 @@
   ],
   "zeroshot_min_similarity": 0.00,
   "embedding_model": "D:/daten_masterarbeit/finbert-sentence-transformer",
-  "min_topic_size": 15,
+  "min_topic_size": 3,
   "doc_chunk_size": 500,
+
   "zeroshot_topic_list": [
-      "Welcome",
-      "Revenue",
-      "Cost",
-      "Earnings",
-      "Marketing",
-      "Outlook",
-      "outliers"
+    "Welcome and Introduction",
+    "Revenue and Sales",
+    "Expenses and Costs",
+    "Earnings and Profit",
+    "Marketing",
+    "Outlook and Forward Looking statements"
   ],
+  
   "zeroshot_topic_list_middle_length": [
       "Opening",
       "Introduction",
