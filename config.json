@@ -10,7 +10,6 @@
     
     "ecc_plots_folder": "C:/Users/nikla/OneDrive/Dokumente/winfoMaster/Masterarbeit/bertopic_ecc/plots/ecc_plots",
     "finbert_model_path": "D:/daten_masterarbeit/finbert-sentence-transformer",
-  "nr_topics": 30,  
 
     "modeling_type": "regular",  
     "sample_size": 2,
