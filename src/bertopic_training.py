@@ -3,6 +3,7 @@ import json
 import time
 import numpy as np
 import torch  # For checking if GPU is available
+import threading #For Heartbeat functionallity
 from bertopic import BERTopic
 from bertopic.representation import KeyBERTInspired, MaximalMarginalRelevance
 from file_handling import FileHandler  # Import the FileHandler class
@@ -40,12 +41,12 @@ class BertopicModel:
             The type of modeling used.
         doc_chunk_size : int
             The number of documents to process in each chunk. (only for iterative modeling)
-        device : str
-            The device to use for training, either "cpu" or "cuda" if gpu is available.
+        device : torch.device
+            The device to use for training, either "cpu" or "cuda" if GPU is available.
         topic_model : BERTopic
             The trained topic model.
-        model : SentenceTransformer
-            The trained sentence transformer model.
+        model : SentenceTransformer or Pipeline
+            The trained sentence transformer model or FinBERT pipeline.
         """
         self.config = config
         self.model_save_path = config["model_save_path"]
@@ -56,13 +57,12 @@ class BertopicModel:
         self.model = self._select_embedding_model(config)  # Load the appropriate embedding model based on config
 
     def _select_device(self):
-        # Check if GPU is available and return the correct device
         """Check if GPU is available and return the correct device.
 
         Returns
         -------
-        device : torch.device
-            The device to use for training, either "cpu" or "cuda" if gpu is available.
+        torch.device
+            The device to use for training, either "cpu" or "cuda" if GPU is available.
         """
         if torch.cuda.is_available():
             print("GPU is available. Using GPU...")
@@ -72,9 +72,7 @@ class BertopicModel:
             return torch.device("cpu")
 
     def _select_embedding_model(self, config):
-        # Select the embedding model based on the config setting
-        """
-        Select the embedding model based on the config setting. Possible choices are:
+        """Select the embedding model based on the config setting. Possible choices are:
 
         - "all-MiniLM-L12-v2": SentenceTransformer model: all-MiniLM-L12-v2
         - "finbert-local": FinBERT model from local path
@@ -87,7 +85,7 @@ class BertopicModel:
 
         Returns
         -------
-        model : SentenceTransformer
+        SentenceTransformer or Pipeline
             The selected embedding model.
 
         Raises
@@ -117,24 +115,13 @@ class BertopicModel:
             raise ValueError(f"Unknown embedding model choice: {embedding_choice}")
     
     def _load_finbert_pipeline(self):
-        """
-        Load the FinBERT model from the Hugging Face pipeline.
-
-        Parameters
-        ----------
-        None
+        """Load the FinBERT model from the Hugging Face pipeline.
 
         Returns
         -------
-        pipe : Pipeline
+        Pipeline
             The loaded FinBERT model pipeline.
-
-        Notes
-        -----
-        This function returns a Hugging Face pipeline object with the FinBERT model and tokenizer.
-        The `device` parameter is set to 0 if the device is "cuda", otherwise it is set to -1.
         """
-        
         print(f"Loading FinBERT model pipeline from HuggingFace on {self.device}...")
         
         # Load the tokenizer
@@ -145,20 +132,16 @@ class BertopicModel:
         tokenizer.truncation = True
 
         # Set up the pipeline with the model and tokenizer
-        pipe = pipeline("feature-extraction",
-                        model="yiyanghkust/finbert-pretrain",
-                        tokenizer=tokenizer,
-                        device=0 if self.device == "cuda" else -1)
+        pipe = pipeline(
+            "feature-extraction",
+            model="yiyanghkust/finbert-pretrain",
+            tokenizer=tokenizer,
+            device=0 if self.device.type == "cuda" else -1
+        )
         return pipe
 
-
     def _initialize_bertopic_model(self):
-        """
-        Initialize the BERTopic model with the specified parameters.
-
-        Parameters
-        ----------
-        None
+        """Initialize the BERTopic model with the specified parameters.
 
         Returns
         -------
@@ -167,22 +150,28 @@ class BertopicModel:
         """
         print(f"Embedding Model used: {self.model}...")
         # Initialize CountVectorizer
-        vectorizer_model = CountVectorizer(ngram_range=tuple(self.config["vectorizer_model_params"]["ngram_range"]),
-                                           stop_words=self.config["vectorizer_model_params"]["stop_words"],
-                                           min_df=self.config["vectorizer_model_params"]["min_df"])
+        vectorizer_model = CountVectorizer(
+            ngram_range=tuple(self.config["vectorizer_model_params"]["ngram_range"]),
+            stop_words=self.config["vectorizer_model_params"]["stop_words"],
+            min_df=self.config["vectorizer_model_params"]["min_df"]
+        )
 
         # Initialize UMAP
-        umap_model = UMAP(n_neighbors=self.config["umap_model_params"]["n_neighbors"],
-                          n_components=self.config["umap_model_params"]["n_components"],
-                          min_dist=self.config["umap_model_params"]["min_dist"],
-                          metric=self.config["umap_model_params"]["metric"],
-                          random_state=42)
+        umap_model = UMAP(
+            n_neighbors=self.config["umap_model_params"]["n_neighbors"],
+            n_components=self.config["umap_model_params"]["n_components"],
+            min_dist=self.config["umap_model_params"]["min_dist"],
+            metric=self.config["umap_model_params"]["metric"],
+            random_state=42
+        )
 
         # Initialize HDBSCAN
-        hdbscan_model = HDBSCAN(min_cluster_size=self.config["hdbscan_model_params"]["min_cluster_size"],
-                                metric=self.config["hdbscan_model_params"]["metric"],
-                                cluster_selection_method=self.config["hdbscan_model_params"]["cluster_selection_method"],
-                                prediction_data=self.config["hdbscan_model_params"]["prediction_data"])
+        hdbscan_model = HDBSCAN(
+            min_cluster_size=self.config["hdbscan_model_params"]["min_cluster_size"],
+            metric=self.config["hdbscan_model_params"]["metric"],
+            cluster_selection_method=self.config["hdbscan_model_params"]["cluster_selection_method"],
+            prediction_data=self.config["hdbscan_model_params"]["prediction_data"]
+        )
 
         # Initialize KeyBERTInspired and MaximalMarginalRelevance using the parameters from config
         keybert_model = KeyBERTInspired(top_n_words=self.config["keybert_params"]["top_n_words"])
@@ -198,7 +187,8 @@ class BertopicModel:
                 vectorizer_model=vectorizer_model,
                 zeroshot_topic_list=self.config["zeroshot_topic_list"],
                 zeroshot_min_similarity=self.config["zeroshot_min_similarity"],
-                representation_model=[keybert_model, mmr_model]
+                representation_model=[keybert_model, mmr_model],
+                min_topic_size=self.config.get("min_topic_size", 15)  # Ensure smaller topics can be captured
             )
         else:
             print("Initializing regular BERTopic model...")
@@ -207,12 +197,31 @@ class BertopicModel:
                 umap_model=umap_model,
                 hdbscan_model=hdbscan_model,
                 vectorizer_model=vectorizer_model,
-                representation_model=[keybert_model, mmr_model]  # Combined representation
+                representation_model=[keybert_model, mmr_model],  # Combined representation
+                min_topic_size=self.config.get("min_topic_size", 15)  # Ensure smaller topics can be captured
             )
 
-    def train(self, docs):
+    def _heartbeat(self, stop_event, interval=60):
+        """Periodically print a heartbeat message to keep the connection alive.
+
+        Parameters
+        ----------
+        stop_event : threading.Event
+            Event to signal the thread to stop.
+        interval : int
+            Time interval in seconds between heartbeat messages. Default is 900 (15 minutes).
+
+        Returns
+        -------
+        None
         """
-        Train the BERTopic model using the specified modeling type.
+        while not stop_event.is_set():
+            elapsed_time = time.strftime('%H:%M:%S', time.gmtime(time.time() - self.start_time))
+            print(f"[Heartbeat] Still working... Time elapsed: {elapsed_time}")
+            stop_event.wait(interval)
+
+    def train(self, docs):
+        """Train the BERTopic model using the specified modeling type.
 
         Parameters
         ----------
@@ -232,8 +241,7 @@ class BertopicModel:
             self._train_regular(docs)
 
     def _train_regular(self, docs):
-        """
-        Train the BERTopic model using the regular approach.
+        """Train the BERTopic model using the regular approach.
 
         Parameters
         ----------
@@ -248,20 +256,43 @@ class BertopicModel:
         self.topic_model = self._initialize_bertopic_model()
 
         # Start timer
-        start_time = time.time()
+        self.start_time = time.time()
+
+        # Initialize the stop event for the heartbeat thread
+        stop_event = threading.Event()
+
+        # Start the heartbeat thread
+        heartbeat_thread = threading.Thread(target=self._heartbeat, args=(stop_event,))
+        heartbeat_thread.daemon = True  # Ensures the thread exits when the main program does
+        heartbeat_thread.start()
 
         # Train the BERTopic model
         print(f"Training BERTopic model using the following modeling type: {self.modeling_type}...")
         try:
             topics, probs = self.topic_model.fit_transform(docs)
 
+            # Handle None values in topics (assign -1 to unassigned topics)
+            topics = [topic if topic is not None else -1 for topic in topics]
+
             # Print document count per topic for debugging
             topic_doc_count = {topic: topics.count(topic) for topic in set(topics)}
             print("Document count per topic:", topic_doc_count)
 
+            # Assign topics and probabilities to the model
+            self.topic_model.topics_ = topics
+            self.topic_model.probabilities_ = probs
+            self.topic_model.original_documents_ = docs  # Ensure original_documents_ is set
+
         except Exception as e:
-            print(f"An error occurred during ctf-idf transformation: {e}")
+            print(f"An error occurred during C-TF-IDF transformation: {e}")
+            # Stop the heartbeat thread in case of an error
+            stop_event.set()
+            heartbeat_thread.join()
             return
+
+        # Stop the heartbeat thread after training completes
+        stop_event.set()
+        heartbeat_thread.join()
 
         # End timer
         end_time = time.time()
@@ -269,20 +300,24 @@ class BertopicModel:
         # Print information about the training process
         print(f"BERTopic model trained on {len(docs)} sections.")
         print(f"Number of topics generated: {len(set(topics))}")
-        print(f"Training time: {end_time - start_time:.2f} seconds.")
+        print(f"Training time: {end_time - self.start_time:.2f} seconds.")
 
         # Save the BERTopic model using safetensors
         try:
             print("Saving BERTopic model...")
             embedding_model = self.config["finbert_model_path"]
-            self.topic_model.save(self.model_save_path, serialization="safetensors", save_ctfidf=True, save_embedding_model=embedding_model)
+            self.topic_model.save(
+                self.model_save_path,
+                serialization="safetensors",
+                save_ctfidf=True,
+                save_embedding_model=embedding_model
+            )
             print(f"BERTopic model saved to {self.model_save_path}.")
         except Exception as e:
             print(f"An error occurred while saving the model: {e}")
 
     def _train_iterative(self, docs):
-        """
-        Train BERTopic model in an iterative manner.
+        """Train BERTopic model in an iterative manner.
 
         Parameters
         ----------
@@ -298,36 +333,84 @@ class BertopicModel:
         # Split the input documents into chunks
         doc_chunks = [docs[i:i+self.doc_chunk_size] for i in range(0, len(docs), self.doc_chunk_size)]
 
+        if not doc_chunks:
+            print("No document chunks found for iterative training.")
+            return
+
         # Initialize the base model with the first chunk of documents
-        base_model = self._initialize_bertopic_model().fit(doc_chunks[0])
+        self.topic_model = self._initialize_bertopic_model()
+        base_model = self.topic_model.fit(doc_chunks[0])
+        base_model.original_documents_ = doc_chunks[0]
+
+        # Start timer
+        self.start_time = time.time()
+
+        # Initialize the stop event for the heartbeat thread
+        stop_event = threading.Event()
+
+        # Start the heartbeat thread
+        heartbeat_thread = threading.Thread(target=self._heartbeat, args=(stop_event,))
+        heartbeat_thread.daemon = True  # Ensures the thread exits when the main program does
+        heartbeat_thread.start()
 
         # Iterate over the remaining chunks of documents
         for chunk in doc_chunks[1:]:
             print("Merging new documents into the base model...")
 
-            # Train a new model on the current chunk of documents
-            new_model = self._initialize_bertopic_model().fit(chunk)
+            try:
+                # Train a new model on the current chunk of documents
+                new_model = self._initialize_bertopic_model().fit(chunk)
+                new_model.original_documents_ = chunk
 
-            # Merge the new model with the base model
-            updated_model = BERTopic.merge_models([base_model, new_model])
+                # Merge the new model with the base model
+                updated_model = BERTopic.merge_models([base_model, new_model])
 
-            # Print the number of newly discovered topics
-            nr_new_topics = len(set(updated_model.topics_)) - len(set(base_model.topics_))
-            new_topics = list(updated_model.topic_labels_.values())[-nr_new_topics:]
-            print("The following topics are newly found:")
-            print(f"{new_topics}\n")
+                # Print the number of newly discovered topics
+                nr_new_topics = len(set(updated_model.topics_)) - len(set(base_model.topics_))
+                new_topics = list(updated_model.topic_labels_.values())[-nr_new_topics:]
+                print("The following topics are newly found:")
+                print(f"{new_topics}\n")
 
-            # Update the base model
-            base_model = updated_model
+                # Update the base model
+                base_model = updated_model
 
-        # Save the final merged model
+            except Exception as e:
+                print(f"An error occurred during iterative training: {e}")
+                # Stop the heartbeat thread in case of an error
+                stop_event.set()
+                heartbeat_thread.join()
+                return
+
+        # Assign the final merged model
         self.topic_model = base_model
 
-        print("Saving the final merged BERTopic model using safetensors...")
-        embedding_model = self.config["finbert_model_path"]
-        self.topic_model.save(self.model_save_path, serialization="safetensors", save_ctfidf=True, save_embedding_model=embedding_model)
-        print(f"Final BERTopic model saved to {self.model_save_path}.")
+        # Stop the heartbeat thread after training completes
+        stop_event.set()
+        heartbeat_thread.join()
 
+        # End timer
+        end_time = time.time()
+
+        # Print information about the training process
+        print(f"Iterative BERTopic model trained on {len(docs)} sections.")
+        print(f"Number of topics generated: {len(set(self.topic_model.topics_))}")
+        print(f"Training time: {end_time - self.start_time:.2f} seconds.")
+
+        # Save the final merged model
+        try:
+            print("Saving the final merged BERTopic model using safetensors...")
+            embedding_model = self.config["finbert_model_path"]
+            self.topic_model.save(
+                self.model_save_path,
+                serialization="safetensors",
+                save_ctfidf=True,
+                save_embedding_model=embedding_model
+            )
+            print(f"Final BERTopic model saved to {self.model_save_path}.")
+        except Exception as e:
+            print(f"An error occurred while saving the model: {e}")
+
+    # You can similarly add heartbeat to other training methods like zeroshot if they exist
 
 def main():
     """
@@ -379,7 +462,6 @@ def main():
     bertopic_model.train(all_relevant_sections)
 
     print("BERTopic model training and saving completed.")
-
 
 if __name__ == "__main__":
     main()
