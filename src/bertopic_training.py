@@ -201,7 +201,7 @@ class BertopicModel:
                 min_topic_size=self.config.get("min_topic_size", 15)  # Ensure smaller topics can be captured
             )
 
-    def _heartbeat(self, stop_event, interval=600):
+    def _heartbeat(self, stop_event, interval=300):
         """Periodically print a heartbeat message to keep the connection alive.
 
         Parameters
