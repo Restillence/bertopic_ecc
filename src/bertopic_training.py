@@ -3,7 +3,8 @@ import json
 import time
 import numpy as np
 import torch  # For checking if GPU is available
-import threading #For Heartbeat functionallity
+import threading  # For Heartbeat functionality
+import GPUtil  # For GPU monitoring
 from bertopic import BERTopic
 from bertopic.representation import KeyBERTInspired, MaximalMarginalRelevance
 from file_handling import FileHandler  # Import the FileHandler class
@@ -23,47 +24,18 @@ class BertopicModel:
         Parameters
         ----------
         config : dict
-            A dictionary containing the configuration for the model. The dictionary should contain the following keys:
-                - model_save_path: str
-                    The path to save the trained model.
-                - modeling_type: str
-                    The type of modeling to use. Options are "regular", "iterative", "iterative_zeroshot", or "zeroshot".
-                - doc_chunk_size: int
-                    The number of documents to process in each chunk. Only used for iterative modeling.
-
-        Attributes
-        ----------
-        config : dict
-            The configuration dictionary.
-        model_save_path : str
-            The path to save the trained model.
-        modeling_type : str
-            The type of modeling used.
-        doc_chunk_size : int
-            The number of documents to process in each chunk. (only for iterative modeling)
-        device : torch.device
-            The device to use for training, either "cpu" or "cuda" if GPU is available.
-        topic_model : BERTopic
-            The trained topic model.
-        model : SentenceTransformer or Pipeline
-            The trained sentence transformer model or FinBERT pipeline.
+            A dictionary containing the configuration for the model.
         """
         self.config = config
         self.model_save_path = config["model_save_path"]
-        self.modeling_type = config.get("modeling_type", "regular")  # default, options: ["regular", "iterative", "iterative_zeroshot", "zeroshot"]
-        self.doc_chunk_size = config.get("doc_chunk_size", 5000)  # default, this variable is only used for iterative training
-        self.device = self._select_device()  # Add device selection here
+        self.modeling_type = config.get("modeling_type", "regular")  # Options: ["regular", "iterative", "iterative_zeroshot", "zeroshot"]
+        self.doc_chunk_size = config.get("doc_chunk_size", 5000)  # Used for iterative training
+        self.device = self._select_device()
         self.topic_model = None
-        self.model = self._select_embedding_model(config)  # Load the appropriate embedding model based on config
+        self.model = self._select_embedding_model(config)
 
     def _select_device(self):
-        """Check if GPU is available and return the correct device.
-
-        Returns
-        -------
-        torch.device
-            The device to use for training, either "cpu" or "cuda" if GPU is available.
-        """
+        """Check if GPU is available and return the correct device."""
         if torch.cuda.is_available():
             print("GPU is available. Using GPU...")
             return torch.device("cuda")
@@ -72,28 +44,7 @@ class BertopicModel:
             return torch.device("cpu")
 
     def _select_embedding_model(self, config):
-        """Select the embedding model based on the config setting. Possible choices are:
-
-        - "all-MiniLM-L12-v2": SentenceTransformer model: all-MiniLM-L12-v2
-        - "finbert-local": FinBERT model from local path
-        - "finbert-pretrain": FinBERT model from HuggingFace pipeline
-
-        Parameters
-        ----------
-        config : dict
-            The configuration dictionary containing the embedding model choice.
-
-        Returns
-        -------
-        SentenceTransformer or Pipeline
-            The selected embedding model.
-
-        Raises
-        ------
-        ValueError
-            If the specified embedding model choice is unknown.
-        """
-
+        """Select the embedding model based on the config setting."""
         embedding_choice = config.get("embedding_model_choice", "all-MiniLM-L12-v2")
         
         if embedding_choice == "all-MiniLM-L12-v2":
@@ -113,15 +64,9 @@ class BertopicModel:
         
         else:
             raise ValueError(f"Unknown embedding model choice: {embedding_choice}")
-    
-    def _load_finbert_pipeline(self):
-        """Load the FinBERT model from the Hugging Face pipeline.
 
-        Returns
-        -------
-        Pipeline
-            The loaded FinBERT model pipeline.
-        """
+    def _load_finbert_pipeline(self):
+        """Load the FinBERT model from the Hugging Face pipeline."""
         print(f"Loading FinBERT model pipeline from HuggingFace on {self.device}...")
         
         # Load the tokenizer
@@ -141,13 +86,7 @@ class BertopicModel:
         return pipe
 
     def _initialize_bertopic_model(self):
-        """Initialize the BERTopic model with the specified parameters.
-
-        Returns
-        -------
-        BERTopic
-            The initialized BERTopic model.
-        """
+        """Initialize the BERTopic model with the specified parameters."""
         print(f"Embedding Model used: {self.model}...")
         # Initialize CountVectorizer
         vectorizer_model = CountVectorizer(
@@ -201,8 +140,8 @@ class BertopicModel:
                 min_topic_size=self.config.get("min_topic_size", 15)  # Ensure smaller topics can be captured
             )
 
-    def _heartbeat(self, stop_event, interval=300):
-        """Periodically print a heartbeat message to keep the connection alive.
+    def _heartbeat(self, stop_event, interval=900):
+        """Periodically print a heartbeat message and GPU usage to keep the connection alive.
 
         Parameters
         ----------
@@ -217,7 +156,22 @@ class BertopicModel:
         """
         while not stop_event.is_set():
             elapsed_time = time.strftime('%H:%M:%S', time.gmtime(time.time() - self.start_time))
-            print(f"[Heartbeat] Still working... Time elapsed: {elapsed_time}")
+            heartbeat_message = f"[Heartbeat] Still working... Time elapsed: {elapsed_time}"
+            
+            # Get GPU usage if GPU is available
+            if self.device.type == "cuda":
+                gpus = GPUtil.getGPUs()
+                gpu_status = []
+                for gpu in gpus:
+                    gpu_status.append(
+                        f"GPU {gpu.id}: {gpu.load*100:.1f}% load, {gpu.memoryUsed}MB/{gpu.memoryTotal}MB memory"
+                    )
+                gpu_message = " | ".join(gpu_status)
+                full_message = f"{heartbeat_message} | {gpu_message}"
+            else:
+                full_message = heartbeat_message
+
+            print(full_message)
             stop_event.wait(interval)
 
     def train(self, docs):
