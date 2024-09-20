@@ -1,78 +1,70 @@
+# src/bertopic_training.py
+
 import os
 import json
 import time
 import numpy as np
-import torch  # For checking if GPU is available
-import threading  # For Heartbeat functionality
-import GPUtil  # For GPU monitoring
+import torch
+import threading
+import GPUtil
 from bertopic import BERTopic
 from bertopic.representation import KeyBERTInspired, MaximalMarginalRelevance
-from file_handling import FileHandler  # Import the FileHandler class
-from text_processing import TextProcessor  # Import the TextProcessor class
-from sentence_transformers import SentenceTransformer
+from file_handling import FileHandler
+from text_processing import TextProcessor
 from sklearn.feature_extraction.text import CountVectorizer
 from umap import UMAP
 from hdbscan import HDBSCAN
 from utils import print_configuration
-from transformers import pipeline, AutoTokenizer
-import multiprocessing
-from multiprocessing import Pool, get_context
+from embedding_manager import EmbeddingManager  # Import the EmbeddingManager class
 
 
-def compute_embeddings_worker(docs, embedding_choice, finbert_model_path, device_id):
+class CustomEmbeddingModel:
     """
-    Compute embeddings for a subset of documents on a specific GPU.
-
-    Parameters
-    ----------
-    docs : list
-        A list of strings representing the input documents.
-    embedding_choice : str
-        The choice of embedding model.
-    finbert_model_path : str
-        Path to the FinBERT model if using a local model.
-    device_id : int
-        The GPU device ID.
-
-    Returns
-    -------
-    np.ndarray
-        The computed embeddings.
+    A custom embedding model to interface BERTopic with EmbeddingManager.
     """
-    if embedding_choice == "all-MiniLM-L12-v2":
-        model = SentenceTransformer("sentence-transformers/all-MiniLM-L12-v2", device=f'cuda:{device_id}')
-    elif embedding_choice == "finbert-local":
-        if not os.path.exists(finbert_model_path):
-            raise ValueError(f"The specified model path does not exist: {finbert_model_path}")
-        model = SentenceTransformer(finbert_model_path, device=f'cuda:{device_id}')
-    elif embedding_choice == "finbert-pretrain":
-        # For finbert-pretrain, use the pipeline to compute embeddings
-        tokenizer = AutoTokenizer.from_pretrained("yiyanghkust/finbert-pretrain")
-        tokenizer.model_max_length = 512
-        tokenizer.truncation = True
 
-        # Initialize the pipeline on the specified GPU
-        pipe = pipeline(
-            "feature-extraction",
-            model="yiyanghkust/finbert-pretrain",
-            tokenizer=tokenizer,
-            device=device_id  # CUDA device ID
-        )
+    def __init__(self, embedding_manager):
+        """
+        Initialize the CustomEmbeddingModel.
 
-        # Compute embeddings using the pipeline
-        embeddings = []
-        for doc in docs:
-            features = pipe(doc)
-            # Flatten the list of lists and convert to np.ndarray
-            flat_features = np.array(features).flatten()
-            embeddings.append(flat_features)
-        return np.array(embeddings)
-    else:
-        raise ValueError(f"Unknown embedding model choice: {embedding_choice}")
+        Parameters
+        ----------
+        embedding_manager : EmbeddingManager
+            An instance of EmbeddingManager to compute embeddings.
+        """
+        self.embedding_manager = embedding_manager
 
-    # Compute embeddings using the SentenceTransformer model
-    embeddings = model.encode(docs, batch_size=32, show_progress_bar=False)
-    return embeddings
+    def embed_documents(self, docs):
+        """
+        Embed documents using the EmbeddingManager.
+
+        Parameters
+        ----------
+        docs : list
+            A list of strings representing the input documents.
+
+        Returns
+        -------
+        np.ndarray
+            The computed embeddings.
+        """
+        return self.embedding_manager.compute_embeddings(docs)
+
+    def encode(self, docs, *args, **kwargs):
+        """
+        Encode documents using the EmbeddingManager.
+
+        Parameters
+        ----------
+        docs : list
+            A list of strings representing the input documents.
+
+        Returns
+        -------
+        np.ndarray
+            The computed embeddings.
+        """
+        return self.embedding_manager.compute_embeddings(docs)
 
 
 class BertopicModel:
@@ -90,98 +82,19 @@ class BertopicModel:
         self.modeling_type = config.get("modeling_type", "regular")  # Options: ["regular", "iterative", "iterative_zeroshot", "zeroshot"]
         self.doc_chunk_size = config.get("doc_chunk_size", 5000)  # Used for iterative training
 
-        # Detect number of GPUs
-        self.num_gpus = torch.cuda.device_count()
-        if self.num_gpus > 1:
-            print(f"Multiple GPUs detected: {self.num_gpus} GPUs will be used.")
-            self.devices = list(range(self.num_gpus))  # GPU IDs: 0, 1, ..., num_gpus-1
-        elif self.num_gpus == 1:
-            print("Single GPU detected. Using GPU 0.")
-            self.devices = [0]
-        else:
-            print("No GPU detected. Using CPU.")
-            self.devices = [-1]  # -1 indicates CPU
+        # Initialize the EmbeddingManager
+        embedding_choice = config.get("embedding_model_choice", "all-MiniLM-L12-v2")
+        finbert_model_path = config.get("finbert_model_path", "")
+        self.embedding_manager = EmbeddingManager(
+            embedding_choice=embedding_choice,
+            finbert_model_path=finbert_model_path,
+            batch_size=config.get("embedding_batch_size", 32)
+        )
+
+        # Initialize the CustomEmbeddingModel
+        self.custom_embedding_model = CustomEmbeddingModel(self.embedding_manager)
 
         self.topic_model = None
-
-    def _select_embedding_model(self, config):
-        """
-        Select the embedding model based on the config setting.
-
-        Parameters
-        ----------
-        config : dict
-            Configuration dictionary.
-
-        Returns
-        -------
-        None
-        """
-        # The actual embedding computation will be handled separately
-        pass  # Embedding models are loaded in worker processes
-
-    def compute_embeddings(self, docs):
-        """
-        Compute embeddings using multiple GPUs if available.
-
-        Parameters
-        ----------
-        docs : list
-            A list of strings representing the input documents.
-
-        Returns
-        -------
-        np.ndarray
-            The computed embeddings.
-        """
-        embedding_choice = self.config.get("embedding_model_choice", "all-MiniLM-L12-v2")
-        finbert_model_path = self.config.get("finbert_model_path", "")
-
-        if self.devices == [-1]:
-            # CPU mode
-            print("Computing embeddings on CPU...")
-            if embedding_choice == "finbert-pretrain":
-                # Initialize pipeline
-                tokenizer = AutoTokenizer.from_pretrained("yiyanghkust/finbert-pretrain")
-                tokenizer.model_max_length = 512
-                tokenizer.truncation = True
-
-                pipe = pipeline(
-                    "feature-extraction",
-                    model="yiyanghkust/finbert-pretrain",
-                    tokenizer=tokenizer,
-                    device=-1
-                )
-
-                embeddings = []
-                for doc in docs:
-                    features = pipe(doc)
-                    flat_features = np.array(features).flatten()
-                    embeddings.append(flat_features)
-                return np.array(embeddings)
-            else:
-                model = SentenceTransformer(embedding_choice if embedding_choice != "finbert-local" else finbert_model_path, device='cpu')
-                embeddings = model.encode(docs, batch_size=32, show_progress_bar=True)
-                return embeddings
-        else:
-            # GPU mode
-            print(f"Computing embeddings on {len(self.devices)} GPU(s)...")
-            # Split docs into chunks based on the number of GPUs
-            chunks = np.array_split(docs, len(self.devices))
-
-            # Prepare arguments for each worker
-            args = []
-            for i, chunk in enumerate(chunks):
-                args.append((chunk.tolist(), embedding_choice, finbert_model_path, self.devices[i]))
-
-            # Use multiprocessing Pool with 'spawn' start method
-            ctx = multiprocessing.get_context('spawn')
-            with ctx.Pool(processes=len(self.devices)) as pool:
-                results = pool.starmap(compute_embeddings_worker, args)
-
-            # Concatenate all embeddings
-            embeddings = np.vstack(results)
-            return embeddings
 
     def _initialize_bertopic_model(self):
         """
@@ -225,7 +138,7 @@ class BertopicModel:
         if self.modeling_type in ["zeroshot", "iterative_zeroshot"]:
             print("Initializing zeroshot BERTopic model...")
             return BERTopic(
-                embedding_model=None,  # Embeddings will be provided externally
+                embedding_model=self.custom_embedding_model,  # Use the custom embedding model
                 umap_model=umap_model,
                 hdbscan_model=hdbscan_model,
                 vectorizer_model=vectorizer_model,
@@ -237,7 +150,7 @@ class BertopicModel:
         else:
             print("Initializing regular BERTopic model...")
             return BERTopic(
-                embedding_model=None,  # Embeddings will be provided externally
+                embedding_model=self.custom_embedding_model,  # Use the custom embedding model
                 umap_model=umap_model,
                 hdbscan_model=hdbscan_model,
                 vectorizer_model=vectorizer_model,
@@ -245,7 +158,7 @@ class BertopicModel:
                 min_topic_size=self.config.get("min_topic_size", 15)  # Ensure smaller topics can be captured
             )
 
-    def _heartbeat(self, stop_event, interval=300):
+    def _heartbeat(self, stop_event, interval=900):
         """
         Periodically print a heartbeat message and GPU usage to keep the connection alive.
 
@@ -254,7 +167,7 @@ class BertopicModel:
         stop_event : threading.Event
             Event to signal the thread to stop.
         interval : int
-            Time interval in seconds between heartbeat messages. Default is 300 (5 minutes).
+            Time interval in seconds between heartbeat messages. Default is 900 (15 minutes).
 
         Returns
         -------
@@ -263,19 +176,10 @@ class BertopicModel:
         while not stop_event.is_set():
             elapsed_time = time.strftime('%H:%M:%S', time.gmtime(time.time() - self.start_time))
             heartbeat_message = f"[Heartbeat] Still working... Time elapsed: {elapsed_time}"
-            
+
             # Get GPU usage if GPU is available
-            if self.devices != [-1]:
-                gpu_status = []
-                gpus = GPUtil.getGPUs()
-                for device_id in self.devices:
-                    gpu = next((gpu for gpu in gpus if gpu.id == device_id), None)
-                    if gpu:
-                        gpu_status.append(
-                            f"GPU {gpu.id}: {gpu.load*100:.1f}% load, {gpu.memoryUsed}MB/{gpu.memoryTotal}MB memory"
-                        )
-                    else:
-                        gpu_status.append(f"GPU {device_id}: Not Available")
+            if self.embedding_manager.devices != [-1]:
+                gpu_status = self.embedding_manager.get_gpu_status()
                 gpu_message = " | ".join(gpu_status)
                 full_message = f"{heartbeat_message} | {gpu_message}"
             else:
@@ -334,7 +238,14 @@ class BertopicModel:
 
         # Compute embeddings
         print("Computing embeddings...")
-        embeddings = self.compute_embeddings(docs)
+        try:
+            embeddings = self.embedding_manager.compute_embeddings(docs)
+        except Exception as e:
+            print(f"An error occurred during embedding computation: {e}")
+            # Stop the heartbeat thread in case of an error
+            stop_event.set()
+            heartbeat_thread.join()
+            return
 
         # Train the BERTopic model
         print(f"Training BERTopic model using the following modeling type: {self.modeling_type}...")
@@ -402,7 +313,7 @@ class BertopicModel:
         print("Initializing iterative BERTopic model...")
 
         # Split the input documents into chunks
-        doc_chunks = [docs[i:i+self.doc_chunk_size] for i in range(0, len(docs), self.doc_chunk_size)]
+        doc_chunks = [docs[i:i + self.doc_chunk_size] for i in range(0, len(docs), self.doc_chunk_size)]
 
         if not doc_chunks:
             print("No document chunks found for iterative training.")
@@ -424,15 +335,15 @@ class BertopicModel:
 
         # Iterate over the chunks and update the model
         for idx, chunk in enumerate(doc_chunks):
-            print(f"Processing chunk {idx+1}/{len(doc_chunks)}...")
+            print(f"Processing chunk {idx + 1}/{len(doc_chunks)}...")
             try:
                 # Compute embeddings for the current chunk
-                embeddings = self.compute_embeddings(chunk)
+                embeddings = self.embedding_manager.compute_embeddings(chunk)
 
                 # Fit the model on the current chunk
                 self.topic_model.partial_fit(chunk, embeddings=embeddings)
 
-                print(f"Chunk {idx+1} processed.")
+                print(f"Chunk {idx + 1} processed.")
 
             except Exception as e:
                 print(f"An error occurred during iterative training: {e}")

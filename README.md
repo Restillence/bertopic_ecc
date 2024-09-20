@@ -49,3 +49,17 @@ Other things: config:
 // Options: "regular", "iterative", "zeroshot", or "iterative_zeroshot"
 
     "embedding_model_choice": "finbert-pretrain",  # Choose between "all-MiniLM-L6-v2", "finbert-local", or "finbert-pretrain"
+
+
+
+    "embedding_model_choice": "all-MiniLM-L12-v2", // Options: "all-MiniLM-L12-v2", "finbert-local", "finbert-pretrain"
+    "finbert_model_path": "../data/finbert-sentence-transformer", // Required if embedding_model_choice is "finbert-local"
+    "embedding_batch_size": 32, // Batch size for embedding computation
+  
+    "ecc_plots_folder": "/plots/ecc_plots",
+    "modeling_type": "regular", // Options: "regular", "iterative", "iterative_zeroshot", "zeroshot"
+    "sample_size": 50,
+    "document_split": "paragraphs",
+    "random_seed": 43,
+    "section_to_analyze": "Presentation",
+    "max_documents": 300000000,
