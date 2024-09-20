@@ -8,6 +8,7 @@ from transformers import pipeline, AutoTokenizer
 import multiprocessing
 from multiprocessing import Pool
 import GPUtil
+import gc
 
 
 def compute_embeddings_worker(docs, embedding_choice, finbert_model_path, device_id):
@@ -28,42 +29,58 @@ def compute_embeddings_worker(docs, embedding_choice, finbert_model_path, device
     Returns
     -------
     np.ndarray
-        The computed embeddings.
+        The computed embeddings or None if an error occurs.
     """
-    if embedding_choice == "all-MiniLM-L12-v2":
-        model = SentenceTransformer("sentence-transformers/all-MiniLM-L12-v2", device=f'cuda:{device_id}')
-    elif embedding_choice == "finbert-local":
-        if not os.path.exists(finbert_model_path):
-            raise ValueError(f"The specified model path does not exist: {finbert_model_path}")
-        model = SentenceTransformer(finbert_model_path, device=f'cuda:{device_id}')
-    elif embedding_choice == "finbert-pretrain":
-        # For finbert-pretrain, use the pipeline to compute embeddings
-        tokenizer = AutoTokenizer.from_pretrained("yiyanghkust/finbert-pretrain")
-        tokenizer.model_max_length = 512
-        tokenizer.truncation = True
+    try:
+        if embedding_choice == "all-MiniLM-L12-v2":
+            model = SentenceTransformer("sentence-transformers/all-MiniLM-L12-v2", device=f'cuda:{device_id}')
+        elif embedding_choice == "finbert-local":
+            if not os.path.exists(finbert_model_path):
+                raise ValueError(f"The specified model path does not exist: {finbert_model_path}")
+            model = SentenceTransformer(finbert_model_path, device=f'cuda:{device_id}')
+        elif embedding_choice == "finbert-pretrain":
+            # For finbert-pretrain, use the pipeline to compute embeddings
+            tokenizer = AutoTokenizer.from_pretrained("yiyanghkust/finbert-pretrain")
+            tokenizer.model_max_length = 512
+            tokenizer.truncation = True
 
-        # Initialize the pipeline on the specified GPU
-        pipe = pipeline(
-            "feature-extraction",
-            model="yiyanghkust/finbert-pretrain",
-            tokenizer=tokenizer,
-            device=device_id  # CUDA device ID
-        )
+            # Initialize the pipeline on the specified GPU
+            pipe = pipeline(
+                "feature-extraction",
+                model="yiyanghkust/finbert-pretrain",
+                tokenizer=tokenizer,
+                device=device_id  # CUDA device ID
+            )
 
-        # Compute embeddings using the pipeline
-        embeddings = []
-        for doc in docs:
-            features = pipe(doc)
-            # Flatten the list of lists and convert to np.ndarray
-            flat_features = np.array(features).flatten()
-            embeddings.append(flat_features)
-        return np.array(embeddings)
-    else:
-        raise ValueError(f"Unknown embedding model choice: {embedding_choice}")
+            # Compute embeddings using the pipeline
+            embeddings = []
+            for doc in docs:
+                features = pipe(doc)
+                # Flatten the list of lists and convert to np.ndarray
+                flat_features = np.array(features).flatten()
+                embeddings.append(flat_features)
 
-    # Compute embeddings using the SentenceTransformer model
-    embeddings = model.encode(docs, batch_size=32, show_progress_bar=False)
-    return embeddings
+            # Clean up resources
+            del pipe
+            del tokenizer
+            torch.cuda.empty_cache()
+            gc.collect()
+            return np.array(embeddings)
+        else:
+            raise ValueError(f"Unknown embedding model choice: {embedding_choice}")
+
+        # Compute embeddings using the SentenceTransformer model
+        embeddings = model.encode(docs, batch_size=32, show_progress_bar=False)
+
+        # Clean up resources
+        del model
+        torch.cuda.empty_cache()
+        gc.collect()
+        return embeddings
+
+    except Exception as e:
+        print(f"Error in compute_embeddings_worker on device {device_id}: {e}")
+        return None
 
 
 class EmbeddingManager:
@@ -111,57 +128,98 @@ class EmbeddingManager:
 
         Returns
         -------
-        np.ndarray
-            The computed embeddings.
+        np.ndarray or None
+            The computed embeddings or None if an error occurs.
         """
         if self.devices == [-1]:
             # CPU mode
             print("Computing embeddings on CPU...")
             if self.embedding_choice == "finbert-pretrain":
-                # Initialize pipeline
-                tokenizer = AutoTokenizer.from_pretrained("yiyanghkust/finbert-pretrain")
-                tokenizer.model_max_length = 512
-                tokenizer.truncation = True
+                try:
+                    # Initialize pipeline
+                    tokenizer = AutoTokenizer.from_pretrained("yiyanghkust/finbert-pretrain")
+                    tokenizer.model_max_length = 512
+                    tokenizer.truncation = True
 
-                pipe = pipeline(
-                    "feature-extraction",
-                    model="yiyanghkust/finbert-pretrain",
-                    tokenizer=tokenizer,
-                    device=-1
-                )
+                    pipe = pipeline(
+                        "feature-extraction",
+                        model="yiyanghkust/finbert-pretrain",
+                        tokenizer=tokenizer,
+                        device=-1
+                    )
 
-                embeddings = []
-                for doc in docs:
-                    features = pipe(doc)
-                    flat_features = np.array(features).flatten()
-                    embeddings.append(flat_features)
-                return np.array(embeddings)
+                    embeddings = []
+                    for doc in docs:
+                        features = pipe(doc)
+                        flat_features = np.array(features).flatten()
+                        embeddings.append(flat_features)
+
+                    # Convert to numpy array
+                    embeddings = np.array(embeddings)
+
+                    # Clean up resources
+                    del pipe
+                    del tokenizer
+                    torch.cuda.empty_cache()
+                    gc.collect()
+                    return embeddings
+
+                except Exception as e:
+                    print(f"Error during CPU embedding computation: {e}")
+                    return None
+
             else:
-                model = SentenceTransformer(
-                    self.embedding_choice if self.embedding_choice != "finbert-local" else self.finbert_model_path,
-                    device='cpu'
-                )
-                embeddings = model.encode(docs, batch_size=self.batch_size, show_progress_bar=True)
-                return embeddings
+                try:
+                    model = SentenceTransformer(
+                        self.embedding_choice if self.embedding_choice != "finbert-local" else self.finbert_model_path,
+                        device='cpu'
+                    )
+                    embeddings = model.encode(docs, batch_size=self.batch_size, show_progress_bar=True)
+
+                    # Clean up resources
+                    del model
+                    gc.collect()
+                    return embeddings
+
+                except Exception as e:
+                    print(f"Error during CPU embedding computation with SentenceTransformer: {e}")
+                    return None
+
         else:
             # GPU mode
             print(f"Computing embeddings on {len(self.devices)} GPU(s)...")
-            # Split docs into chunks based on the number of GPUs
-            chunks = np.array_split(docs, len(self.devices))
+            try:
+                # Split docs into chunks based on the number of GPUs
+                chunks = np.array_split(docs, len(self.devices))
 
-            # Prepare arguments for each worker
-            args = []
-            for i, chunk in enumerate(chunks):
-                args.append((chunk.tolist(), self.embedding_choice, self.finbert_model_path, self.devices[i]))
+                # Prepare arguments for each worker
+                args = []
+                for i, chunk in enumerate(chunks):
+                    args.append((chunk.tolist(), self.embedding_choice, self.finbert_model_path, self.devices[i]))
 
-            # Use multiprocessing Pool with 'spawn' start method
-            ctx = multiprocessing.get_context('spawn')
-            with ctx.Pool(processes=len(self.devices)) as pool:
-                results = pool.starmap(compute_embeddings_worker, args)
+                # Use multiprocessing Pool with 'spawn' start method
+                ctx = multiprocessing.get_context('spawn')
+                with ctx.Pool(processes=len(self.devices)) as pool:
+                    results = pool.starmap(compute_embeddings_worker, args)
 
-            # Concatenate all embeddings
-            embeddings = np.vstack(results)
-            return embeddings
+                # Filter out any None results due to errors
+                results = [r for r in results if r is not None]
+                if not results:
+                    print("No embeddings were successfully computed.")
+                    return None
+
+                # Concatenate all embeddings
+                embeddings = np.vstack(results)
+
+                # Clean up resources
+                del results
+                torch.cuda.empty_cache()
+                gc.collect()
+                return embeddings
+
+            except Exception as e:
+                print(f"Error during GPU embedding computation: {e}")
+                return None
 
     def get_gpu_status(self):
         """
