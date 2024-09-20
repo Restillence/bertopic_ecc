@@ -18,3 +18,4 @@ networkx
 transformers
 torch
 sentence_transformers
+GPUtil
