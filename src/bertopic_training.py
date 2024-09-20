@@ -158,7 +158,7 @@ class BertopicModel:
                 min_topic_size=self.config.get("min_topic_size", 15)  # Ensure smaller topics can be captured
             )
 
-    def _heartbeat(self, stop_event, interval=900):
+    def _heartbeat(self, stop_event, interval=300):
         """
         Periodically print a heartbeat message and GPU usage to keep the connection alive.
 
@@ -167,7 +167,7 @@ class BertopicModel:
         stop_event : threading.Event
             Event to signal the thread to stop.
         interval : int
-            Time interval in seconds between heartbeat messages. Default is 900 (15 minutes).
+            Time interval in seconds between heartbeat messages. Default is 300 (5 minutes).
 
         Returns
         -------
