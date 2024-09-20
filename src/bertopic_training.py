@@ -16,9 +16,9 @@ from hdbscan import HDBSCAN
 from utils import print_configuration
 from transformers import pipeline, AutoTokenizer
 import multiprocessing
-from multiprocessing import Pool
+from multiprocessing import Pool, get_context
 
-# Worker function for embedding computation on a specific GPU
+
 def compute_embeddings_worker(docs, embedding_choice, finbert_model_path, device_id):
     """
     Compute embeddings for a subset of documents on a specific GPU.
@@ -73,6 +73,7 @@ def compute_embeddings_worker(docs, embedding_choice, finbert_model_path, device
     # Compute embeddings using the SentenceTransformer model
     embeddings = model.encode(docs, batch_size=32, show_progress_bar=False)
     return embeddings
+
 
 class BertopicModel:
     def __init__(self, config):
@@ -173,8 +174,9 @@ class BertopicModel:
             for i, chunk in enumerate(chunks):
                 args.append((chunk.tolist(), embedding_choice, finbert_model_path, self.devices[i]))
 
-            # Use multiprocessing Pool to compute embeddings in parallel
-            with Pool(processes=len(self.devices)) as pool:
+            # Use multiprocessing Pool with 'spawn' start method
+            ctx = multiprocessing.get_context('spawn')
+            with ctx.Pool(processes=len(self.devices)) as pool:
                 results = pool.starmap(compute_embeddings_worker, args)
 
             # Concatenate all embeddings
@@ -243,7 +245,7 @@ class BertopicModel:
                 min_topic_size=self.config.get("min_topic_size", 15)  # Ensure smaller topics can be captured
             )
 
-    def _heartbeat(self, stop_event, interval=900):
+    def _heartbeat(self, stop_event, interval=300):
         """
         Periodically print a heartbeat message and GPU usage to keep the connection alive.
 
@@ -252,7 +254,7 @@ class BertopicModel:
         stop_event : threading.Event
             Event to signal the thread to stop.
         interval : int
-            Time interval in seconds between heartbeat messages. Default is 900 (15 minutes).
+            Time interval in seconds between heartbeat messages. Default is 300 (5 minutes).
 
         Returns
         -------
@@ -265,11 +267,15 @@ class BertopicModel:
             # Get GPU usage if GPU is available
             if self.devices != [-1]:
                 gpu_status = []
+                gpus = GPUtil.getGPUs()
                 for device_id in self.devices:
-                    gpu = GPUtil.getGPUs()[device_id]
-                    gpu_status.append(
-                        f"GPU {gpu.id}: {gpu.load*100:.1f}% load, {gpu.memoryUsed}MB/{gpu.memoryTotal}MB memory"
-                    )
+                    gpu = next((gpu for gpu in gpus if gpu.id == device_id), None)
+                    if gpu:
+                        gpu_status.append(
+                            f"GPU {gpu.id}: {gpu.load*100:.1f}% load, {gpu.memoryUsed}MB/{gpu.memoryTotal}MB memory"
+                        )
+                    else:
+                        gpu_status.append(f"GPU {device_id}: Not Available")
                 gpu_message = " | ".join(gpu_status)
                 full_message = f"{heartbeat_message} | {gpu_message}"
             else:
@@ -464,6 +470,7 @@ class BertopicModel:
         except Exception as e:
             print(f"An error occurred while saving the model: {e}")
 
+
 def main():
     """
     Main entry point of the script.
@@ -514,6 +521,7 @@ def main():
     bertopic_model.train(all_relevant_sections)
 
     print("BERTopic model training and saving completed.")
+
 
 if __name__ == "__main__":
     main()
