@@ -1,4 +1,8 @@
 import os
+
+# **Set TOKENIZERS_PARALLELISM to 'false' to disable parallelism and suppress warnings**
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
+
 import json
 import time
 import numpy as np
