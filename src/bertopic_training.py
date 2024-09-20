@@ -36,6 +36,7 @@ class BertopicModel:
         self.doc_chunk_size = config.get("doc_chunk_size", 5000)  # Used for iterative training
         self.device = self._select_device()
         self.topic_model = None
+        self.batch_size = config.get("batch_size", 32)  # Added batch size
         self.model = self._select_embedding_model(config)
 
     def _select_device(self):
@@ -224,10 +225,18 @@ class BertopicModel:
         heartbeat_thread.daemon = True  # Ensures the thread exits when the main program does
         heartbeat_thread.start()
 
+        # Compute embeddings with reduced batch size
+        print(f"Computing embeddings with batch size {self.batch_size}...")
+        embeddings = self.model.encode(
+            docs,
+            batch_size=self.batch_size,
+            show_progress_bar=True
+        )
+
         # Train the BERTopic model
         print(f"Training BERTopic model using the following modeling type: {self.modeling_type}...")
         try:
-            topics, probs = self.topic_model.fit_transform(docs)
+            topics, probs = self.topic_model.fit_transform(docs, embeddings)
 
             # Handle None values in topics (assign -1 to unassigned topics)
             topics = [topic if topic is not None else -1 for topic in topics]
@@ -242,7 +251,7 @@ class BertopicModel:
             self.topic_model.original_documents_ = docs  # Ensure original_documents_ is set
 
         except Exception as e:
-            print(f"An error occurred during C-TF-IDF transformation: {e}")
+            print(f"An error occurred during model training: {e}")
             # Stop the heartbeat thread in case of an error
             stop_event.set()
             heartbeat_thread.join()
@@ -297,7 +306,16 @@ class BertopicModel:
 
         # Initialize the base model with the first chunk of documents
         self.topic_model = self._initialize_bertopic_model()
-        base_model = self.topic_model.fit(doc_chunks[0])
+
+        # Compute embeddings for the first chunk
+        print(f"Computing embeddings for the first chunk with batch size {self.batch_size}...")
+        embeddings_chunk = self.model.encode(
+            doc_chunks[0],
+            batch_size=self.batch_size,
+            show_progress_bar=True
+        )
+
+        base_model = self.topic_model.fit(doc_chunks[0], embeddings_chunk)
         base_model.original_documents_ = doc_chunks[0]
 
         # Start timer
@@ -316,8 +334,16 @@ class BertopicModel:
             print("Merging new documents into the base model...")
 
             try:
+                # Compute embeddings for the current chunk
+                print(f"Computing embeddings for the current chunk with batch size {self.batch_size}...")
+                embeddings_chunk = self.model.encode(
+                    chunk,
+                    batch_size=self.batch_size,
+                    show_progress_bar=True
+                )
+
                 # Train a new model on the current chunk of documents
-                new_model = self._initialize_bertopic_model().fit(chunk)
+                new_model = self._initialize_bertopic_model().fit(chunk, embeddings_chunk)
                 new_model.original_documents_ = chunk
 
                 # Merge the new model with the base model
@@ -374,8 +400,8 @@ def main():
     """
     Main entry point of the script.
 
-    This function loads the configuration from `config.json`, sets the random seed, and extracts the necessary variables from the config.
-    Then, it initializes the `FileHandler` and `TextProcessor` classes with the imported configuration, creates the ECC sample, and extracts the relevant sections.
+    This function loads the configuration from config.json, sets the random seed, and extracts the necessary variables from the config.
+    Then, it initializes the FileHandler and TextProcessor classes with the imported configuration, creates the ECC sample, and extracts the relevant sections.
     Finally, it trains the BERTopic model and saves it to the specified path.
 
     Returns
