@@ -9,7 +9,7 @@
   "finbert_model_path": "../data/finbert-sentence-transformer",
   "ecc_plots_folder": "/plots/ecc_plots",
   "modeling_type": "zeroshot",
-  "sample_size": 30,
+  "sample_size": 60,
   "document_split": "paragraphs",
   "random_seed": 43,
   "section_to_analyze": "Presentation",
@@ -98,7 +98,7 @@
   ],
   "zeroshot_min_similarity": 0.00,
   "embedding_model": "D:/daten_masterarbeit/finbert-sentence-transformer",
-  "min_topic_size": 3,
+  "min_topic_size": 10,
   "doc_chunk_size": 500,
 
   "zeroshot_topic_list": [
