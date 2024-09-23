@@ -9,7 +9,7 @@
   "finbert_model_path": "../data/finbert-sentence-transformer",
   "ecc_plots_folder": "/plots/ecc_plots",
   "modeling_type": "zeroshot",
-  "sample_size": 60,
+  "sample_size": 30,
   "document_split": "paragraphs",
   "random_seed": 43,
   "section_to_analyze": "Presentation",
@@ -21,10 +21,10 @@
   "vectorizer_model_params": {
       "ngram_range": [1, 3],
       "stop_words": "english",
-      "min_df": 0.8
+      "min_df": 0.01
   },
   "umap_model_params": {
-      "n_neighbors": 2,
+      "n_neighbors": 15,
       "n_components": 5,
       "min_dist": 0.3,
       "metric": "cosine"

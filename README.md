@@ -49,3 +49,9 @@ Other things: config:
 // Options: "regular", "iterative", "zeroshot", or "iterative_zeroshot"
 
     "embedding_model_choice": "finbert-pretrain",  # Choose between "all-MiniLM-L6-v2", "finbert-local", or "finbert-pretrain"
+
+
+neccessary adjustments for zeroshot topic modeling:
+
+min df = 0.01, min cluster size should also be low. 
+also maybe umap n neighbors should be low (2)
