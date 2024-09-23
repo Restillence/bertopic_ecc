@@ -201,17 +201,6 @@ class BertopicModel:
             self._train_regular(docs)
 
     def _train_regular(self, docs):
-        """Train the BERTopic model using the regular approach.
-
-        Parameters
-        ----------
-        docs : list
-            A list of strings representing the input documents.
-
-        Returns
-        -------
-        None
-        """
         # Initialize BERTopic model
         self.topic_model = self._initialize_bertopic_model()
 
@@ -242,7 +231,11 @@ class BertopicModel:
             # Reduce the number of topics to the desired number
             if self.nr_topics is not None:
                 print(f"Reducing the number of topics to {self.nr_topics}...")
-                self.topic_model.reduce_topics(docs, embeddings, nr_topics=self.nr_topics)
+                self.topic_model.reduce_topics(
+                    docs=docs,
+                    embeddings=embeddings,
+                    nr_topics=self.nr_topics
+                )
                 topics = self.topic_model.topics_
                 probs = self.topic_model.probabilities_
 
@@ -292,17 +285,6 @@ class BertopicModel:
             print(f"An error occurred while saving the model: {e}")
 
     def _train_iterative(self, docs):
-        """Train BERTopic model in an iterative manner.
-
-        Parameters
-        ----------
-        docs : list
-            A list of strings representing the input documents.
-
-        Returns
-        -------
-        None
-        """
         print("Initializing iterative BERTopic model...")
 
         # Split the input documents into chunks
@@ -391,7 +373,11 @@ class BertopicModel:
                 )
                 all_embeddings.extend(embeddings_chunk)
             # Reduce topics
-            self.topic_model.reduce_topics(all_docs, all_embeddings, nr_topics=self.nr_topics)
+            self.topic_model.reduce_topics(
+                docs=all_docs,
+                embeddings=all_embeddings,
+                nr_topics=self.nr_topics
+            )
 
         # Stop the heartbeat thread after training completes
         stop_event.set()
@@ -418,8 +404,6 @@ class BertopicModel:
             print(f"Final BERTopic model saved to {self.model_save_path}.")
         except Exception as e:
             print(f"An error occurred while saving the model: {e}")
-
-    # You can similarly add heartbeat to other training methods like zeroshot if they exist
 
 def main():
     """
