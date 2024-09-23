@@ -1,6 +1,6 @@
 import os
 
-# **Set TOKENIZERS_PARALLELISM to 'false' to disable parallelism and suppress warnings**
+# Set TOKENIZERS_PARALLELISM to 'false' to disable parallelism and suppress warnings
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
 import json
@@ -410,7 +410,7 @@ def main():
     """
     # Load configuration from config.json
     print("Loading configuration...")
-    with open('config_hlr.json', 'r') as config_file:
+    with open('config.json', 'r') as config_file:
         config = json.load(config_file)
     print_configuration(config)
 

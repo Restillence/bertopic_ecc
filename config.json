@@ -2,7 +2,7 @@
     "index_file_ecc_folder": "D:/daten_masterarbeit/",
     "folderpath_ecc": "D:/daten_masterarbeit/Transcripts_Masterarbeit_full/",
     "model_save_path": "D:/daten_masterarbeit/bertopic_model_dir", 
-    "model_load_path": "D:/daten_masterarbeit/bertopic_model_dir_regular_1729_300_l12", 
+    "model_load_path": "D:/daten_masterarbeit/bertopic_model_dir_500_zeroshot", 
     "model_load_path_with_data": "D:/daten_masterarbeit/bertopic_model_dir_regular_1729_300_l12/bertopic_model_with_data_and_docs_cpu_works", 
     "index_file_path": "D:/daten_masterarbeit/list_earnings_call_transcripts.csv",
     "embedding_model_choice": "all-MiniLM-L12-v2", 
@@ -11,8 +11,10 @@
     "ecc_plots_folder": "C:/Users/nikla/OneDrive/Dokumente/winfoMaster/Masterarbeit/bertopic_ecc/plots/ecc_plots",
     "finbert_model_path": "D:/daten_masterarbeit/finbert-sentence-transformer",
 
+    "batch_size": 16,
+
     "modeling_type": "regular",  
-    "sample_size": 20,
+    "sample_size": 1729,
     "document_split": "paragraphs",
     "random_seed": 43,
     "section_to_analyze": "Presentation",
@@ -32,7 +34,7 @@
     },
     
     "hdbscan_model_params": {
-      "min_cluster_size": 50,
+      "min_cluster_size": 1000,
       "metric": "euclidean",
       "cluster_selection_method": "eom",
       "prediction_data": true
