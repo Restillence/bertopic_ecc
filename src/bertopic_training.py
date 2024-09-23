@@ -233,7 +233,6 @@ class BertopicModel:
                 print(f"Reducing the number of topics to {self.nr_topics}...")
                 self.topic_model.reduce_topics(
                     docs=docs,
-                    embeddings=embeddings,
                     nr_topics=self.nr_topics
                 )
                 topics = self.topic_model.topics_
@@ -375,7 +374,6 @@ class BertopicModel:
             # Reduce topics
             self.topic_model.reduce_topics(
                 docs=all_docs,
-                embeddings=all_embeddings,
                 nr_topics=self.nr_topics
             )
 
