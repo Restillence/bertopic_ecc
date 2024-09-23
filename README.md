@@ -55,3 +55,5 @@ neccessary adjustments for zeroshot topic modeling:
 
 min df = 0.01, min cluster size should also be low. 
 also maybe umap n neighbors should be low (2)
+
+intuition: größeres n neighbors: cluster sollten größer werden
