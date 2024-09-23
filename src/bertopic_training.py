@@ -39,6 +39,7 @@ class BertopicModel:
         self.batch_size = config.get("batch_size", 32)
         self.nr_topics = config.get("nr_topics", None)  # Added nr_topics
         self.model = self._select_embedding_model(config)
+        self.docs = None  # Initialize self.docs
 
     def _select_device(self):
         """Check if GPU is available and return the correct device."""
@@ -94,6 +95,13 @@ class BertopicModel:
     def _initialize_bertopic_model(self):
         """Initialize the BERTopic model with the specified parameters."""
         print(f"Embedding Model used: {self.model}...")
+        # Adjust n_neighbors based on dataset size
+        num_docs = len(self.docs)
+        n_neighbors_config = self.config["umap_model_params"]["n_neighbors"]
+        n_neighbors = min(n_neighbors_config, num_docs - 1)
+        n_neighbors = max(n_neighbors, 2)  # Ensure n_neighbors is at least 2
+        print(f"Adjusted n_neighbors to {n_neighbors} based on dataset size of {num_docs} documents.")
+
         # Initialize CountVectorizer
         vectorizer_model = CountVectorizer(
             ngram_range=tuple(self.config["vectorizer_model_params"]["ngram_range"]),
@@ -101,18 +109,24 @@ class BertopicModel:
             min_df=self.config["vectorizer_model_params"]["min_df"]
         )
 
-        # Initialize UMAP
+        # Initialize UMAP with adjusted n_neighbors
         umap_model = UMAP(
-            n_neighbors=self.config["umap_model_params"]["n_neighbors"],
+            n_neighbors=n_neighbors,
             n_components=self.config["umap_model_params"]["n_components"],
             min_dist=self.config["umap_model_params"]["min_dist"],
             metric=self.config["umap_model_params"]["metric"],
             random_state=42
         )
 
-        # Initialize HDBSCAN
+        # Adjust min_cluster_size based on dataset size
+        min_cluster_size_config = self.config["hdbscan_model_params"]["min_cluster_size"]
+        min_cluster_size = min(min_cluster_size_config, num_docs)
+        min_cluster_size = max(min_cluster_size, 2)  # Ensure min_cluster_size is at least 2
+        print(f"Adjusted min_cluster_size to {min_cluster_size} based on dataset size.")
+
+        # Initialize HDBSCAN with adjusted min_cluster_size
         hdbscan_model = HDBSCAN(
-            min_cluster_size=self.config["hdbscan_model_params"]["min_cluster_size"],
+            min_cluster_size=min_cluster_size,
             metric=self.config["hdbscan_model_params"]["metric"],
             cluster_selection_method=self.config["hdbscan_model_params"]["cluster_selection_method"],
             prediction_data=self.config["hdbscan_model_params"]["prediction_data"]
@@ -133,7 +147,8 @@ class BertopicModel:
                 zeroshot_topic_list=self.config["zeroshot_topic_list"],
                 zeroshot_min_similarity=self.config["zeroshot_min_similarity"],
                 representation_model=[keybert_model, mmr_model],
-                min_topic_size=self.config.get("min_topic_size", 15)  # Ensure smaller topics can be captured
+                min_topic_size=2,  # Ensure smaller topics can be captured
+                calculate_probabilities=True
             )
         else:
             print("Initializing regular BERTopic model...")
@@ -143,7 +158,8 @@ class BertopicModel:
                 hdbscan_model=hdbscan_model,
                 vectorizer_model=vectorizer_model,
                 representation_model=[keybert_model, mmr_model],  # Combined representation
-                min_topic_size=self.config.get("min_topic_size", 15)  # Ensure smaller topics can be captured
+                min_topic_size=2,  # Ensure smaller topics can be captured
+                calculate_probabilities=True
             )
 
     def _heartbeat(self, stop_event, interval=300):
@@ -192,6 +208,8 @@ class BertopicModel:
         -------
         None
         """
+        self.docs = docs  # Store documents for use in other methods
+
         # Check if the modeling type is iterative or iterative_zeroshot
         if self.modeling_type in ["iterative", "iterative_zeroshot"]:
             # Train the model using the iterative approach
@@ -294,6 +312,7 @@ class BertopicModel:
             return
 
         # Initialize the base model with the first chunk of documents
+        self.docs = doc_chunks[0]
         self.topic_model = self._initialize_bertopic_model()
 
         # Compute embeddings for the first chunk
@@ -331,6 +350,8 @@ class BertopicModel:
                     show_progress_bar=True
                 )
 
+                # Update self.docs for the current chunk
+                self.docs = chunk
                 # Train a new model on the current chunk of documents
                 new_model = self._initialize_bertopic_model().fit(chunk, embeddings_chunk)
                 new_model.original_documents_ = chunk
