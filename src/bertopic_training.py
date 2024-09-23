@@ -36,7 +36,8 @@ class BertopicModel:
         self.doc_chunk_size = config.get("doc_chunk_size", 5000)  # Used for iterative training
         self.device = self._select_device()
         self.topic_model = None
-        self.batch_size = config.get("batch_size", 32)  # Added batch size
+        self.batch_size = config.get("batch_size", 32)
+        self.nr_topics = config.get("nr_topics", None)  # Added nr_topics
         self.model = self._select_embedding_model(config)
 
     def _select_device(self):
@@ -238,6 +239,13 @@ class BertopicModel:
         try:
             topics, probs = self.topic_model.fit_transform(docs, embeddings)
 
+            # Reduce the number of topics to the desired number
+            if self.nr_topics is not None:
+                print(f"Reducing the number of topics to {self.nr_topics}...")
+                self.topic_model.reduce_topics(docs, embeddings, nr_topics=self.nr_topics)
+                topics = self.topic_model.topics_
+                probs = self.topic_model.probabilities_
+
             # Handle None values in topics (assign -1 to unassigned topics)
             topics = [topic if topic is not None else -1 for topic in topics]
 
@@ -368,6 +376,23 @@ class BertopicModel:
         # Assign the final merged model
         self.topic_model = base_model
 
+        # Reduce the number of topics to the desired number
+        if self.nr_topics is not None:
+            print(f"Reducing the number of topics to {self.nr_topics}...")
+            # Combine all documents and embeddings
+            all_docs = []
+            all_embeddings = []
+            for chunk in doc_chunks:
+                all_docs.extend(chunk)
+                embeddings_chunk = self.model.encode(
+                    chunk,
+                    batch_size=self.batch_size,
+                    show_progress_bar=True
+                )
+                all_embeddings.extend(embeddings_chunk)
+            # Reduce topics
+            self.topic_model.reduce_topics(all_docs, all_embeddings, nr_topics=self.nr_topics)
+
         # Stop the heartbeat thread after training completes
         stop_event.set()
         heartbeat_thread.join()
@@ -377,7 +402,7 @@ class BertopicModel:
 
         # Print information about the training process
         print(f"Iterative BERTopic model trained on {len(docs)} sections.")
-        print(f"Number of topics generated: {len(set(self.topic_model.topics_))}")
+        print(f"Number of topics generated after reduction: {len(set(self.topic_model.topics_))}")
         print(f"Training time: {end_time - self.start_time:.2f} seconds.")
 
         # Save the final merged model
