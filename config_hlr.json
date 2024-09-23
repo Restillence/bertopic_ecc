@@ -9,7 +9,7 @@
   "finbert_model_path": "../data/finbert-sentence-transformer",
   "ecc_plots_folder": "/plots/ecc_plots",
   "modeling_type": "regular",
-  "sample_size": 1729,
+  "sample_size": 200,
   "document_split": "paragraphs",
   "random_seed": 43,
   "section_to_analyze": "Presentation",
@@ -30,7 +30,7 @@
       "metric": "cosine"
   },
   "hdbscan_model_params": {
-      "min_cluster_size": 1000,
+      "min_cluster_size": 200,
       "metric": "euclidean",
       "cluster_selection_method": "eom",
       "prediction_data": true
