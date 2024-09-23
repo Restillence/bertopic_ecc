@@ -95,12 +95,20 @@ class BertopicModel:
     def _initialize_bertopic_model(self):
         """Initialize the BERTopic model with the specified parameters."""
         print(f"Embedding Model used: {self.model}...")
-        # Adjust n_neighbors based on dataset size
         num_docs = len(self.docs)
         n_neighbors_config = self.config["umap_model_params"]["n_neighbors"]
         n_neighbors = min(n_neighbors_config, num_docs - 1)
         n_neighbors = max(n_neighbors, 2)  # Ensure n_neighbors is at least 2
-        print(f"Adjusted n_neighbors to {n_neighbors} based on dataset size of {num_docs} documents.")
+
+        # Adjust n_neighbors for topic embeddings if zero-shot modeling
+        if self.modeling_type in ["zeroshot", "iterative_zeroshot"]:
+            num_topics = len(self.config["zeroshot_topic_list"])
+            n_neighbors_topics = min(n_neighbors_config, num_topics - 1)
+            n_neighbors_topics = max(n_neighbors_topics, 2)
+            n_neighbors = min(n_neighbors, n_neighbors_topics)
+            print(f"Adjusted n_neighbors to {n_neighbors} based on {num_docs} documents and {num_topics} topics.")
+        else:
+            print(f"Adjusted n_neighbors to {n_neighbors} based on dataset size of {num_docs} documents.")
 
         # Initialize CountVectorizer
         vectorizer_model = CountVectorizer(
@@ -137,30 +145,17 @@ class BertopicModel:
         mmr_model = MaximalMarginalRelevance(diversity=self.config["mmr_params"]["diversity"])
 
         # Initialize BERTopic with both representation models (KeyBERTInspired and MaximalMarginalRelevance)
-        if self.modeling_type in ["zeroshot", "iterative_zeroshot"]:
-            print("Initializing zeroshot BERTopic model...")
-            return BERTopic(
-                embedding_model=self.model,
-                umap_model=umap_model,
-                hdbscan_model=hdbscan_model,
-                vectorizer_model=vectorizer_model,
-                zeroshot_topic_list=self.config["zeroshot_topic_list"],
-                zeroshot_min_similarity=self.config["zeroshot_min_similarity"],
-                representation_model=[keybert_model, mmr_model],
-                min_topic_size=2,  # Ensure smaller topics can be captured
-                calculate_probabilities=True
-            )
-        else:
-            print("Initializing regular BERTopic model...")
-            return BERTopic(
-                embedding_model=self.model,
-                umap_model=umap_model,
-                hdbscan_model=hdbscan_model,
-                vectorizer_model=vectorizer_model,
-                representation_model=[keybert_model, mmr_model],  # Combined representation
-                min_topic_size=2,  # Ensure smaller topics can be captured
-                calculate_probabilities=True
-            )
+        return BERTopic(
+            embedding_model=self.model,
+            umap_model=umap_model,
+            hdbscan_model=hdbscan_model,
+            vectorizer_model=vectorizer_model,
+            zeroshot_topic_list=self.config.get("zeroshot_topic_list", None),
+            zeroshot_min_similarity=self.config.get("zeroshot_min_similarity", None),
+            representation_model=[keybert_model, mmr_model],
+            min_topic_size=2,  # Ensure smaller topics can be captured
+            calculate_probabilities=True
+        )
 
     def _heartbeat(self, stop_event, interval=300):
         """Periodically print a heartbeat message and GPU usage to keep the connection alive.
@@ -290,12 +285,10 @@ class BertopicModel:
         # Save the BERTopic model using safetensors
         try:
             print("Saving BERTopic model...")
-            embedding_model = self.config["finbert_model_path"]
             self.topic_model.save(
                 self.model_save_path,
                 serialization="safetensors",
-                save_ctfidf=True,
-                save_embedding_model=embedding_model
+                save_ctfidf=True
             )
             print(f"BERTopic model saved to {self.model_save_path}.")
         except Exception as e:
@@ -413,12 +406,10 @@ class BertopicModel:
         # Save the final merged model
         try:
             print("Saving the final merged BERTopic model using safetensors...")
-            embedding_model = self.config["finbert_model_path"]
             self.topic_model.save(
                 self.model_save_path,
                 serialization="safetensors",
-                save_ctfidf=True,
-                save_embedding_model=embedding_model
+                save_ctfidf=True
             )
             print(f"Final BERTopic model saved to {self.model_save_path}.")
         except Exception as e:
