@@ -101,7 +101,7 @@ class BertopicModel:
             n_neighbors = min(n_neighbors, n_neighbors_topics)
             print(f"Adjusted n_neighbors to {n_neighbors} based on {num_docs} documents and {num_topics} topics.")
         else:
-            print(f"Adjusted n_neighbors to {n_neighbors} based on dataset size of {num_docs} documents.")
+            print(f"Taking n_neighbors {n_neighbors} while using a dataset size of {num_docs} documents.")
 
         # Initialize CountVectorizer
         vectorizer_model = CountVectorizer(
