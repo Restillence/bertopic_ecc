@@ -8,14 +8,13 @@
   "embedding_model_choice": "all-MiniLM-L12-v2",
   "finbert_model_path": "../data/finbert-sentence-transformer",
   "ecc_plots_folder": "/plots/ecc_plots",
-  "modeling_type": "zeroshot",
-  "sample_size": 100,
-  "document_split": "paragraphs",
+  "modeling_type": "regular",
+  "sample_size": 10,
+  "document_split": "sentences",
   "random_seed": 43,
   "section_to_analyze": "Presentation",
   "max_documents": 300000000,
 
-  "batch_size": 16,
   "nr_topics": 20,
 
   "vectorizer_model_params": {

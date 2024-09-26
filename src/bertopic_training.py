@@ -1,14 +1,8 @@
 import os
 
-# Set TOKENIZERS_PARALLELISM to 'false' to disable parallelism and suppress warnings
-os.environ["TOKENIZERS_PARALLELISM"] = "false"
-
 import json
-import time
 import numpy as np
 import torch  # For checking if GPU is available
-import threading  # For Heartbeat functionality
-import GPUtil  # For GPU monitoring
 from bertopic import BERTopic
 from bertopic.representation import KeyBERTInspired, MaximalMarginalRelevance
 from file_handling import FileHandler  # Import the FileHandler class
@@ -36,7 +30,6 @@ class BertopicModel:
         self.doc_chunk_size = config.get("doc_chunk_size", 5000)  # Used for iterative training
         self.device = self._select_device()
         self.topic_model = None
-        self.batch_size = config.get("batch_size", 32)
         self.nr_topics = config.get("nr_topics", None)  # Added nr_topics
         self.model = self._select_embedding_model(config)
         self.docs = None  # Initialize self.docs
@@ -154,42 +147,9 @@ class BertopicModel:
             zeroshot_min_similarity=self.config.get("zeroshot_min_similarity", None),
             representation_model=[keybert_model, mmr_model],
             min_topic_size=2,  # Ensure smaller topics can be captured
-            calculate_probabilities=True
+            calculate_probabilities=True,
+            nr_topics=self.nr_topics  # Pass nr_topics to BERTopic initialization
         )
-
-    def _heartbeat(self, stop_event, interval=300):
-        """Periodically print a heartbeat message and GPU usage to keep the connection alive.
-
-        Parameters
-        ----------
-        stop_event : threading.Event
-            Event to signal the thread to stop.
-        interval : int
-            Time interval in seconds between heartbeat messages. Default is 300 (5 minutes).
-
-        Returns
-        -------
-        None
-        """
-        while not stop_event.is_set():
-            elapsed_time = time.strftime('%H:%M:%S', time.gmtime(time.time() - self.start_time))
-            heartbeat_message = f"[Heartbeat] Still working... Time elapsed: {elapsed_time}"
-            
-            # Get GPU usage if GPU is available
-            if self.device.type == "cuda":
-                gpus = GPUtil.getGPUs()
-                gpu_status = []
-                for gpu in gpus:
-                    gpu_status.append(
-                        f"GPU {gpu.id}: {gpu.load*100:.1f}% load, {gpu.memoryUsed}MB/{gpu.memoryTotal}MB memory"
-                    )
-                gpu_message = " | ".join(gpu_status)
-                full_message = f"{heartbeat_message} | {gpu_message}"
-            else:
-                full_message = heartbeat_message
-
-            print(full_message)
-            stop_event.wait(interval)
 
     def train(self, docs):
         """Train the BERTopic model using the specified modeling type.
@@ -217,39 +177,10 @@ class BertopicModel:
         # Initialize BERTopic model
         self.topic_model = self._initialize_bertopic_model()
 
-        # Start timer
-        self.start_time = time.time()
-
-        # Initialize the stop event for the heartbeat thread
-        stop_event = threading.Event()
-
-        # Start the heartbeat thread
-        heartbeat_thread = threading.Thread(target=self._heartbeat, args=(stop_event,))
-        heartbeat_thread.daemon = True  # Ensures the thread exits when the main program does
-        heartbeat_thread.start()
-
-        # Compute embeddings with reduced batch size
-        print(f"Computing embeddings with batch size {self.batch_size}...")
-        embeddings = self.model.encode(
-            docs,
-            batch_size=self.batch_size,
-            show_progress_bar=True
-        )
-
         # Train the BERTopic model
         print(f"Training BERTopic model using the following modeling type: {self.modeling_type}...")
         try:
-            topics, probs = self.topic_model.fit_transform(docs, embeddings)
-
-            # Reduce the number of topics to the desired number
-            if self.nr_topics is not None:
-                print(f"Reducing the number of topics to {self.nr_topics}...")
-                self.topic_model.reduce_topics(
-                    docs=docs,
-                    nr_topics=self.nr_topics
-                )
-                topics = self.topic_model.topics_
-                probs = self.topic_model.probabilities_
+            topics, probs = self.topic_model.fit_transform(docs)
 
             # Handle None values in topics (assign -1 to unassigned topics)
             topics = [topic if topic is not None else -1 for topic in topics]
@@ -265,22 +196,11 @@ class BertopicModel:
 
         except Exception as e:
             print(f"An error occurred during model training: {e}")
-            # Stop the heartbeat thread in case of an error
-            stop_event.set()
-            heartbeat_thread.join()
             return
-
-        # Stop the heartbeat thread after training completes
-        stop_event.set()
-        heartbeat_thread.join()
-
-        # End timer
-        end_time = time.time()
 
         # Print information about the training process
         print(f"BERTopic model trained on {len(docs)} sections.")
         print(f"Number of topics generated: {len(set(topics))}")
-        print(f"Training time: {end_time - self.start_time:.2f} seconds.")
 
         # Save the BERTopic model using safetensors
         try:
@@ -295,6 +215,7 @@ class BertopicModel:
             print(f"An error occurred while saving the model: {e}")
 
     def _train_iterative(self, docs):
+        # Adjusted to remove batch processing and embeddings computation
         print("Initializing iterative BERTopic model...")
 
         # Split the input documents into chunks
@@ -308,45 +229,18 @@ class BertopicModel:
         self.docs = doc_chunks[0]
         self.topic_model = self._initialize_bertopic_model()
 
-        # Compute embeddings for the first chunk
-        print(f"Computing embeddings for the first chunk with batch size {self.batch_size}...")
-        embeddings_chunk = self.model.encode(
-            doc_chunks[0],
-            batch_size=self.batch_size,
-            show_progress_bar=True
-        )
-
-        base_model = self.topic_model.fit(doc_chunks[0], embeddings_chunk)
+        base_model = self.topic_model.fit(doc_chunks[0])
         base_model.original_documents_ = doc_chunks[0]
-
-        # Start timer
-        self.start_time = time.time()
-
-        # Initialize the stop event for the heartbeat thread
-        stop_event = threading.Event()
-
-        # Start the heartbeat thread
-        heartbeat_thread = threading.Thread(target=self._heartbeat, args=(stop_event,))
-        heartbeat_thread.daemon = True  # Ensures the thread exits when the main program does
-        heartbeat_thread.start()
 
         # Iterate over the remaining chunks of documents
         for chunk in doc_chunks[1:]:
             print("Merging new documents into the base model...")
 
             try:
-                # Compute embeddings for the current chunk
-                print(f"Computing embeddings for the current chunk with batch size {self.batch_size}...")
-                embeddings_chunk = self.model.encode(
-                    chunk,
-                    batch_size=self.batch_size,
-                    show_progress_bar=True
-                )
-
                 # Update self.docs for the current chunk
                 self.docs = chunk
                 # Train a new model on the current chunk of documents
-                new_model = self._initialize_bertopic_model().fit(chunk, embeddings_chunk)
+                new_model = self._initialize_bertopic_model().fit(chunk)
                 new_model.original_documents_ = chunk
 
                 # Merge the new model with the base model
@@ -363,45 +257,14 @@ class BertopicModel:
 
             except Exception as e:
                 print(f"An error occurred during iterative training: {e}")
-                # Stop the heartbeat thread in case of an error
-                stop_event.set()
-                heartbeat_thread.join()
                 return
 
         # Assign the final merged model
         self.topic_model = base_model
 
-        # Reduce the number of topics to the desired number
-        if self.nr_topics is not None:
-            print(f"Reducing the number of topics to {self.nr_topics}...")
-            # Combine all documents and embeddings
-            all_docs = []
-            all_embeddings = []
-            for chunk in doc_chunks:
-                all_docs.extend(chunk)
-                embeddings_chunk = self.model.encode(
-                    chunk,
-                    batch_size=self.batch_size,
-                    show_progress_bar=True
-                )
-                all_embeddings.extend(embeddings_chunk)
-            # Reduce topics
-            self.topic_model.reduce_topics(
-                docs=all_docs,
-                nr_topics=self.nr_topics
-            )
-
-        # Stop the heartbeat thread after training completes
-        stop_event.set()
-        heartbeat_thread.join()
-
-        # End timer
-        end_time = time.time()
-
         # Print information about the training process
         print(f"Iterative BERTopic model trained on {len(docs)} sections.")
-        print(f"Number of topics generated after reduction: {len(set(self.topic_model.topics_))}")
-        print(f"Training time: {end_time - self.start_time:.2f} seconds.")
+        print(f"Number of topics generated: {len(set(self.topic_model.topics_))}")
 
         # Save the final merged model
         try:
@@ -429,7 +292,7 @@ def main():
     """
     # Load configuration from config.json
     print("Loading configuration...")
-    with open('config_hlr.json', 'r') as config_file:
+    with open('config.json', 'r') as config_file:
         config = json.load(config_file)
     print_configuration(config)
 
