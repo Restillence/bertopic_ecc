@@ -1,5 +1,8 @@
 import os
 
+# Disable parallelism in tokenizers to prevent CPU overutilization
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
+
 import json
 import numpy as np
 import torch  # For checking if GPU is available
@@ -12,9 +15,8 @@ from sklearn.feature_extraction.text import CountVectorizer
 from umap import UMAP
 from hdbscan import HDBSCAN
 from utils import print_configuration
-from transformers import pipeline, AutoTokenizer
-
-os.environ["TOKENIZERS_PARALLELISM"] = "false"
+# Removed unused imports related to FinBERT
+# from transformers import pipeline, AutoTokenizer
 
 class BertopicModel:
     def __init__(self, config):
@@ -32,7 +34,7 @@ class BertopicModel:
         self.doc_chunk_size = config.get("doc_chunk_size", 5000)  # Used for iterative training
         self.device = self._select_device()
         self.topic_model = None
-        self.nr_topics = config.get("nr_topics", None)  # Added nr_topics
+        self.nr_topics = config.get("nr_topics", None)
         self.model = self._select_embedding_model(config)
         self.docs = None  # Initialize self.docs
 
@@ -48,44 +50,12 @@ class BertopicModel:
     def _select_embedding_model(self, config):
         """Select the embedding model based on the config setting."""
         embedding_choice = config.get("embedding_model_choice", "all-MiniLM-L12-v2")
-        
+
         if embedding_choice == "all-MiniLM-L12-v2":
             print("Loading SentenceTransformer model: all-MiniLM-L12-v2...")
             return SentenceTransformer("sentence-transformers/all-MiniLM-L12-v2", device=self.device)
-        
-        elif embedding_choice == "finbert-local":
-            model_path = config["finbert_model_path"]
-            print(f"Loading FinBERT model from local path: {model_path} on {self.device}...")
-            if not os.path.exists(model_path):
-                raise ValueError(f"The specified model path does not exist: {model_path}")
-            return SentenceTransformer(model_path, device=self.device)
-
-        elif embedding_choice == "finbert-pretrain":
-            print("Loading FinBERT model from HuggingFace pipeline...")
-            return self._load_finbert_pipeline()
-        
         else:
             raise ValueError(f"Unknown embedding model choice: {embedding_choice}")
-
-    def _load_finbert_pipeline(self):
-        """Load the FinBERT model from the Hugging Face pipeline."""
-        print(f"Loading FinBERT model pipeline from HuggingFace on {self.device}...")
-        
-        # Load the tokenizer
-        tokenizer = AutoTokenizer.from_pretrained("yiyanghkust/finbert-pretrain")
-        
-        # Force tokenizer to truncate inputs at 512 tokens
-        tokenizer.model_max_length = 512
-        tokenizer.truncation = True
-
-        # Set up the pipeline with the model and tokenizer
-        pipe = pipeline(
-            "feature-extraction",
-            model="yiyanghkust/finbert-pretrain",
-            tokenizer=tokenizer,
-            device=0 if self.device.type == "cuda" else -1
-        )
-        return pipe
 
     def _initialize_bertopic_model(self):
         """Initialize the BERTopic model with the specified parameters."""
@@ -121,7 +91,7 @@ class BertopicModel:
             random_state=42
         )
 
-        # Initialize HDBSCAN with adjusted min_cluster_size
+        # Initialize HDBSCAN with specified parameters
         hdbscan_model = HDBSCAN(
             min_cluster_size=self.config["hdbscan_model_params"]["min_cluster_size"],
             metric=self.config["hdbscan_model_params"]["metric"],
@@ -129,11 +99,11 @@ class BertopicModel:
             prediction_data=self.config["hdbscan_model_params"]["prediction_data"]
         )
 
-        # Initialize KeyBERTInspired and MaximalMarginalRelevance using the parameters from config
+        # Initialize representation models
         keybert_model = KeyBERTInspired(top_n_words=self.config["keybert_params"]["top_n_words"])
         mmr_model = MaximalMarginalRelevance(diversity=self.config["mmr_params"]["diversity"])
 
-        # Initialize BERTopic model conditionally based on modeling_type
+        # Initialize BERTopic model based on modeling_type
         if self.modeling_type in ["zeroshot", "iterative_zeroshot"]:
             # Zero-Shot Topic Modeling
             return BERTopic(
@@ -144,7 +114,6 @@ class BertopicModel:
                 zeroshot_topic_list=self.config.get("zeroshot_topic_list", None),
                 zeroshot_min_similarity=self.config.get("zeroshot_min_similarity", None),
                 representation_model=[keybert_model, mmr_model],
-                min_topic_size=2,
                 calculate_probabilities=True,
                 nr_topics=self.nr_topics
             )
@@ -156,7 +125,6 @@ class BertopicModel:
                 hdbscan_model=hdbscan_model,
                 vectorizer_model=vectorizer_model,
                 representation_model=[keybert_model, mmr_model],
-                min_topic_size=2,
                 calculate_probabilities=True,
                 nr_topics=self.nr_topics
             )
