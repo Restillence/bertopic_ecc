@@ -101,7 +101,7 @@ class BertopicModel:
             n_neighbors = min(n_neighbors, n_neighbors_topics)
             print(f"Adjusted n_neighbors to {n_neighbors} based on {num_docs} documents and {num_topics} topics.")
         else:
-            print(f"Taking n_neighbors {n_neighbors} while using a dataset size of {num_docs} documents.")
+            print(f"Using n_neighbors {n_neighbors} for dataset size of {num_docs} documents.")
 
         # Initialize CountVectorizer
         vectorizer_model = CountVectorizer(
@@ -131,19 +131,33 @@ class BertopicModel:
         keybert_model = KeyBERTInspired(top_n_words=self.config["keybert_params"]["top_n_words"])
         mmr_model = MaximalMarginalRelevance(diversity=self.config["mmr_params"]["diversity"])
 
-        # Initialize BERTopic with both representation models (KeyBERTInspired and MaximalMarginalRelevance)
-        return BERTopic(
-            embedding_model=self.model,
-            umap_model=umap_model,
-            hdbscan_model=hdbscan_model,
-            vectorizer_model=vectorizer_model,
-            zeroshot_topic_list=self.config.get("zeroshot_topic_list", None),
-            zeroshot_min_similarity=self.config.get("zeroshot_min_similarity", None),
-            representation_model=[keybert_model, mmr_model],
-            min_topic_size=2,  # Ensure smaller topics can be captured
-            calculate_probabilities=True,
-            nr_topics=self.nr_topics  # Pass nr_topics to BERTopic initialization
-        )
+        # Initialize BERTopic model conditionally based on modeling_type
+        if self.modeling_type in ["zeroshot", "iterative_zeroshot"]:
+            # Zero-Shot Topic Modeling
+            return BERTopic(
+                embedding_model=self.model,
+                umap_model=umap_model,
+                hdbscan_model=hdbscan_model,
+                vectorizer_model=vectorizer_model,
+                zeroshot_topic_list=self.config.get("zeroshot_topic_list", None),
+                zeroshot_min_similarity=self.config.get("zeroshot_min_similarity", None),
+                representation_model=[keybert_model, mmr_model],
+                min_topic_size=2,
+                calculate_probabilities=True,
+                nr_topics=self.nr_topics
+            )
+        else:
+            # Regular Topic Modeling
+            return BERTopic(
+                embedding_model=self.model,
+                umap_model=umap_model,
+                hdbscan_model=hdbscan_model,
+                vectorizer_model=vectorizer_model,
+                representation_model=[keybert_model, mmr_model],
+                min_topic_size=2,
+                calculate_probabilities=True,
+                nr_topics=self.nr_topics
+            )
 
     def train(self, docs):
         """Train the BERTopic model using the specified modeling type.
