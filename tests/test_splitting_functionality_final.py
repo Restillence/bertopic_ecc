@@ -2,7 +2,7 @@ import sys
 import os
 
 # Add the oop_code_test directory to sys.path
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../oop_code_test')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
 
 import pandas as pd
 import numpy as np

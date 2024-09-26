@@ -13,12 +13,10 @@ class TextProcessor:
         section_to_analyze : str
             The section to analyze, either 'Presentation' or 'Questions and Answers'.
         """
-        
         self.method = method
         self.section_to_analyze = section_to_analyze
 
     def remove_unwanted_sections(self, text):
-        # Remove blocks like "TEXT version of Transcript", "Corporate Participants", "Conference Call Participants"
         """
         Remove blocks like "TEXT version of Transcript", "Corporate Participants", "Conference Call Participants" from a transcript text.
 
@@ -37,7 +35,6 @@ class TextProcessor:
         return cleaned_text
 
     def remove_questions_and_answers_and_beyond(self, text):
-        # Remove the "Questions and Answers" section and everything after it
         """
         Remove the "Questions and Answers" section and everything after it.
 
@@ -57,7 +54,6 @@ class TextProcessor:
         return text
 
     def remove_concluding_statements(self, text):
-        # Remove concluding statements that might be present after the main content
         """
         Remove concluding statements that might be present after the main content.
 
@@ -71,13 +67,11 @@ class TextProcessor:
         str
             The text with the concluding statements removed.
         """
-        
         pattern = r'(Ladies and gentlemen, thank you for participating.*|This concludes today\'s program.*|You may all disconnect.*)'
         text = re.sub(pattern, '', text, flags=re.IGNORECASE | re.DOTALL)
         return text
 
     def remove_pattern(self, text):
-        # This method removes patterns like "---- some text ----"
         """
         Remove patterns like "---- some text ----"
 
@@ -96,26 +90,30 @@ class TextProcessor:
         return cleaned_text
 
     def remove_specific_string(self, text):
-        # Final step to ensure the specific string "TEXT version of Transcript" is removed
         """
-        Final step to ensure the specific string "TEXT version of Transcript" is removed
-
+        Forcefully remove "Presentation" from the text, regardless of where it appears.
+        
         Parameters
         ----------
         text : str
-            The text from which to remove the specific string.
+            The text from which to remove specific strings.
 
         Returns
         -------
         str
-            The text with the specific string removed.
+            The text with the specific strings removed.
         """
-        return text.replace("TEXT version of Transcript", "").strip()
+        # Remove "TEXT version of Transcript" case-insensitively
+        text = re.sub(r"TEXT version of Transcript", '', text, flags=re.IGNORECASE)
+        
+        # Forcefully remove "Presentation" anywhere it appears at the start of a line, along with optional whitespace
+        text = re.sub(r'(?i)^\s*Presentation\s*\n', '', text, flags=re.MULTILINE)
+        
+        return text.strip()
 
     def remove_separator_line(self, text):
-        # Remove lines that are just a series of "=" characters
         """
-        Remove lines that are just a series of "=" characters
+        Remove lines that are just a series of "=" or "-" characters
 
         Parameters
         ----------
@@ -127,7 +125,7 @@ class TextProcessor:
         str
             The text with the separator lines removed.
         """
-        return text.replace("================================================================================", "").strip()
+        return re.sub(r'^\s*[-=]{3,}\s*$', '', text, flags=re.MULTILINE).strip()
 
     def split_text(self, text):
         """
@@ -158,8 +156,39 @@ class TextProcessor:
         else:
             raise ValueError("Invalid text splitting method. Choose 'sentences', 'paragraphs', or 'custom'.")
 
+    def remove_presentation_from_final_list(self, text_list):
+        """
+        Ensure the string 'Presentation' is fully removed from the final list of sentences or paragraphs.
+        
+        Parameters
+        ----------
+        text_list : list of str
+            The list of sentences or paragraphs.
+
+        Returns
+        -------
+        list of str
+            The cleaned list with 'Presentation' removed.
+        """
+        return [element for element in text_list if element.strip().lower() != "presentation"]
+
+    def filter_short_elements(self, text_list):
+        """
+        Remove elements that have fewer than 3 words from the list.
+        
+        Parameters
+        ----------
+        text_list : list of str
+            The list of sentences or paragraphs.
+
+        Returns
+        -------
+        list of str
+            The filtered list where each element has at least 3 words.
+        """
+        return [element for element in text_list if len(element.split()) >= 3]
+
     def extract_and_split_section(self, company, call_id, company_info, date, text):
-        # Identify the relevant section first
         """
         Extract and split the relevant section from the text.
 
@@ -186,45 +215,18 @@ class TextProcessor:
         ValueError
             If the method is not 'sentences', 'paragraphs', or 'custom'.
         """
-        paragraphs = self.split_text(text)
+        # Proceed with cleaning the text before splitting
+        text = self.remove_unwanted_sections(text)
+        text = self.remove_questions_and_answers_and_beyond(text)
+        text = self.remove_concluding_statements(text)
+        text = self.remove_pattern(text)
+        text = self.remove_specific_string(text)  # Ensure "Presentation" is removed forcefully
 
-        section_patterns = {
-            "Presentation": r"Presentation\s*\n[-=]+",
-            "Questions and Answers": r"Questions and Answers\s*\n[-=]+"
-        }
-
-        relevant_section = None
-        start_index = None
-        for i, element in enumerate(paragraphs):
-            if re.search(section_patterns.get(self.section_to_analyze, ""), element, re.IGNORECASE):
-                relevant_section = element
-                start_index = i
-                break
-
-        if relevant_section is None:
-            print(f"No explicit section found for {self.section_to_analyze} in company: {company}, call ID: {call_id}. Using the first part as the Presentation section.")
-            relevant_section = paragraphs[0]  # Assume the first part is the presentation
-            start_index = 0
-
-        combined_text = '\n\n'.join(paragraphs[start_index:])
-
-        # If analyzing the "Presentation" section, remove everything after the "Questions and Answers" section starts
-        if self.section_to_analyze == "Presentation":
-            qa_match = re.search(section_patterns["Questions and Answers"], combined_text, re.IGNORECASE)
-            if qa_match:
-                combined_text = combined_text[:qa_match.start()]
-
-        # Proceed with cleaning the text
-        combined_text = self.remove_unwanted_sections(combined_text)
-        combined_text = self.remove_questions_and_answers_and_beyond(combined_text)
-        combined_text = self.remove_concluding_statements(combined_text)
-        combined_text = self.remove_pattern(combined_text)
-        combined_text = self.remove_specific_string(combined_text)
-
+        # Split the cleaned text
         if self.method == 'sentences':
-            combined_text = self.split_text(combined_text)
+            combined_text = self.split_text(text)
         else:
-            combined_text = self.split_text_by_visual_cues(combined_text)
+            combined_text = self.split_text_by_visual_cues(text)
 
         # Final cleanup: Remove any remaining separator lines
         if isinstance(combined_text, list):
@@ -232,17 +234,21 @@ class TextProcessor:
         else:
             combined_text = self.remove_separator_line(combined_text)
 
+        # Final Steps: Remove "Presentation" and filter out elements with fewer than 3 words
+        combined_text = self.remove_presentation_from_final_list(combined_text)
+        combined_text = self.filter_short_elements(combined_text)
+
         return combined_text
 
     def split_text_by_visual_cues(self, text):
-        # Define the pattern for splitting text by visual cues and removing unnecessary paragraphs
-        """Split text into paragraphs by visual cues (e.g. blank lines, separators, etc.) and remove any unnecessary paragraphs.
-        
+        """
+        Split text into paragraphs by visual cues (e.g. blank lines, separators, etc.) and remove any unnecessary paragraphs.
+
         Parameters
         ----------
         text : str
             The text to be split.
-        
+
         Returns
         -------
         list of str
@@ -255,19 +261,19 @@ class TextProcessor:
         return paragraphs
 
     def preprocess_paragraphs(self, paragraphs):
-        """Remove unnecessary paragraphs from the list of paragraphs.
-        
+        """
+        Remove unnecessary paragraphs from the list of paragraphs.
+
         Parameters
         ----------
         paragraphs : list of str
             The list of paragraphs to be cleaned.
-        
+
         Returns
         -------
         list of str
             The cleaned list of paragraphs.
         """
-        
         cleaned_paragraphs = []
         skip_next = False
 
@@ -290,13 +296,14 @@ class TextProcessor:
         return cleaned_paragraphs
 
     def is_name_title_paragraph(self, paragraph):
-        """Check if a paragraph is a name/title paragraph.
-        
+        """
+        Check if a paragraph is a name/title paragraph.
+
         Parameters
         ----------
         paragraph : str
             The paragraph to be checked.
-        
+
         Returns
         -------
         bool
@@ -306,32 +313,34 @@ class TextProcessor:
         return re.match(pattern, paragraph.strip()) is not None
 
     def has_content_indicators(self, paragraph):
-        """Check if a paragraph contains any of the following phrases which are indicators of a presentation section.
-        
+        """
+        Check if a paragraph contains any of the following phrases which are indicators of a presentation section.
+
         Parameters
         ----------
         paragraph : str
             The paragraph to be checked.
-        
+
         Returns
         -------
         bool
             True if the paragraph contains any of the phrases, False otherwise.
         """
         indicators = [
-            "pleasure to", "turn the call over", "let me introduce", "I will now hand over",
+            "pleasure to", "turn the call over", "let me introduce", "i will now hand over",
             "welcome", "thank", "let's get started"
         ]
         return any(phrase in paragraph.lower() for phrase in indicators)
 
     def is_separator_line(self, paragraph):
-        """Check if a paragraph is a separator line.
-        
+        """
+        Check if a paragraph is a separator line.
+
         Parameters
         ----------
         paragraph : str
             The paragraph to be checked.
-        
+
         Returns
         -------
         bool
@@ -341,15 +350,16 @@ class TextProcessor:
         return re.match(pattern, paragraph.strip()) is not None
 
     def extract_all_relevant_sections(self, ecc_sample, max_documents):
-        """Extract all relevant sections from the ECC sample.
-        
+        """
+        Extract all relevant sections from the ECC sample.
+
         Parameters
         ----------
         ecc_sample : dict
             The ECC sample to extract relevant sections from.
         max_documents : int
             The maximum number of documents to extract relevant sections from.
-        
+
         Returns
         -------
         list

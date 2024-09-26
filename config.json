@@ -14,8 +14,8 @@
     "batch_size": 16,
 
     "modeling_type": "regular",  
-    "sample_size": 1729,
-    "document_split": "paragraphs",
+    "sample_size": 10,
+    "document_split": "sentences",
     "random_seed": 43,
     "section_to_analyze": "Presentation",
     "max_documents": 300000000,
