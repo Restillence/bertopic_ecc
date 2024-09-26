@@ -16,6 +16,7 @@
     "nr_topics": 10,
     "max_documents": 300000000,
     
+    "batch_size": 64,
 
     "vectorizer_model_params": {
       "ngram_range": [1, 3],

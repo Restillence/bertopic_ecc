@@ -129,6 +129,14 @@ class BertopicModel:
                 nr_topics=self.nr_topics
             )
 
+    def _print_gpu_usage(self):
+        
+        if self.device.type == "cuda":
+            import GPUtil
+            gpus = GPUtil.getGPUs()
+            for gpu in gpus:
+                print(f"GPU {gpu.id} - Memory Usage: {gpu.memoryUsed}/{gpu.memoryTotal} MB - Utilization: {gpu.load*100}%")
+        
     def train(self, docs):
         """Train the BERTopic model using the specified modeling type.
 
@@ -155,10 +163,16 @@ class BertopicModel:
         # Initialize BERTopic model
         self.topic_model = self._initialize_bertopic_model()
 
-        # Train the BERTopic model
+        # Compute embeddings on GPU
+        print("Computing embeddings...")
+        self._print_gpu_usage()
+        embeddings = self.model.encode(docs, show_progress_bar=True, batch_size=self.config["batch_size"])
+        self._print_gpu_usage()
+
+        # Train the BERTopic model with embeddings
         print(f"Training BERTopic model using the following modeling type: {self.modeling_type}...")
         try:
-            topics, probs = self.topic_model.fit_transform(docs)
+            topics, probs = self.topic_model.fit_transform(docs, embeddings)
 
             # Handle None values in topics (assign -1 to unassigned topics)
             topics = [topic if topic is not None else -1 for topic in topics]
