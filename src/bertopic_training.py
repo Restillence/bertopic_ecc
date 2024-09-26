@@ -119,15 +119,9 @@ class BertopicModel:
             random_state=42
         )
 
-        # Adjust min_cluster_size based on dataset size
-        min_cluster_size_config = self.config["hdbscan_model_params"]["min_cluster_size"]
-        min_cluster_size = min(min_cluster_size_config, num_docs)
-        min_cluster_size = max(min_cluster_size, 2)  # Ensure min_cluster_size is at least 2
-        print(f"Adjusted min_cluster_size to {min_cluster_size} based on dataset size.")
-
         # Initialize HDBSCAN with adjusted min_cluster_size
         hdbscan_model = HDBSCAN(
-            min_cluster_size=min_cluster_size,
+            min_cluster_size=self.config["hdbscan_model_params"]["min_cluster_size"],
             metric=self.config["hdbscan_model_params"]["metric"],
             cluster_selection_method=self.config["hdbscan_model_params"]["cluster_selection_method"],
             prediction_data=self.config["hdbscan_model_params"]["prediction_data"]
@@ -292,7 +286,7 @@ def main():
     """
     # Load configuration from config.json
     print("Loading configuration...")
-    with open('config.json', 'r') as config_file:
+    with open('config_hlr.json', 'r') as config_file:
         config = json.load(config_file)
     print_configuration(config)
 
