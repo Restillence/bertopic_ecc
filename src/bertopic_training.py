@@ -14,6 +14,8 @@ from hdbscan import HDBSCAN
 from utils import print_configuration
 from transformers import pipeline, AutoTokenizer
 
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
+
 class BertopicModel:
     def __init__(self, config):
         """
