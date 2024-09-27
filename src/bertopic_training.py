@@ -15,8 +15,6 @@ from sklearn.feature_extraction.text import CountVectorizer
 from umap import UMAP
 from hdbscan import HDBSCAN
 from utils import print_configuration
-# Removed unused imports related to FinBERT
-# from transformers import pipeline, AutoTokenizer
 
 class BertopicModel:
     def __init__(self, config):
@@ -42,6 +40,9 @@ class BertopicModel:
         """Check if GPU is available and return the correct device."""
         if torch.cuda.is_available():
             print("GPU is available. Using GPU...")
+            from cuml.cluster import HDBSCAN
+            from cuml.manifold import UMAP
+            print("Also using GPU for UMAP and HDBSCAN with cuml...")
             return torch.device("cuda")
         else:
             print("GPU not available. Falling back to CPU...")
@@ -88,7 +89,8 @@ class BertopicModel:
             n_components=self.config["umap_model_params"]["n_components"],
             min_dist=self.config["umap_model_params"]["min_dist"],
             metric=self.config["umap_model_params"]["metric"],
-            random_state=42
+            low_memory=self.config["umap_model_params"]["low_memory"],
+            random_state=42, 
         )
 
         # Initialize HDBSCAN with specified parameters
