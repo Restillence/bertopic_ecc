@@ -8,34 +8,33 @@
     "embedding_model_choice": "all-MiniLM-L12-v2", 
     "ecc_plots_folder": "C:/Users/nikla/OneDrive/Dokumente/winfoMaster/Masterarbeit/bertopic_ecc/plots/ecc_plots",
 
-    "modeling_type": "regular",  
-    "sample_size": 5,
+    "modeling_type": "regular",
+    "sample_size": 1729,
     "document_split": "sentences",
     "random_seed": 43,
     "section_to_analyze": "Presentation",
-    "nr_topics": 10,
     "max_documents": 300000000,
-    
-    "batch_size": 64,
-
-    "vectorizer_model_params": {
-      "ngram_range": [1, 3],
-      "stop_words": "english",
-      "min_df": 0.2
-    },
+    "nr_topics": 20,
   
-    "umap_model_params": {
-      "n_neighbors":15,
-      "n_components": 5,
-      "min_dist": 0.3,
-      "metric": "cosine"
+    "batch_size": 64,
+  
+    "vectorizer_model_params": {
+        "ngram_range": [1, 3],
+        "stop_words": "english",
+        "min_df": 0.4
     },
-    
+    "umap_model_params": {
+        "n_neighbors": 15,
+        "n_components": 5,
+        "min_dist": 0.0,
+        "metric": "cosine",
+        "low_memory": true
+    },
     "hdbscan_model_params": {
-      "min_cluster_size": 5,
-      "metric": "euclidean",
-      "cluster_selection_method": "eom",
-      "prediction_data": true
+        "min_cluster_size": 300,
+        "metric": "euclidean",
+        "cluster_selection_method": "eom",
+        "prediction_data": true
     },
     
     "keybert_outdated_params": {

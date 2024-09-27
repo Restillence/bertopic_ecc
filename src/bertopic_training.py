@@ -12,8 +12,8 @@ from file_handling import FileHandler  # Import the FileHandler class
 from text_processing import TextProcessor  # Import the TextProcessor class
 from sentence_transformers import SentenceTransformer
 from sklearn.feature_extraction.text import CountVectorizer
-from umap import UMAP
-from hdbscan import HDBSCAN
+#from umap import UMAP
+#from hdbscan import HDBSCAN
 from utils import print_configuration
 
 class BertopicModel:
@@ -40,13 +40,22 @@ class BertopicModel:
         """Check if GPU is available and return the correct device."""
         if torch.cuda.is_available():
             print("GPU is available. Using GPU...")
-            from cuml.cluster import HDBSCAN
-            from cuml.manifold import UMAP
-            print("Also using GPU for UMAP and HDBSCAN with cuml...")
+            # Import cuml versions
+            from cuml.manifold import UMAP as cumlUMAP
+            from cuml.cluster import HDBSCAN as cumlHDBSCAN
+            self.UMAP = cumlUMAP
+            self.HDBSCAN = cumlHDBSCAN
+            print("Also using GPU for UMAP and HDBSCAN with cuML...")
             return torch.device("cuda")
         else:
             print("GPU not available. Falling back to CPU...")
+            # Import CPU versions
+            from umap import UMAP as cpuUMAP
+            from hdbscan import HDBSCAN as cpuHDBSCAN
+            self.UMAP = cpuUMAP
+            self.HDBSCAN = cpuHDBSCAN
             return torch.device("cpu")
+
 
     def _select_embedding_model(self, config):
         """Select the embedding model based on the config setting."""
@@ -84,17 +93,18 @@ class BertopicModel:
         )
 
         # Initialize UMAP with adjusted n_neighbors
-        umap_model = UMAP(
+        umap_model = self.UMAP(
             n_neighbors=n_neighbors,
             n_components=self.config["umap_model_params"]["n_components"],
             min_dist=self.config["umap_model_params"]["min_dist"],
             metric=self.config["umap_model_params"]["metric"],
-            low_memory=self.config["umap_model_params"]["low_memory"],
+            #low_memory=self.config["umap_model_params"]["low_memory"],
             random_state=42, 
+            output_type='numpy'  # Ensure output is numpy array
         )
 
         # Initialize HDBSCAN with specified parameters
-        hdbscan_model = HDBSCAN(
+        hdbscan_model = self.HDBSCAN(
             min_cluster_size=self.config["hdbscan_model_params"]["min_cluster_size"],
             metric=self.config["hdbscan_model_params"]["metric"],
             cluster_selection_method=self.config["hdbscan_model_params"]["cluster_selection_method"],
