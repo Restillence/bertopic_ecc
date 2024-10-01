@@ -9,7 +9,7 @@
   "ecc_plots_folder": "/plots/ecc_plots",
 
   "modeling_type": "regular",
-  "sample_size": 20,
+  "sample_size": 100,
   "document_split": "sentences",
   "random_seed": 43,
   "section_to_analyze": "Presentation",
@@ -31,7 +31,7 @@
       "low_memory": true
   },
   "hdbscan_model_params": {
-      "min_cluster_size": 300,
+      "min_cluster_size": 200,
       "metric": "euclidean",
       "cluster_selection_method": "eom",
       "prediction_data": true
