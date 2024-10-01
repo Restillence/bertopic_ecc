@@ -12,8 +12,6 @@ from file_handling import FileHandler  # Import the FileHandler class
 from text_processing import TextProcessor  # Import the TextProcessor class
 from sentence_transformers import SentenceTransformer
 from sklearn.feature_extraction.text import CountVectorizer
-#from umap import UMAP
-#from hdbscan import HDBSCAN
 from utils import print_configuration
 
 class BertopicModel:
@@ -56,7 +54,6 @@ class BertopicModel:
             self.HDBSCAN = cpuHDBSCAN
             return torch.device("cpu")
 
-
     def _select_embedding_model(self, config):
         """Select the embedding model based on the config setting."""
         embedding_choice = config.get("embedding_model_choice", "all-MiniLM-L12-v2")
@@ -92,63 +89,56 @@ class BertopicModel:
             min_df=self.config["vectorizer_model_params"]["min_df"]
         )
 
-        # Initialize UMAP with adjusted n_neighbors
-        umap_model = self.UMAP(
-            n_neighbors=n_neighbors,
-            n_components=self.config["umap_model_params"]["n_components"],
-            min_dist=self.config["umap_model_params"]["min_dist"],
-            metric=self.config["umap_model_params"]["metric"],
-            #low_memory=self.config["umap_model_params"]["low_memory"],
-            random_state=42, 
-            output_type='numpy'  # Ensure output is numpy array
-        )
+        # Build UMAP parameters
+        umap_params = {
+            'n_neighbors': n_neighbors,
+            'n_components': self.config["umap_model_params"]["n_components"],
+            'min_dist': self.config["umap_model_params"]["min_dist"],
+            'metric': self.config["umap_model_params"]["metric"],
+            'random_state': 42
+        }
+
+        # Remove 'output_type' parameter
+        # Initialize UMAP with adjusted parameters
+        umap_model = self.UMAP(**umap_params)
 
         # Initialize HDBSCAN with specified parameters
-        hdbscan_model = self.HDBSCAN(
-            min_cluster_size=self.config["hdbscan_model_params"]["min_cluster_size"],
-            metric=self.config["hdbscan_model_params"]["metric"],
-            cluster_selection_method=self.config["hdbscan_model_params"]["cluster_selection_method"],
-            prediction_data=self.config["hdbscan_model_params"]["prediction_data"]
-        )
+        hdbscan_params = {
+            'min_cluster_size': self.config["hdbscan_model_params"]["min_cluster_size"],
+            'metric': self.config["hdbscan_model_params"]["metric"],
+            'cluster_selection_method': self.config["hdbscan_model_params"]["cluster_selection_method"],
+            'prediction_data': self.config["hdbscan_model_params"]["prediction_data"]
+        }
+        hdbscan_model = self.HDBSCAN(**hdbscan_params)
 
         # Initialize representation models
         keybert_model = KeyBERTInspired(top_n_words=self.config["keybert_params"]["top_n_words"])
         mmr_model = MaximalMarginalRelevance(diversity=self.config["mmr_params"]["diversity"])
 
         # Initialize BERTopic model based on modeling_type
+        bertopic_params = {
+            'embedding_model': self.model,
+            'umap_model': umap_model,
+            'hdbscan_model': hdbscan_model,
+            'vectorizer_model': vectorizer_model,
+            'representation_model': [keybert_model, mmr_model],
+            'calculate_probabilities': True,
+            'nr_topics': self.nr_topics
+        }
+
         if self.modeling_type in ["zeroshot", "iterative_zeroshot"]:
-            # Zero-Shot Topic Modeling
-            return BERTopic(
-                embedding_model=self.model,
-                umap_model=umap_model,
-                hdbscan_model=hdbscan_model,
-                vectorizer_model=vectorizer_model,
-                zeroshot_topic_list=self.config.get("zeroshot_topic_list", None),
-                zeroshot_min_similarity=self.config.get("zeroshot_min_similarity", None),
-                representation_model=[keybert_model, mmr_model],
-                calculate_probabilities=True,
-                nr_topics=self.nr_topics
-            )
-        else:
-            # Regular Topic Modeling
-            return BERTopic(
-                embedding_model=self.model,
-                umap_model=umap_model,
-                hdbscan_model=hdbscan_model,
-                vectorizer_model=vectorizer_model,
-                representation_model=[keybert_model, mmr_model],
-                calculate_probabilities=True,
-                nr_topics=self.nr_topics
-            )
+            bertopic_params['zeroshot_topic_list'] = self.config.get("zeroshot_topic_list", None)
+            bertopic_params['zeroshot_min_similarity'] = self.config.get("zeroshot_min_similarity", None)
+
+        return BERTopic(**bertopic_params)
 
     def _print_gpu_usage(self):
-        
         if self.device.type == "cuda":
             import GPUtil
             gpus = GPUtil.getGPUs()
             for gpu in gpus:
                 print(f"GPU {gpu.id} - Memory Usage: {gpu.memoryUsed}/{gpu.memoryTotal} MB - Utilization: {gpu.load*100}%")
-        
+
     def train(self, docs):
         """Train the BERTopic model using the specified modeling type.
 
@@ -184,6 +174,10 @@ class BertopicModel:
         # Train the BERTopic model with embeddings
         print(f"Training BERTopic model using the following modeling type: {self.modeling_type}...")
         try:
+            # Ensure embeddings are in the correct format
+            if self.device.type == "cuda":
+                # Convert embeddings to numpy array if needed
+                embeddings = embeddings.get()
             topics, probs = self.topic_model.fit_transform(docs, embeddings)
 
             # Handle None values in topics (assign -1 to unassigned topics)
