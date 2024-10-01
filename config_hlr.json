@@ -24,9 +24,9 @@
       "min_df": 0.4
   },
   "umap_model_params": {
-      "n_neighbors": 15,
+      "n_neighbors": 50,
       "n_components": 5,
-      "min_dist": 0.0,
+      "min_dist": 0.3,
       "metric": "cosine",
       "low_memory": true
   },
