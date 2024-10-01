@@ -171,10 +171,10 @@ class BertopicModel:
         embeddings = self.model.encode(docs, show_progress_bar=True, batch_size=self.config["batch_size"])
         self._print_gpu_usage()
 
-        # Convert embeddings to CuPy array if using GPU
-        if self.device.type == "cuda":
-            import cupy as cp
-            embeddings = cp.asarray(embeddings)
+        # Remove the conversion to CuPy arrays
+        # if self.device.type == "cuda":
+        #     import cupy as cp
+        #     embeddings = cp.asarray(embeddings)
 
         # Train the BERTopic model with embeddings
         print(f"Training BERTopic model using the following modeling type: {self.modeling_type}...")
