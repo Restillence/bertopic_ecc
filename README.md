@@ -12,6 +12,8 @@ conda create --name myenv
 
 4) Install packages from requirements
 pip install -r "(path)/.requirements.txt"
+if you receive errors here, use the installation script which skips bad lines: package_installations.py 
+by running: python package_installations.py
 
 5) Change the following Variables in the config file:
 folderpath_ecc = "D:/daten_masterarbeit/Transcripts_Masterarbeit_full/"   
