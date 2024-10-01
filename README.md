@@ -7,7 +7,7 @@ Steps to get ready:
 
 2) Open repository in your IDE of choice
 
-3) Install Python and create a virtual environment (optional):
+3) Install Python >3.9 and create a virtual environment (optional):
 conda create --name myenv
 
 4) Install packages from requirements
@@ -57,3 +57,11 @@ min df = 0.01, min cluster size should also be low.
 also maybe umap n neighbors should be low (2)
 
 intuition: größeres n neighbors: cluster sollten größer werden
+
+
+Install for cuML: 
+!pip install bertopic
+!pip install cudf-cu11 dask-cudf-cu11 --extra-index-url=https://pypi.nvidia.com
+!pip install cuml-cu11 --extra-index-url=https://pypi.nvidia.com
+!pip install cugraph-cu11 --extra-index-url=https://pypi.nvidia.com
+!pip install --upgrade cupy-cuda11x -f https://pip.cupy.dev/aarch64
