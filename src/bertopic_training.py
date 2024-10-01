@@ -171,13 +171,14 @@ class BertopicModel:
         embeddings = self.model.encode(docs, show_progress_bar=True, batch_size=self.config["batch_size"])
         self._print_gpu_usage()
 
+        # Convert embeddings to CuPy array if using GPU
+        if self.device.type == "cuda":
+            import cupy as cp
+            embeddings = cp.asarray(embeddings)
+
         # Train the BERTopic model with embeddings
         print(f"Training BERTopic model using the following modeling type: {self.modeling_type}...")
         try:
-            # Ensure embeddings are in the correct format
-            if self.device.type == "cuda":
-                # Convert embeddings to numpy array if needed
-                embeddings = embeddings.get()
             topics, probs = self.topic_model.fit_transform(docs, embeddings)
 
             # Handle None values in topics (assign -1 to unassigned topics)
@@ -211,6 +212,7 @@ class BertopicModel:
             print(f"BERTopic model saved to {self.model_save_path}.")
         except Exception as e:
             print(f"An error occurred while saving the model: {e}")
+
 
     def _train_iterative(self, docs):
         # Adjusted to remove batch processing and embeddings computation
