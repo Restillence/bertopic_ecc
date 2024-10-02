@@ -25,13 +25,13 @@
   },
   "umap_model_params": {
       "n_neighbors": 15,
-      "n_components": 10,
+      "n_components": 5,
       "min_dist": 0.3,
       "metric": "cosine",
       "low_memory": true
   },
   "hdbscan_model_params": {
-      "min_cluster_size": 200,
+      "min_cluster_size": 100,
       "metric": "euclidean",
       "cluster_selection_method": "eom",
       "prediction_data": true

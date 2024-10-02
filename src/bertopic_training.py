@@ -1,11 +1,12 @@
 import os
+import json
+import numpy as np
+import torch  # For checking if GPU is available
+import time  # For time tracking
 
 # Disable parallelism in tokenizers to prevent CPU overutilization
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
-import json
-import numpy as np
-import torch  # For checking if GPU is available
 from bertopic import BERTopic
 from bertopic.representation import KeyBERTInspired, MaximalMarginalRelevance
 from file_handling import FileHandler  # Import the FileHandler class
@@ -98,7 +99,6 @@ class BertopicModel:
             'random_state': 42
         }
 
-        # Remove 'output_type' parameter
         # Initialize UMAP with adjusted parameters
         umap_model = self.UMAP(**umap_params)
 
@@ -153,6 +153,9 @@ class BertopicModel:
         """
         self.docs = docs  # Store documents for use in other methods
 
+        # Start embeddings and training time tracking
+        embeddings_and_training_start_time = time.time()
+
         # Check if the modeling type is iterative or iterative_zeroshot
         if self.modeling_type in ["iterative", "iterative_zeroshot"]:
             # Train the model using the iterative approach
@@ -161,9 +164,17 @@ class BertopicModel:
             # Train the model using the regular approach
             self._train_regular(docs)
 
+        # End embeddings and training time tracking
+        embeddings_and_training_end_time = time.time()
+        embeddings_and_training_duration = embeddings_and_training_end_time - embeddings_and_training_start_time
+        print(f"Computing embeddings and training took {embeddings_and_training_duration:.2f} seconds.")
+
     def _train_regular(self, docs):
         # Initialize BERTopic model
         self.topic_model = self._initialize_bertopic_model()
+
+        # Start embeddings time tracking
+        embeddings_start_time = time.time()
 
         # Compute embeddings on GPU
         print("Computing embeddings...")
@@ -171,10 +182,13 @@ class BertopicModel:
         embeddings = self.model.encode(docs, show_progress_bar=True, batch_size=self.config["batch_size"])
         self._print_gpu_usage()
 
-        # Remove the conversion to CuPy arrays
-        # if self.device.type == "cuda":
-        #     import cupy as cp
-        #     embeddings = cp.asarray(embeddings)
+        # End embeddings time tracking
+        embeddings_end_time = time.time()
+        embeddings_duration = embeddings_end_time - embeddings_start_time
+        print(f"Computing embeddings took {embeddings_duration:.2f} seconds.")
+
+        # Start training time tracking
+        training_start_time = time.time()
 
         # Train the BERTopic model with embeddings
         print(f"Training BERTopic model using the following modeling type: {self.modeling_type}...")
@@ -197,6 +211,11 @@ class BertopicModel:
             print(f"An error occurred during model training: {e}")
             return
 
+        # End training time tracking
+        training_end_time = time.time()
+        training_duration = training_end_time - training_start_time
+        print(f"Training the model took {training_duration:.2f} seconds.")
+
         # Print information about the training process
         print(f"BERTopic model trained on {len(docs)} sections.")
         print(f"Number of topics generated: {len(set(topics))}")
@@ -212,7 +231,6 @@ class BertopicModel:
             print(f"BERTopic model saved to {self.model_save_path}.")
         except Exception as e:
             print(f"An error occurred while saving the model: {e}")
-
 
     def _train_iterative(self, docs):
         # Adjusted to remove batch processing and embeddings computation
@@ -290,6 +308,9 @@ def main():
     -------
     None
     """
+    # Start total execution time tracking
+    total_start_time = time.time()
+
     # Load configuration from config.json
     print("Loading configuration...")
     with open('config_hlr.json', 'r') as config_file:
@@ -313,11 +334,19 @@ def main():
     file_handler = FileHandler(index_file_path=config["index_file_path"], folderpath_ecc=folderpath_ecc)
     text_processor = TextProcessor(method=document_split, section_to_analyze=section_to_analyze)
 
+    # Start splitting process time tracking
+    splitting_start_time = time.time()
+
     # Create the sample and extract relevant sections
     print("Reading index file and creating ECC sample...")
     index_file = file_handler.read_index_file()
     ecc_sample = file_handler.create_ecc_sample(sample_size)
     all_relevant_sections = text_processor.extract_all_relevant_sections(ecc_sample, max_documents)
+
+    # End splitting process time tracking
+    splitting_end_time = time.time()
+    splitting_duration = splitting_end_time - splitting_start_time
+    print(f"Splitting process took {splitting_duration:.2f} seconds.")
 
     if not all_relevant_sections:
         print("No relevant sections found to fit BERTopic.")
@@ -325,9 +354,20 @@ def main():
 
     # Instantiate and train the BERTopic model
     bertopic_model = BertopicModel(config)
+
+    # Start training time tracking
+    training_start_time = time.time()
     bertopic_model.train(all_relevant_sections)
+    training_end_time = time.time()
+    training_duration = training_end_time - training_start_time
+    print(f"Training the model took {training_duration:.2f} seconds.")
 
     print("BERTopic model training and saving completed.")
+
+    # End total execution time tracking
+    total_end_time = time.time()
+    total_duration = total_end_time - total_start_time
+    print(f"Total execution time: {total_duration:.2f} seconds.")
 
 if __name__ == "__main__":
     main()
