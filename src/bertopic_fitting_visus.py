@@ -247,12 +247,12 @@ class BertopicFitting:
         print("Visualizing topics...")
         fig = self.topic_model.visualize_topics()
         self.save_visualization(fig, os.path.join(self.output_dir, "topics.html"), file_format="html")
-
+        """
         # Visualize Documents
         print("Visualizing documents...")
         fig = self.topic_model.visualize_documents(self.topic_model.original_documents)
         self.save_visualization(fig, os.path.join(self.output_dir, "documents.html"), file_format="html")
-
+        """
         # Visualize Topic Hierarchy
         print("Visualizing topic hierarchy...")
         fig = self.topic_model.visualize_hierarchy()
