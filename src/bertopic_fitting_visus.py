@@ -26,28 +26,27 @@ class BertopicFitting:
         """
         self.config = config
         self.model_load_path = model_load_path
-        self.topic_model = self._load_bertopic_model()
         self.index_file_ecc_folder = config["index_file_ecc_folder"]
         self.output_dir = "model_outputs"
         os.makedirs(self.output_dir, exist_ok=True)
-        # self.nr_topics = config.get("nr_topics", None)  # Get the number of topics from config
+
+        # Load the embedding model and BERTopic model
+        self.device = "cuda" if torch.cuda.is_available() else "cpu"
+        self.embedding_model = SentenceTransformer(self.config["embedding_model_choice"], device=self.device)
+        print(f"Embedding model loaded successfully. Using device: {self.device}")
+
+        self.topic_model = self._load_bertopic_model()
+        self.topic_model.embedding_model = self.embedding_model  # Ensure the embedding model is set
 
     def _load_bertopic_model(self):
         """
-        Load the pre-trained BERTopic model from the given filepath and use GPU for the embedding model if available,
-        otherwise fall back to CPU.
+        Load the pre-trained BERTopic model from the given filepath.
         """
         print(f"Loading BERTopic model from {self.model_load_path}...")
 
-        # Check if a GPU is available, otherwise use CPU
-        device = "cuda" if torch.cuda.is_available() else "cpu"
-
-        # Load the embedding model on the selected device
-        embedding_model = SentenceTransformer(self.config["embedding_model_choice"], device=device)
-        print(f"Embedding model loaded successfully. Using device: {device}")
-
-        # Load the BERTopic model with the embedding model
-        return BERTopic.load(self.model_load_path, embedding_model=embedding_model)
+        # Load the BERTopic model without loading an embedding model
+        topic_model = BERTopic.load(self.model_load_path)
+        return topic_model
 
     def save_results(self, all_relevant_sections, topics, ecc_sample):
         """
@@ -112,48 +111,37 @@ class BertopicFitting:
         Fit the BERTopic model, save results, and generate visualizations.
         """
         total_start_time = time.time()  # Start total time tracking
-        print("Transforming documents with the BERTopic model...")
+        print("Computing embeddings for all documents...")
 
-        # Initialize lists to store topics and probabilities
-        all_topics = []
-        all_probabilities = []
-
-        # Define batch size from config or set a default value
-        batch_size = self.config.get("batch_size", 10000)
-        num_documents = len(all_relevant_sections)
-        num_batches = (num_documents + batch_size - 1) // batch_size
-
-        # Start embeddings time tracking
+        # Compute embeddings for all documents
         embeddings_start_time = time.time()
-
-        # Process documents in batches without per-batch print statements
-        for batch_num in range(num_batches):
-            start_idx = batch_num * batch_size
-            end_idx = min(start_idx + batch_size, num_documents)
-            batch_sections = all_relevant_sections[start_idx:end_idx]
-
-            # Transform documents and get topics and probabilities for the batch
-            topics, probabilities = self.topic_model.transform(batch_sections)
-
-            # Append batch results to the overall lists
-            all_topics.extend(topics)
-            all_probabilities.extend(probabilities)
-
-        # End embeddings time tracking
+        embeddings = self.embedding_model.encode(
+            all_relevant_sections,
+            show_progress_bar=True,
+            batch_size=self.config.get("batch_size", 64)
+        )
         embeddings_end_time = time.time()
         embeddings_duration = embeddings_end_time - embeddings_start_time
-        print(f"Transforming documents took {embeddings_duration:.2f} seconds.")
+        print(f"Computed embeddings for {len(all_relevant_sections)} documents in {embeddings_duration:.2f} seconds.")
+
+        # Transform documents with the BERTopic model using precomputed embeddings
+        print("Transforming documents with the BERTopic model...")
+        transform_start_time = time.time()
+        topics, probabilities = self.topic_model.transform(all_relevant_sections, embeddings)
+        transform_end_time = time.time()
+        transform_duration = transform_end_time - transform_start_time
+        print(f"Transformed documents in {transform_duration:.2f} seconds.")
 
         # Save the transformed topics and probabilities to the model
-        self.topic_model.topics_ = np.array(all_topics)
-        self.topic_model.probabilities_ = np.array(all_probabilities)
+        self.topic_model.topics_ = topics
+        self.topic_model.probabilities_ = probabilities
 
         # Ensure original documents are saved for visualization
-        self.topic_model.original_documents_ = all_relevant_sections
+        self.topic_model.original_documents = all_relevant_sections
 
         total_end_time = time.time()
         total_duration = total_end_time - total_start_time
-        print(f"BERTopic model transformed for {num_documents} sections in {total_duration:.2f} seconds.")
+        print(f"Total processing time: {total_duration:.2f} seconds.")
 
         # Save the results to CSV and store results_df
         self.save_results(all_relevant_sections, self.topic_model.topics_, ecc_sample)
@@ -244,7 +232,7 @@ class BertopicFitting:
 
         # Visualize Documents
         print("Visualizing documents...")
-        fig = self.topic_model.visualize_documents(self.topic_model.original_documents_)
+        fig = self.topic_model.visualize_documents(self.topic_model.original_documents)
         self.save_visualization(fig, os.path.join(self.output_dir, "documents.html"), file_format="html")
 
         # Visualize Topic Hierarchy
@@ -335,7 +323,7 @@ class BertopicFitting:
         print("Visualizing documents...")
         start_time = time.time()
 
-        fig = self.topic_model.visualize_documents(self.topic_model.original_documents_)
+        fig = self.topic_model.visualize_documents(self.topic_model.original_documents)
         self.save_visualization(fig, os.path.join(self.output_dir, "documents.html"), file_format="html")
 
         end_time = time.time()
