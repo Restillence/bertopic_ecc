@@ -8,7 +8,7 @@
   "embedding_model_choice": "all-MiniLM-L12-v2",
   "ecc_plots_folder": "/plots/ecc_plots",
 
-  "modeling_type": "regular",
+  "modeling_type": "zeroshot",
   "sample_size": 100,
   "document_split": "sentences",
   "random_seed": 43,
