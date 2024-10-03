@@ -31,7 +31,7 @@
       "low_memory": true
   },
   "hdbscan_model_params": {
-      "min_cluster_size": 300,
+      "min_cluster_size": 150,
       "metric": "euclidean",
       "cluster_selection_method": "eom",
       "prediction_data": true
