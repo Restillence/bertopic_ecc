@@ -127,8 +127,8 @@ class BertopicModel:
         }
 
         if self.modeling_type in ["zeroshot", "iterative_zeroshot"]:
-            bertopic_params['zeroshot_topic_list'] = self.config.get("zeroshot_topic_list", None)
-            bertopic_params['zeroshot_min_similarity'] = self.config.get("zeroshot_min_similarity", None)
+            bertopic_params['zeroshot_topics'] = self.config.get("zeroshot_topic_list", None)
+            bertopic_params['min_similarity'] = self.config.get("zeroshot_min_similarity", None)
 
         return BERTopic(**bertopic_params)
 
@@ -169,6 +169,9 @@ class BertopicModel:
         embeddings_and_training_duration = embeddings_and_training_end_time - embeddings_and_training_start_time
         print(f"Computing embeddings and training took {embeddings_and_training_duration:.2f} seconds.")
 
+        # After training, display topic information and customize labels if zero-shot modeling
+        self._post_training_tasks()
+
     def _train_regular(self, docs):
         # Initialize BERTopic model
         self.topic_model = self._initialize_bertopic_model()
@@ -198,14 +201,10 @@ class BertopicModel:
             # Handle None values in topics (assign -1 to unassigned topics)
             topics = [topic if topic is not None else -1 for topic in topics]
 
-            # Print document count per topic for debugging
-            topic_doc_count = {topic: topics.count(topic) for topic in set(topics)}
-            print("Document count per topic:", topic_doc_count)
-
             # Assign topics and probabilities to the model
             self.topic_model.topics_ = topics
             self.topic_model.probabilities_ = probs
-            self.topic_model.original_documents_ = docs  # Ensure original_documents_ is set
+            self.topic_model.original_documents = docs  # Ensure original_documents is set
 
         except Exception as e:
             print(f"An error occurred during model training: {e}")
@@ -217,7 +216,7 @@ class BertopicModel:
         print(f"Training the model took {training_duration:.2f} seconds.")
 
         # Print information about the training process
-        print(f"BERTopic model trained on {len(docs)} sections.")
+        print(f"BERTopic model trained on {len(docs)} documents.")
         print(f"Number of topics generated: {len(set(topics))}")
 
         # Save the BERTopic model using safetensors
@@ -248,7 +247,7 @@ class BertopicModel:
         self.topic_model = self._initialize_bertopic_model()
 
         base_model = self.topic_model.fit(doc_chunks[0])
-        base_model.original_documents_ = doc_chunks[0]
+        base_model.original_documents = doc_chunks[0]
 
         # Iterate over the remaining chunks of documents
         for chunk in doc_chunks[1:]:
@@ -259,14 +258,14 @@ class BertopicModel:
                 self.docs = chunk
                 # Train a new model on the current chunk of documents
                 new_model = self._initialize_bertopic_model().fit(chunk)
-                new_model.original_documents_ = chunk
+                new_model.original_documents = chunk
 
                 # Merge the new model with the base model
                 updated_model = BERTopic.merge_models([base_model, new_model])
 
                 # Print the number of newly discovered topics
                 nr_new_topics = len(set(updated_model.topics_)) - len(set(base_model.topics_))
-                new_topics = list(updated_model.topic_labels_.values())[-nr_new_topics:]
+                new_topics = list(updated_model.get_topic_info()['Name'])[-nr_new_topics:]
                 print("The following topics are newly found:")
                 print(f"{new_topics}\n")
 
@@ -281,7 +280,7 @@ class BertopicModel:
         self.topic_model = base_model
 
         # Print information about the training process
-        print(f"Iterative BERTopic model trained on {len(docs)} sections.")
+        print(f"Iterative BERTopic model trained on {len(docs)} documents.")
         print(f"Number of topics generated: {len(set(self.topic_model.topics_))}")
 
         # Save the final merged model
@@ -295,6 +294,51 @@ class BertopicModel:
             print(f"Final BERTopic model saved to {self.model_save_path}.")
         except Exception as e:
             print(f"An error occurred while saving the model: {e}")
+
+    def _post_training_tasks(self):
+        """Perform tasks after training, such as displaying topic info and customizing labels."""
+        # Display the number of documents assigned to each topic
+        print("\nGetting topic information...")
+        topic_info = self.topic_model.get_topic_info()
+        print(topic_info[['Topic', 'Count']])
+
+        # Customize topic labels if zero-shot modeling
+        if self.modeling_type in ["zeroshot", "iterative_zeroshot"]:
+            print("\nCustomizing topic labels with zero-shot topic names...")
+            self._customize_topic_labels()
+
+    def _customize_topic_labels(self):
+        """Customize topic labels to include zero-shot topic names followed by top words."""
+        # Get zero-shot topic list from config
+        zeroshot_topic_list = self.config.get("zeroshot_topic_list", [])
+
+        # Create a mapping from topic IDs to zero-shot topic names
+        topic_labels = {}
+        for topic_id in self.topic_model.get_topic_info()['Topic']:
+            if topic_id == -1:
+                topic_labels[topic_id] = "Outliers"
+            else:
+                # Get the assigned zero-shot topic name
+                zeroshot_topic_name = zeroshot_topic_list[topic_id]
+                # Get the top words for the topic
+                top_words = ', '.join([word for word, _ in self.topic_model.get_topic(topic_id)])
+                # Combine the zero-shot topic name with the top words
+                topic_labels[topic_id] = f"{zeroshot_topic_name}: {top_words}"
+
+        # Update the topic labels in the model
+        self.topic_model.set_topic_labels(topic_labels)
+
+        # Display updated topic labels
+        print("Updated topic labels:")
+        topic_info = self.topic_model.get_topic_info()
+        print(topic_info[['Topic', 'Name']])
+
+    def save_topic_info(self):
+        """Save topic information to a CSV file."""
+        topic_info = self.topic_model.get_topic_info()
+        output_file = os.path.join(self.config.get("output_dir", "."), "topic_info.csv")
+        topic_info.to_csv(output_file, index=False)
+        print(f"Topic information saved to {output_file}.")
 
 def main():
     """
@@ -363,6 +407,9 @@ def main():
     print(f"Training the model took {training_duration:.2f} seconds.")
 
     print("BERTopic model training and saving completed.")
+
+    # Save topic information to CSV
+    bertopic_model.save_topic_info()
 
     # End total execution time tracking
     total_end_time = time.time()

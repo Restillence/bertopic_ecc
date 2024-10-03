@@ -123,13 +123,14 @@ class BertopicFitting:
         num_documents = len(all_relevant_sections)
         num_batches = (num_documents + batch_size - 1) // batch_size
 
+        # Start embeddings time tracking
+        embeddings_start_time = time.time()
+
+        # Process documents in batches without per-batch print statements
         for batch_num in range(num_batches):
-            batch_start_time = time.time()
             start_idx = batch_num * batch_size
             end_idx = min(start_idx + batch_size, num_documents)
             batch_sections = all_relevant_sections[start_idx:end_idx]
-
-            print(f"Processing batch {batch_num + 1}/{num_batches} (documents {start_idx} to {end_idx})...")
 
             # Transform documents and get topics and probabilities for the batch
             topics, probabilities = self.topic_model.transform(batch_sections)
@@ -138,8 +139,10 @@ class BertopicFitting:
             all_topics.extend(topics)
             all_probabilities.extend(probabilities)
 
-            batch_end_time = time.time()
-            print(f"Batch {batch_num + 1} processed in {batch_end_time - batch_start_time:.2f} seconds.")
+        # End embeddings time tracking
+        embeddings_end_time = time.time()
+        embeddings_duration = embeddings_end_time - embeddings_start_time
+        print(f"Transforming documents took {embeddings_duration:.2f} seconds.")
 
         # Save the transformed topics and probabilities to the model
         self.topic_model.topics_ = np.array(all_topics)
@@ -149,7 +152,8 @@ class BertopicFitting:
         self.topic_model.original_documents_ = all_relevant_sections
 
         total_end_time = time.time()
-        print(f"BERTopic model transformed for {num_documents} sections in {total_end_time - total_start_time:.2f} seconds.")
+        total_duration = total_end_time - total_start_time
+        print(f"BERTopic model transformed for {num_documents} sections in {total_duration:.2f} seconds.")
 
         # Save the results to CSV and store results_df
         self.save_results(all_relevant_sections, self.topic_model.topics_, ecc_sample)
