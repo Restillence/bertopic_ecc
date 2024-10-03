@@ -6,10 +6,25 @@ import numpy as np
 import torch
 import matplotlib.pyplot as plt
 from bertopic import BERTopic
+from bertopic.backend import BaseEmbedder  # Import BaseEmbedder for custom embedding
 from file_handling import FileHandler
 from text_processing import TextProcessor
 from utils import print_configuration
 from sentence_transformers import SentenceTransformer
+
+class CustomEmbeddingModel(BaseEmbedder):
+    """
+    A wrapper class for the SentenceTransformer model to add the 'embed_documents' method
+    expected by BERTopic.
+    """
+    def __init__(self, embedding_model):
+        self.embedding_model = embedding_model
+
+    def embed_documents(self, documents, verbose=False):
+        return self.embedding_model.encode(documents, show_progress_bar=verbose)
+
+    def embed_queries(self, queries, verbose=False):
+        return self.embedding_model.encode(queries, show_progress_bar=verbose)
 
 class BertopicFitting:
     """
@@ -30,13 +45,17 @@ class BertopicFitting:
         self.output_dir = "model_outputs"
         os.makedirs(self.output_dir, exist_ok=True)
 
-        # Load the embedding model and BERTopic model
+        # Load the embedding model and wrap it
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
-        self.embedding_model = SentenceTransformer(self.config["embedding_model_choice"], device=self.device)
+        embedding_model = SentenceTransformer(self.config["embedding_model_choice"], device=self.device)
         print(f"Embedding model loaded successfully. Using device: {self.device}")
 
+        # Wrap the embedding model
+        self.embedding_model = CustomEmbeddingModel(embedding_model)
+
+        # Load the BERTopic model with the custom embedding model
         self.topic_model = self._load_bertopic_model()
-        self.topic_model.embedding_model = self.embedding_model  # Ensure the embedding model is set
+        self.topic_model.embedding_model = self.embedding_model  # Set the custom embedding model
 
     def _load_bertopic_model(self):
         """
@@ -115,10 +134,9 @@ class BertopicFitting:
 
         # Compute embeddings for all documents
         embeddings_start_time = time.time()
-        embeddings = self.embedding_model.encode(
+        embeddings = self.embedding_model.embed_documents(
             all_relevant_sections,
-            show_progress_bar=True,
-            batch_size=self.config.get("batch_size", 64)
+            verbose=True
         )
         embeddings_end_time = time.time()
         embeddings_duration = embeddings_end_time - embeddings_start_time
@@ -272,28 +290,39 @@ class BertopicFitting:
             # Prepare the data
             timestamps = []
             documents = []
+            topics = []
 
             for index, row in self.results_df.iterrows():
                 date = row['date']  # The date of the conference call
                 sections = json.loads(row['text'])  # List of sections (paragraphs)
+                section_topics = json.loads(row['topics'])
                 num_sections = len(sections)
                 timestamps.extend([date] * num_sections)
                 documents.extend(sections)
+                topics.extend(section_topics)
 
             # Convert timestamps to datetime objects
             timestamps = pd.to_datetime(timestamps)
 
             # Ensure that the number of timestamps matches the number of documents
-            if len(timestamps) != len(documents):
-                raise ValueError("Number of timestamps does not match the number of documents.")
+            if not (len(timestamps) == len(documents) == len(topics)):
+                raise ValueError("Number of timestamps, documents, and topics do not match.")
 
-            # Set the number of bins to a value lower than 100
+            # Create a DataFrame for topics over time
+            data = pd.DataFrame({
+                "Timestamp": timestamps,
+                "Topic": topics,
+                "Document": documents
+            })
+
+            # Set the number of bins
             nr_bins = 50  # Adjust as needed
 
             # Generate topics over time with the specified number of bins
             topics_over_time = self.topic_model.topics_over_time(
-                documents,
-                timestamps,
+                data["Document"],
+                data["Timestamp"],
+                data["Topic"],
                 nr_bins=nr_bins
             )
 
@@ -316,31 +345,18 @@ class BertopicFitting:
         except Exception as e:
             print(f"An error occurred in visualize_topics_over_time: {e}")
 
-    def visualize_documents(self):
-        """
-        Generate and save the Visualize Documents visualization.
-        """
-        print("Visualizing documents...")
-        start_time = time.time()
-
-        fig = self.topic_model.visualize_documents(self.topic_model.original_documents)
-        self.save_visualization(fig, os.path.join(self.output_dir, "documents.html"), file_format="html")
-
-        end_time = time.time()
-        print(f"Documents visualization saved in {end_time - start_time:.2f} seconds.")
-
 def main():
     """
     Main entry point of the script.
 
-    This function loads the configuration from `config.json`, sets the random seed, and extracts the necessary variables from the config.
+    This function loads the configuration from `config_hlr.json`, sets the random seed, and extracts the necessary variables from the config.
     Then, it initializes the `FileHandler` and `TextProcessor` classes with the imported configuration, creates the ECC sample, and extracts the relevant sections.
     Finally, it fits the BERTopic model, saves the results, and generates visualizations.
     """
     # Start total time tracking
     total_start_time = time.time()
 
-    # Load configuration from config.json
+    # Load configuration from config_hlr.json
     print("Loading configuration...")
     with open('config_hlr.json', 'r') as f:
         config = json.load(f)
