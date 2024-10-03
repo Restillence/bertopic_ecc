@@ -14,7 +14,7 @@
   "random_seed": 43,
   "section_to_analyze": "Presentation",
   "max_documents": 3000000000,
-  "nr_topics": 20,
+  "nr_topics": 12,
 
   "batch_size": 64,
 
