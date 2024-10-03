@@ -9,7 +9,7 @@
   "ecc_plots_folder": "/plots/ecc_plots",
 
   "modeling_type": "regular",
-  "sample_size": 200,
+  "sample_size": 100,
   "document_split": "sentences",
   "random_seed": 43,
   "section_to_analyze": "Presentation",
@@ -43,6 +43,11 @@
   "mmr_params": {
       "diversity": 0.7
   },
+
+  "zeroshot_min_similarity": 0.00,
+  "min_topic_size": 10,
+  "doc_chunk_size": 500,
+
   "zeroshot_topic_list_long": [
       "Financial Performance",
       "Revenue and Profit Margins",
@@ -90,10 +95,6 @@
       "Dividend Policies and Stock Repurchase Programs",
       "outliers"
   ],
-  "zeroshot_min_similarity": 0.00,
-  "embedding_model": "D:/daten_masterarbeit/finbert-sentence-transformer",
-  "min_topic_size": 10,
-  "doc_chunk_size": 500,
 
   "zeroshot_topic_list": [
     "Welcome and Introduction",

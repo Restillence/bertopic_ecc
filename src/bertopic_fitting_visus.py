@@ -30,7 +30,7 @@ class BertopicFitting:
         self.index_file_ecc_folder = config["index_file_ecc_folder"]
         self.output_dir = "model_outputs"
         os.makedirs(self.output_dir, exist_ok=True)
-        #self.nr_topics = config.get("nr_topics", None)  # Get the number of topics from config
+        # self.nr_topics = config.get("nr_topics", None)  # Get the number of topics from config
 
     def _load_bertopic_model(self):
         """
@@ -55,7 +55,7 @@ class BertopicFitting:
 
         Args:
             all_relevant_sections (list): List of all relevant sections from the ECC sample.
-            topics (numpy.ndarray): Array of topics assigned to each section.
+            topics (list): List of topics assigned to each section.
             ecc_sample (dict): Dictionary containing the ECC sample data.
         """
         result_dict = {}
@@ -111,21 +111,45 @@ class BertopicFitting:
         """
         Fit the BERTopic model, save results, and generate visualizations.
         """
-        bertopic_start_time = time.time()
+        total_start_time = time.time()  # Start total time tracking
         print("Transforming documents with the BERTopic model...")
 
-        # Transform documents and get topics and probabilities
-        topics, probabilities = self.topic_model.transform(all_relevant_sections)
+        # Initialize lists to store topics and probabilities
+        all_topics = []
+        all_probabilities = []
+
+        # Define batch size from config or set a default value
+        batch_size = self.config.get("batch_size", 10000)
+        num_documents = len(all_relevant_sections)
+        num_batches = (num_documents + batch_size - 1) // batch_size
+
+        for batch_num in range(num_batches):
+            batch_start_time = time.time()
+            start_idx = batch_num * batch_size
+            end_idx = min(start_idx + batch_size, num_documents)
+            batch_sections = all_relevant_sections[start_idx:end_idx]
+
+            print(f"Processing batch {batch_num + 1}/{num_batches} (documents {start_idx} to {end_idx})...")
+
+            # Transform documents and get topics and probabilities for the batch
+            topics, probabilities = self.topic_model.transform(batch_sections)
+
+            # Append batch results to the overall lists
+            all_topics.extend(topics)
+            all_probabilities.extend(probabilities)
+
+            batch_end_time = time.time()
+            print(f"Batch {batch_num + 1} processed in {batch_end_time - batch_start_time:.2f} seconds.")
 
         # Save the transformed topics and probabilities to the model
-        self.topic_model.topics_ = topics
-        self.topic_model.probabilities_ = probabilities
+        self.topic_model.topics_ = np.array(all_topics)
+        self.topic_model.probabilities_ = np.array(all_probabilities)
 
         # Ensure original documents are saved for visualization
         self.topic_model.original_documents_ = all_relevant_sections
 
-        end_time = time.time()
-        print(f"BERTopic model transformed for {len(all_relevant_sections)} sections in {end_time - bertopic_start_time:.2f} seconds.")
+        total_end_time = time.time()
+        print(f"BERTopic model transformed for {num_documents} sections in {total_end_time - total_start_time:.2f} seconds.")
 
         # Save the results to CSV and store results_df
         self.save_results(all_relevant_sections, self.topic_model.topics_, ecc_sample)
@@ -321,6 +345,9 @@ def main():
     Then, it initializes the `FileHandler` and `TextProcessor` classes with the imported configuration, creates the ECC sample, and extracts the relevant sections.
     Finally, it fits the BERTopic model, saves the results, and generates visualizations.
     """
+    # Start total time tracking
+    total_start_time = time.time()
+
     # Load configuration from config.json
     print("Loading configuration...")
     with open('config_hlr.json', 'r') as f:
@@ -355,12 +382,15 @@ def main():
     # Extract texts for BERTopic analysis (processed sections/paragraphs)
     print("Extracting and processing relevant sections...")
     all_relevant_sections = []
+    extraction_start_time = time.time()  # Time tracking
     for permco, calls in ecc_sample.items():
         for call_id, value in calls.items():
             relevant_sections = text_processor.extract_and_split_section(permco, call_id, value[0], value[1], value[2])
             all_relevant_sections.extend(relevant_sections)
             # Add the relevant sections to the ECC sample
             ecc_sample[permco][call_id] = (*value, relevant_sections)
+    extraction_end_time = time.time()
+    print(f"Extraction and processing completed in {extraction_end_time - extraction_start_time:.2f} seconds.")
 
     if not all_relevant_sections:
         print("No relevant sections found to fit BERTopic.")
@@ -369,6 +399,9 @@ def main():
     # Instantiate BertopicFitting and process the data
     bertopic_fitting = BertopicFitting(config, model_load_path)
     bertopic_fitting.fit_and_save(all_relevant_sections, ecc_sample)
+
+    total_end_time = time.time()
+    print(f"Total script execution time: {total_end_time - total_start_time:.2f} seconds.")
 
 if __name__ == "__main__":
     main()
