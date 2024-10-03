@@ -9,7 +9,7 @@
   "ecc_plots_folder": "/plots/ecc_plots",
 
   "modeling_type": "zeroshot",
-  "sample_size": 30,
+  "sample_size": 100,
   "document_split": "sentences",
   "random_seed": 43,
   "section_to_analyze": "Presentation",
@@ -35,7 +35,7 @@
       "metric": "euclidean",
       "cluster_selection_method": "eom",
       "prediction_data": true
-      
+
   },
   "keybert_params": {
       "top_n_words": 10
