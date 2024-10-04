@@ -62,9 +62,8 @@ class BertopicFitting:
         Load the pre-trained BERTopic model from the given filepath.
         """
         print(f"Loading BERTopic model from {self.model_load_path}...")
-
-        # Load the BERTopic model without loading an embedding model
-        topic_model = BERTopic.load(self.model_load_path)
+        # Load the BERTopic model with the embedding model
+        topic_model = BERTopic.load(self.model_load_path, embedding_model=self.embedding_model)
         return topic_model
 
     def save_results(self, all_relevant_sections, topics, ecc_sample):
@@ -129,45 +128,61 @@ class BertopicFitting:
         """
         Fit the BERTopic model, save results, and generate visualizations.
         """
-        total_start_time = time.time()  # Start total time tracking
-        print("Computing embeddings for all documents...")
+        try:
+            total_start_time = time.time()  # Start total time tracking
+            print("Computing embeddings for all documents...")
 
-        # Compute embeddings for all documents
-        embeddings_start_time = time.time()
-        embeddings = self.embedding_model.embed_documents(
-            all_relevant_sections,
-            verbose=True
-        )
-        embeddings_end_time = time.time()
-        embeddings_duration = embeddings_end_time - embeddings_start_time
-        print(f"Computed embeddings for {len(all_relevant_sections)} documents in {embeddings_duration:.2f} seconds.")
+            # Compute embeddings for all documents
+            embeddings_start_time = time.time()
+            embeddings = self.embedding_model.embed_documents(
+                all_relevant_sections,
+                verbose=True
+            )
+            embeddings_end_time = time.time()
+            embeddings_duration = embeddings_end_time - embeddings_start_time
+            print(f"Computed embeddings for {len(all_relevant_sections)} documents in {embeddings_duration:.2f} seconds.")
 
-        # Transform documents with the BERTopic model using precomputed embeddings
-        print("Transforming documents with the BERTopic model...")
-        transform_start_time = time.time()
-        topics, probabilities = self.topic_model.transform(all_relevant_sections, embeddings)
-        transform_end_time = time.time()
-        transform_duration = transform_end_time - transform_start_time
-        print(f"Transformed documents in {transform_duration:.2f} seconds.")
+            # Transform documents with the BERTopic model using precomputed embeddings
+            print("Transforming documents with the BERTopic model...")
+            transform_start_time = time.time()
+            topics, probabilities = self.topic_model.transform(all_relevant_sections, embeddings)
+            transform_end_time = time.time()
+            transform_duration = transform_end_time - transform_start_time
+            print(f"Transformed documents in {transform_duration:.2f} seconds.")
 
-        # Save the transformed topics and probabilities to the model
-        self.topic_model.topics_ = topics
-        self.topic_model.probabilities_ = probabilities
+            # Save the transformed topics and probabilities to the model
+            self.topic_model.topics_ = topics
+            self.topic_model.probabilities_ = probabilities
 
-        # Ensure original documents are saved for visualization
-        self.topic_model.original_documents = all_relevant_sections
+            # Ensure original documents are saved for visualization
+            self.topic_model.original_documents = all_relevant_sections
 
-        total_end_time = time.time()
-        total_duration = total_end_time - total_start_time
-        print(f"Total processing time: {total_duration:.2f} seconds.")
+            total_end_time = time.time()
+            total_duration = total_end_time - total_start_time
+            print(f"Total processing time: {total_duration:.2f} seconds.")
 
-        # Save the results to CSV and store results_df
-        self.save_results(all_relevant_sections, self.topic_model.topics_, ecc_sample)
+            # Save the results to CSV and store results_df
+            print("Saving results...")
+            self.save_results(all_relevant_sections, self.topic_model.topics_, ecc_sample)
+            print("Results saved.")
 
-        # Generate and save information and visualizations
-        self.save_basic_info()
-        self.save_topics_distribution()
-        self.generate_additional_visualizations()
+            # Generate and save information and visualizations
+            print("Saving basic information...")
+            self.save_basic_info()
+            print("Basic information saved.")
+
+            print("Saving topic distribution...")
+            self.save_topics_distribution()
+            print("Topic distribution saved.")
+
+            print("Generating additional visualizations...")
+            self.generate_additional_visualizations()
+            print("Additional visualizations generated.")
+
+        except Exception as e:
+            print(f"An error occurred in fit_and_save: {e}")
+            import traceback
+            traceback.print_exc()
 
     def save_basic_info(self):
         """
@@ -178,21 +193,26 @@ class BertopicFitting:
         output_file = os.path.join(self.output_dir, "basic_info.txt")
         with open(output_file, 'w') as f:
             # Get the number of topics
-            num_topics = len(self.topic_model.get_topic_info())
+            topic_info = self.topic_model.get_topic_info()
+            num_topics = len(topic_info)
             f.write(f"Number of Topics: {num_topics}\n\n")
 
             # Get topic frequency (number of documents per topic)
-            topic_info = self.topic_model.get_topic_info()
-            f.write("Top 5 Topics by Frequency:\n")
-            f.write(topic_info.head(5).to_string())
+            f.write("Topics by Frequency:\n")
+            f.write(topic_info.to_string())
             f.write("\n\n")
 
-            # Get top words for a specific topic (example: topic 0)
-            example_topic = 0
-            top_words = self.topic_model.get_topic(example_topic)
-            f.write(f"Top words for Topic {example_topic}:\n")
-            for word, score in top_words:
-                f.write(f"  - {word}: {score}\n")
+            # Get top words for each topic
+            f.write("Top words for each topic:\n")
+            for topic_id in topic_info['Topic']:
+                if topic_id == -1:
+                    f.write("\nTopic -1 (Outliers):\n")
+                    f.write("  No words available for outlier topic.\n")
+                    continue  # Skip the outlier topic
+                top_words = self.topic_model.get_topic(topic_id)
+                f.write(f"\nTopic {topic_id}:\n")
+                for word, score in top_words:
+                    f.write(f"  - {word}: {score}\n")
 
         end_time = time.time()
         print(f"Basic information saved to {output_file} in {end_time - start_time:.2f} seconds.")
@@ -209,11 +229,13 @@ class BertopicFitting:
         # Exclude topic -1
         topic_info = topic_info[topic_info['Topic'] != -1]
 
-        plt.figure()
-        plt.bar(topic_info['Topic'], topic_info['Count'])
+        plt.figure(figsize=(10, 6))
+        plt.bar(topic_info['Topic'].astype(str), topic_info['Count'])
         plt.xlabel('Topic')
         plt.ylabel('Number of Documents')
         plt.title('Topic Distribution (excluding outlier topic)')
+        plt.xticks(rotation=90)
+        plt.tight_layout()
         plt.savefig(output_file)
         plt.close()
         end_time = time.time()
@@ -247,12 +269,14 @@ class BertopicFitting:
         print("Visualizing topics...")
         fig = self.topic_model.visualize_topics()
         self.save_visualization(fig, os.path.join(self.output_dir, "topics.html"), file_format="html")
+
         """
         # Visualize Documents
         print("Visualizing documents...")
         fig = self.topic_model.visualize_documents(self.topic_model.original_documents)
         self.save_visualization(fig, os.path.join(self.output_dir, "documents.html"), file_format="html")
         """
+
         # Visualize Topic Hierarchy
         print("Visualizing topic hierarchy...")
         fig = self.topic_model.visualize_hierarchy()
@@ -290,39 +314,33 @@ class BertopicFitting:
             # Prepare the data
             timestamps = []
             documents = []
-            topics = []
+            topics_list = []
 
             for index, row in self.results_df.iterrows():
                 date = row['date']  # The date of the conference call
                 sections = json.loads(row['text'])  # List of sections (paragraphs)
-                section_topics = json.loads(row['topics'])
+                section_topics = json.loads(row['topics'])  # List of topics for the sections
+
                 num_sections = len(sections)
                 timestamps.extend([date] * num_sections)
                 documents.extend(sections)
-                topics.extend(section_topics)
+                topics_list.extend(section_topics)
 
             # Convert timestamps to datetime objects
             timestamps = pd.to_datetime(timestamps)
 
-            # Ensure that the number of timestamps matches the number of documents
-            if not (len(timestamps) == len(documents) == len(topics)):
+            # Ensure that the number of timestamps matches the number of documents and topics
+            if not (len(timestamps) == len(documents) == len(topics_list)):
                 raise ValueError("Number of timestamps, documents, and topics do not match.")
 
-            # Create a DataFrame for topics over time
-            data = pd.DataFrame({
-                "Timestamp": timestamps,
-                "Topic": topics,
-                "Document": documents
-            })
-
-            # Set the number of bins
+            # Set the number of bins to a value lower than 100
             nr_bins = 50  # Adjust as needed
 
             # Generate topics over time with the specified number of bins
             topics_over_time = self.topic_model.topics_over_time(
-                data["Document"],
-                data["Timestamp"],
-                data["Topic"],
+                documents=documents,
+                topics=topics_list,
+                timestamps=timestamps,
                 nr_bins=nr_bins
             )
 
@@ -344,6 +362,8 @@ class BertopicFitting:
 
         except Exception as e:
             print(f"An error occurred in visualize_topics_over_time: {e}")
+            import traceback
+            traceback.print_exc()
 
 def main():
     """
