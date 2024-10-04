@@ -9,8 +9,8 @@
     "ecc_plots_folder": "C:/Users/nikla/OneDrive/Dokumente/winfoMaster/Masterarbeit/bertopic_ecc/plots/ecc_plots",
 
     "modeling_type": "regular",
-    "sample_size": 1729,
-    "document_split": "sentences",
+    "sample_size": 50,
+    "document_split": "paragraphs",
     "random_seed": 43,
     "section_to_analyze": "Presentation",
     "max_documents": 300000000,

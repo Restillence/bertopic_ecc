@@ -139,6 +139,32 @@ class ECCDataExplorer:
         plt.savefig(os.path.join(self.ecc_plots_folder, 'ecc_length_distribution_by_year.png'))
         plt.close()
 
+    def plot_avg_paragraph_length_distribution(self, results_df):
+        print("Computing average paragraph length distribution per earnings call...")
+        avg_paragraph_lengths = []
+
+        for _, row in results_df.iterrows():
+            # Split the text into paragraphs using the text_processor object
+            paragraphs = self.text_processor.split_text(row['text'])
+            if paragraphs:  # Ensure there are paragraphs
+                avg_length = sum(len(paragraph.split()) for paragraph in paragraphs) / len(paragraphs)
+                avg_paragraph_lengths.append(avg_length)
+
+        # Plot the average paragraph length distribution
+        plt.figure(figsize=(10, 6))
+        sns.histplot(avg_paragraph_lengths, bins=30, kde=True)
+        plt.title('Average Paragraph Length Distribution per Earnings Call')
+        plt.xlabel('Average Paragraph Length (Number of Words)')
+        plt.ylabel('Frequency')
+        plt.grid(True)
+
+        # Save the plot
+        plot_path = os.path.join(self.ecc_plots_folder, 'avg_paragraph_length_distribution.png')
+        plt.savefig(plot_path)
+        plt.close()
+
+        print(f"Plot saved to {plot_path}")
+
     def additional_descriptive_statistics(self, results_df):
         print("Computing additional descriptive statistics...")
         num_unique_companies = results_df['company_info'].nunique()
