@@ -141,13 +141,42 @@ class ECCDataExplorer:
 
     def plot_avg_paragraph_length_distribution(self, results_df):
         print("Computing average paragraph length distribution per earnings call...")
+        
         avg_paragraph_lengths = []
 
+        # Create a new TextProcessor instance with method='paragraphs'
+        paragraph_text_processor = TextProcessor(
+            method='paragraphs', 
+            section_to_analyze=self.text_processor.section_to_analyze
+        )
+
+        # Loop through each earnings call in the results_df
         for _, row in results_df.iterrows():
-            # Split the text into paragraphs using the text_processor object
-            paragraphs = self.text_processor.split_text(row['text'])
-            if paragraphs:  # Ensure there are paragraphs
-                avg_length = sum(len(paragraph.split()) for paragraph in paragraphs) / len(paragraphs)
+            text = row['text']
+
+            # Clean the text using the paragraph_text_processor
+            text = paragraph_text_processor.remove_unwanted_sections(text)
+            text = paragraph_text_processor.remove_questions_and_answers_and_beyond(text)
+            text = paragraph_text_processor.remove_concluding_statements(text)
+            text = paragraph_text_processor.remove_pattern(text)
+            text = paragraph_text_processor.remove_specific_string(text)  # Ensure "Presentation" is removed forcefully
+
+            # Split the cleaned text into paragraphs
+            paragraphs = paragraph_text_processor.split_text_by_visual_cues(text)
+
+            # Final cleanup: Remove any remaining separator lines
+            paragraphs = [paragraph_text_processor.remove_separator_line(para) for para in paragraphs]
+
+            # Final Steps: Remove "Presentation" and filter out elements with fewer than 3 words
+            paragraphs = paragraph_text_processor.remove_presentation_from_final_list(paragraphs)
+            paragraphs = paragraph_text_processor.filter_short_elements(paragraphs)
+            
+            # Calculate the average paragraph length for this earnings call
+            paragraph_lengths = [len(paragraph.split()) for paragraph in paragraphs]
+            
+            # Ensure there are paragraphs and calculate the average length
+            if paragraph_lengths:  # Avoid division by zero
+                avg_length = sum(paragraph_lengths) / len(paragraph_lengths)
                 avg_paragraph_lengths.append(avg_length)
 
         # Plot the average paragraph length distribution
@@ -164,6 +193,7 @@ class ECCDataExplorer:
         plt.close()
 
         print(f"Plot saved to {plot_path}")
+
 
     def additional_descriptive_statistics(self, results_df):
         print("Computing additional descriptive statistics...")
@@ -215,3 +245,68 @@ class ECCDataExplorer:
         print("\nTop 5 companies by average ECC length:")
         print(top5_avg_length.to_string(index=False))
         print(f"\nTables have been saved to {output_html_path}")
+
+    def get_calls_with_highest_avg_paragraph_lengths(self, results_df, top_percent=20):
+        print("Computing average paragraph length per earnings call...")
+        
+        # Create a new TextProcessor instance with method='paragraphs'
+        paragraph_text_processor = TextProcessor(
+            method='paragraphs', 
+            section_to_analyze=self.text_processor.section_to_analyze
+        )
+        
+        call_avg_paragraph_lengths = []
+        
+        # Loop through each earnings call in the results_df
+        for _, row in results_df.iterrows():
+            text = row['text']
+            call_id = row['call_id']  # Ensure results_df has a 'call_id' column
+            company_info = row['company_info']  # Use 'company_info' instead of 'company'
+            date = row['date']  # Ensure results_df has a 'date' column
+
+            # Clean the text using the paragraph_text_processor
+            text = paragraph_text_processor.remove_unwanted_sections(text)
+            text = paragraph_text_processor.remove_questions_and_answers_and_beyond(text)
+            text = paragraph_text_processor.remove_concluding_statements(text)
+            text = paragraph_text_processor.remove_pattern(text)
+            text = paragraph_text_processor.remove_specific_string(text)  # Ensure "Presentation" is removed forcefully
+
+            # Split the cleaned text into paragraphs
+            paragraphs = paragraph_text_processor.split_text_by_visual_cues(text)
+
+            # Final cleanup: Remove any remaining separator lines
+            paragraphs = [paragraph_text_processor.remove_separator_line(para) for para in paragraphs]
+
+            # Final Steps: Remove "Presentation" and filter out elements with fewer than 3 words
+            paragraphs = paragraph_text_processor.remove_presentation_from_final_list(paragraphs)
+            paragraphs = paragraph_text_processor.filter_short_elements(paragraphs)
+            
+            # Calculate the average paragraph length for this earnings call
+            paragraph_lengths = [len(paragraph.split()) for paragraph in paragraphs]
+            
+            # Ensure there are paragraphs and calculate the average length
+            if paragraph_lengths:  # Avoid division by zero
+                avg_length = sum(paragraph_lengths) / len(paragraph_lengths)
+                call_avg_paragraph_lengths.append({
+                    'call_id': call_id,
+                    'company_info': company_info,  # Use 'company_info' here
+                    'date': date,
+                    'avg_paragraph_length': avg_length
+                })
+        
+        # Convert the list to a DataFrame
+        avg_paragraph_lengths_df = pd.DataFrame(call_avg_paragraph_lengths)
+        
+        # Calculate the threshold for the top 'top_percent' %
+        threshold = np.percentile(avg_paragraph_lengths_df['avg_paragraph_length'], 100 - top_percent)
+        
+        # Get the calls in the top 'top_percent' %
+        top_calls = avg_paragraph_lengths_df[avg_paragraph_lengths_df['avg_paragraph_length'] >= threshold]
+        
+        # Sort by avg_paragraph_length descending
+        top_calls = top_calls.sort_values(by='avg_paragraph_length', ascending=False).reset_index(drop=True)
+        
+        print(f"Top {top_percent}% calls with highest average paragraph lengths:")
+        print(top_calls)
+        
+        return top_calls

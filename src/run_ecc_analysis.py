@@ -2,6 +2,9 @@ from ecc_data_exploration import ECCDataExplorer
 from nlp_plots import NLPPlotter
 import os
 import torch
+import numpy as np
+import pandas as pd
+
 
 def main():
     # Initialize ECCDataExplorer
@@ -11,6 +14,7 @@ def main():
     ecc_sample = ecc_explorer.load_data()
     results_df = ecc_explorer.convert_to_dataframe(ecc_sample)
     
+    """
     # Perform data exploration and plotting
     ecc_explorer.plot_paragraph_length_distribution(results_df)
     ecc_explorer.plot_ecc_length_distribution(results_df)
@@ -19,10 +23,12 @@ def main():
     ecc_explorer.plot_files_distribution(results_df)
     ecc_explorer.plot_average_ecc_length_per_company(results_df)
     ecc_explorer.plot_ecc_length_distribution_by_year(results_df)
-
+    """
     # Add new plot for average paragraph length distribution
-    ecc_explorer.plot_avg_paragraph_length_distribution(results_df)
-
+    #ecc_explorer.plot_avg_paragraph_length_distribution(results_df)
+    
+    ecc_explorer.get_calls_with_highest_avg_paragraph_lengths(results_df)
+    """
     # Display additional stats
     num_unique_companies, calls_per_company, top5_avg_length, summary_stats_table = ecc_explorer.additional_descriptive_statistics(results_df)
     ecc_explorer.display_tables(
@@ -44,6 +50,6 @@ def main():
     nlp_plotter.plot_word_length_distribution(results_df)
     nlp_plotter.plot_bag_of_words(results_df)
     nlp_plotter.plot_wordcloud(results_df)
-
+    """
 if __name__ == "__main__":
     main()
