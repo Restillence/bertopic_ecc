@@ -1,5 +1,4 @@
 import os
-import sys  # Added import for sys, as it's used later in the script
 import json
 import numpy as np
 import torch  # For checking if GPU is available
@@ -11,9 +10,6 @@ from text_processing import TextProcessor  # Import the TextProcessor class
 from sentence_transformers import SentenceTransformer
 from sklearn.feature_extraction.text import CountVectorizer
 from utils import print_configuration
-
-# Add the src directory to the system path
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'src'))
 
 # Start total execution time tracking
 total_start_time = time.time()
