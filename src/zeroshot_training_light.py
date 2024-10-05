@@ -99,7 +99,7 @@ topic_model = BERTopic(
     min_topic_size=50,
     zeroshot_topic_list=zeroshot_topic_list,
     zeroshot_min_similarity=0.1,
-    representation_model=KeyBERTInspired(model=embedding_model)  # Ensure representation model uses the same embedding model
+    representation_model=KeyBERTInspired()  # Removed 'model=embedding_model'
 )
 
 # Start training time tracking
