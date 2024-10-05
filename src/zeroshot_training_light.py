@@ -44,7 +44,7 @@ folderpath_ecc = config.get("folderpath_ecc", "")
 sample_size = config.get("sample_size", 100)
 document_split = config.get("document_split", "default_method")
 section_to_analyze = config.get("section_to_analyze", "default_section")
-max_documents = config.get("max_documents", 1000)
+max_documents = config.get("max_documents", 1000000)
 model_save_path = config.get("model_save_path", "bertopic_model")
 
 # Initialize FileHandler and TextProcessor with the imported configuration
@@ -96,9 +96,9 @@ embedding_model = SentenceTransformer("all-MiniLM-L12-v2", device=device)
 # Initialize BERTopic with the embedding model
 topic_model = BERTopic(
     embedding_model=embedding_model,  # Use the loaded embedding model
-    min_topic_size=50,
+    min_topic_size=100,
     zeroshot_topic_list=zeroshot_topic_list,
-    zeroshot_min_similarity=0.1,
+    zeroshot_min_similarity=0.0,
     representation_model=KeyBERTInspired()  # Removed 'model=embedding_model'
 )
 
