@@ -17,8 +17,7 @@ total_start_time = time.time()
 
 # Load configuration from config.json
 print("Loading configuration...")
-config_path = r'C:\Users\nikla\OneDrive\Dokumente\winfoMaster\Masterarbeit\bertopic_ecc\config_hlr.json'
-with open(config_path, 'r') as config_file:
+with open('config_hlr.json', 'r') as config_file:
     config = json.load(config_file)
 print_configuration(config)
 
