@@ -12,31 +12,44 @@ from sentence_transformers import SentenceTransformer
 from sklearn.feature_extraction.text import CountVectorizer
 from utils import print_configuration
 
+# Determine the directory where the script is located
+script_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Construct the path to config_hlr.json relative to the script's directory
+config_path = os.path.join(script_dir, '..', 'config_hlr.json')
+
 # Start total execution time tracking
 total_start_time = time.time()
 
 # Load configuration from config.json
 print("Loading configuration...")
-with open('config_hlr.json', 'r') as config_file:
-    config = json.load(config_file)
-print_configuration(config)
+try:
+    with open(config_path, 'r') as config_file:
+        config = json.load(config_file)
+    print_configuration(config)
+except FileNotFoundError:
+    print(f"Configuration file not found at {config_path}. Please ensure the file exists.")
+    exit(1)
+except json.JSONDecodeError as e:
+    print(f"Error decoding JSON from the configuration file: {e}")
+    exit(1)
 
 # Set random seed
-random_seed = config["random_seed"]
+random_seed = config.get("random_seed", 42)  # Default to 42 if not specified
 np.random.seed(random_seed)
 
 # Extract variables from the config
-index_file_ecc_folder = config["index_file_ecc_folder"]
-folderpath_ecc = config["folderpath_ecc"]
-sample_size = config["sample_size"]
-document_split = config["document_split"]
-section_to_analyze = config["section_to_analyze"]
-max_documents = config["max_documents"]
-model_save_path = config["model_save_path"]
+index_file_ecc_folder = config.get("index_file_ecc_folder", "")
+folderpath_ecc = config.get("folderpath_ecc", "")
+sample_size = config.get("sample_size", 100)
+document_split = config.get("document_split", "default_method")
+section_to_analyze = config.get("section_to_analyze", "default_section")
+max_documents = config.get("max_documents", 1000)
+model_save_path = config.get("model_save_path", "bertopic_model")
 
 # Initialize FileHandler and TextProcessor with the imported configuration
 print("Initializing file handler and text processor...")
-file_handler = FileHandler(index_file_path=config["index_file_path"], folderpath_ecc=folderpath_ecc)
+file_handler = FileHandler(index_file_path=config.get("index_file_path", ""), folderpath_ecc=folderpath_ecc)
 text_processor = TextProcessor(method=document_split, section_to_analyze=section_to_analyze)
 
 # Start splitting process time tracking
@@ -55,6 +68,7 @@ print(f"Splitting process took {splitting_duration:.2f} seconds.")
 
 if not all_relevant_sections:
     print("No relevant sections found to fit BERTopic.")
+    exit(0)
 
 docs = all_relevant_sections
 
@@ -94,6 +108,7 @@ training_start_time = time.time()
 topics, _ = topic_model.fit_transform(docs)
 training_end_time = time.time()
 training_duration = training_end_time - training_start_time
+print(f"Training process took {training_duration:.2f} seconds.")
 
 # Save the BERTopic model using safetensors
 try:
