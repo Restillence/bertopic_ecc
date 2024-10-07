@@ -5,6 +5,7 @@ import json
 import numpy as np
 import torch  # For checking if GPU is available
 import time  # For time tracking
+import threading  # For heartbeat functionality
 from bertopic import BERTopic
 from bertopic.representation import KeyBERTInspired, MaximalMarginalRelevance
 from file_handling import FileHandler  # Ensure this is correctly implemented
@@ -14,9 +15,22 @@ from sklearn.feature_extraction.text import CountVectorizer
 from utils import print_configuration
 from umap import UMAP
 
+def heartbeat():
+    """
+    Prints a heartbeat message to the console every 5 minutes.
+    Runs indefinitely until the main program exits.
+    """
+    while True:
+        time.sleep(300)  # 300 seconds = 5 minutes
+        print("[Heartbeat] The script is still running...")
+
 def main():
     # Suppress Hugging Face tokenizers parallelism warnings
     os.environ["TOKENIZERS_PARALLELISM"] = "false"
+
+    # Start the heartbeat thread
+    heartbeat_thread = threading.Thread(target=heartbeat, daemon=True)
+    heartbeat_thread.start()
 
     # Determine the directory where the script is located
     script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -123,7 +137,10 @@ def main():
     # print("Embeddings saved successfully.")
 
     # **Embedding Computation Ends Here**
+
+    # Initialize UMAP for dimensionality reduction (optional customization)
     umap_model = UMAP(n_neighbors=15, n_components=10, metric='cosine', low_memory=True)
+
     # Initialize BERTopic with the embedding model
     print("Initializing BERTopic model...")
     topic_model = BERTopic(
