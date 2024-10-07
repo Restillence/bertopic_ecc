@@ -9,7 +9,7 @@
     "ecc_plots_folder": "C:/Users/nikla/OneDrive/Dokumente/winfoMaster/Masterarbeit/bertopic_ecc/plots/ecc_plots",
 
     "modeling_type": "regular",
-    "sample_size": 20,
+    "sample_size": 5,
     "document_split": "sentences",
     "random_seed": 43,
     "section_to_analyze": "Presentation",
@@ -19,7 +19,7 @@
     "batch_size": 64,
   
     "vectorizer_model_params": {
-        "ngram_range": [1, 3],
+        "ngram_range": [1, 2],
         "stop_words": "english",
         "min_df": 0.4
     },

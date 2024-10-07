@@ -12,6 +12,7 @@ from text_processing import TextProcessor  # Ensure this is correctly implemente
 from sentence_transformers import SentenceTransformer
 from sklearn.feature_extraction.text import CountVectorizer
 from utils import print_configuration
+from umap import UMAP
 
 def main():
     # Suppress Hugging Face tokenizers parallelism warnings
@@ -122,21 +123,22 @@ def main():
     # print("Embeddings saved successfully.")
 
     # **Embedding Computation Ends Here**
-
+    umap_model = UMAP(n_neighbors=15, n_components=10, metric='cosine', low_memory=True)
     # Initialize BERTopic with the embedding model
     print("Initializing BERTopic model...")
     topic_model = BERTopic(
         embedding_model=embedding_model,  # Provide the actual embedding model
-        min_topic_size=50,
+        umap_model=umap_model,
+        min_topic_size=5,
         zeroshot_topic_list=zeroshot_topic_list,
-        zeroshot_min_similarity=0.1,
+        zeroshot_min_similarity=0.0,
         representation_model=KeyBERTInspired()  # No need to pass the model here
     )
 
     # Start training time tracking
     print("Training BERTopic model...")
     training_start_time = time.time()
-    topics, _ = topic_model.fit_transform(docs, embeddings=embeddings)  # Pass precomputed embeddings
+    topic_model = topic_model.fit(docs, embeddings=embeddings)  # Pass precomputed embeddings
     training_end_time = time.time()
     training_duration = training_end_time - training_start_time
     print(f"Training process took {training_duration:.2f} seconds.")
