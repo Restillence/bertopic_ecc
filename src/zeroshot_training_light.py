@@ -14,6 +14,9 @@ from sklearn.feature_extraction.text import CountVectorizer
 from utils import print_configuration
 
 def main():
+    # Suppress Hugging Face tokenizers parallelism warnings
+    os.environ["TOKENIZERS_PARALLELISM"] = "false"
+
     # Determine the directory where the script is located
     script_dir = os.path.dirname(os.path.abspath(__file__))
 
@@ -120,14 +123,14 @@ def main():
 
     # **Embedding Computation Ends Here**
 
-    # Initialize BERTopic with precomputed embeddings
+    # Initialize BERTopic with the embedding model
     print("Initializing BERTopic model...")
     topic_model = BERTopic(
-        embedding_model=None,  # Set to None since embeddings are precomputed
+        embedding_model=embedding_model,  # Provide the actual embedding model
         min_topic_size=50,
         zeroshot_topic_list=zeroshot_topic_list,
         zeroshot_min_similarity=0.1,
-        representation_model=KeyBERTInspired()  # Removed 'model=embedding_model'
+        representation_model=KeyBERTInspired()  # No need to pass the model here
     )
 
     # Start training time tracking
