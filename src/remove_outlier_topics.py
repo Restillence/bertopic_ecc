@@ -7,13 +7,13 @@ Created on Fri Oct  4 10:49:19 2024
 # TODO : This script should be put in a function and moved to utils
 import pandas as pd 
 
-path = "D:/daten_masterarbeit/topics_output.csv"
+path = "D:/daten_masterarbeit/topics_output_sentences_50_zeroshot_025_minsim.csv"
 
 # Load your CSV file
 df = pd.read_csv(path)
 
 # Define the topics to keep
-topics_to_keep = [16, 146, 1, 5, -2, 4]
+topics_to_keep = [-1,0,1,2,3,4,5]
 
 # Function to keep only the specified topics and corresponding texts
 def keep_topics_and_texts(row, topics_to_keep):

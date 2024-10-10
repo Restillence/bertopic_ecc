@@ -62,6 +62,9 @@ class BertopicModel:
         if embedding_choice == "all-MiniLM-L12-v2":
             print("Loading SentenceTransformer model: all-MiniLM-L12-v2...")
             return SentenceTransformer("sentence-transformers/all-MiniLM-L12-v2", device=self.device)
+        elif embedding_choice == "all-MiniLM-L6-v2":
+            print("Loading SentenceTransformer model: all-MiniLM-L6-v2...")
+            return SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2", device=self.device)
         else:
             raise ValueError(f"Unknown embedding model choice: {embedding_choice}")
 
