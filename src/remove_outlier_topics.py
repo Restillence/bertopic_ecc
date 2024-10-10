@@ -7,13 +7,14 @@ Created on Fri Oct  4 10:49:19 2024
 # TODO : This script should be put in a function and moved to utils
 import pandas as pd 
 
-path = "D:/daten_masterarbeit/topics_output_sentences_50_zeroshot_025_minsim.csv"
+path = "D:/daten_masterarbeit/topics_output_sentences_50_zeroshot_0_minsim.csv"
+output_path = "D:/daten_masterarbeit/topics_output_sentences_50_zeroshot_0_minsim_outlier_removed.csv"
 
 # Load your CSV file
 df = pd.read_csv(path)
 
 # Define the topics to keep
-topics_to_keep = [-1,0,1,2,3,4,5]
+topics_to_keep = [1,2,3,4,5,6]
 
 # Function to keep only the specified topics and corresponding texts
 def keep_topics_and_texts(row, topics_to_keep):
@@ -46,3 +47,6 @@ df['consistent'] = df.apply(check_consistency, axis=1)
 
 # Display the resulting dataframe with filtered topics, texts, and consistency check
 print(df[['topics', 'text', 'filtered_topics', 'filtered_texts', 'consistent']])
+
+#export to csv, pathname should be original path + outlier_removed
+df.to_csv(output_path, sep='\t', encoding='utf-8', index=False, header=list(df))
