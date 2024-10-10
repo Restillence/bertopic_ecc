@@ -4,6 +4,7 @@ Created on Fri Oct  4 10:49:19 2024
 
 @author: nikla
 """
+#TODO : This script should be put in a function and moved to utils
 import pandas as pd 
 
 path = "D:/daten_masterarbeit/topics_output.csv"

@@ -148,7 +148,7 @@ def main():
         umap_model=umap_model,
         min_topic_size=40,
         zeroshot_topic_list=zeroshot_topic_list,
-        zeroshot_min_similarity=0.25,
+        zeroshot_min_similarity=0.0,
         representation_model=KeyBERTInspired()  # No need to pass the model here
     )
 
