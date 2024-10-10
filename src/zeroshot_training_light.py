@@ -139,7 +139,7 @@ def main():
     # **Embedding Computation Ends Here**
 
     # Initialize UMAP for dimensionality reduction (optional customization)
-    umap_model = UMAP(n_neighbors=15, n_components=10, metric='cosine', low_memory=True)
+    umap_model = UMAP(n_neighbors=15, n_components=10, metric='cosine', low_memory=True, random_state=42)
 
     # Initialize BERTopic with the embedding model
     print("Initializing BERTopic model...")

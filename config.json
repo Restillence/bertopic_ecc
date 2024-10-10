@@ -91,9 +91,8 @@
       "Dividend Policies and Stock Repurchase Programs",
       "outliers"
     ],
-    "zeroshot_min_similarity": 0.00,
-    "embedding_model": "D:/daten_masterarbeit/finbert-sentence-transformer",
-    "min_topic_size": 15,
+    "zeroshot_min_similarity": 0.25,
+    "min_topic_size": 150,
     "doc_chunk_size": 500,
 
     "zeroshot_topic_list": [
