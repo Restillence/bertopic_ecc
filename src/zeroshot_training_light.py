@@ -146,7 +146,7 @@ def main():
     topic_model = BERTopic(
         embedding_model=embedding_model,  # Provide the actual embedding model
         umap_model=umap_model,
-        min_topic_size=40,
+        min_topic_size=150,
         zeroshot_topic_list=zeroshot_topic_list,
         zeroshot_min_similarity=0.0,
         representation_model=KeyBERTInspired()  # No need to pass the model here
