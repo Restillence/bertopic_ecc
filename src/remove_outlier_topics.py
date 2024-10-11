@@ -9,6 +9,7 @@ import pandas as pd
 
 path = "D:/daten_masterarbeit/topics_output_sentences_50_zeroshot_0_minsim.csv"
 output_path = "D:/daten_masterarbeit/topics_output_sentences_50_zeroshot_0_minsim_outlier_removed.csv"
+output_path_sample = "D:/daten_masterarbeit/topics_output_sentences_50_zeroshot_0_minsim_outlier_removed_sample.csv"
 
 # Load your CSV file
 df = pd.read_csv(path)
@@ -50,3 +51,4 @@ print(df[['topics', 'text', 'filtered_topics', 'filtered_texts', 'consistent']])
 
 #export to csv, pathname should be original path + outlier_removed
 df.to_csv(output_path, sep='\t', encoding='utf-8', index=False, header=list(df))
+df.head(100).to_csv(output_path_sample, sep='\t', encoding='utf-8', index=False, header=list(df))
