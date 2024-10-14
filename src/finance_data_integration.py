@@ -184,7 +184,7 @@ merged_df.to_csv(merged_file_path, index=False)
 
 """
 
-#%%
+#%% read files, create dfs (for the moment on small sample)
 import pandas as pd
 import pytz
 
@@ -206,6 +206,56 @@ print("CRSP/Monthly file loaded successfully.")
 df_topics['permco'] = df_topics['permco'].astype(str)
 df_crsp_daily['permco'] = df_crsp_daily['permco'].astype(str)
 df_crsp_monthly['permco'] = df_crsp_monthly['permco'].astype(str)
+
+
+#%% remove nans in datadate and drop unneccssary columns
+
+df_crsp_monthly = df_crsp_monthly[["datadate", "epsfxq", "permco"]]
+
+# Remove rows from df_crsp_monthly where 'datadate' contains NaNs
+df_crsp_monthly = df_crsp_monthly[df_crsp_monthly['datadate'].notna()]
+
+
+#%% convert to ny time
+
+# Parse 'date' as datetime with UTC timezone
+df_topics['date'] = pd.to_datetime(df_topics['date'], utc=True, errors='coerce')
+
+# Convert to New York time (Eastern Time Zone)
+df_topics['date'] = df_topics['date'].dt.tz_convert('America/New_York')
+
+# Optionally, remove timezone information if not needed
+df_topics['date'] = df_topics['date'].dt.tz_localize(None)
+
+#%% merge df crsp monthly and topics df
+import pandas as pd
+
+# Ensure 'date' in df_topics is in datetime format (with time)
+df_topics['date'] = pd.to_datetime(df_topics['date'], errors='coerce')
+
+# Calculate the previous quarter end date for each 'date'
+df_topics['quarter_end_date'] = df_topics['date'].apply(lambda x: (x - pd.offsets.QuarterEnd(n=1)).normalize())
+
+# Ensure 'datadate' in df_crsp_monthly is in datetime format and date-only
+df_crsp_monthly['datadate'] = pd.to_datetime(df_crsp_monthly['datadate'], errors='coerce').dt.normalize()
+
+# Remove rows where 'datadate' contains NaNs
+df_crsp_monthly = df_crsp_monthly[df_crsp_monthly['datadate'].notna()]
+
+# Merge the DataFrames on 'permco' and 'quarter_end_date' == 'datadate'
+merged_df = pd.merge(
+    df_topics,
+    df_crsp_monthly,
+    left_on=['permco', 'quarter_end_date'],
+    right_on=['permco', 'datadate'],
+    how='left'
+)
+
+# Drop 'datadate' column after merging if desired
+merged_df = merged_df.drop(columns=['datadate'])
+
+
+#%%
 
 # Convert date columns to datetime format with explicit format and timezones
 print("Converting date columns to datetime format...")
