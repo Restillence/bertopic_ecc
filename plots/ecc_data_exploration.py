@@ -4,6 +4,18 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
 import numpy as np
+import sys
+
+# Get the current working directory
+current_dir = os.getcwd()
+
+# Check if "src" is not part of the path
+if "src" not in current_dir:
+    # Adjust path to include 'src'
+    src_path = os.path.abspath(os.path.join(current_dir, '..', 'src'))
+    sys.path.append(src_path)
+
+# Import necessary custom modules
 from file_handling import FileHandler
 from text_processing import TextProcessor
 

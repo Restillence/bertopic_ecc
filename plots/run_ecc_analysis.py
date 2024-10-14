@@ -1,9 +1,21 @@
-from ecc_data_exploration import ECCDataExplorer
-from nlp_plots import NLPPlotter
 import os
 import torch
 import numpy as np
 import pandas as pd
+import sys
+
+# Get the current working directory
+current_dir = os.getcwd()
+
+# Check if "src" is not part of the path
+if "src" not in current_dir:
+    # Adjust path to include 'src'
+    src_path = os.path.abspath(os.path.join(current_dir, 'src'))
+    sys.path.append(src_path)
+
+# Import your custom modules
+from ecc_data_exploration import ECCDataExplorer
+from nlp_plots import NLPPlotter
 
 
 def main():
@@ -38,7 +50,7 @@ def main():
         summary_stats_table, 
         os.path.join(ecc_explorer.ecc_plots_folder, 'ecc_statistics.html')
     )
-
+    
     # Initialize NLPPlotter
     nlp_plotter = NLPPlotter(config_path="config.json")
     
