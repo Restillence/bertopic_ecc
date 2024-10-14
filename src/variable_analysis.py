@@ -23,7 +23,7 @@ import seaborn as sns
 sns.set_style('whitegrid')
 
 # List of return variables
-return_vars = ['ret_next_day', 'ret_5_days', 'ret_20_days', 'ret_60_days']
+return_vars = ['ret_next_day', 'ret_5_days', 'ret_20_days', 'ret_60_days', 'epsfxq']
 
 # Create scatter plots
 for ret_var in return_vars:
