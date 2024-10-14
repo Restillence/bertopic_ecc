@@ -1,3 +1,5 @@
+#filehandling.py
+#allows to read files and create a sample of Earnings Conference Calls (ECC).
 import os
 import pandas as pd
 import numpy as np

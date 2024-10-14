@@ -1,3 +1,5 @@
+#text_processing.py
+#Allows to split the text into sentences or paragraphs, depending on the method specified.
 import re
 from nltk.tokenize import sent_tokenize
 

@@ -31,6 +31,9 @@ in the file which you are attempting to run.
 
 9) Run variable_analysis.py to perform statistical analysis and get results.
 
+10) Optional: To create plots and statistics from the dataset, run run_ecc_analysis.py script. Some plots might be computational intensive, 
+    so comment out/ comment in them in the main function before running the script. 
+
 #useful videos to get started with bertopic:
 https://www.youtube.com/watch?v=uZxQz87lb84
 https://www.youtube.com/watch?v=5a5Dfft-rWc

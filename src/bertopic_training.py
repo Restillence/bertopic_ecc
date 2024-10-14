@@ -3,6 +3,8 @@ import json
 import numpy as np
 import torch  # For checking if GPU is available
 import time  # For time tracking
+from utils import heartbeat
+import threading  # For heartbeat functionality
 
 # Disable parallelism in tokenizers to prevent CPU overutilization
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
@@ -99,7 +101,8 @@ class BertopicModel:
             'n_components': self.config["umap_model_params"]["n_components"],
             'min_dist': self.config["umap_model_params"]["min_dist"],
             'metric': self.config["umap_model_params"]["metric"],
-            'random_state': 42
+            'random_state': 42,
+            'low_memory': self.config["umap_model_params"]["low_memory"]
         }
 
         # Initialize UMAP with adjusted parameters
@@ -357,6 +360,9 @@ def main():
     """
     # Start total execution time tracking
     total_start_time = time.time()
+    # Start the heartbeat thread
+    heartbeat_thread = threading.Thread(target=heartbeat, daemon=True)
+    heartbeat_thread.start()
 
     # Load configuration from config.json
     print("Loading configuration...")

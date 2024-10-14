@@ -26,3 +26,12 @@ def load_bertopic_model(model_path):
     topic_model = BERTopic.load(model_path)
     print(f"BERTopic model loaded from {model_path}")
     return topic_model
+
+def heartbeat():
+    """
+    Prints a heartbeat message to the console every 5 minutes.
+    Runs indefinitely until the main program exits.
+    """
+    while True:
+        time.sleep(300)  # 300 seconds = 5 minutes
+        print("[Heartbeat] The script is still running...")
