@@ -141,7 +141,7 @@ merged_df = pd.merge(
 merged_df = merged_df.drop(columns=['date', 'topics', 'text','consistent'])
 
 #rearrange columns
-merged_df = merged_df[['permco', 'call_date', 'quarter_end_date', 'filtered_topics', 'filtered_texts' 'prc', 'shrout', 'vol', 'ret',  'ret_next_day', 'ret_5_days', 'ret_20_days', 'ret_60_days', 'epsfxq']]
+merged_df = merged_df[['permco', 'call_date', 'quarter_end_date', 'filtered_topics', 'filtered_texts' ,'prc', 'shrout', 'vol', 'ret',  'ret_next_day', 'ret_5_days', 'ret_20_days', 'ret_60_days', 'epsfxq']]
 
 # Save the final merged DataFrame
 print("Saving the final merged DataFrame...")
