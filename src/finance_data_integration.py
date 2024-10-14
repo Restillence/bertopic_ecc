@@ -135,55 +135,6 @@ if unexpected_permcos:
 else:
     print("All permcos in filtered data match the permcos from df_topics.")
 
-
-
-#%% continue processing of data 
-
-#alter code, schauen was hier noch gebraucht wird 
-"""
-df_topics = pd.read_csv(file_path_topics)
-print("Topics file loaded successfully.")
-df_crsp_daily = pd.read_csv(file_path_crsp_daily)
-print("CRSP/Daily file loaded successfully.")
-df_crsp_monthly = pd.read_csv(file_path_crsp_monthly)
-print("CRSP/Monthly file loaded successfully.")
-
-#monthly
-# Select relevant columns from CRSP/Compustat data monthly
-print("Selecting relevant columns from CRSP/Compustat data monthly...")
-#cols_to_keep = ['date', 'permco', 'prc', 'vol', 'ret', 'gvkey','datadate', 'epsfxq', 'shrout']
-cols_to_keep_monthly = ['date', 'permco', 'gvkey','datadate', 'epsfxq']
-df_crsp_monthly = df_crsp_daily[cols_to_keep_monthly]
-
-#daily
-#select relevant columns from CRSP/Compustat data daily
-print("Selecting relevant columns from CRSP/Compustat data daily...")
-cols_to_keep_daily = ['date', 'permco', 'gvkey','prc','vol','ret','shrout']
-df_crsp_daily = df_crsp_daily[cols_to_keep_daily]
-
-#topics
-#select relevant columns from topics
-print("Selecting relevant columns from topics...")
-cols_to_keep_topics = ['permco', 'call_id', 'date','filtered_topics', 'filtered_texts','similarity_to_average']
-df_topics = df_topics[cols_to_keep_topics]
-
-
-# If there are duplicate column names after merging, such as multiple datadate columns, rename them or drop duplicates
-df_crsp_daily = df_crsp_daily.rename(columns={'datadate': 'datadate_crsp'})
-
-# Merge the DataFrames on permco
-print("Merging the DataFrames on permco...")
-merged_df = pd.merge(df_topics, df_crsp_daily, on='permco', how='inner')
-
-# Inspect the merged DataFrame
-print(merged_df.head())
-
-# Save the merged DataFrame if needed
-print("Saving the merged DataFrame...")
-merged_df.to_csv(merged_file_path, index=False)
-
-"""
-
 #%% read files, create dfs (for the moment on small sample)
 import pandas as pd
 import pytz
@@ -254,76 +205,86 @@ merged_df = pd.merge(
 # Drop 'datadate' column after merging if desired
 merged_df = merged_df.drop(columns=['datadate'])
 
+#%% crsp daily to datetime
+import pandas as pd
+import numpy as np
 
-#%%
+# Ensure 'date' in df_crsp_daily is in datetime format
+df_crsp_daily['date'] = pd.to_datetime(df_crsp_daily['date'], format='%d%b%Y', errors='coerce')
 
-# Convert date columns to datetime format with explicit format and timezones
-print("Converting date columns to datetime format...")
+# Handle any parsing errors
+df_crsp_daily = df_crsp_daily[df_crsp_daily['date'].notna()]
 
-# For df_topics['date']
-df_topics['date'] = pd.to_datetime(df_topics['date'], format='%d.%m.%Y %H:%M', errors='coerce')
-df_topics = df_topics.dropna(subset=['date'])
 
-# Adjust to New York time
-df_topics['date'] = df_topics['date'].dt.tz_localize('Europe/London', ambiguous='NaT', nonexistent='NaT').dt.tz_convert('America/New_York')
-df_topics = df_topics.dropna(subset=['date'])  # Drop rows where timezone conversion failed
+#%% merge topics and crsp daily
+# Ensure 'permco' columns are of the same data type
+df_crsp_daily['permco'] = df_crsp_daily['permco'].astype(str)
+merged_df['permco'] = merged_df['permco'].astype(str)
 
-# Remove timezone info to make 'date' naive and normalize to remove time component
-df_topics['date'] = df_topics['date'].dt.tz_localize(None).dt.normalize()
+#rename of date column to call date
+merged_df["call_date"] = merged_df["date"]
+merged_df = merged_df.drop(columns=['date'])
 
-# For df_crsp_daily['date']
-df_crsp_daily['date'] = pd.to_datetime(df_crsp_daily['date'], errors='coerce')
-df_crsp_daily = df_crsp_daily.dropna(subset=['date'])
-df_crsp_daily['date'] = df_crsp_daily['date'].dt.normalize()
+# Ensure 'call_date' in merged_df is date-only
+merged_df['call_date'] = pd.to_datetime(merged_df['call_date']).dt.normalize()
 
-# Select relevant columns from topics
-print("Selecting relevant columns from topics...")
-cols_to_keep_topics = ['permco', 'call_id', 'date', 'filtered_topics', 'filtered_texts', 'similarity_to_average']
-df_topics = df_topics[cols_to_keep_topics]
-
-# Create 'quarter' columns in df_topics and df_crsp_monthly
-df_topics['quarter'] = df_topics['date'].dt.to_period('Q')
-df_crsp_monthly['datadate'] = pd.to_datetime(df_crsp_monthly['datadate'], errors='coerce')
-df_crsp_monthly = df_crsp_monthly.dropna(subset=['datadate'])
-df_crsp_monthly['quarter'] = df_crsp_monthly['datadate'].dt.to_period('Q')
-
-# Select relevant columns from CRSP/Compustat monthly data
-print("Selecting relevant columns from CRSP/Compustat monthly data...")
-cols_to_keep_monthly = ['permco', 'gvkey', 'datadate', 'epsfxq', 'quarter']
-df_crsp_monthly = df_crsp_monthly[cols_to_keep_monthly]
-
-# Select relevant columns from CRSP daily data
-print("Selecting relevant columns from CRSP daily data...")
-cols_to_keep_daily = ['date', 'permco', 'gvkey', 'prc', 'vol', 'ret', 'shrout']
-df_crsp_daily = df_crsp_daily[cols_to_keep_daily]
-
-# Merge df_topics and df_crsp_daily on 'permco' and 'date'
-print("Merging df_topics and df_crsp_daily on 'permco' and 'date'...")
-merged_daily = pd.merge(df_topics, df_crsp_daily, on=['permco', 'date'], how='left')
-
-# Check if merge resulted in any matches
-if merged_daily.empty:
-    print("Merged DataFrame is empty after merging df_topics and df_crsp_daily.")
-else:
-    print("Number of rows in merged_daily:", len(merged_daily))
-
-# Merge the monthly data into the merged_daily DataFrame
-print("Merging monthly data into the daily merged DataFrame...")
-final_merged_df = pd.merge(
-    merged_daily,
-    df_crsp_monthly,
-    on=['permco', 'quarter'],
-    how='left',
-    suffixes=('_daily', '_monthly')
+# Merge the DataFrames on 'permco' and 'call_date' == 'date'
+merged_df = pd.merge(
+    merged_df,
+    df_crsp_daily[['permco', 'date', 'prc', 'shrout', 'ret', 'vol']],
+    left_on=['permco', 'call_date'],
+    right_on=['permco', 'date'],
+    how='left'
 )
 
-# Verify the final merged DataFrame
-if final_merged_df.empty:
-    print("Final merged DataFrame is empty after merging with monthly data.")
-else:
-    print("Number of rows in final_merged_df:", len(final_merged_df))
-    print(final_merged_df.head())
+# Drop 'date' column from df_crsp_daily if desired
+merged_df = merged_df.drop(columns=['date'])
 
+#%% create return variables
+df_crsp_daily['ret'] = pd.to_numeric(df_crsp_daily['ret'], errors='coerce')
+df_crsp_daily = df_crsp_daily.sort_values(['permco', 'date']).reset_index(drop=True)
+
+def compute_future_returns(group):
+    group = group.sort_values('date').reset_index(drop=True)
+    n = len(group)
+    ret_next_day = np.full(n, np.nan)
+    ret_5_days = np.full(n, np.nan)
+    ret_20_days = np.full(n, np.nan)
+    ret_60_days = np.full(n, np.nan)
+    ret_values = group['ret'].values
+    for i in range(n):
+        # ret_next_day
+        if i + 1 < n:
+            ret_next_day[i] = ret_values[i+1]
+        # ret_5_days
+        if i + 5 < n:
+            ret_5_days[i] = np.prod(1 + ret_values[i+1:i+6]) - 1
+        # ret_20_days
+        if i + 20 < n:
+            ret_20_days[i] = np.prod(1 + ret_values[i+1:i+21]) - 1
+        # ret_60_days
+        if i + 60 < n:
+            ret_60_days[i] = np.prod(1 + ret_values[i+1:i+61]) - 1
+    group['ret_next_day'] = ret_next_day
+    group['ret_5_days'] = ret_5_days
+    group['ret_20_days'] = ret_20_days
+    group['ret_60_days'] = ret_60_days
+    return group
+
+df_crsp_daily = df_crsp_daily.groupby('permco').apply(compute_future_returns).reset_index(drop=True)
+
+# **Step 4: Merge the Future Returns into the Merged DataFrame**
+merged_df = pd.merge(
+    merged_df,
+    df_crsp_daily[['permco', 'date', 'ret_next_day', 'ret_5_days', 'ret_20_days', 'ret_60_days']],
+    left_on=['permco', 'call_date'],
+    right_on=['permco', 'date'],
+    how='left'
+)
+merged_df = merged_df.drop(columns=['date'])
+
+
+merged_file_path =  "D:/daten_masterarbeit/merged_topics_crsp_sample.csv"
 # Save the final merged DataFrame
 print("Saving the final merged DataFrame...")
-final_merged_df.to_csv(merged_file_path, index=False)
+merged_df.to_csv(merged_file_path, index=False)
