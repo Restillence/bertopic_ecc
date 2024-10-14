@@ -8,6 +8,24 @@
   "embedding_model_choice": "all-MiniLM-L12-v2",
   "ecc_plots_folder": "/plots/ecc_plots",
 
+  "file_path_crsp_daily": "D:/daten_masterarbeit/CRSP_daily_master_thesis.csv",
+  "file_path_crsp_monthly": "D:/daten_masterarbeit/CRSP_monthly_Compustat_quarterly_merged.csv",
+  "merged_file_path": "D:/daten_masterarbeit/final_dataset.csv",
+
+  "topics_input_path": "D:/daten_masterarbeit/topics_output_sentences_50_zeroshot_0_minsim.csv",
+  "topics_output_path": "D:/daten_masterarbeit/topics_output_sentences_50_zeroshot_0_minsim_outlier_removed.csv",
+  "topics_to_keep": [1, 2, 3, 4, 5, 6],
+
+  "fuzzy_topic_labels": {
+    "0": "Introduction",
+    "1": "Revenue",
+    "2": "Expenses",
+    "3": "Earnings",
+    "4": "Marketing",
+    "5": "Strategy",
+    "6": "Risk"
+  },
+
   "modeling_type": "regular",
   "sample_size": 50,
   "document_split": "sentences",
