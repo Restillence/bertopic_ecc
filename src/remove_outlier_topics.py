@@ -51,4 +51,4 @@ print(df[['topics', 'text', 'filtered_topics', 'filtered_texts', 'consistent']])
 
 #export to csv, pathname should be original path + outlier_removed
 df.to_csv(output_path, sep='\t', encoding='utf-8', index=False, header=list(df))
-df.head(100).to_csv(output_path_sample, sep='\t', encoding='utf-8', index=False, header=list(df))
+#df.head(100).to_csv(output_path_sample, sep='\t', encoding='utf-8', index=False, header=list(df))
