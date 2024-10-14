@@ -23,6 +23,13 @@ sample_size = 10 # number of unique companies to be analyzed, max is 1729
 Note: If the Config file is not found, you need to set its filepath manually
 in the file which you are attempting to run.
 
+6) Run the bertopic_training.py script to train and save the BERTopic Model.
+
+7) Run bertopic_fitting_visus.py to fit the model on data and generate visualizations + statistics. 
+
+8) Run (TODO Skriptnamen hier noch einfügen) xxx to prepare the final dataset for the analysis. 
+
+9) Run variable_analysis.py to perform statistical analysis and get results.
 
 #useful videos to get started with bertopic:
 https://www.youtube.com/watch?v=uZxQz87lb84
