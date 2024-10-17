@@ -4,9 +4,17 @@ import pandas as pd
 import numpy as np
 from utils import process_topics, compute_similarity_to_average
 
+fallback_config_path = "C:/Users/nikla/OneDrive/Dokumente/winfoMaster/Masterarbeit/bertopic_ecc/config.json"
+
 # Load configuration variables from config.json
-with open('config.json', 'r') as config_file:
-    config = json.load(config_file)
+try: 
+    with open('config.json', 'r') as config_file:
+        config = json.load(config_file)
+        print("Config File Loaded.")
+except: 
+    with open(fallback_config_path, 'r') as config_file:
+        config = json.load(config_file)
+        print("Config File Loaded.")
 
 topic_input_path = config['topics_input_path']
 topic_output_path = config['topics_output_path']
