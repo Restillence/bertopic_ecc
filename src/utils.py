@@ -77,36 +77,67 @@ def create_transition_matrix(topic_sequence, num_topics):
         from_topic = topic_sequence[i]
         to_topic = topic_sequence[i + 1]
         transition_matrix[from_topic][to_topic] += 1
+    # Normalize to get probabilities
     row_sums = transition_matrix.sum(axis=1, keepdims=True)
+    # Avoid division by zero
     row_sums[row_sums == 0] = 1
     transition_matrix = transition_matrix / row_sums
     return transition_matrix
 
 def compute_similarity_to_average(df, num_topics):
-    # Create transition matrices
+    # Create transition matrices for each call
     transition_matrices = []
     call_ids = []
+    siccds = []
     grouped = df.groupby('call_id')
     for call_id, group in grouped:
         topics = [topic for sublist in group['filtered_topics'] for topic in sublist]
         transition_matrix = create_transition_matrix(topics, num_topics)
         transition_matrices.append(transition_matrix)
         call_ids.append(call_id)
-
-    # Compute the average transition matrix
+        siccd = group['siccd'].iloc[0]  # Assuming 'siccd' is consistent within a call
+        siccds.append(siccd)
+    
+    # Create a DataFrame to hold the data
+    calls_df = pd.DataFrame({
+        'call_id': call_ids,
+        'transition_matrix': transition_matrices,
+        'siccd': siccds
+    })
+    
+    # Compute the overall average transition matrix
     average_transition_matrix = np.mean(transition_matrices, axis=0)
     average_transition_matrix = np.nan_to_num(average_transition_matrix)
-
-    # Compute similarity between each call's transition matrix and the average
-    similarities = []
-    for tm in transition_matrices:
-        tm = np.nan_to_num(tm)
+    
+    # Compute industry-specific average transition matrices
+    industry_avg_matrices = {}
+    for siccd, group in calls_df.groupby('siccd'):
+        matrices = group['transition_matrix'].tolist()
+        industry_avg_matrix = np.mean(matrices, axis=0)
+        industry_avg_matrix = np.nan_to_num(industry_avg_matrix)
+        industry_avg_matrices[siccd] = industry_avg_matrix
+    
+    # Compute similarities
+    similarities_overall = []
+    similarities_industry = []
+    for idx, row in calls_df.iterrows():
+        tm = np.nan_to_num(row['transition_matrix'])
         tm_vector = tm.flatten()
+        # Similarity to overall average
         avg_vector = average_transition_matrix.flatten()
-        sim = 1 - cosine(tm_vector, avg_vector)
-        similarities.append(sim)
-
-    # Create a DataFrame with call_ids and similarities
-    similarity_df = pd.DataFrame({'call_id': call_ids, 'similarity_to_average': similarities})
-
+        sim_overall = 1 - cosine(tm_vector, avg_vector)
+        similarities_overall.append(sim_overall)
+        # Similarity to industry average
+        industry_avg_matrix = industry_avg_matrices[row['siccd']]
+        industry_avg_vector = industry_avg_matrix.flatten()
+        sim_industry = 1 - cosine(tm_vector, industry_avg_vector)
+        similarities_industry.append(sim_industry)
+    
+    # Add similarities to calls_df
+    calls_df['similarity_to_overall_average'] = similarities_overall
+    calls_df['similarity_to_industry_average'] = similarities_industry
+    
+    # Return the DataFrame with similarities
+    similarity_df = calls_df[['call_id', 'similarity_to_overall_average', 'similarity_to_industry_average']]
     return similarity_df
+

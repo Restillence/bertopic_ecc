@@ -24,16 +24,10 @@ file_path_crsp_daily = config['file_path_crsp_daily']
 file_path_crsp_monthly = config['file_path_crsp_monthly']
 merged_file_path = config['merged_file_path']
 
-# Process the topics and compute similarity to the average
-print("Processing topics and computing similarity to the average call...")
+# Process the topics
+print("Processing topics...")
 processed_df = process_topics(topic_input_path, topic_output_path, topics_to_keep)
 print(f"Processed DataFrame columns: {processed_df.columns}")
-
-num_topics = processed_df['filtered_topics'].apply(lambda x: max(x) if x else 0).max() + 1
-similarity_df = compute_similarity_to_average(processed_df, num_topics)
-
-# Merge similarity back into the processed DataFrame
-processed_df = processed_df.merge(similarity_df, on='call_id', how='left')
 
 # Ensure 'permco' is a string in all DataFrames
 processed_df['permco'] = processed_df['permco'].astype(str)
@@ -130,7 +124,7 @@ print("Checking if 'datadate' is globally sorted in df_crsp_monthly...")
 is_datadate_sorted = df_crsp_monthly['datadate'].is_monotonic_increasing
 print(f"Is 'datadate' globally sorted? {is_datadate_sorted}")
 
-# Merge using merge_asof with direction='backward' to get 'epsfxq' and 'epsfxq_next' using 'gvkey'
+# Merge using merge_asof with direction='backward' to get 'epsfxq', 'epsfxq_next', and 'siccd' using 'gvkey'
 print("Merging processed_df with df_crsp_monthly using 'gvkey' and merge_asof...")
 merged_df = pd.merge_asof(
     processed_df,
@@ -144,6 +138,25 @@ merged_df = pd.merge_asof(
 
 # Optionally, rename 'datadate' to 'fiscal_period_end' for clarity
 merged_df.rename(columns={'datadate': 'fiscal_period_end'}, inplace=True)
+
+# Now that 'siccd' is available, compute similarities including similarity to industry average
+print("Computing similarities to overall and industry averages...")
+num_topics = merged_df['filtered_topics'].apply(lambda x: max(x) if x else 0).max() + 1
+
+# Ensure 'filtered_topics' is evaluated as lists
+merged_df['filtered_topics'] = merged_df['filtered_topics'].apply(lambda x: eval(x) if isinstance(x, str) else x)
+
+# Ensure 'siccd' is not null
+merged_df = merged_df[merged_df['siccd'].notna()]
+
+# Convert 'siccd' to integer (if needed)
+merged_df['siccd'] = merged_df['siccd'].astype(int)
+
+# Compute similarities
+similarity_df = compute_similarity_to_average(merged_df, num_topics)
+
+# Merge similarities back into merged_df
+merged_df = merged_df.merge(similarity_df, on='call_id', how='left')
 
 # Proceed with merging with CRSP daily data and calculating future returns
 # Ensure 'call_date' and 'date' are date-only (no time component)
@@ -218,10 +231,10 @@ merged_df = pd.merge(
 )
 merged_df = merged_df.drop(columns=['date', 'topics', 'text', 'consistent'])
 
-# Rearrange columns to include 'epsfxq_next'
-merged_df = merged_df[['gvkey', 'permco', 'siccd', 'call_date', 'fiscal_period_end', 'filtered_topics', 'filtered_texts',
+# Rearrange columns to include 'epsfxq_next' and similarity measures
+merged_df = merged_df[['gvkey', 'permco', 'siccd', 'call_id', 'call_date', 'fiscal_period_end', 'filtered_topics', 'filtered_texts',
                        'prc', 'shrout', 'vol', 'ret', 'ret_next_day', 'ret_5_days', 'ret_20_days', 'ret_60_days',
-                       'epsfxq', 'epsfxq_next']]
+                       'epsfxq', 'epsfxq_next', 'similarity_to_overall_average', 'similarity_to_industry_average']]
 
 # Fill NaNs in 'siccd' based on 'gvkey'
 print("Filling NaNs in 'siccd' column based on 'gvkey'...")
