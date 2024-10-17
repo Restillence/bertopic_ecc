@@ -122,13 +122,16 @@ merged_df = pd.merge_asof(
 # Optionally, rename 'datadate' to 'fiscal_period_end' for clarity
 merged_df.rename(columns={'datadate': 'fiscal_period_end'}, inplace=True)
 
-# Ensure 'date' in CRSP daily is in datetime format
-df_crsp_daily['date'] = pd.to_datetime(df_crsp_daily['date'], errors='coerce')
-df_crsp_daily = df_crsp_daily[df_crsp_daily['date'].notna()]
+# Ensure 'call_date' and 'date' are date-only (no time component)
+merged_df['call_date'] = pd.to_datetime(merged_df['call_date']).dt.normalize()
+df_crsp_daily['date'] = pd.to_datetime(df_crsp_daily['date']).dt.normalize()
+
+# Ensure 'permco' columns are of the same data type
+merged_df['permco'] = merged_df['permco'].astype(str)
 df_crsp_daily['permco'] = df_crsp_daily['permco'].astype(str)
 
-# Merge with CRSP daily data on 'permco' and 'call_date' == 'date'
-print("Merging with CRSP/Daily data...")
+# Proceed with the merge
+print("Merging with CRSP/Daily data after normalizing dates...")
 merged_df = pd.merge(
     merged_df,
     df_crsp_daily[['permco', 'date', 'prc', 'shrout', 'ret', 'vol']],
@@ -138,9 +141,17 @@ merged_df = pd.merge(
 )
 merged_df = merged_df.drop(columns=['date'])
 
-# Calculate future returns for CRSP daily data
-print("Calculating future returns for CRSP/Daily data...")
-df_crsp_daily['ret'] = pd.to_numeric(df_crsp_daily['ret'], errors='coerce')
+# Convert 'ret' to numeric, handling non-numeric values
+def clean_ret(value):
+    try:
+        return float(value)
+    except ValueError:
+        return np.nan
+
+df_crsp_daily['ret'] = df_crsp_daily['ret'].apply(clean_ret)
+print(f"\nNumber of NaNs in 'ret' after cleaning: {df_crsp_daily['ret'].isna().sum()}")
+
+# Proceed with computing future returns
 df_crsp_daily = df_crsp_daily.sort_values(['permco', 'date']).reset_index(drop=True)
 
 def compute_future_returns(group):
@@ -152,13 +163,13 @@ def compute_future_returns(group):
     ret_60_days = np.full(n, np.nan)
     ret_values = group['ret'].values
     for i in range(n):
-        if i + 1 < n:
+        if i + 1 < n and not np.isnan(ret_values[i+1]):
             ret_next_day[i] = ret_values[i+1]
-        if i + 5 < n:
+        if i + 5 < n and not np.isnan(ret_values[i+1:i+6]).any():
             ret_5_days[i] = np.prod(1 + ret_values[i+1:i+6]) - 1
-        if i + 20 < n:
+        if i + 20 < n and not np.isnan(ret_values[i+1:i+21]).any():
             ret_20_days[i] = np.prod(1 + ret_values[i+1:i+21]) - 1
-        if i + 60 < n:
+        if i + 60 < n and not np.isnan(ret_values[i+1:i+61]).any():
             ret_60_days[i] = np.prod(1 + ret_values[i+1:i+61]) - 1
     group['ret_next_day'] = ret_next_day
     group['ret_5_days'] = ret_5_days
@@ -168,8 +179,12 @@ def compute_future_returns(group):
 
 df_crsp_daily = df_crsp_daily.groupby('permco').apply(compute_future_returns).reset_index(drop=True)
 
-# Merge returns into the merged DataFrame
-print("Merging returns into the merged DataFrame...")
+# Verify future returns
+print("\nSummary statistics of future returns in df_crsp_daily:")
+print(df_crsp_daily[['ret_next_day', 'ret_5_days', 'ret_20_days', 'ret_60_days']].describe())
+
+# Merge future returns into merged_df
+print("Merging future returns into the merged DataFrame...")
 merged_df = pd.merge(
     merged_df,
     df_crsp_daily[['permco', 'date', 'ret_next_day', 'ret_5_days', 'ret_20_days', 'ret_60_days']],
@@ -177,6 +192,7 @@ merged_df = pd.merge(
     right_on=['permco', 'date'],
     how='left'
 )
+
 merged_df = merged_df.drop(columns=['date', 'topics', 'text', 'consistent'])
 
 # Rearrange columns to include 'epsfxq_next'
