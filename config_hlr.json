@@ -27,11 +27,11 @@
   },
 
   "modeling_type": "regular",
-  "sample_size": 50,
+  "sample_size": 200,
   "document_split": "sentences",
   "random_seed": 43,
   "section_to_analyze": "Presentation",
-  "max_documents": 3000000000,
+  "max_documents": 30000000,
   "nr_topics": null,
 
   "batch_size": 64,

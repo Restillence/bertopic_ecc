@@ -128,7 +128,7 @@ class BertopicModel:
             'hdbscan_model': hdbscan_model,
             'vectorizer_model': vectorizer_model,
             'representation_model': [keybert_model, mmr_model],
-            'calculate_probabilities': True,
+            'calculate_probabilities': False,
             'nr_topics': self.nr_topics
         }
 
