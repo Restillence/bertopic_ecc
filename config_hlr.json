@@ -33,8 +33,11 @@
   "section_to_analyze": "Presentation",
   "max_documents": 30000000,
   "nr_topics": null,
+  "use_gpu": true,
+  "pca_components": 50,
+  "output_dir": "D:/daten_masterarbeit/",
 
-  "batch_size": 64,
+  "batch_size": 32,
 
   "vectorizer_model_params": {
       "ngram_range": [1, 2],
@@ -64,7 +67,6 @@
 
   "zeroshot_min_similarity": 0.05,
   "min_topic_size": 150,
-  "doc_chunk_size": 500,
 
   "zeroshot_topic_list_long": [
       "Financial Performance",

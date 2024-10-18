@@ -15,6 +15,7 @@ from file_handling import FileHandler  # Import the FileHandler class
 from text_processing import TextProcessor  # Import the TextProcessor class
 from sentence_transformers import SentenceTransformer
 from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.decomposition import PCA  # Import PCA for dimensionality reduction
 from utils import print_configuration
 
 class BertopicModel:
@@ -29,8 +30,7 @@ class BertopicModel:
         """
         self.config = config
         self.model_save_path = config["model_save_path"]
-        self.modeling_type = config.get("modeling_type", "regular")  # Options: ["regular", "iterative", "iterative_zeroshot", "zeroshot"]
-        self.doc_chunk_size = config.get("doc_chunk_size", 5000)  # Used for iterative training
+        self.modeling_type = config.get("modeling_type", "regular")  # Options: ["regular", "zeroshot"]
         self.device = self._select_device()
         self.topic_model = None
         self.nr_topics = config.get("nr_topics", None)
@@ -38,19 +38,19 @@ class BertopicModel:
         self.docs = None  # Initialize self.docs
 
     def _select_device(self):
-        """Check if GPU is available and return the correct device."""
-        if torch.cuda.is_available():
-            print("GPU is available. Using GPU...")
+        """Select device based on config setting and availability."""
+        use_gpu = self.config.get("use_gpu", True)
+        if use_gpu and torch.cuda.is_available():
+            print("GPU is available and use_gpu is set to True. Using GPU...")
             # Import cuml versions
             from cuml.manifold import UMAP as cumlUMAP
             from cuml.cluster import HDBSCAN as cumlHDBSCAN
             self.UMAP = cumlUMAP
             self.HDBSCAN = cumlHDBSCAN
-            print("Also using GPU for UMAP and HDBSCAN with cuML...")
+            print("Using GPU-accelerated UMAP and HDBSCAN with cuML...")
             return torch.device("cuda")
         else:
-            print("GPU not available. Falling back to CPU...")
-            # Import CPU versions
+            print("Using CPU versions of UMAP and HDBSCAN...")
             from umap import UMAP as cpuUMAP
             from hdbscan import HDBSCAN as cpuHDBSCAN
             self.UMAP = cpuUMAP
@@ -79,7 +79,7 @@ class BertopicModel:
         n_neighbors = max(n_neighbors, 2)  # Ensure n_neighbors is at least 2
 
         # Adjust n_neighbors for topic embeddings if zero-shot modeling
-        if self.modeling_type in ["zeroshot", "iterative_zeroshot"]:
+        if self.modeling_type == "zeroshot":
             num_topics = len(self.config["zeroshot_topic_list"])
             n_neighbors_topics = min(n_neighbors_config, num_topics - 1)
             n_neighbors_topics = max(n_neighbors_topics, 2)
@@ -121,7 +121,7 @@ class BertopicModel:
         keybert_model = KeyBERTInspired(top_n_words=self.config["keybert_params"]["top_n_words"])
         mmr_model = MaximalMarginalRelevance(diversity=self.config["mmr_params"]["diversity"])
 
-        # Initialize BERTopic model based on modeling_type
+        # Initialize BERTopic model
         bertopic_params = {
             'embedding_model': self.model,
             'umap_model': umap_model,
@@ -132,7 +132,7 @@ class BertopicModel:
             'nr_topics': self.nr_topics
         }
 
-        if self.modeling_type in ["zeroshot", "iterative_zeroshot"]:
+        if self.modeling_type == "zeroshot":
             bertopic_params['zeroshot_topics'] = self.config.get("zeroshot_topic_list", None)
             bertopic_params['min_similarity'] = self.config.get("zeroshot_min_similarity", None)
 
@@ -162,13 +162,8 @@ class BertopicModel:
         # Start embeddings and training time tracking
         embeddings_and_training_start_time = time.time()
 
-        # Check if the modeling type is iterative or iterative_zeroshot
-        if self.modeling_type in ["iterative", "iterative_zeroshot"]:
-            # Train the model using the iterative approach
-            self._train_iterative(docs)
-        else:
-            # Train the model using the regular approach
-            self._train_regular(docs)
+        # Train the model using the regular approach
+        self._train_regular(docs)
 
         # End embeddings and training time tracking
         embeddings_and_training_end_time = time.time()
@@ -185,7 +180,7 @@ class BertopicModel:
         # Start embeddings time tracking
         embeddings_start_time = time.time()
 
-        # Compute embeddings on GPU
+        # Compute embeddings on GPU or CPU based on device
         print("Computing embeddings...")
         self._print_gpu_usage()
         embeddings = self.model.encode(docs, show_progress_bar=True, batch_size=self.config["batch_size"])
@@ -196,13 +191,20 @@ class BertopicModel:
         embeddings_duration = embeddings_end_time - embeddings_start_time
         print(f"Computing embeddings took {embeddings_duration:.2f} seconds.")
 
+        # Start PCA dimensionality reduction
+        print("Reducing dimensionality of embeddings before UMAP...")
+        pca_components = self.config.get("pca_components", 50)
+        pca = PCA(n_components=pca_components, random_state=42)
+        embeddings_reduced = pca.fit_transform(embeddings)
+        print(f"Dimensionality reduced to {pca_components} components.")
+
         # Start training time tracking
         training_start_time = time.time()
 
-        # Train the BERTopic model with embeddings
+        # Train the BERTopic model with reduced embeddings
         print(f"Training BERTopic model using the following modeling type: {self.modeling_type}...")
         try:
-            topics, probs = self.topic_model.fit_transform(docs, embeddings)
+            topics, probs = self.topic_model.fit_transform(docs, embeddings_reduced)
 
             # Handle None values in topics (assign -1 to unassigned topics)
             topics = [topic if topic is not None else -1 for topic in topics]
@@ -237,70 +239,6 @@ class BertopicModel:
         except Exception as e:
             print(f"An error occurred while saving the model: {e}")
 
-    def _train_iterative(self, docs):
-        # Adjusted to remove batch processing and embeddings computation
-        print("Initializing iterative BERTopic model...")
-
-        # Split the input documents into chunks
-        doc_chunks = [docs[i:i+self.doc_chunk_size] for i in range(0, len(docs), self.doc_chunk_size)]
-
-        if not doc_chunks:
-            print("No document chunks found for iterative training.")
-            return
-
-        # Initialize the base model with the first chunk of documents
-        self.docs = doc_chunks[0]
-        self.topic_model = self._initialize_bertopic_model()
-
-        base_model = self.topic_model.fit(doc_chunks[0])
-        base_model.original_documents = doc_chunks[0]
-
-        # Iterate over the remaining chunks of documents
-        for chunk in doc_chunks[1:]:
-            print("Merging new documents into the base model...")
-
-            try:
-                # Update self.docs for the current chunk
-                self.docs = chunk
-                # Train a new model on the current chunk of documents
-                new_model = self._initialize_bertopic_model().fit(chunk)
-                new_model.original_documents = chunk
-
-                # Merge the new model with the base model
-                updated_model = BERTopic.merge_models([base_model, new_model])
-
-                # Print the number of newly discovered topics
-                nr_new_topics = len(set(updated_model.topics_)) - len(set(base_model.topics_))
-                new_topics = list(updated_model.get_topic_info()['Name'])[-nr_new_topics:]
-                print("The following topics are newly found:")
-                print(f"{new_topics}\n")
-
-                # Update the base model
-                base_model = updated_model
-
-            except Exception as e:
-                print(f"An error occurred during iterative training: {e}")
-                return
-
-        # Assign the final merged model
-        self.topic_model = base_model
-
-        # Print information about the training process
-        print(f"Iterative BERTopic model trained on {len(docs)} documents.")
-        print(f"Number of topics generated: {len(set(self.topic_model.topics_))}")
-
-        # Save the final merged model
-        try:
-            print("Saving the final merged BERTopic model using safetensors...")
-            self.topic_model.save(
-                self.model_save_path,
-                serialization="safetensors",
-                save_ctfidf=True
-            )
-            print(f"Final BERTopic model saved to {self.model_save_path}.")
-        except Exception as e:
-            print(f"An error occurred while saving the model: {e}")
-
     def _post_training_tasks(self):
         """Perform tasks after training, such as displaying topic info and customizing labels."""
         # Display the number of documents assigned to each topic
@@ -309,7 +247,7 @@ class BertopicModel:
         print(topic_info[['Topic', 'Count']])
 
         # Customize topic labels if zero-shot modeling
-        if self.modeling_type in ["zeroshot", "iterative_zeroshot"]:
+        if self.modeling_type == "zeroshot":
             print("\nCustomizing topic labels with zero-shot topic names...")
             self._customize_topic_labels()
 
