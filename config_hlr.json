@@ -27,7 +27,7 @@
   },
 
   "modeling_type": "regular",
-  "sample_size": 400,
+  "sample_size": 250,
   "document_split": "sentences",
   "random_seed": 43,
   "section_to_analyze": "Presentation",
