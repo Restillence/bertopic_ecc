@@ -27,7 +27,7 @@
   },
 
   "modeling_type": "regular",
-  "sample_size": 150,
+  "sample_size": 400,
   "document_split": "sentences",
   "random_seed": 43,
   "section_to_analyze": "Presentation",
@@ -35,7 +35,7 @@
   "nr_topics": null,
   "use_gpu": true,
   "pca_components": 50,
-  "output_dir": "D:/daten_masterarbeit/",
+  "output_dir": "../data/",
 
   "batch_size": 32,
 
