@@ -29,33 +29,43 @@ class BertopicModel:
             A dictionary containing the configuration for the model.
         """
         self.config = config
+        self.use_gpu = self.config.get("use_gpu", True)  # For UMAP and HDBSCAN
         self.model_save_path = config["model_save_path"]
         self.modeling_type = config.get("modeling_type", "regular")  # Options: ["regular", "zeroshot"]
-        self.device = self._select_device()
+        self.device = self._select_embedding_device()  # Device for embeddings
         self.topic_model = None
         self.nr_topics = config.get("nr_topics", None)
         self.model = self._select_embedding_model(config)
         self.docs = None  # Initialize self.docs
 
-    def _select_device(self):
-        """Select device based on config setting and availability."""
-        use_gpu = self.config.get("use_gpu", True)
-        if use_gpu and torch.cuda.is_available():
-            print("GPU is available and use_gpu is set to True. Using GPU...")
-            # Import cuml versions
+        # Select UMAP and HDBSCAN implementations
+        self._select_umap_hdbscan()
+
+    def _select_embedding_device(self):
+        """Select device for embeddings based on GPU availability."""
+        if torch.cuda.is_available():
+            print("GPU is available. Using GPU for embeddings...")
+            return torch.device("cuda")
+        else:
+            print("GPU not available. Using CPU for embeddings...")
+            return torch.device("cpu")
+
+    def _select_umap_hdbscan(self):
+        """Select UMAP and HDBSCAN implementations based on config setting and availability."""
+        if self.use_gpu and torch.cuda.is_available():
+            print("Using GPU-accelerated UMAP and HDBSCAN with cuML...")
             from cuml.manifold import UMAP as cumlUMAP
             from cuml.cluster import HDBSCAN as cumlHDBSCAN
             self.UMAP = cumlUMAP
             self.HDBSCAN = cumlHDBSCAN
-            print("Using GPU-accelerated UMAP and HDBSCAN with cuML...")
-            return torch.device("cuda")
+            self.use_gpu_umap = True  # Track UMAP implementation
         else:
             print("Using CPU versions of UMAP and HDBSCAN...")
             from umap import UMAP as cpuUMAP
             from hdbscan import HDBSCAN as cpuHDBSCAN
             self.UMAP = cpuUMAP
             self.HDBSCAN = cpuHDBSCAN
-            return torch.device("cpu")
+            self.use_gpu_umap = False  # Track UMAP implementation
 
     def _select_embedding_model(self, config):
         """Select the embedding model based on the config setting."""
@@ -101,9 +111,12 @@ class BertopicModel:
             'n_components': self.config["umap_model_params"]["n_components"],
             'min_dist': self.config["umap_model_params"]["min_dist"],
             'metric': self.config["umap_model_params"]["metric"],
-            'random_state': 42,
-            'low_memory': self.config["umap_model_params"]["low_memory"]
+            'random_state': 42
         }
+
+        # Add 'low_memory' parameter only if using CPU UMAP
+        if not self.use_gpu_umap:
+            umap_params['low_memory'] = self.config["umap_model_params"]["low_memory"]
 
         # Initialize UMAP with adjusted parameters
         umap_model = self.UMAP(**umap_params)
@@ -139,7 +152,7 @@ class BertopicModel:
         return BERTopic(**bertopic_params)
 
     def _print_gpu_usage(self):
-        if self.device.type == "cuda":
+        if torch.cuda.is_available():
             import GPUtil
             gpus = GPUtil.getGPUs()
             for gpu in gpus:
