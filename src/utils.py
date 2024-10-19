@@ -32,13 +32,10 @@ def load_bertopic_model(model_path):
     return topic_model
 
 def heartbeat():
-    """
-    Prints a heartbeat message to the console every 5 minutes.
-    Runs indefinitely until the main program exits.
-    """
     while True:
-        time.sleep(300)  # 300 seconds = 5 minutes
-        print("[Heartbeat] The script is still running...")
+        current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        print(f"Heartbeat: The current time is {current_time}")
+        time.sleep(300)  # Sleep for 5 minutes (300 seconds)
 
 def process_topics(path, output_path, topics_to_keep):
     # Load the CSV file
