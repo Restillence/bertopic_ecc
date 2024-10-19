@@ -33,7 +33,7 @@
   "section_to_analyze": "Presentation",
   "max_documents": 30000000,
   "nr_topics": null,
-  "use_gpu": true,
+  "use_gpu": false,
   "pca_components": 50,
   "output_dir": "../data/",
 
