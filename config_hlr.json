@@ -27,7 +27,7 @@
   },
 
   "modeling_type": "regular",
-  "sample_size": 200,
+  "sample_size": 3000,
   "sampling_mode": "full_random",
   "document_split": "sentences",
   "random_seed": 43,
@@ -35,7 +35,7 @@
   "max_documents": 30000000,
   "nr_topics": null,
   "use_gpu": false,
-  "pca_components": 40,
+  "pca_components": 50,
   "output_dir": "../data/",
 
   "batch_size": 32,
