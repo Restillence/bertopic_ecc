@@ -12,9 +12,10 @@
     "file_path_crsp_monthly": "D:/daten_masterarbeit/CRSP_monthly_Compustat_quarterly_merged.csv",
     "merged_file_path": "D:/daten_masterarbeit/final_dataset.csv",
     
-    "topics_input_path": "D:/daten_masterarbeit/topics_output_sentences_50_zeroshot_0_minsim.csv",
-    "topics_output_path": "D:/daten_masterarbeit/topics_output_sentences_50_zeroshot_0_minsim_outlier_removed.csv",
-    "topics_to_keep": [1, 2, 3, 4, 5, 6],
+    "topics_input_path": "D:/daten_masterarbeit/topics_output.csv",
+    "topics_output_path": "D:/daten_masterarbeit/topics_output_outlier_removed.csv",
+    "topics_to_keep": ["auto"],
+    "topic_threshold_percentage": 90,
   
     "fuzzy_topic_labels": {
       "0": "Introduction",

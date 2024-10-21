@@ -5,6 +5,7 @@ import pandas as pd
 import numpy as np
 from scipy.spatial.distance import cosine
 import time
+import ast
 
 def print_configuration(config):
     """
@@ -31,14 +32,22 @@ def load_bertopic_model(model_path):
     print(f"BERTopic model loaded from {model_path}")
     return topic_model
 
-def process_topics(path, output_path, topics_to_keep):
+def process_topics(path, output_path, topics_to_keep, threshold_percentage=None):
     # Load the CSV file
     df = pd.read_csv(path)
 
+    # Convert string representations of lists into actual lists using ast.literal_eval
+    df['topics'] = df['topics'].apply(lambda x: ast.literal_eval(x) if isinstance(x, str) else x)
+    df['text'] = df['text'].apply(lambda x: ast.literal_eval(x) if isinstance(x, str) else x)
+
+    # Automatically determine topics to keep if set to "auto"
+    if topics_to_keep == "auto":
+        topics_to_keep = determine_topics_to_keep(df, threshold_percentage)
+
     # Function to keep only the specified topics and corresponding texts
     def keep_topics_and_texts(row, topics_to_keep):
-        topics = eval(row['topics'])
-        texts = eval(row['text'])
+        topics = row['topics']
+        texts = row['text']
         filtered_data = [(topic, text) for topic, text in zip(topics, texts) if topic in topics_to_keep]
         if filtered_data:
             filtered_topics, filtered_texts = zip(*filtered_data)
@@ -51,16 +60,50 @@ def process_topics(path, output_path, topics_to_keep):
 
     # Consistency check to validate if topics and texts are of the same length
     def check_consistency(row):
-        topics = eval(row['topics'])
-        texts = eval(row['text'])
-        return len(topics) == len(texts)
+        return len(row['topics']) == len(row['text'])
 
     df['consistent'] = df.apply(check_consistency, axis=1)
 
-    # Export to CSV; not neccessary for the final version
-    #df.to_csv(output_path, sep='\t', encoding='utf-8', index=False, header=list(df))
-
+    # Return relevant columns
     return df[['topics', 'text', 'filtered_topics', 'filtered_texts', 'consistent', 'call_id', 'permco', 'date']]
+
+
+def determine_topics_to_keep(df, threshold_percentage):
+    """
+    Determine topics that appear in at least 1 call for the specified percentage of companies.
+    """
+    # Get the total number of companies
+    total_companies = df['permco'].nunique()
+
+    # Set to keep track of topics per company
+    topics_per_company = df.groupby('permco')['topics'].apply(lambda x: set().union(*x)).reset_index()
+
+    # Count the occurrences of each topic across companies
+    topic_counts = {}
+
+    for topics in topics_per_company['topics']:
+        for topic in topics:
+            if topic not in topic_counts:
+                topic_counts[topic] = 0
+            topic_counts[topic] += 1
+
+    # Determine the threshold number of companies
+    company_threshold = total_companies * (threshold_percentage / 100)
+
+    # Find topics that appear in at least the threshold percentage of companies
+    topics_to_keep = {topic for topic, count in topic_counts.items() if count >= company_threshold}
+    
+    # Find topics to remove
+    topics_to_remove = set(topic_counts.keys()) - topics_to_keep
+
+    # Print statements to show kept and removed topics
+    print(f"Topics to Keep (Appearing in {threshold_percentage}% or more of companies): {topics_to_keep}")
+    print(f"Topics to Remove: {topics_to_remove}")
+    print(f"Percentage Threshold: {threshold_percentage}%")
+    
+    return topics_to_keep
+
+
 
 def create_transition_matrix(topic_sequence, num_topics):
     transition_matrix = np.zeros((num_topics, num_topics))

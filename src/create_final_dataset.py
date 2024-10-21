@@ -23,10 +23,11 @@ topics_to_keep = config['topics_to_keep']
 file_path_crsp_daily = config['file_path_crsp_daily']
 file_path_crsp_monthly = config['file_path_crsp_monthly']
 merged_file_path = config['merged_file_path']
+topic_threshold_percentage = config['topic_threshold_percentage']  # Add this to your config
 
 # Process the topics
 print("Processing topics...")
-processed_df = process_topics(topic_input_path, topic_output_path, topics_to_keep)
+processed_df = process_topics(topic_input_path, topic_output_path, topics_to_keep, topic_threshold_percentage)
 print(f"Processed DataFrame columns: {processed_df.columns}")
 
 # Ensure 'permco' is a string in all DataFrames
