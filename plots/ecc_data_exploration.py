@@ -41,23 +41,62 @@ class ECCDataExplorer:
         np.random.seed(self.random_seed)
         return self.file_handler.create_ecc_sample(self.sample_size)
 
-
     def convert_to_dataframe(self, ecc_sample):
         records = []
         for permco, calls in ecc_sample.items():
             for call_id, values in calls.items():
-                company_info, date, text = values
-                print(f"Text for call_id {call_id} (first 500 chars): {text[:500]}...")  # Print to check the content
+                # Access the dictionary keys directly
+                company_name = values['company_name']
+                date = values['date']
+                text_content = values['text_content']
+                
+                # Append the extracted data to the records list
                 records.append({
                     'permco': permco,
                     'call_id': call_id,
-                    'company_info': company_info,
+                    'company_info': company_name,
                     'date': date,
-                    'text': text,
-                    'text_length': len(text.split())
+                    'text': text_content,
+                    'text_length': len(text_content.split())
                 })
+        
+        # Create the DataFrame from the records list
         return pd.DataFrame(records)
 
+    def get_calls_above_2_std(self, results_df):
+        """
+        Identifies calls where the average paragraph length is 2 standard deviations above the mean
+        and calculates the percentage of permcos associated with those calls.
+        """
+        # Step 1: Compute median and standard deviation of average paragraph lengths
+        avg_paragraph_lengths = results_df['avg_paragraph_length']
+        median_length = np.median(avg_paragraph_lengths)
+        std_length = np.std(avg_paragraph_lengths)
+    
+        # Threshold for calls 2 standard deviations above the median
+        threshold = median_length + 2 * std_length
+    
+        # Step 2: Filter calls where the average paragraph length is above this threshold
+        calls_above_threshold = results_df[results_df['avg_paragraph_length'] > threshold]
+    
+        # Debug: Print statistics
+        print(f"Median Paragraph Length: {median_length}")
+        print(f"Standard Deviation: {std_length}")
+        print(f"Threshold for 2 Standard Deviations Above Median: {threshold}")
+        print(f"Number of Calls Above Threshold: {len(calls_above_threshold)}")
+        # Step 3: Extract the unique permcos associated with those calls
+        permcos_above_threshold = calls_above_threshold['permco'].unique()
+        
+        # Step 4: Calculate the percentage of permcos that have calls above 2 standard deviations
+        total_permcos = results_df['permco'].nunique()
+        permcos_above_threshold_count = len(permcos_above_threshold)
+        percentage_permcos = (permcos_above_threshold_count / total_permcos) * 100
+        
+        # Step 5: Return the relevant information
+        print(f"Number of Permcos with Calls Above Threshold: {permcos_above_threshold_count}")
+        print(f"Percentage of Permcos with Calls Above Threshold: {percentage_permcos:.2f}%")
+        
+        return calls_above_threshold, permcos_above_threshold, percentage_permcos
 
     def plot_paragraph_length_distribution(self, results_df):
         print("Computing paragraph word length distribution...")
@@ -280,8 +319,9 @@ class ECCDataExplorer:
             call_id = row['call_id']
             company_info = row['company_info']
             date = row['date']
-    
-            print(f"Text for call_id {call_id}: {text[:500]}...")  # Check text content
+            permco = row["permco"]
+            #debugging statement
+            #print(f"Text for call_id {call_id}: {text[:500]}...")  # Check text content
             
             # Clean the text using the paragraph_text_processor
             text = paragraph_text_processor.remove_unwanted_sections(text)
@@ -292,7 +332,7 @@ class ECCDataExplorer:
             
             # Split the cleaned text into paragraphs
             paragraphs = paragraph_text_processor.split_text_by_visual_cues(text)
-            print(f"Found {len(paragraphs)} paragraphs for call_id {call_id}.")
+            #print(f"Found {len(paragraphs)} paragraphs for call_id {call_id}.")
             
             # Final cleanup: Remove any remaining separator lines
             paragraphs = [paragraph_text_processor.remove_separator_line(para) for para in paragraphs]
@@ -305,17 +345,19 @@ class ECCDataExplorer:
             paragraph_lengths = [len(paragraph.split()) for paragraph in paragraphs]
             
             # Debugging: Check if paragraph lengths are being calculated
-            print(f"Paragraph lengths for call_id {call_id}: {paragraph_lengths}")
+            #print(f"Paragraph lengths for call_id {call_id}: {paragraph_lengths}")
     
             # Ensure there are paragraphs and calculate the average length
             if paragraph_lengths:  # Avoid division by zero
                 avg_length = sum(paragraph_lengths) / len(paragraph_lengths)
-                print(f"Average paragraph length for call_id {call_id}: {avg_length}")
+                #debugging
+                #print(f"Average paragraph length for call_id {call_id}: {avg_length}")
                 call_avg_paragraph_lengths.append({
                     'call_id': call_id,
                     'company_info': company_info,  # Use 'company_info' here
                     'date': date,
-                    'avg_paragraph_length': avg_length  # Make sure this is the correct column name
+                    'avg_paragraph_length': avg_length,  # Make sure this is the correct column name
+                    "permco": permco
                 })
             else:
                 print(f"No valid paragraphs found for call_id {call_id}.")
@@ -324,8 +366,8 @@ class ECCDataExplorer:
         avg_paragraph_lengths_df = pd.DataFrame(call_avg_paragraph_lengths)
         
         # Debug: Print the DataFrame columns to verify
-        print("avg_paragraph_lengths_df columns:", avg_paragraph_lengths_df.columns)
-        print(avg_paragraph_lengths_df.head())
+        #print("avg_paragraph_lengths_df columns:", avg_paragraph_lengths_df.columns)
+        #print(avg_paragraph_lengths_df.head())
     
         # Calculate the threshold for the top 'top_percent' %
         if 'avg_paragraph_length' in avg_paragraph_lengths_df.columns:
@@ -340,7 +382,7 @@ class ECCDataExplorer:
             print(f"Top {top_percent}% calls with highest average paragraph lengths:")
             print(top_calls)
             
-            return top_calls
+            return top_calls, avg_paragraph_lengths_df
         else:
             print("Error: 'avg_paragraph_length' column not found in the DataFrame")
             return pd.DataFrame()  # Return empty DataFrame if the column is missing

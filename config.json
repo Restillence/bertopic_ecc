@@ -28,7 +28,7 @@
     },
 
     "modeling_type": "regular",
-    "sample_size": 20,
+    "sample_size": 200,
     "sampling_mode": "random_company",
     "document_split": "paragraphs",
     "random_seed": 43,

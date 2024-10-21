@@ -47,6 +47,14 @@ def main():
     #
     ecc_explorer.get_calls_with_highest_avg_paragraph_lengths(results_df) # only works with "sampling_mode": "random_company"; and 
     #"docoument_split": "paragraphs"!!!
+    calls_above_threshold, permcos_above_threshold, percentage_permcos = ecc_explorer.get_calls_above_2_std(results_df)
+
+    # To inspect the filtered calls and permcos:
+    print("Calls Above Threshold (first 5 rows):")
+    print(calls_above_threshold[['call_id', 'permco', 'avg_paragraph_length']].head())
+    
+    print("Permcos with Calls Above Threshold:", permcos_above_threshold)
+    print(f"Percentage of Permcos with Calls Above 2 Std Dev: {percentage_permcos:.2f}%")
     """
     # Display additional stats
     num_unique_companies, calls_per_company, top5_avg_length, summary_stats_table = ecc_explorer.additional_descriptive_statistics(results_df)
