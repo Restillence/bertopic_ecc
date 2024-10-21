@@ -27,14 +27,14 @@
   },
 
   "modeling_type": "regular",
-  "sample_size": 250,
+  "sample_size": 200,
   "document_split": "sentences",
   "random_seed": 43,
   "section_to_analyze": "Presentation",
   "max_documents": 30000000,
   "nr_topics": null,
   "use_gpu": false,
-  "pca_components": 50,
+  "pca_components": 40,
   "output_dir": "../data/",
 
   "batch_size": 32,
@@ -52,7 +52,7 @@
       "low_memory": true
   },
   "hdbscan_model_params": {
-      "min_cluster_size": 300,
+      "min_cluster_size": 250,
       "metric": "euclidean",
       "cluster_selection_method": "eom",
       "prediction_data": true
