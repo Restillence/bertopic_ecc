@@ -28,9 +28,9 @@
     },
 
     "modeling_type": "regular",
-    "sample_size": 50,
-    "sampling_mode": "full_random",
-    "document_split": "sentences",
+    "sample_size": 20,
+    "sampling_mode": "random_company",
+    "document_split": "paragraphs",
     "random_seed": 43,
     "section_to_analyze": "Presentation",
     "max_documents": 300000000,

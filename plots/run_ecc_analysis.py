@@ -4,6 +4,9 @@ import numpy as np
 import pandas as pd
 import sys
 
+# If git structure is not working properly:
+fallback_config_path = "C:/Users/nikla/OneDrive/Dokumente/winfoMaster/Masterarbeit/bertopic_ecc/config.json"
+
 # Get the current working directory
 current_dir = os.getcwd()
 
@@ -17,10 +20,12 @@ if "src" not in current_dir:
 from ecc_data_exploration import ECCDataExplorer
 from nlp_plots import NLPPlotter
 
-
 def main():
     # Initialize ECCDataExplorer
-    ecc_explorer = ECCDataExplorer(config_path="config.json")
+    try: 
+        ecc_explorer = ECCDataExplorer(config_path="config.json")
+    except:
+        ecc_explorer = ECCDataExplorer(config_path= fallback_config_path)
     
     # Load data and convert to dataframe
     ecc_sample = ecc_explorer.load_data()
@@ -39,7 +44,9 @@ def main():
     # Add new plot for average paragraph length distribution
     #ecc_explorer.plot_avg_paragraph_length_distribution(results_df)
     
-    ecc_explorer.get_calls_with_highest_avg_paragraph_lengths(results_df)
+    #
+    ecc_explorer.get_calls_with_highest_avg_paragraph_lengths(results_df) # only works with "sampling_mode": "random_company"; and 
+    #"docoument_split": "paragraphs"!!!
     """
     # Display additional stats
     num_unique_companies, calls_per_company, top5_avg_length, summary_stats_table = ecc_explorer.additional_descriptive_statistics(results_df)
@@ -50,7 +57,7 @@ def main():
         summary_stats_table, 
         os.path.join(ecc_explorer.ecc_plots_folder, 'ecc_statistics.html')
     )
-    
+
     # Initialize NLPPlotter
     nlp_plotter = NLPPlotter(config_path="config.json")
     

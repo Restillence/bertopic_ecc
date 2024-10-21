@@ -33,17 +33,21 @@ class ECCDataExplorer:
         
         # Initializing necessary objects
         self.text_processor = TextProcessor(method=self.config["document_split"], section_to_analyze=self.config["section_to_analyze"])
-        self.file_handler = FileHandler(index_file_path=self.index_file_path, folderpath_ecc=self.folderpath_ecc)
+        
+        # Pass the entire config to FileHandler
+        self.file_handler = FileHandler(config=self.config)
 
     def load_data(self):
         np.random.seed(self.random_seed)
         return self.file_handler.create_ecc_sample(self.sample_size)
+
 
     def convert_to_dataframe(self, ecc_sample):
         records = []
         for permco, calls in ecc_sample.items():
             for call_id, values in calls.items():
                 company_info, date, text = values
+                print(f"Text for call_id {call_id} (first 500 chars): {text[:500]}...")  # Print to check the content
                 records.append({
                     'permco': permco,
                     'call_id': call_id,
@@ -53,6 +57,7 @@ class ECCDataExplorer:
                     'text_length': len(text.split())
                 })
         return pd.DataFrame(records)
+
 
     def plot_paragraph_length_distribution(self, results_df):
         print("Computing paragraph word length distribution...")
@@ -272,23 +277,26 @@ class ECCDataExplorer:
         # Loop through each earnings call in the results_df
         for _, row in results_df.iterrows():
             text = row['text']
-            call_id = row['call_id']  # Ensure results_df has a 'call_id' column
-            company_info = row['company_info']  # Use 'company_info' instead of 'company'
-            date = row['date']  # Ensure results_df has a 'date' column
-
+            call_id = row['call_id']
+            company_info = row['company_info']
+            date = row['date']
+    
+            print(f"Text for call_id {call_id}: {text[:500]}...")  # Check text content
+            
             # Clean the text using the paragraph_text_processor
             text = paragraph_text_processor.remove_unwanted_sections(text)
             text = paragraph_text_processor.remove_questions_and_answers_and_beyond(text)
             text = paragraph_text_processor.remove_concluding_statements(text)
             text = paragraph_text_processor.remove_pattern(text)
-            text = paragraph_text_processor.remove_specific_string(text)  # Ensure "Presentation" is removed forcefully
-
+            text = paragraph_text_processor.remove_specific_string(text)
+            
             # Split the cleaned text into paragraphs
             paragraphs = paragraph_text_processor.split_text_by_visual_cues(text)
-
+            print(f"Found {len(paragraphs)} paragraphs for call_id {call_id}.")
+            
             # Final cleanup: Remove any remaining separator lines
             paragraphs = [paragraph_text_processor.remove_separator_line(para) for para in paragraphs]
-
+    
             # Final Steps: Remove "Presentation" and filter out elements with fewer than 3 words
             paragraphs = paragraph_text_processor.remove_presentation_from_final_list(paragraphs)
             paragraphs = paragraph_text_processor.filter_short_elements(paragraphs)
@@ -296,29 +304,43 @@ class ECCDataExplorer:
             # Calculate the average paragraph length for this earnings call
             paragraph_lengths = [len(paragraph.split()) for paragraph in paragraphs]
             
+            # Debugging: Check if paragraph lengths are being calculated
+            print(f"Paragraph lengths for call_id {call_id}: {paragraph_lengths}")
+    
             # Ensure there are paragraphs and calculate the average length
             if paragraph_lengths:  # Avoid division by zero
                 avg_length = sum(paragraph_lengths) / len(paragraph_lengths)
+                print(f"Average paragraph length for call_id {call_id}: {avg_length}")
                 call_avg_paragraph_lengths.append({
                     'call_id': call_id,
                     'company_info': company_info,  # Use 'company_info' here
                     'date': date,
-                    'avg_paragraph_length': avg_length
+                    'avg_paragraph_length': avg_length  # Make sure this is the correct column name
                 })
-        
+            else:
+                print(f"No valid paragraphs found for call_id {call_id}.")
+    
         # Convert the list to a DataFrame
         avg_paragraph_lengths_df = pd.DataFrame(call_avg_paragraph_lengths)
         
+        # Debug: Print the DataFrame columns to verify
+        print("avg_paragraph_lengths_df columns:", avg_paragraph_lengths_df.columns)
+        print(avg_paragraph_lengths_df.head())
+    
         # Calculate the threshold for the top 'top_percent' %
-        threshold = np.percentile(avg_paragraph_lengths_df['avg_paragraph_length'], 100 - top_percent)
+        if 'avg_paragraph_length' in avg_paragraph_lengths_df.columns:
+            threshold = np.percentile(avg_paragraph_lengths_df['avg_paragraph_length'], 100 - top_percent)
         
-        # Get the calls in the top 'top_percent' %
-        top_calls = avg_paragraph_lengths_df[avg_paragraph_lengths_df['avg_paragraph_length'] >= threshold]
-        
-        # Sort by avg_paragraph_length descending
-        top_calls = top_calls.sort_values(by='avg_paragraph_length', ascending=False).reset_index(drop=True)
-        
-        print(f"Top {top_percent}% calls with highest average paragraph lengths:")
-        print(top_calls)
-        
-        return top_calls
+            # Get the calls in the top 'top_percent' %
+            top_calls = avg_paragraph_lengths_df[avg_paragraph_lengths_df['avg_paragraph_length'] >= threshold]
+            
+            # Sort by avg_paragraph_length descending
+            top_calls = top_calls.sort_values(by='avg_paragraph_length', ascending=False).reset_index(drop=True)
+            
+            print(f"Top {top_percent}% calls with highest average paragraph lengths:")
+            print(top_calls)
+            
+            return top_calls
+        else:
+            print("Error: 'avg_paragraph_length' column not found in the DataFrame")
+            return pd.DataFrame()  # Return empty DataFrame if the column is missing
