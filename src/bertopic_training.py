@@ -16,6 +16,7 @@ from sentence_transformers import SentenceTransformer
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.decomposition import PCA  # Import PCA for dimensionality reduction
 from utils import print_configuration
+import datetime
 
 class BertopicModel:
     def __init__(self, config):
