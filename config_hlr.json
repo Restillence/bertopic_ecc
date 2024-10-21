@@ -27,7 +27,7 @@
   },
 
   "modeling_type": "regular",
-  "sample_size": 500,
+  "sample_size": 3000,
   "sampling_mode": "full_random",
   "document_split": "sentences",
   "random_seed": 43,
@@ -53,7 +53,7 @@
       "low_memory": true
   },
   "hdbscan_model_params": {
-      "min_cluster_size": 100,
+      "min_cluster_size": 200,
       "metric": "euclidean",
       "cluster_selection_method": "eom",
       "prediction_data": true
