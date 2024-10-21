@@ -3,7 +3,6 @@ import json
 import numpy as np
 import torch  # For checking if GPU is available
 import time  # For time tracking
-from utils import heartbeat
 import threading  # For heartbeat functionality
 
 # Disable parallelism in tokenizers to prevent CPU overutilization
@@ -209,7 +208,7 @@ class BertopicModel:
         pca_components = self.config.get("pca_components", 50)
         pca = PCA(n_components=pca_components, random_state=42)
         embeddings_reduced = pca.fit_transform(embeddings)
-        print(f"Dimensionality reduced to {pca_components} components.")
+        print(f"Dimensionality reduced to {pca_components} components for less expensive usage of UMAP.")
 
         # Start training time tracking
         training_start_time = time.time()
@@ -297,6 +296,12 @@ class BertopicModel:
         topic_info.to_csv(output_file, index=False)
         print(f"Topic information saved to {output_file}.")
 
+def heartbeat():
+    while True:
+        current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        print(f"Heartbeat: The current time is {current_time}")
+        time.sleep(300)  # Sleep for 5 minutes (300 seconds)
+
 def main():
     """
     Main entry point of the script.
@@ -309,6 +314,10 @@ def main():
     -------
     None
     """
+    # Start the heartbeat thread
+    heartbeat_thread = threading.Thread(target=heartbeat, daemon=True)
+    heartbeat_thread.start()
+    
     # Start total execution time tracking
     total_start_time = time.time()
     # Start the heartbeat thread

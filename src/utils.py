@@ -31,12 +31,6 @@ def load_bertopic_model(model_path):
     print(f"BERTopic model loaded from {model_path}")
     return topic_model
 
-def heartbeat():
-    while True:
-        current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        print(f"Heartbeat: The current time is {current_time}")
-        time.sleep(300)  # Sleep for 5 minutes (300 seconds)
-
 def process_topics(path, output_path, topics_to_keep):
     # Load the CSV file
     df = pd.read_csv(path)
