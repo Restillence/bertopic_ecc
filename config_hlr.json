@@ -48,7 +48,7 @@
   },
   "umap_model_params": {
       "n_neighbors": 15,
-      "n_components": 5,
+      "n_components": 10,
       "min_dist": 0.0,
       "metric": "cosine",
       "low_memory": true
