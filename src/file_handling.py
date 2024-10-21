@@ -26,7 +26,7 @@ class FileHandler:
         self.config = config
 
         # Extract file paths from config
-        self.index_file_path = self.config.get('index_file_ecc_folder')
+        self.index_file_path = self.config.get('index_file_path')
         self.folderpath_ecc = self.config.get('folderpath_ecc')
 
         # Ensure file paths are set
@@ -80,15 +80,27 @@ class FileHandler:
             # Select random files
             random_files = np.random.choice(all_files, size=sample_size, replace=False)
             print(f"Selected {len(random_files)} random files.")
+            print("First 10 random files:", random_files[:10])
             for ecc_file in random_files:
                 # Extract permco and SE_ID from the file name
                 parts = ecc_file.replace('.txt', '').split('_')
-                if len(parts) < 4:
+                if len(parts) != 4:
                     print(f"File name {ecc_file} does not match expected pattern.")
                     continue
-                _, permco_str, _, se_id_str = parts
-                permco = int(permco_str)
-                se_id = int(se_id_str)
+                if parts[0] != 'earnings' or parts[1] != 'call':
+                    print(f"File name {ecc_file} does not match expected pattern.")
+                    continue
+                permco_str = parts[2]
+                se_id_str = parts[3]
+                try:
+                    permco = int(permco_str)
+                    se_id = int(se_id_str)
+                except ValueError:
+                    print(f"Cannot convert permco or SE_ID to int in file name {ecc_file}.")
+                    continue
+
+                # Define ecc_key here
+                ecc_key = f"earnings_call_{permco}_{se_id}"
 
                 # Get the row for the current permco and SE_ID
                 specific_row = index_file[(index_file['permco'] == permco) & (index_file['SE_ID'] == se_id)]
@@ -105,12 +117,14 @@ class FileHandler:
                     text_content = file.read()
 
                 # Add the ECC to the sample
-                ecc_key = f"earnings_call_{permco}_{se_id}"
-                ecc_sample[ecc_key] = {
+                if permco not in ecc_sample:
+                    ecc_sample[permco] = {}
+                ecc_sample[permco][ecc_key] = {
                     'company_name': company_name,
                     'date': date,
                     'text_content': text_content
                 }
+
         elif sampling_mode == 'random_company':
             # Sample companies at random and include their earnings calls
             print("Sampling mode: random_company")

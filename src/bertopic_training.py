@@ -214,18 +214,10 @@ class BertopicModel:
         # Start training time tracking
         training_start_time = time.time()
 
-        # Train the BERTopic model with reduced embeddings
-        print(f"Training BERTopic model using the following modeling type: {self.modeling_type}...")
+        # Fit the BERTopic model with reduced embeddings
+        print(f"Fitting BERTopic model using the following modeling type: {self.modeling_type}...")
         try:
-            topics, probs = self.topic_model.fit_transform(docs, embeddings_reduced)
-
-            # Handle None values in topics (assign -1 to unassigned topics)
-            topics = [topic if topic is not None else -1 for topic in topics]
-
-            # Assign topics and probabilities to the model
-            self.topic_model.topics_ = topics
-            self.topic_model.probabilities_ = probs
-            self.topic_model.original_documents = docs  # Ensure original_documents is set
+            self.topic_model.fit(docs, embeddings_reduced)
 
         except Exception as e:
             print(f"An error occurred during model training: {e}")
@@ -238,7 +230,7 @@ class BertopicModel:
 
         # Print information about the training process
         print(f"BERTopic model trained on {len(docs)} documents.")
-        print(f"Number of topics generated: {len(set(topics))}")
+        print(f"Number of topics generated: {len(self.topic_model.get_topic_info())}")
 
         # Save the BERTopic model using safetensors
         try:
@@ -333,8 +325,6 @@ def main():
     np.random.seed(random_seed)
 
     # Extract variables from the config
-    index_file_ecc_folder = config["index_file_ecc_folder"]
-    folderpath_ecc = config["folderpath_ecc"]
     sample_size = config["sample_size"]
     document_split = config["document_split"]
     section_to_analyze = config["section_to_analyze"]
@@ -342,7 +332,7 @@ def main():
 
     # Initialize FileHandler and TextProcessor with the imported configuration
     print("Initializing file handler and text processor...")
-    file_handler = FileHandler(index_file_path=config["index_file_path"], folderpath_ecc=folderpath_ecc)
+    file_handler = FileHandler(config=config)
     text_processor = TextProcessor(method=document_split, section_to_analyze=section_to_analyze)
 
     # Start splitting process time tracking

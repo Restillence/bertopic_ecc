@@ -374,7 +374,9 @@ class TextProcessor:
             for call_id, value in calls.items():
                 if document_count >= max_documents:
                     break
-                company_info, date, text = value
+                company_info = value['company_name']
+                date = value['date']
+                text = value['text_content']
                 relevant_sections = self.extract_and_split_section(permco, call_id, company_info, date, text)
                 if relevant_sections is not None:
                     if isinstance(relevant_sections, list):
@@ -384,5 +386,7 @@ class TextProcessor:
                     document_count += 1
             if document_count >= max_documents:
                 break
+
         print(f"Extracted {len(all_relevant_sections)} relevant sections.")
         return all_relevant_sections
+
