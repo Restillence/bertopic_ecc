@@ -77,3 +77,7 @@ Install for cuML:
 !pip install cuml-cu11 --extra-index-url=https://pypi.nvidia.com
 !pip install cugraph-cu11 --extra-index-url=https://pypi.nvidia.com
 !pip install --upgrade cupy-cuda11x -f https://pip.cupy.dev/aarch64
+
+
+
+    "sampling_mode": "full_random",  // Options: "full_random" or "random_company"

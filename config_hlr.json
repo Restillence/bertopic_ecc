@@ -28,6 +28,7 @@
 
   "modeling_type": "regular",
   "sample_size": 200,
+  "sampling_mode": "full_random",
   "document_split": "sentences",
   "random_seed": 43,
   "section_to_analyze": "Presentation",

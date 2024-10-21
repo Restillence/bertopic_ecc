@@ -321,13 +321,10 @@ def main():
     
     # Start total execution time tracking
     total_start_time = time.time()
-    # Start the heartbeat thread
-    heartbeat_thread = threading.Thread(target=heartbeat, daemon=True)
-    heartbeat_thread.start()
 
     # Load configuration from config.json
     print("Loading configuration...")
-    with open('config_hlr.json', 'r') as config_file:
+    with open('config.json', 'r') as config_file:
         config = json.load(config_file)
     print_configuration(config)
 
