@@ -205,21 +205,24 @@ class BertopicModel:
         embeddings_duration = embeddings_end_time - embeddings_start_time
         print(f"Computing embeddings took {embeddings_duration:.2f} seconds.")
 
-        # Start PCA dimensionality reduction
-        print("Reducing dimensionality of embeddings before UMAP...")
-        pca_components = self.config.get("pca_components", 50)
-        pca = PCA(n_components=pca_components, random_state=42)
-        embeddings_reduced = pca.fit_transform(embeddings)
-        print(f"Dimensionality reduced to {pca_components} components for less expensive usage of UMAP.")
+        # Conditionally perform PCA only if not using zero-shot modeling
+        if self.modeling_type != "zeroshot":
+            # Start PCA dimensionality reduction
+            print("Reducing dimensionality of embeddings before UMAP...")
+            pca_components = self.config.get("pca_components", 50)
+            pca = PCA(n_components=pca_components, random_state=42)
+            embeddings = pca.fit_transform(embeddings)
+            print(f"Dimensionality reduced to {pca_components} components for less expensive usage of UMAP.")
+        else:
+            print("Skipping PCA dimensionality reduction for zero-shot topic modeling.")
 
         # Start training time tracking
         training_start_time = time.time()
 
-        # Fit the BERTopic model with reduced embeddings
+        # Fit the BERTopic model with embeddings
         print(f"Fitting BERTopic model using the following modeling type: {self.modeling_type}...")
         try:
-            self.topic_model.fit(docs, embeddings_reduced)
-
+            self.topic_model.fit(docs, embeddings)
         except Exception as e:
             print(f"An error occurred during model training: {e}")
             return
