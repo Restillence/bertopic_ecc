@@ -146,10 +146,11 @@ class BertopicModel:
         }
 
         if self.modeling_type == "zeroshot":
-            bertopic_params['zeroshot_topics'] = self.config.get("zeroshot_topic_list", None)
-            bertopic_params['min_similarity'] = self.config.get("zeroshot_min_similarity", None)
+            bertopic_params['zeroshot_topic_list'] = self.config.get("zeroshot_topic_list", None)
+            bertopic_params['zeroshot_min_similarity'] = self.config.get("zeroshot_min_similarity", None)
 
         return BERTopic(**bertopic_params)
+
 
     def _print_gpu_usage(self):
         if torch.cuda.is_available():
