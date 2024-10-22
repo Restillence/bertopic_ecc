@@ -28,7 +28,7 @@
   },
 
   "modeling_type": "regular",
-  "sample_size": 3000,
+  "sample_size": 5000,
   "sampling_mode": "full_random",
   "document_split": "sentences",
   "random_seed": 43,
@@ -48,7 +48,7 @@
   },
   "umap_model_params": {
       "n_neighbors": 15,
-      "n_components": 10,
+      "n_components": 5,
       "min_dist": 0.0,
       "metric": "cosine",
       "low_memory": true
@@ -67,7 +67,7 @@
       "diversity": 0.7
   },
 
-  "zeroshot_min_similarity": 0.05,
+  "zeroshot_min_similarity": 0.7,
   "min_topic_size": 150,
 
   "zeroshot_topic_list_long": [
