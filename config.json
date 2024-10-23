@@ -2,7 +2,7 @@
     "index_file_ecc_folder": "D:/daten_masterarbeit/",
     "folderpath_ecc": "D:/daten_masterarbeit/Transcripts_Masterarbeit_full/",
     "model_save_path": "D:/daten_masterarbeit/bertopic_model_dir", 
-    "model_load_path": "D:/daten_masterarbeit/bertopic_model_dir_3000full_zeroshot_07minsim", 
+    "model_load_path": "D:/daten_masterarbeit/bertopic_model_dir_3000full_zeroshot_03minsim", 
     "model_load_path_with_data": "D:/daten_masterarbeit/bertopic_model_dir_regular_1729_300_l12/bertopic_model_with_data_and_docs_cpu_works", 
     "index_file_path": "D:/daten_masterarbeit/list_earnings_call_transcripts.csv",
     "embedding_model_choice": "all-MiniLM-L12-v2", 
