@@ -28,7 +28,7 @@
   },
 
   "modeling_type": "zeroshot",
-  "sample_size": 3000,
+  "sample_size": 1000,
   "sampling_mode": "full_random",
   "document_split": "sentences",
   "random_seed": 43,

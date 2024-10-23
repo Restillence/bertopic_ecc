@@ -82,5 +82,5 @@ Install for cuML:
 
     "sampling_mode": "full_random",  // Options: "full_random" or "random_company"
 
-        "topics_to_keep": ["auto"],
+        "topics_to_keep": ["auto"], oder "all" oder topic list []
     "topic_threshold_percentage": 90,

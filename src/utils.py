@@ -35,7 +35,10 @@ def load_bertopic_model(model_path):
 def process_topics(path, output_path, topics_to_keep, threshold_percentage=None):
     # Load the CSV file
     df = pd.read_csv(path)
-
+    if topics_to_keep == "all":
+        df['filtered_topics'] = df["topics"]
+        df['filtered_texts'] = df["text"]
+        return df
     # Convert string representations of lists into actual lists using ast.literal_eval
     df['topics'] = df['topics'].apply(lambda x: ast.literal_eval(x) if isinstance(x, str) else x)
     df['text'] = df['text'].apply(lambda x: ast.literal_eval(x) if isinstance(x, str) else x)

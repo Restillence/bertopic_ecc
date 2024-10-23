@@ -237,9 +237,11 @@ merged_df = merged_df[['gvkey', 'permco', 'siccd', 'call_id', 'call_date', 'fisc
                        'prc', 'shrout', 'vol', 'ret', 'ret_next_day', 'ret_5_days', 'ret_20_days', 'ret_60_days',
                        'epsfxq', 'epsfxq_next', 'similarity_to_overall_average', 'similarity_to_industry_average']]
 
+"""
 # Fill NaNs in 'siccd' based on 'gvkey'
 print("Filling NaNs in 'siccd' column based on 'gvkey'...")
 merged_df['siccd'] = merged_df.groupby('gvkey')['siccd'].transform(lambda x: x.fillna(method='ffill').fillna(method='bfill'))
+"""
 
 # Sort the final DataFrame by 'gvkey' and 'call_date' in ascending order
 print("Sorting the final DataFrame by 'gvkey' and 'call_date'...")

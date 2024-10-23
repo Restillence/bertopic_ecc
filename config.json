@@ -14,7 +14,7 @@
     
     "topics_input_path": "D:/daten_masterarbeit/topics_output.csv",
     "topics_output_path": "D:/daten_masterarbeit/topics_output_outlier_removed.csv",
-    "topics_to_keep": ["auto"],
+    "topics_to_keep": "auto",
     "topic_threshold_percentage": 90,
   
     "fuzzy_topic_labels": {
