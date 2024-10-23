@@ -67,7 +67,7 @@
       "diversity": 0.7
   },
 
-  "zeroshot_min_similarity": 0.7,
+  "zeroshot_min_similarity": 0.3,
   "min_topic_size": 150,
 
   "zeroshot_topic_list_long": [
