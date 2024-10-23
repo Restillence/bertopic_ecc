@@ -67,20 +67,12 @@ class BertopicFitting:
         return topic_model
 
     def save_results(self, all_relevant_sections, topics, ecc_sample):
-        """
-        Save the results of the BERTopic model to a CSV file.
-
-        Args:
-            all_relevant_sections (list): List of all relevant sections from the ECC sample.
-            topics (list): List of topics assigned to each section.
-            ecc_sample (dict): Dictionary containing the ECC sample data.
-        """
         result_dict = {}
         topic_idx = 0
 
         for permco, calls in ecc_sample.items():
             for call_id, value in calls.items():
-                sections = value[-1]  # Assuming the last element in value is the list of sections
+                sections = value['relevant_sections']
                 num_sections = len(sections)
                 section_topics = topics[topic_idx:topic_idx + num_sections]
 
@@ -92,15 +84,18 @@ class BertopicFitting:
                 section_topics = section_topics.tolist()
 
                 # Get the timestamp for the call
-                timestamp = value[1]  # Assuming the date is at index 1 in value
+                timestamp = value['date']
+
+                # Get company_info
+                company_info = value['company_name']
 
                 # Format sections and topics to be stored correctly in the CSV
                 result_dict[call_id] = {
                     "permco": permco,
-                    "company_info": value[0],
+                    "company_info": company_info,
                     "date": timestamp,
-                    "sections": sections,  # Keeping it as a list for CSV storage
-                    "topics": section_topics  # Convert lists to JSON strings
+                    "sections": sections,
+                    "topics": section_topics
                 }
                 topic_idx += num_sections
 
@@ -112,8 +107,8 @@ class BertopicFitting:
                 'call_id': call_id,
                 'company_info': call_data['company_info'],
                 'date': call_data['date'],
-                'text': json.dumps(call_data['sections']),  # Convert lists to JSON strings
-                'topics': json.dumps(call_data['topics'])   # Convert lists to JSON strings
+                'text': json.dumps(call_data['sections']),
+                'topics': json.dumps(call_data['topics'])
             })
 
         results_df = pd.DataFrame(records)
@@ -123,6 +118,7 @@ class BertopicFitting:
 
         # Save the DataFrame for later use (e.g., for topics over time)
         self.results_df = results_df
+
 
     def fit_and_save(self, all_relevant_sections, ecc_sample):
         """
@@ -410,12 +406,16 @@ def main():
     extraction_start_time = time.time()  # Time tracking
     for permco, calls in ecc_sample.items():
         for call_id, value in calls.items():
-            relevant_sections = text_processor.extract_and_split_section(permco, call_id, value[0], value[1], value[2])
+            company_info = value['company_name']
+            date = value['date']
+            text = value['text_content']
+            relevant_sections = text_processor.extract_and_split_section(permco, call_id, company_info, date, text)
             all_relevant_sections.extend(relevant_sections)
             # Add the relevant sections to the ECC sample
-            ecc_sample[permco][call_id] = (*value, relevant_sections)
+            value['relevant_sections'] = relevant_sections
     extraction_end_time = time.time()
     print(f"Extraction and processing completed in {extraction_end_time - extraction_start_time:.2f} seconds.")
+
 
     if not all_relevant_sections:
         print("No relevant sections found to fit BERTopic.")
