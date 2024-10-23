@@ -368,10 +368,6 @@ class BertopicFitting:
 def main():
     """
     Main entry point of the script.
-
-    This function loads the configuration from `config_hlr.json`, sets the random seed, and extracts the necessary variables from the config.
-    Then, it initializes the `FileHandler` and `TextProcessor` classes with the imported configuration, creates the ECC sample, and extracts the relevant sections.
-    Finally, it fits the BERTopic model, saves the results, and generates visualizations.
     """
     # Start total time tracking
     total_start_time = time.time()
@@ -396,7 +392,8 @@ def main():
 
     # Initialize FileHandler and TextProcessor with the imported configuration
     print("Initializing file handler and text processor...")
-    file_handler = FileHandler(index_file_path=config["index_file_path"], folderpath_ecc=folderpath_ecc)
+    # Pass the entire config dictionary to FileHandler
+    file_handler = FileHandler(config=config)
     text_processor = TextProcessor(method=document_split, section_to_analyze=section_to_analyze)
 
     # Read the index file
