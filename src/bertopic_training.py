@@ -9,6 +9,7 @@ import threading  # For heartbeat functionality
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
 from bertopic import BERTopic
+from bertopic.vectorizers import ClassTfidfTransformer
 from bertopic.representation import KeyBERTInspired, MaximalMarginalRelevance
 from file_handling import FileHandler  # Import the FileHandler class
 from text_processing import TextProcessor  # Import the TextProcessor class
