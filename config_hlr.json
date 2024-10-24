@@ -27,7 +27,7 @@
     "6": "Risk"
   },
 
-  "modeling_type": "regular",
+  "modeling_type": "zeroshot",
   "sample_size": 3000,
   "sampling_mode": "full_random",
   "document_split": "sentences",
@@ -150,19 +150,19 @@
       "outliers"
   ],
   "zeroshot_topic_list_huang": [
-    "REGULATION",
-    "RISK",
-    "COMPETITION",
-    "CONSUMER",
-    "ECONOMY",
-    "SALES",
-    "PRODUCTS",
-    "EARNINGS",
-    "OPERATIONS",
-    "INVESTMENTS",
-    "GEOGRAPHY",
-    "GROWTH",
-    "TAX"
+    "regulation",
+    "risk",
+    "competition",
+    "consumer",
+    "economy",
+    "sales",
+    "products",
+    "earnings",
+    "operations",
+    "investments",
+    "geography",
+    "growth",
+    "tax"
 ],
 "seed_words": {
     "REGULATION": ["regulate", "regulates", "regulating", "regulation", "regulations", "regulator", "regulators", "regulatory"],
