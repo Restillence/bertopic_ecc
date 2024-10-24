@@ -84,3 +84,5 @@ Install for cuML:
 
         "topics_to_keep": ["auto"], oder "all" oder topic list []
     "topic_threshold_percentage": 90,
+
+"auto" : removes all topics that dont appear in [90%, or other threshold (configurable in config file)] of the companies in atleast 1 call. 
