@@ -27,14 +27,14 @@
     "6": "Risk"
   },
 
-  "modeling_type": "zeroshot",
-  "sample_size": 300,
-  "sampling_mode": "random_company",
+  "modeling_type": "regular",
+  "sample_size": 3000,
+  "sampling_mode": "full_random",
   "document_split": "sentences",
   "random_seed": 43,
   "section_to_analyze": "Presentation",
   "max_documents": 30000000,
-  "nr_topics": null,
+  "nr_topics": "auto",
   "use_gpu": false,
   "pca_components": 50,
   "output_dir": "../data/",
@@ -60,6 +60,9 @@
       "prediction_data": true
 
   },
+
+  "ctfidf_seed_multiplier": 2,
+
   "keybert_params": {
       "top_n_words": 10
   },
@@ -145,5 +148,35 @@
       "Risk Management",
       "Investor Relations",
       "outliers"
-  ]
+  ],
+  "zeroshot_topic_list_huang": [
+    "REGULATION",
+    "RISK",
+    "COMPETITION",
+    "CONSUMER",
+    "ECONOMY",
+    "SALES",
+    "PRODUCTS",
+    "EARNINGS",
+    "OPERATIONS",
+    "INVESTMENTS",
+    "GEOGRAPHY",
+    "GROWTH",
+    "TAX"
+],
+"seed_words": {
+    "REGULATION": ["regulate", "regulates", "regulating", "regulation", "regulations", "regulator", "regulators", "regulatory"],
+    "RISK": ["risk", "risks", "risky"],
+    "COMPETITION": ["competition", "competitions", "competitive", "competitively", "competitiveness", "competitor", "competitors", "rival", "rivals"],
+    "CONSUMER": ["advertise", "advertised", "advertisement", "advertisements", "advertiser", "advertisers", "advertising", "brand", "branded", "branding", "brands", "consumer", "consumers", "customer", "customers"],
+    "ECONOMY": ["economies", "economy", "macroeconomic", "macroeconomics", "macroeconomy"],
+    "SALES": ["revenue", "revenues", "sales", "sale"],
+    "PRODUCTS": ["product", "production", "productline", "productlines", "products"],
+    "EARNINGS": ["earnings", "ebitda", "ebit", "ebitdas", "ebitdax", "eps", "income", "profit"],
+    "OPERATIONS": ["operate", "operated", "operating", "operation", "operational", "operationally"],
+    "INVESTMENTS": ["investment", "investments"],
+    "GEOGRAPHY": ["geography", "segments", "markets", "china", "europe", "global", "emerging", "america", "region", "asia", "india", "japan", "country", "west", "european", "central", "international", "foreign"],
+    "GROWTH": ["growth", "organic", "strong", "digit", "acquisition", "business", "revenue-growth", "eps-growth", "strengthen", "margin", "solid"],
+    "TAX": ["tax", "taxes", "carryforward", "carryback", "avoidance", "haven", "statutory", "break", "provision", "IRS", "NOL"]
+}
 }
