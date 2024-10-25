@@ -70,7 +70,6 @@ def process_topics(path, output_path, topics_to_keep, threshold_percentage=None)
     # Return relevant columns
     return df[['topics', 'text', 'filtered_topics', 'filtered_texts', 'consistent', 'call_id', 'permco', 'date']]
 
-
 def determine_topics_to_keep(df, threshold_percentage):
     """
     Determine topics that appear in at least 1 call for the specified percentage of companies.
@@ -106,8 +105,6 @@ def determine_topics_to_keep(df, threshold_percentage):
     
     return topics_to_keep
 
-
-
 def create_transition_matrix(topic_sequence, num_topics):
     transition_matrix = np.zeros((num_topics, num_topics))
     for i in range(len(topic_sequence) - 1):
@@ -126,6 +123,7 @@ def compute_similarity_to_average(df, num_topics):
     transition_matrices = []
     call_ids = []
     siccds = []
+    permcos = []
     grouped = df.groupby('call_id')
     for call_id, group in grouped:
         topics = [topic for sublist in group['filtered_topics'] for topic in sublist]
@@ -133,13 +131,16 @@ def compute_similarity_to_average(df, num_topics):
         transition_matrices.append(transition_matrix)
         call_ids.append(call_id)
         siccd = group['siccd'].iloc[0]  # Assuming 'siccd' is consistent within a call
+        permco = group['permco'].iloc[0]  # Assuming 'permco' is consistent within a call
         siccds.append(siccd)
+        permcos.append(permco)
     
     # Create a DataFrame to hold the data
     calls_df = pd.DataFrame({
         'call_id': call_ids,
         'transition_matrix': transition_matrices,
-        'siccd': siccds
+        'siccd': siccds,
+        'permco': permcos
     })
     
     # Compute the overall average transition matrix
@@ -154,9 +155,18 @@ def compute_similarity_to_average(df, num_topics):
         industry_avg_matrix = np.nan_to_num(industry_avg_matrix)
         industry_avg_matrices[siccd] = industry_avg_matrix
     
+    # Compute company-specific average transition matrices
+    company_avg_matrices = {}
+    for permco, group in calls_df.groupby('permco'):
+        matrices = group['transition_matrix'].tolist()
+        company_avg_matrix = np.mean(matrices, axis=0)
+        company_avg_matrix = np.nan_to_num(company_avg_matrix)
+        company_avg_matrices[permco] = company_avg_matrix
+    
     # Compute similarities
     similarities_overall = []
     similarities_industry = []
+    similarities_company = []
     for idx, row in calls_df.iterrows():
         tm = np.nan_to_num(row['transition_matrix'])
         tm_vector = tm.flatten()
@@ -169,12 +179,17 @@ def compute_similarity_to_average(df, num_topics):
         industry_avg_vector = industry_avg_matrix.flatten()
         sim_industry = 1 - cosine(tm_vector, industry_avg_vector)
         similarities_industry.append(sim_industry)
+        # Similarity to company average
+        company_avg_matrix = company_avg_matrices[row['permco']]
+        company_avg_vector = company_avg_matrix.flatten()
+        sim_company = 1 - cosine(tm_vector, company_avg_vector)
+        similarities_company.append(sim_company)
     
     # Add similarities to calls_df
     calls_df['similarity_to_overall_average'] = similarities_overall
     calls_df['similarity_to_industry_average'] = similarities_industry
+    calls_df['similarity_to_company_average'] = similarities_company
     
     # Return the DataFrame with similarities
-    similarity_df = calls_df[['call_id', 'similarity_to_overall_average', 'similarity_to_industry_average']]
+    similarity_df = calls_df[['call_id', 'similarity_to_overall_average', 'similarity_to_industry_average', 'similarity_to_company_average']]
     return similarity_df
-
