@@ -334,7 +334,7 @@ class BertopicFitting:
 
             # Generate topics over time with the specified number of bins
             topics_over_time = self.topic_model.topics_over_time(
-                documents=documents,
+                docs=documents,
                 topics=topics_list,
                 timestamps=timestamps,
                 nr_bins=nr_bins
@@ -345,8 +345,11 @@ class BertopicFitting:
                 print("No data available for topics over time visualization.")
                 return
 
-            # Visualize topics over time
-            fig = self.topic_model.visualize_topics_over_time(topics_over_time)
+            # Visualize topics over time with normalize_frequency=False
+            fig = self.topic_model.visualize_topics_over_time(
+                topics_over_time,
+                normalize_frequency=True  # Added the parameter here
+            )
             self.save_visualization(
                 fig,
                 os.path.join(self.output_dir, "topics_over_time.html"),
