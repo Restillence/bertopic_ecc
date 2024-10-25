@@ -121,7 +121,7 @@
       "outliers"
   ],
 
-  "zeroshot_topic_list": [
+  "zeroshot_topic_list_small": [
     "Welcome and Introduction",
     "Revenue and Sales",
     "Expenses and Costs",
@@ -149,7 +149,7 @@
       "Investor Relations",
       "outliers"
   ],
-  "zeroshot_topic_list_huang": [
+  "zeroshot_topic_list": [
     "regulation",
     "risk",
     "competition",
