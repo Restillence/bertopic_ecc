@@ -6,7 +6,7 @@ import numpy as np
 import torch
 import matplotlib.pyplot as plt
 from bertopic import BERTopic
-from bertopic.backend import BaseEmbedder
+from bertopic.backend import BaseEmbedder  # Import BaseEmbedder for custom embedding
 from file_handling import FileHandler
 from text_processing import TextProcessor
 from utils import print_configuration
@@ -44,9 +44,6 @@ class BertopicFitting:
         self.index_file_ecc_folder = config["index_file_ecc_folder"]
         self.output_dir = "model_outputs"
         os.makedirs(self.output_dir, exist_ok=True)
-
-        # Extract modeling type
-        self.modeling_type = self.config.get("modeling_type", "regular")  # Options: ["regular", "zeroshot"]
 
         # Load the embedding model and wrap it
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -122,15 +119,16 @@ class BertopicFitting:
         # Save the DataFrame for later use (e.g., for topics over time)
         self.results_df = results_df
 
+
     def fit_and_save(self, all_relevant_sections, ecc_sample):
         """
         Fit the BERTopic model, save results, and generate visualizations.
         """
         try:
             total_start_time = time.time()  # Start total time tracking
+            print("Computing embeddings for all documents...")
 
             # Compute embeddings for all documents
-            print("Computing embeddings for all documents...")
             embeddings_start_time = time.time()
             embeddings = self.embedding_model.embed_documents(
                 all_relevant_sections,
@@ -139,17 +137,6 @@ class BertopicFitting:
             embeddings_end_time = time.time()
             embeddings_duration = embeddings_end_time - embeddings_start_time
             print(f"Computed embeddings for {len(all_relevant_sections)} documents in {embeddings_duration:.2f} seconds.")
-
-            # Conditionally apply PCA for regular model
-            if self.modeling_type != "zeroshot":
-                print("Applying PCA dimensionality reduction to embeddings...")
-                pca_model = self.topic_model.dimensionality_reduction
-                if pca_model is None:
-                    raise ValueError("PCA model not found in BERTopic model. Ensure PCA was applied during training.")
-                embeddings = pca_model.transform(embeddings)
-                print(f"Embeddings reduced to {embeddings.shape[1]} dimensions.")
-            else:
-                print("Skipping PCA dimensionality reduction for zero-shot topic modeling.")
 
             # Transform documents with the BERTopic model using precomputed embeddings
             print("Transforming documents with the BERTopic model...")
@@ -279,6 +266,13 @@ class BertopicFitting:
         fig = self.topic_model.visualize_topics()
         self.save_visualization(fig, os.path.join(self.output_dir, "topics.html"), file_format="html")
 
+        """
+        # Visualize Documents
+        print("Visualizing documents...")
+        fig = self.topic_model.visualize_documents(self.topic_model.original_documents)
+        self.save_visualization(fig, os.path.join(self.output_dir, "documents.html"), file_format="html")
+        """
+
         # Visualize Topic Hierarchy
         print("Visualizing topic hierarchy...")
         fig = self.topic_model.visualize_hierarchy()
@@ -335,7 +329,7 @@ class BertopicFitting:
             if not (len(timestamps) == len(documents) == len(topics_list)):
                 raise ValueError("Number of timestamps, documents, and topics do not match.")
 
-            # Set the number of bins
+            # Set the number of bins to a value lower than 100
             nr_bins = 50  # Adjust as needed
 
             # Generate topics over time with the specified number of bins
@@ -421,6 +415,7 @@ def main():
             value['relevant_sections'] = relevant_sections
     extraction_end_time = time.time()
     print(f"Extraction and processing completed in {extraction_end_time - extraction_start_time:.2f} seconds.")
+
 
     if not all_relevant_sections:
         print("No relevant sections found to fit BERTopic.")
