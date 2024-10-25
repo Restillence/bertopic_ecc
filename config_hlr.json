@@ -130,21 +130,23 @@
     "Risk and Forward Looking statements"
   ],
 
-  "zeroshot_topic_list": [
-    "regulation",
-    "risk and Forward Looking statements",
-    "competition",
-    "consumer",
-    "economy",
+"zeroshot_topic_list": [
+    "regulation and compliance",
+    "risk and forecasts",
+    "competition and strategy",
+    "consumer and demand",
+    "economy and outlook",
     "revenue and sales",
-    "products",
-    "earnings and ",
-    "operations",
-    "investments",
-    "geography",
-    "growth",
-    "tax"
-],
+    "products and services",
+    "earnings and income",
+    "operations and management",
+    "investments and capital",
+    "geography and regions",
+    "growth and strategy",
+    "tax and policies",
+    "expenses and costs",
+    "marketing and advertising"
+  ],
 
   "zeroshot_topic_list_middle_length": [
       "Opening",
