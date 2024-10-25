@@ -28,8 +28,8 @@
   },
 
   "modeling_type": "regular",
-  "sample_size": 30,
-  "sampling_mode": "random_company",
+  "sample_size": 3000,
+  "sampling_mode": "full_random",
   "document_split": "sentences",
   "random_seed": 43,
   "section_to_analyze": "Presentation",
