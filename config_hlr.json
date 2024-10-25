@@ -130,6 +130,22 @@
     "Risk and Forward Looking statements"
   ],
 
+  "zeroshot_topic_list": [
+    "regulation",
+    "risk and Forward Looking statements",
+    "competition",
+    "consumer",
+    "economy",
+    "revenue and sales",
+    "products",
+    "earnings and ",
+    "operations",
+    "investments",
+    "geography",
+    "growth",
+    "tax"
+],
+
   "zeroshot_topic_list_middle_length": [
       "Opening",
       "Introduction",
@@ -149,7 +165,7 @@
       "Investor Relations",
       "outliers"
   ],
-  "zeroshot_topic_list": [
+  "zeroshot_topic_list_huang": [
     "regulation",
     "risk",
     "competition",
@@ -164,6 +180,7 @@
     "growth",
     "tax"
 ],
+
 "seed_words": {
     "REGULATION": ["regulate", "regulates", "regulating", "regulation", "regulations", "regulator", "regulators", "regulatory"],
     "RISK": ["risk", "risks", "risky"],
