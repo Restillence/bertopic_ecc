@@ -235,7 +235,7 @@ merged_df = merged_df.drop(columns=['date', 'topics', 'text', 'consistent'])
 # Rearrange columns to include 'epsfxq_next' and similarity measures
 merged_df = merged_df[['gvkey', 'permco', 'siccd', 'call_id', 'call_date', 'fiscal_period_end', 'filtered_topics', 'filtered_texts',
                        'prc', 'shrout', 'vol', 'ret', 'ret_next_day', 'ret_5_days', 'ret_20_days', 'ret_60_days',
-                       'epsfxq', 'epsfxq_next', 'similarity_to_overall_average', 'similarity_to_industry_average']]
+                       'epsfxq', 'epsfxq_next', 'similarity_to_overall_average', 'similarity_to_industry_average','similarity_to_company_average']]
 
 """
 # Fill NaNs in 'siccd' based on 'gvkey'

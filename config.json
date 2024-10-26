@@ -12,7 +12,7 @@
     "file_path_crsp_monthly": "D:/daten_masterarbeit/CRSP_monthly_Compustat_quarterly_merged.csv",
     "merged_file_path": "D:/daten_masterarbeit/final_dataset.csv",
     
-    "topics_input_path": "D:/daten_masterarbeit/topics_output_3000full_zeroshot_03minsim.csv",
+    "topics_input_path": "D:/daten_masterarbeit/topics_output3000full_zeroshot_03minsim_huang_own.csv",
     "topics_output_path": "D:/daten_masterarbeit/topics_output_outlier_removed.csv",
     "topics_to_keep": "auto",
     "topic_threshold_percentage": 90,
