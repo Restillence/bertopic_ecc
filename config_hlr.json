@@ -27,7 +27,7 @@
     "6": "Risk"
   },
 
-  "modeling_type": "regular",
+  "modeling_type": "zeroshot",
   "sample_size": 10000,
   "sampling_mode": "full_random",
   "document_split": "sentences",
