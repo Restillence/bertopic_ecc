@@ -1,5 +1,5 @@
-#text_processing.py
-#Allows to split the text into sentences or paragraphs, depending on the method specified.
+# text_processing.py
+# Allows to split the text into sentences or paragraphs, depending on the method specified.
 import re
 from nltk.tokenize import sent_tokenize
 
@@ -32,28 +32,9 @@ class TextProcessor:
         str
             The text with the unwanted sections removed.
         """
-        pattern = r'(TEXT version of Transcript|Corporate Participants|Conference Call Participants)\n=+\n(?:.*\n)*?=+\n'
+        pattern = r'(TEXT version of Transcript|Corporate Participants|Conference Call Participants)\n=+\n(?:.*?\n)*?=+\n'
         cleaned_text = re.sub(pattern, '', text, flags=re.IGNORECASE)
         return cleaned_text
-
-    def remove_questions_and_answers_and_beyond(self, text):
-        """
-        Remove the "Questions and Answers" section and everything after it.
-
-        Parameters
-        ----------
-        text : str
-            The text from which to remove the "Questions and Answers" section.
-
-        Returns
-        -------
-        str
-            The text with the "Questions and Answers" section removed.
-        """
-        if self.section_to_analyze.lower() != "questions and answers":
-            pattern = r'Questions and Answers\s*\n[-=]+\n.*'
-            text = re.sub(pattern, '', text, flags=re.IGNORECASE | re.DOTALL)
-        return text
 
     def remove_concluding_statements(self, text):
         """
@@ -217,9 +198,37 @@ class TextProcessor:
         ValueError
             If the method is not 'sentences', 'paragraphs', or 'custom'.
         """
-        # Proceed with cleaning the text before splitting
+        print(f"\nProcessing call ID: {call_id}")
+        print("Original text length:", len(text))
+
+        # If 'Questions and Answers' is selected, extract that section first
+        if self.section_to_analyze.lower() == "questions and answers":
+            # Find 'Questions and Answers' section and remove everything before it
+            pattern = r'(?:.*?)(Questions?\s+and\s+Answers?.*)'
+            match = re.search(pattern, text, flags=re.IGNORECASE | re.DOTALL)
+            if match:
+                text = match.group(1)
+                print(f"'Questions and Answers' section found for call ID: {call_id}")
+            else:
+                print(f"'Questions and Answers' section not found for call ID: {call_id}")
+                text = ''
+        elif self.section_to_analyze.lower() == "presentation":
+            # Find 'Presentation' section and remove everything before it
+            pattern = r'(?:.*?)(Presentation.*?)(?=Questions?\s+and\s+Answers?|$)'
+            match = re.search(pattern, text, flags=re.IGNORECASE | re.DOTALL)
+            if match:
+                text = match.group(1)
+                print(f"'Presentation' section found for call ID: {call_id}")
+            else:
+                print(f"'Presentation' section not found for call ID: {call_id}")
+                text = ''
+
+        if not text.strip():
+            print(f"No relevant sections found for call ID: {call_id}")
+            return []
+
+        # Proceed with cleaning the text after extracting the section
         text = self.remove_unwanted_sections(text)
-        text = self.remove_questions_and_answers_and_beyond(text)
         text = self.remove_concluding_statements(text)
         text = self.remove_pattern(text)
         text = self.remove_specific_string(text)  # Ensure "Presentation" is removed forcefully
@@ -231,20 +240,19 @@ class TextProcessor:
             combined_text = self.split_text_by_visual_cues(text)
 
         # Final cleanup: Remove any remaining separator lines
-        if isinstance(combined_text, list):
-            combined_text = [self.remove_separator_line(para) for para in combined_text]
-        else:
-            combined_text = self.remove_separator_line(combined_text)
-
+        combined_text = [self.remove_separator_line(para) for para in combined_text]
+        # Remove any empty strings resulted from cleaning
+        combined_text = [para for para in combined_text if para.strip()]
         # Final Steps: Remove "Presentation" and filter out elements with fewer than 3 words
         combined_text = self.remove_presentation_from_final_list(combined_text)
         combined_text = self.filter_short_elements(combined_text)
 
+        print(f"Extracted {len(combined_text)} sections for call ID: {call_id}")
         return combined_text
 
     def split_text_by_visual_cues(self, text):
         """
-        Split text into paragraphs by visual cues (e.g. blank lines, separators, etc.) and remove any unnecessary paragraphs.
+        Split text into paragraphs by visual cues (e.g., blank lines, separators, etc.) and remove any unnecessary paragraphs.
 
         Parameters
         ----------
@@ -378,15 +386,13 @@ class TextProcessor:
                 date = value['date']
                 text = value['text_content']
                 relevant_sections = self.extract_and_split_section(permco, call_id, company_info, date, text)
-                if relevant_sections is not None:
-                    if isinstance(relevant_sections, list):
-                        all_relevant_sections.extend(relevant_sections)
-                    else:
-                        all_relevant_sections.append(relevant_sections)
+                if relevant_sections:
+                    all_relevant_sections.extend(relevant_sections)
                     document_count += 1
+                else:
+                    print(f"No relevant sections found for call ID: {call_id}")
             if document_count >= max_documents:
                 break
 
         print(f"Extracted {len(all_relevant_sections)} relevant sections.")
         return all_relevant_sections
-
