@@ -27,13 +27,13 @@
     "6": "Risk"
   },
 
-  "modeling_type": "zeroshot",
-  "sample_size": 300,
-  "sampling_mode": "random_company",
+  "modeling_type": "regular",
+  "sample_size": 10000,
+  "sampling_mode": "full_random",
   "document_split": "sentences",
   "random_seed": 43,
   "section_to_analyze": "Presentation",
-  "max_documents": 30000000,
+  "max_documents": 300000000,
   "nr_topics": "auto",
   "use_gpu": false,
   "pca_components": 50,

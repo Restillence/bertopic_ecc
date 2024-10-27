@@ -23,10 +23,12 @@ document_split = config["document_split"]
 random_seed = config["random_seed"]
 section_to_analyze = config["section_to_analyze"]
 max_documents = config["max_documents"]
-index_file_path = config["index_file_path"]
+#index_file_path = config["index_file_path"]
 
-# Initialize FileHandler and TextProcessor
-file_handler = FileHandler(index_file_path=index_file_path, folderpath_ecc=folderpath_ecc)
+# Initialize FileHandler and TextProcessor with the imported configuration
+print("Initializing file handler and text processor...")
+# Pass the entire config dictionary to FileHandler
+file_handler = FileHandler(config=config)
 text_processor = TextProcessor(method=document_split, section_to_analyze=section_to_analyze)
 
 np.random.seed(random_seed)
