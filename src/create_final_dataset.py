@@ -25,7 +25,7 @@ file_path_crsp_monthly = config['file_path_crsp_monthly']
 merged_file_path = config['merged_file_path']
 topic_threshold_percentage = config['topic_threshold_percentage']  # Add this to your config
 
-# Process the topics
+#%% Process the topics
 print("Processing topics...")
 processed_df = process_topics(topic_input_path, topic_output_path, topics_to_keep, topic_threshold_percentage)
 print(f"Processed DataFrame columns: {processed_df.columns}")
@@ -71,7 +71,7 @@ processed_df['call_date'] = processed_df['call_date'].dt.tz_convert('America/New
 processed_df['call_date'] = processed_df['call_date'].dt.normalize()
 df_crsp_daily['date'] = df_crsp_daily['date'].dt.normalize()
 
-# Merge processed_df with df_crsp_daily to get 'gvkey' into processed_df
+#%% Merge processed_df with df_crsp_daily to get 'gvkey' into processed_df
 print("Merging processed_df with df_crsp_daily to get 'gvkey'...")
 processed_df = pd.merge(
     processed_df,
@@ -125,7 +125,7 @@ print("Checking if 'datadate' is globally sorted in df_crsp_monthly...")
 is_datadate_sorted = df_crsp_monthly['datadate'].is_monotonic_increasing
 print(f"Is 'datadate' globally sorted? {is_datadate_sorted}")
 
-# Merge using merge_asof with direction='backward' to get 'epsfxq', 'epsfxq_next', and 'siccd' using 'gvkey'
+#%% Merge using merge_asof with direction='backward' to get 'epsfxq', 'epsfxq_next', and 'siccd' using 'gvkey'
 print("Merging processed_df with df_crsp_monthly using 'gvkey' and merge_asof...")
 merged_df = pd.merge_asof(
     processed_df,
@@ -136,7 +136,7 @@ merged_df = pd.merge_asof(
     direction='backward',
     allow_exact_matches=True
 )
-
+#%%
 # Optionally, rename 'datadate' to 'fiscal_period_end' for clarity
 merged_df.rename(columns={'datadate': 'fiscal_period_end'}, inplace=True)
 

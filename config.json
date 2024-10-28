@@ -137,6 +137,22 @@
       "Guidance and Financial Projections",
       "Capital Allocation",
       "Risk Management"
-    ]
+    ],
+    "seed_words": {
+    "REGULATION": ["regulate", "regulates", "regulating", "regulation", "regulations", "regulator", "regulators", "regulatory"],
+    "RISK": ["risk", "risks", "risky"],
+    "COMPETITION": ["competition", "competitions", "competitive", "competitively", "competitiveness", "competitor", "competitors", "rival", "rivals"],
+    "CONSUMER": ["advertise", "advertised", "advertisement", "advertisements", "advertiser", "advertisers", "advertising", "brand", "branded", "branding", "brands", "consumer", "consumers", "customer", "customers"],
+    "ECONOMY": ["economies", "economy", "macroeconomic", "macroeconomics", "macroeconomy"],
+    "SALES": ["revenue", "revenues", "sales", "sale"],
+    "PRODUCTS": ["product", "production", "productline", "productlines", "products"],
+    "EARNINGS": ["earnings", "ebitda", "ebit", "ebitdas", "ebitdax", "eps", "income", "profit"],
+    "OPERATIONS": ["operate", "operated", "operating", "operation", "operational", "operationally"],
+    "INVESTMENTS": ["investment", "investments"],
+    "GEOGRAPHY": ["geography", "segments", "markets", "china", "europe", "global", "emerging", "america", "region", "asia", "india", "japan", "country", "west", "european", "central", "international", "foreign"],
+    "GROWTH": ["growth", "organic", "strong", "digit", "acquisition", "business", "revenue-growth", "eps-growth", "strengthen", "margin", "solid"],
+    "TAX": ["tax", "taxes", "carryforward", "carryback", "avoidance", "haven", "statutory", "break", "provision", "IRS", "NOL"],
+    "COSTS": ["costs","expenses","expenditures","cost"]
+}
 }  
   
