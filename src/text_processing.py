@@ -198,8 +198,8 @@ class TextProcessor:
         ValueError
             If the method is not 'sentences', 'paragraphs', or 'custom'.
         """
-        print(f"\nProcessing call ID: {call_id}")
-        print("Original text length:", len(text))
+        #print(f"\nProcessing call ID: {call_id}")
+        #print("Original text length:", len(text))
 
         # If 'Questions and Answers' is selected, extract that section first
         if self.section_to_analyze.lower() == "questions and answers":
@@ -208,7 +208,7 @@ class TextProcessor:
             match = re.search(pattern, text, flags=re.IGNORECASE | re.DOTALL)
             if match:
                 text = match.group(1)
-                print(f"'Questions and Answers' section found for call ID: {call_id}")
+                #print(f"'Questions and Answers' section found for call ID: {call_id}")
             else:
                 print(f"'Questions and Answers' section not found for call ID: {call_id}")
                 text = ''
@@ -218,7 +218,7 @@ class TextProcessor:
             match = re.search(pattern, text, flags=re.IGNORECASE | re.DOTALL)
             if match:
                 text = match.group(1)
-                print(f"'Presentation' section found for call ID: {call_id}")
+                #print(f"'Presentation' section found for call ID: {call_id}")
             else:
                 print(f"'Presentation' section not found for call ID: {call_id}")
                 text = ''
@@ -247,7 +247,7 @@ class TextProcessor:
         combined_text = self.remove_presentation_from_final_list(combined_text)
         combined_text = self.filter_short_elements(combined_text)
 
-        print(f"Extracted {len(combined_text)} sections for call ID: {call_id}")
+        #print(f"Extracted {len(combined_text)} sections for call ID: {call_id}")
         return combined_text
 
     def split_text_by_visual_cues(self, text):
@@ -394,5 +394,5 @@ class TextProcessor:
             if document_count >= max_documents:
                 break
 
-        print(f"Extracted {len(all_relevant_sections)} relevant sections.")
+        #print(f"Extracted {len(all_relevant_sections)} relevant sections.")
         return all_relevant_sections
