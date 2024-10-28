@@ -28,13 +28,13 @@
   },
 
   "modeling_type": "zeroshot",
-  "sample_size": 10000,
+  "sample_size": 6000,
   "sampling_mode": "full_random",
   "document_split": "sentences",
   "random_seed": 43,
   "section_to_analyze": "Presentation",
   "max_documents": 300000000,
-  "nr_topics": "auto",
+  "nr_topics": null,
   "use_gpu": false,
   "pca_components": 50,
   "output_dir": "../data/",
@@ -197,6 +197,7 @@
     "GEOGRAPHY": ["geography", "segments", "markets", "china", "europe", "global", "emerging", "america", "region", "asia", "india", "japan", "country", "west", "european", "central", "international", "foreign"],
     "GROWTH": ["growth", "organic", "strong", "digit", "acquisition", "business", "revenue-growth", "eps-growth", "strengthen", "margin", "solid"],
     "TAX": ["tax", "taxes", "carryforward", "carryback", "avoidance", "haven", "statutory", "break", "provision", "IRS", "NOL"],
-    "COSTS": ["costs","expenses","expenditures","cost"]
+    "COSTS": ["costs","expenses","expenditures","cost"],
+    "MARKETING": ["marketing", "advertising"]
 }
 }
