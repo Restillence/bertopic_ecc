@@ -213,15 +213,26 @@ class TextProcessor:
                 print(f"'Questions and Answers' section not found for call ID: {call_id}")
                 text = ''
         elif self.section_to_analyze.lower() == "presentation":
-            # Find 'Presentation' section and remove everything before it
+            # Try to find 'Presentation' section
             pattern = r'(?:.*?)(Presentation.*?)(?=Questions?\s+and\s+Answers?|$)'
             match = re.search(pattern, text, flags=re.IGNORECASE | re.DOTALL)
             if match:
                 text = match.group(1)
                 #print(f"'Presentation' section found for call ID: {call_id}")
             else:
+                # If 'Presentation' section not found, take from the start up to 'Questions and Answers'
                 print(f"'Presentation' section not found for call ID: {call_id}")
-                text = ''
+                print("Attempting to extract text from start up to 'Questions and Answers' section...")
+                pattern = r'^(.*?)(?=Questions?\s+and\s+Answers?|$)'
+                match = re.search(pattern, text, flags=re.IGNORECASE | re.DOTALL)
+                if match:
+                    text = match.group(1)
+                    print(f"Extracted text up to 'Questions and Answers' for call ID: {call_id}")
+                else:
+                    print(f"'Questions and Answers' section not found for call ID: {call_id}")
+                    print("Using entire text as 'Presentation' section.")
+                    # Use the entire text as 'Presentation' section
+                    text = text
 
         if not text.strip():
             print(f"No relevant sections found for call ID: {call_id}")
