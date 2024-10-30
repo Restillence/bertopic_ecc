@@ -1,7 +1,7 @@
 {
   "index_file_ecc_folder": "../data/",
   "folderpath_ecc": "../data/Transcripts_Masterarbeit/",
-  "model_save_path": "../data/bertopic_model_dir_zeroshot",
+  "model_save_path": "../data/bertopic_model_dir",
   "model_load_path": "../data/bertopic_model_dir_3000full_zeroshot_03minsim_seed_huang_own",
   "model_load_path_with_data": "../data/bertopic_model_dir_regular_1729_300_l12/bertopic_model_with_data_and_docs_cpu",
   "index_file_path": "../data/list_earnings_call_transcripts.csv",
