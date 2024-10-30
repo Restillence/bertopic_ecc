@@ -4,6 +4,7 @@ import numpy as np
 import torch  # For checking if GPU is available
 import time  # For time tracking
 import threading  # For heartbeat functionality
+import datetime
 
 # Disable parallelism in tokenizers to prevent CPU overutilization
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
@@ -15,9 +16,7 @@ from file_handling import FileHandler  # Import the FileHandler class
 from text_processing import TextProcessor  # Import the TextProcessor class
 from sentence_transformers import SentenceTransformer
 from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.decomposition import PCA  # Import PCA for dimensionality reduction
 from utils import print_configuration
-import datetime
 
 class BertopicModel:
     def __init__(self, config):
@@ -163,7 +162,6 @@ class BertopicModel:
 
         return BERTopic(**bertopic_params)
 
-
     def _print_gpu_usage(self):
         if torch.cuda.is_available():
             import GPUtil
@@ -217,16 +215,8 @@ class BertopicModel:
         embeddings_duration = embeddings_end_time - embeddings_start_time
         print(f"Computing embeddings took {embeddings_duration:.2f} seconds.")
 
-        # Conditionally perform PCA only if not using zero-shot modeling
-        if self.modeling_type != "zeroshot":
-            # Start PCA dimensionality reduction
-            print("Reducing dimensionality of embeddings before UMAP...")
-            pca_components = self.config.get("pca_components", 50)
-            pca = PCA(n_components=pca_components, random_state=42)
-            embeddings = pca.fit_transform(embeddings)
-            print(f"Dimensionality reduced to {pca_components} components for less expensive usage of UMAP.")
-        else:
-            print("Skipping PCA dimensionality reduction for zero-shot topic modeling.")
+        # Use embeddings directly without PCA
+        print("Using embeddings directly without PCA.")
 
         # Start training time tracking
         training_start_time = time.time()
