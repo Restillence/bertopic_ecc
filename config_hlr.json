@@ -38,7 +38,7 @@
   "pca_components": 50,
   "output_dir": "../data/",
 
-  "zeroshot_min_similarity": 0.8,
+  "zeroshot_min_similarity": 0.95,
   "min_topic_size": 1000,
 
   "batch_size": 32,
