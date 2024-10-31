@@ -339,7 +339,7 @@ class BertopicModel:
         updated_topic_info = self.topic_model.get_topic_info()
         print(updated_topic_info[['Topic', 'Name']])
 
-    def merge_similar_topics(self, topic_list, similarity_threshold=0.3):
+    def merge_similar_topics(self, topic_list, similarity_threshold=0.5):
         """
         Merge topics in the topic model that are similar to the topics in topic_list,
         based on a similarity threshold.
@@ -380,7 +380,10 @@ class BertopicModel:
                     print(f"Topic {merge_topic_id} representation before merging:")
                     print(current_model.get_topic(merge_topic_id))
                     # Merge the topics
-                    current_model, new_topic = current_model.merge_topics(self.docs, base_topic_id, merge_topic_id)
+                    current_model, new_topic = current_model.merge_topics(
+                        self.docs,
+                        topics_to_merge=[base_topic_id, merge_topic_id]
+                    )
                     base_topic_id = new_topic
                     # Print new topic
                     print(f"New merged Topic {new_topic} representation:")
