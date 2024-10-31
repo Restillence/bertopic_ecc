@@ -28,7 +28,7 @@
 
   "modeling_type": "regular",
   "apply_topic_merging": true, 
-  "sample_size": 500,
+  "sample_size": 200,
   "sampling_mode": "full_random",
   "document_split": "sentences",
   "random_seed": 43,
