@@ -18,8 +18,6 @@ from sentence_transformers import SentenceTransformer
 from sklearn.feature_extraction.text import CountVectorizer
 from utils import print_configuration
 
-#in case there are problems with the folder structure, use this fallback path
-fallback_config_file_path = r'C:\Users\nikla\OneDrive\Dokumente\winfoMaster\Masterarbeit\bertopic_ecc\config.json'
 class BertopicModel:
     def __init__(self, config):
         """
@@ -39,6 +37,9 @@ class BertopicModel:
         self.nr_topics = config.get("nr_topics", None)
         self.model = self._select_embedding_model(config)
         self.docs = None  # Initialize self.docs
+
+        # Read the apply_topic_merging parameter from the config
+        self.apply_topic_merging = config.get("apply_topic_merging", False)
 
         # Select UMAP and HDBSCAN implementations
         self._select_umap_hdbscan()
@@ -96,10 +97,9 @@ class BertopicModel:
             n_neighbors_topics = min(n_neighbors_config, num_topics - 1)
             n_neighbors_topics = max(n_neighbors_topics, 2)
             n_neighbors = min(n_neighbors, n_neighbors_topics)
-            print(f"Adjusted n_neighbors to {n_neighbors} based on {num_docs} documents and {num_topics} topics.")
+            print(f"Adjusted n_neighbors to {n_neighbors} based on {num_docs} documents and {num_topics}.")
         else:
-            pass
-            #print(f"Using n_neighbors {n_neighbors} for dataset size of {num_docs} documents.")
+            print(f"Using n_neighbors {n_neighbors} for dataset size of {num_docs} documents.")
 
         # Initialize CountVectorizer
         vectorizer_model = CountVectorizer(
@@ -265,6 +265,32 @@ class BertopicModel:
             print("\nCustomizing topic labels with zero-shot topic names...")
             self._customize_topic_labels()
 
+        # Check if topic merging is enabled in the configuration
+        if self.apply_topic_merging:
+            # Proceed to merge similar topics based on your topic_list
+            topic_list = [
+                "regulation and compliance",
+                "risk and forecasts",
+                "competition and strategy",
+                "consumer and demand",
+                "economy",
+                "revenue and sales",
+                "products and services",
+                "earnings and income",
+                "operations and management",
+                "investments and capital",
+                "geography and regions",
+                "growth and strategy",
+                "tax and policies",
+                "expenses and costs",
+                "marketing and advertising"
+            ]
+
+            print("\nMerging similar topics based on the provided topic list...")
+            self.merge_similar_topics(topic_list)
+        else:
+            print("\nSkipping topic merging as per configuration.")
+
     def _customize_topic_labels(self):
         """Customize topic labels to include zero-shot topic names followed by top words."""
         # Get zero-shot topic list and seed words from config
@@ -313,6 +339,57 @@ class BertopicModel:
         updated_topic_info = self.topic_model.get_topic_info()
         print(updated_topic_info[['Topic', 'Name']])
 
+    def merge_similar_topics(self, topic_list):
+        """
+        Merge topics in the topic model that are similar to the topics in topic_list.
+
+        Parameters:
+        - topic_list: list of str
+            The list of topics to search for and merge similar topics.
+
+        The method finds topics similar to each topic in topic_list and merges them together.
+        Once a topic is merged, it will not be merged again.
+
+        """
+        merged_topic_ids = set()
+        current_model = self.topic_model
+
+        for topic_name in topic_list:
+            print(f"\nProcessing topic: '{topic_name}'")
+            # Find topics similar to topic_name
+            similar_topics, similarity = current_model.find_topics(search_term=topic_name, top_n=10)
+            topics_to_merge = []
+            for topic_id in similar_topics:
+                if topic_id != -1 and topic_id not in merged_topic_ids:
+                    topics_to_merge.append(topic_id)
+                    merged_topic_ids.add(topic_id)
+            if len(topics_to_merge) > 1:
+                # Merge topics sequentially
+                base_topic_id = topics_to_merge[0]
+                for merge_topic_id in topics_to_merge[1:]:
+                    print(f"\nMerging Topic {base_topic_id} with Topic {merge_topic_id}")
+                    # Print old topics
+                    print(f"Topic {base_topic_id} representation before merging:")
+                    print(current_model.get_topic(base_topic_id))
+                    print(f"Topic {merge_topic_id} representation before merging:")
+                    print(current_model.get_topic(merge_topic_id))
+                    # Merge the topics
+                    current_model, new_topic = current_model.merge_topics(self.docs, base_topic_id, merge_topic_id)
+                    base_topic_id = new_topic
+                    # Print new topic
+                    print(f"New merged Topic {new_topic} representation:")
+                    print(current_model.get_topic(new_topic))
+                # Update the base_topic_id in merged_topic_ids
+                merged_topic_ids.add(base_topic_id)
+                print(f"\nTopics merged into new Topic {base_topic_id}")
+            elif len(topics_to_merge) == 1:
+                print(f"Only one topic found similar to '{topic_name}'. No merging performed.")
+            else:
+                print(f"No similar topics found for '{topic_name}' or topics already merged.")
+
+        # Update the topic model
+        self.topic_model = current_model
+
     def save_topic_info(self):
         """Save topic information to a CSV file."""
         topic_info = self.topic_model.get_topic_info()
@@ -347,14 +424,9 @@ def main():
 
     # Load configuration from config.json
     print("Loading configuration...")
-    try:
-        with open('config_hlr.json', 'r') as config_file:
-            config = json.load(config_file)
-        print_configuration(config)
-    except:
-        with open(fallback_config_file_path, 'r') as f:
-            config = json.load(f)
-        print_configuration(config)
+    with open('config.json', 'r') as config_file:
+        config = json.load(config_file)
+    print_configuration(config)
 
     # Set random seed
     random_seed = config.get("random_seed", 42)

@@ -6,6 +6,7 @@
     "index_file_path": "D:/daten_masterarbeit/list_earnings_call_transcripts.csv",
     
     "modeling_type": "regular",
+    "apply_topic_merging": true, 
     "sample_size": 10000,
     "nr_topics": "auto",
     "sampling_mode": "full_random",
