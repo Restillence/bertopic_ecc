@@ -28,7 +28,7 @@
 
   "modeling_type": "regular",
   "apply_topic_merging": true, 
-  "sample_size": 300,
+  "sample_size": 500,
   "sampling_mode": "full_random",
   "document_split": "sentences",
   "random_seed": 43,
@@ -40,7 +40,7 @@
   "output_dir": "../data/",
 
   "zeroshot_min_similarity": 0.95,
-  "min_topic_size": 1000,
+  "min_topic_size": 50,
 
   "batch_size": 32,
 
@@ -57,7 +57,7 @@
       "low_memory": true
   },
   "hdbscan_model_params": {
-      "min_cluster_size": 200,
+      "min_cluster_size": 50,
       "metric": "euclidean",
       "cluster_selection_method": "eom",
       "prediction_data": true
