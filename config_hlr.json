@@ -38,6 +38,9 @@
   "pca_components": 50,
   "output_dir": "../data/",
 
+  "zeroshot_min_similarity": 0.8,
+  "min_topic_size": 1000,
+
   "batch_size": 32,
 
   "vectorizer_model_params": {
@@ -68,9 +71,6 @@
   "mmr_params": {
       "diversity": 0.7
   },
-
-  "zeroshot_min_similarity": 0.8,
-  "min_topic_size": 1000,
 
   "zeroshot_topic_list_long": [
       "Financial Performance",

@@ -16,6 +16,9 @@
     "use_gpu": false,
     "pca_components": 50,
 
+    "zeroshot_min_similarity": 0.8,
+    "min_topic_size": 150,
+
     "ecc_plots_folder": "C:/Users/nikla/OneDrive/Dokumente/winfoMaster/Masterarbeit/bertopic_ecc/plots/ecc_plots",
     "embedding_model_choice": "all-MiniLM-L12-v2", 
 
@@ -116,8 +119,6 @@
       "Dividend Policies and Stock Repurchase Programs",
       "outliers"
     ],
-    "zeroshot_min_similarity": 0.05,
-    "min_topic_size": 150,
 
     "zeroshot_topic_list_small": [
       "Welcome and Introduction",
