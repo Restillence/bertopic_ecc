@@ -54,7 +54,7 @@
       "low_memory": true
   },
   "hdbscan_model_params": {
-      "min_cluster_size": 200,
+      "min_cluster_size": 100,
       "metric": "euclidean",
       "cluster_selection_method": "eom",
       "prediction_data": true
@@ -197,7 +197,7 @@
     "GEOGRAPHY": ["geography", "segments", "markets", "china", "europe", "global", "emerging", "america", "region", "asia", "india", "japan", "country", "west", "european", "central", "international", "foreign"],
     "GROWTH": ["growth", "organic", "strong", "digit", "acquisition", "business", "revenue-growth", "eps-growth", "strengthen", "margin", "solid"],
     "TAX": ["tax", "taxes", "carryforward", "carryback", "avoidance", "haven", "statutory", "break", "provision", "IRS", "NOL"],
-    "COSTS": ["costs","expenses","expenditures","cost"],
+    "COSTS": ["costs","expenses","expenditures","cost","expense","expenditure"],
     "MARKETING": ["marketing", "advertising"]
 }
 }
