@@ -339,16 +339,20 @@ class BertopicModel:
         updated_topic_info = self.topic_model.get_topic_info()
         print(updated_topic_info[['Topic', 'Name']])
 
-    def merge_similar_topics(self, topic_list):
+    def merge_similar_topics(self, topic_list, similarity_threshold=0.3):
         """
-        Merge topics in the topic model that are similar to the topics in topic_list.
+        Merge topics in the topic model that are similar to the topics in topic_list,
+        based on a similarity threshold.
 
         Parameters:
         - topic_list: list of str
             The list of topics to search for and merge similar topics.
+        - similarity_threshold: float
+            The minimum similarity score required to consider merging topics.
 
-        The method finds topics similar to each topic in topic_list and merges them together.
-        Once a topic is merged, it will not be merged again.
+        The method finds topics similar to each topic in topic_list and merges them together
+        if their similarity score exceeds the threshold. Once a topic is merged, it will not
+        be merged again.
 
         """
         merged_topic_ids = set()
@@ -357,17 +361,19 @@ class BertopicModel:
         for topic_name in topic_list:
             print(f"\nProcessing topic: '{topic_name}'")
             # Find topics similar to topic_name
-            similar_topics, similarity = current_model.find_topics(search_term=topic_name, top_n=10)
+            similar_topics, similarities = current_model.find_topics(search_term=topic_name, top_n=10)
             topics_to_merge = []
-            for topic_id in similar_topics:
-                if topic_id != -1 and topic_id not in merged_topic_ids:
-                    topics_to_merge.append(topic_id)
+            for topic_id, sim in zip(similar_topics, similarities):
+                if topic_id != -1 and topic_id not in merged_topic_ids and sim >= similarity_threshold:
+                    topics_to_merge.append((topic_id, sim))
                     merged_topic_ids.add(topic_id)
             if len(topics_to_merge) > 1:
+                # Sort topics by similarity in descending order
+                topics_to_merge.sort(key=lambda x: x[1], reverse=True)
                 # Merge topics sequentially
-                base_topic_id = topics_to_merge[0]
-                for merge_topic_id in topics_to_merge[1:]:
-                    print(f"\nMerging Topic {base_topic_id} with Topic {merge_topic_id}")
+                base_topic_id = topics_to_merge[0][0]
+                for merge_topic_id, sim in topics_to_merge[1:]:
+                    print(f"\nMerging Topic {base_topic_id} with Topic {merge_topic_id} (Similarity: {sim:.4f})")
                     # Print old topics
                     print(f"Topic {base_topic_id} representation before merging:")
                     print(current_model.get_topic(base_topic_id))
@@ -383,9 +389,9 @@ class BertopicModel:
                 merged_topic_ids.add(base_topic_id)
                 print(f"\nTopics merged into new Topic {base_topic_id}")
             elif len(topics_to_merge) == 1:
-                print(f"Only one topic found similar to '{topic_name}'. No merging performed.")
+                print(f"Only one topic found similar to '{topic_name}' with similarity above threshold. No merging performed.")
             else:
-                print(f"No similar topics found for '{topic_name}' or topics already merged.")
+                print(f"No similar topics found for '{topic_name}' with similarity above threshold or topics already merged.")
 
         # Update the topic model
         self.topic_model = current_model
@@ -424,7 +430,7 @@ def main():
 
     # Load configuration from config.json
     print("Loading configuration...")
-    with open('config.json_hlr', 'r') as config_file:
+    with open('config_hlr.json', 'r') as config_file:
         config = json.load(config_file)
     print_configuration(config)
 
