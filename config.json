@@ -2,11 +2,22 @@
     "index_file_ecc_folder": "D:/daten_masterarbeit/",
     "folderpath_ecc": "D:/daten_masterarbeit/Transcripts_Masterarbeit_full/",
     "model_save_path": "D:/daten_masterarbeit/bertopic_model_dir", 
-    "model_load_path": "D:/daten_masterarbeit/bertopic_model_dir_3000full_random_regular_auto_100mincl", 
-    "model_load_path_with_data": "D:/daten_masterarbeit/bertopic_model_dir_regular_1729_300_l12/bertopic_model_with_data_and_docs_cpu_works", 
+    "model_load_path": "D:/daten_masterarbeit/bertopic_model_dir", 
     "index_file_path": "D:/daten_masterarbeit/list_earnings_call_transcripts.csv",
-    "embedding_model_choice": "all-MiniLM-L12-v2", 
+    
+    "modeling_type": "regular",
+    "sample_size": 10000,
+    "nr_topics": "auto",
+    "sampling_mode": "full_random",
+    "document_split": "sentences",
+    "random_seed": 43,
+    "section_to_analyze": "presentation",
+    "max_documents": 300000000,
+    "use_gpu": false,
+    "pca_components": 50,
+
     "ecc_plots_folder": "C:/Users/nikla/OneDrive/Dokumente/winfoMaster/Masterarbeit/bertopic_ecc/plots/ecc_plots",
+    "embedding_model_choice": "all-MiniLM-L12-v2", 
 
     "file_path_crsp_daily": "D:/daten_masterarbeit/CRSP_daily_master_thesis.csv",
     "file_path_crsp_monthly": "D:/daten_masterarbeit/CRSP_monthly_Compustat_quarterly_merged.csv",
@@ -14,6 +25,8 @@
     
     "topics_input_path": "D:/daten_masterarbeit/topics_output3000full_zeroshot_03minsim_huang_own.csv",
     "topics_output_path": "D:/daten_masterarbeit/topics_output_outlier_removed.csv",
+    "output_dir": "D:/daten_masterarbeit/",
+
     "topics_to_keep": "auto",
     "topic_threshold_percentage": 90,
   
@@ -27,17 +40,6 @@
       "6": "Risk"
     },
 
-    "modeling_type": "regular",
-    "sample_size": 20,
-    "sampling_mode": "full_random",
-    "document_split": "sentences",
-    "random_seed": 43,
-    "section_to_analyze": "presentation",
-    "max_documents": 300000000,
-    "nr_topics": "auto",
-    "use_gpu": false,
-    "pca_components": 50,
-    "output_dir": "D:/daten_masterarbeit/",
   
     "batch_size": 32,
   
@@ -117,7 +119,7 @@
     "zeroshot_min_similarity": 0.05,
     "min_topic_size": 150,
 
-    "zeroshot_topic_list": [
+    "zeroshot_topic_list_small": [
       "Welcome and Introduction",
       "Revenue and Sales",
       "Expenses and Costs",
@@ -125,6 +127,24 @@
       "Marketing",
       "Risk and Forward Looking statements"
     ],
+
+    "zeroshot_topic_list": [
+    "regulation and compliance",
+    "risk and forecasts",
+    "competition and strategy",
+    "consumer and demand",
+    "economy",
+    "revenue and sales",
+    "products and services",
+    "earnings and income",
+    "operations and management",
+    "investments and capital",
+    "geography and regions",
+    "growth and strategy",
+    "tax and policies",
+    "expenses and costs",
+    "marketing and advertising"
+  ],
     
     "zeroshot_topic_list_middle_length": [
       "Welcome and Introduction",
