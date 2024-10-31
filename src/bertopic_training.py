@@ -18,6 +18,8 @@ from sentence_transformers import SentenceTransformer
 from sklearn.feature_extraction.text import CountVectorizer
 from utils import print_configuration
 
+#in case there are problems with the folder structure, use this fallback path
+fallback_config_file_path = r'C:\Users\nikla\OneDrive\Dokumente\winfoMaster\Masterarbeit\bertopic_ecc\config.json'
 class BertopicModel:
     def __init__(self, config):
         """
@@ -345,9 +347,14 @@ def main():
 
     # Load configuration from config.json
     print("Loading configuration...")
-    with open('config_hlr.json', 'r') as config_file:
-        config = json.load(config_file)
-    print_configuration(config)
+    try:
+        with open('config_hlr.json', 'r') as config_file:
+            config = json.load(config_file)
+        print_configuration(config)
+    except:
+        with open(fallback_config_file_path, 'r') as f:
+            config = json.load(f)
+        print_configuration(config)
 
     # Set random seed
     random_seed = config.get("random_seed", 42)
