@@ -96,7 +96,8 @@ class BertopicModel:
             n_neighbors = min(n_neighbors, n_neighbors_topics)
             print(f"Adjusted n_neighbors to {n_neighbors} based on {num_docs} documents and {num_topics} topics.")
         else:
-            print(f"Using n_neighbors {n_neighbors} for dataset size of {num_docs} documents.")
+            pass
+            #print(f"Using n_neighbors {n_neighbors} for dataset size of {num_docs} documents.")
 
         # Initialize CountVectorizer
         vectorizer_model = CountVectorizer(
@@ -344,7 +345,7 @@ def main():
 
     # Load configuration from config.json
     print("Loading configuration...")
-    with open('config.json', 'r') as config_file:
+    with open('config_hlr.json', 'r') as config_file:
         config = json.load(config_file)
     print_configuration(config)
 
