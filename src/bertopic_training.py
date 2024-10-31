@@ -370,27 +370,21 @@ class BertopicModel:
             if len(topics_to_merge) > 1:
                 # Sort topics by similarity in descending order
                 topics_to_merge.sort(key=lambda x: x[1], reverse=True)
-                # Merge topics sequentially
-                base_topic_id = topics_to_merge[0][0]
-                for merge_topic_id, sim in topics_to_merge[1:]:
-                    print(f"\nMerging Topic {base_topic_id} with Topic {merge_topic_id} (Similarity: {sim:.4f})")
-                    # Print old topics
-                    print(f"Topic {base_topic_id} representation before merging:")
-                    print(current_model.get_topic(base_topic_id))
-                    print(f"Topic {merge_topic_id} representation before merging:")
-                    print(current_model.get_topic(merge_topic_id))
-                    # Merge the topics
-                    current_model, new_topic = current_model.merge_topics(
-                        self.docs,
-                        topics_to_merge=[base_topic_id, merge_topic_id]
-                    )
-                    base_topic_id = new_topic
-                    # Print new topic
-                    print(f"New merged Topic {new_topic} representation:")
-                    print(current_model.get_topic(new_topic))
-                # Update the base_topic_id in merged_topic_ids
-                merged_topic_ids.add(base_topic_id)
-                print(f"\nTopics merged into new Topic {base_topic_id}")
+                # Prepare list of topic IDs to merge
+                merge_topic_ids = [topic_id for topic_id, _ in topics_to_merge]
+                print(f"\nMerging Topics {merge_topic_ids}")
+                # Print topics before merging
+                for topic_id in merge_topic_ids:
+                    print(f"Topic {topic_id} representation before merging:")
+                    print(current_model.get_topic(topic_id))
+                # Merge the topics
+                current_model.merge_topics(
+                    self.docs,
+                    topics_to_merge=merge_topic_ids
+                )
+                print("\nTopics merged successfully.")
+                # Update merged_topic_ids
+                merged_topic_ids.update(merge_topic_ids)
             elif len(topics_to_merge) == 1:
                 print(f"Only one topic found similar to '{topic_name}' with similarity above threshold. No merging performed.")
             else:
