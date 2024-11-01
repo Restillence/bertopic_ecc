@@ -351,11 +351,9 @@ class BertopicModel:
             The minimum similarity score required to consider merging topics.
 
         The method finds topics similar to each topic in topic_list and merges them together
-        if their similarity score exceeds the threshold. Once a topic is merged, it will not
-        be merged again.
-
+        if their similarity score exceeds the threshold. Once a topic is merged, it can still
+        be considered for merging with other topics in subsequent iterations.
         """
-        merged_topic_ids = set()
         current_model = self.topic_model
 
         for topic_name in topic_list:
@@ -364,35 +362,48 @@ class BertopicModel:
             similar_topics, similarities = current_model.find_topics(search_term=topic_name, top_n=10)
             topics_to_merge = []
             for topic_id, sim in zip(similar_topics, similarities):
-                if topic_id != -1 and topic_id not in merged_topic_ids and sim >= similarity_threshold:
+                if topic_id != -1 and sim >= similarity_threshold:
                     topics_to_merge.append((topic_id, sim))
-                    merged_topic_ids.add(topic_id)
+
             if len(topics_to_merge) > 1:
                 # Sort topics by similarity in descending order
                 topics_to_merge.sort(key=lambda x: x[1], reverse=True)
                 # Prepare list of topic IDs to merge
                 merge_topic_ids = [topic_id for topic_id, _ in topics_to_merge]
-                print(f"\nMerging Topics {merge_topic_ids}")
-                # Print topics before merging
+                print(f"\nMerging Topics {merge_topic_ids} ")
+
+                # Retrieve topic information
+                topic_info = current_model.get_topic_info()
+
+                # Print topics before merging with counts
                 for topic_id in merge_topic_ids:
-                    print(f"Topic {topic_id} representation before merging:")
+                    count = topic_info[topic_info['Topic'] == topic_id]['Count'].values[0]
+                    print(f"\nTopic {topic_id} representation before merging (Count: {count}):")
                     print(current_model.get_topic(topic_id))
+
                 # Merge the topics
                 current_model.merge_topics(
                     self.docs,
                     topics_to_merge=merge_topic_ids
                 )
                 print("\nTopics merged successfully.")
-                # Update merged_topic_ids
-                merged_topic_ids.update(merge_topic_ids)
+
+                # Retrieve updated topic information
+                updated_topic_info = current_model.get_topic_info()
+
+                # Assuming the first topic in merge_topic_ids is retained as the new merged topic
+                new_topic_id = merge_topic_ids[0]
+                new_topic_count = updated_topic_info[updated_topic_info['Topic'] == new_topic_id]['Count'].values[0]
+                print(f"\nNew merged Topic {new_topic_id} representation (Count: {new_topic_count}):")
+                print(current_model.get_topic(new_topic_id))
+
             elif len(topics_to_merge) == 1:
                 print(f"Only one topic found similar to '{topic_name}' with similarity above threshold. No merging performed.")
             else:
-                print(f"No similar topics found for '{topic_name}' with similarity above threshold or topics already merged.")
+                print(f"No similar topics found for '{topic_name}' with similarity above threshold.")
 
         # Update the topic model
         self.topic_model = current_model
-
     def save_topic_info(self):
         """Save topic information to a CSV file."""
         topic_info = self.topic_model.get_topic_info()
