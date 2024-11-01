@@ -194,9 +194,10 @@ if is_call_date_sorted and is_datadate_sorted:
     print("Merging processed_df with df_crsp_monthly using 'gvkey' and merge_asof...")
     print(f"Number of rows in processed_df before merging: {len(processed_df)}")
     
+    # Exclude 'permco' from df_crsp_monthly to avoid column conflict
     merged_df = pd.merge_asof(
         processed_df,
-        df_crsp_monthly[['gvkey', 'datadate', 'epsfxq', 'siccd', 'permco']],
+        df_crsp_monthly[['gvkey', 'datadate', 'epsfxq', 'siccd']],  # Exclude 'permco' here
         left_on='call_date',
         right_on='datadate',
         by='gvkey',
@@ -219,10 +220,14 @@ siccd_mapping = df_crsp_monthly.groupby('permco')['siccd'].apply(
     lambda x: x.value_counts().idxmax() if x.notna().any() else np.nan
 )
 
-merged_df['siccd'] = merged_df.apply(
-    lambda row: siccd_mapping[row['permco']] if pd.isna(row['siccd']) and row['permco'] in siccd_mapping else row['siccd'],
-    axis=1
-)
+# Ensure 'permco' is present in 'merged_df'
+if 'permco' not in merged_df.columns:
+    print("Error: 'permco' column is missing in 'merged_df'.")
+else:
+    merged_df['siccd'] = merged_df.apply(
+        lambda row: siccd_mapping[row['permco']] if pd.isna(row['siccd']) and row['permco'] in siccd_mapping else row['siccd'],
+        axis=1
+    )
 
 # Now, check how many NaNs are left
 num_nan_siccd = merged_df['siccd'].isna().sum()
@@ -327,7 +332,7 @@ merged_df = merged_df.drop(columns=['date', 'topics', 'text', 'consistent'], err
 # Rearrange columns to include 'epsfxq' and similarity measures
 merged_df = merged_df[['gvkey', 'permco', 'siccd', 'call_id', 'call_date', 'fiscal_period_end', 'filtered_topics', 'filtered_texts',
                        'prc', 'shrout', 'vol', 'ret', 'ret_next_day', 'ret_5_days', 'ret_20_days', 'ret_60_days',
-                       'epsfxq', 'similarity_to_overall_average', 'similarity_to_industry_average']]
+                       'epsfxq', 'similarity_to_overall_average', 'similarity_to_industry_average',"similarity_to_company_average"]]
 
 # Sort the final DataFrame by 'gvkey' and 'call_date' in ascending order
 print("Sorting the final DataFrame by 'gvkey' and 'call_date'...")
@@ -337,3 +342,4 @@ merged_df = merged_df.sort_values(by=['gvkey', 'call_date']).reset_index(drop=Tr
 print("Saving the final merged DataFrame...")
 merged_df.to_csv(merged_file_path, index=False)
 print(f"Final merged DataFrame saved to {merged_file_path}")
+

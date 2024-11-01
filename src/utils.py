@@ -127,6 +127,9 @@ def compute_similarity_to_average(df, num_topics):
     grouped = df.groupby('call_id')
     for call_id, group in grouped:
         topics = [topic for sublist in group['filtered_topics'] for topic in sublist]
+        if len(topics) < 2:
+            # Cannot create a transition matrix with fewer than 2 topics
+            continue
         transition_matrix = create_transition_matrix(topics, num_topics)
         transition_matrices.append(transition_matrix)
         call_ids.append(call_id)
@@ -134,7 +137,7 @@ def compute_similarity_to_average(df, num_topics):
         permco = group['permco'].iloc[0]  # Assuming 'permco' is consistent within a call
         siccds.append(siccd)
         permcos.append(permco)
-    
+
     # Create a DataFrame to hold the data
     calls_df = pd.DataFrame({
         'call_id': call_ids,
@@ -142,27 +145,31 @@ def compute_similarity_to_average(df, num_topics):
         'siccd': siccds,
         'permco': permcos
     })
-    
+
     # Compute the overall average transition matrix
     average_transition_matrix = np.mean(transition_matrices, axis=0)
     average_transition_matrix = np.nan_to_num(average_transition_matrix)
-    
+
     # Compute industry-specific average transition matrices
     industry_avg_matrices = {}
     for siccd, group in calls_df.groupby('siccd'):
+        if pd.isna(siccd):
+            continue  # Skip missing siccds
         matrices = group['transition_matrix'].tolist()
-        industry_avg_matrix = np.mean(matrices, axis=0)
-        industry_avg_matrix = np.nan_to_num(industry_avg_matrix)
-        industry_avg_matrices[siccd] = industry_avg_matrix
-    
+        if matrices:
+            industry_avg_matrix = np.mean(matrices, axis=0)
+            industry_avg_matrix = np.nan_to_num(industry_avg_matrix)
+            industry_avg_matrices[siccd] = industry_avg_matrix
+
     # Compute company-specific average transition matrices
     company_avg_matrices = {}
     for permco, group in calls_df.groupby('permco'):
         matrices = group['transition_matrix'].tolist()
-        company_avg_matrix = np.mean(matrices, axis=0)
-        company_avg_matrix = np.nan_to_num(company_avg_matrix)
-        company_avg_matrices[permco] = company_avg_matrix
-    
+        if matrices:
+            company_avg_matrix = np.mean(matrices, axis=0)
+            company_avg_matrix = np.nan_to_num(company_avg_matrix)
+            company_avg_matrices[permco] = company_avg_matrix
+
     # Compute similarities
     similarities_overall = []
     similarities_industry = []
@@ -172,24 +179,40 @@ def compute_similarity_to_average(df, num_topics):
         tm_vector = tm.flatten()
         # Similarity to overall average
         avg_vector = average_transition_matrix.flatten()
-        sim_overall = 1 - cosine(tm_vector, avg_vector)
+        # Check if both vectors are non-zero
+        if np.linalg.norm(tm_vector) == 0 or np.linalg.norm(avg_vector) == 0:
+            sim_overall = np.nan
+        else:
+            sim_overall = 1 - cosine(tm_vector, avg_vector)
         similarities_overall.append(sim_overall)
         # Similarity to industry average
-        industry_avg_matrix = industry_avg_matrices[row['siccd']]
-        industry_avg_vector = industry_avg_matrix.flatten()
-        sim_industry = 1 - cosine(tm_vector, industry_avg_vector)
+        if pd.isna(row['siccd']):
+            sim_industry = np.nan
+        else:
+            industry_avg_matrix = industry_avg_matrices.get(row['siccd'])
+            if industry_avg_matrix is not None:
+                industry_avg_vector = industry_avg_matrix.flatten()
+                if np.linalg.norm(industry_avg_vector) == 0 or np.linalg.norm(tm_vector) == 0:
+                    sim_industry = np.nan
+                else:
+                    sim_industry = 1 - cosine(tm_vector, industry_avg_vector)
+            else:
+                sim_industry = np.nan
         similarities_industry.append(sim_industry)
         # Similarity to company average
         company_avg_matrix = company_avg_matrices[row['permco']]
         company_avg_vector = company_avg_matrix.flatten()
-        sim_company = 1 - cosine(tm_vector, company_avg_vector)
+        if np.linalg.norm(company_avg_vector) == 0 or np.linalg.norm(tm_vector) == 0:
+            sim_company = np.nan
+        else:
+            sim_company = 1 - cosine(tm_vector, company_avg_vector)
         similarities_company.append(sim_company)
-    
+
     # Add similarities to calls_df
     calls_df['similarity_to_overall_average'] = similarities_overall
     calls_df['similarity_to_industry_average'] = similarities_industry
     calls_df['similarity_to_company_average'] = similarities_company
-    
+
     # Return the DataFrame with similarities
     similarity_df = calls_df[['call_id', 'similarity_to_overall_average', 'similarity_to_industry_average', 'similarity_to_company_average']]
     return similarity_df
