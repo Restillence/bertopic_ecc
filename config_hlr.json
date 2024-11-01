@@ -1,7 +1,7 @@
 {
   "index_file_ecc_folder": "../data/",
   "folderpath_ecc": "../data/Transcripts_Masterarbeit/",
-  "model_save_path": "../data/bertopic_model_dir_zeroshot_08minsim_seed_huang_own_real",
+  "model_save_path": "../data/bertopic_model_dir",
   "model_load_path": "../data/bertopic_model_dir_3000full_zeroshot_03minsim_seed_huang_own",
   "index_file_path": "../data/list_earnings_call_transcripts.csv",
   "embedding_model_choice": "all-MiniLM-L12-v2",
@@ -26,9 +26,10 @@
     "6": "Risk"
   },
 
-  "modeling_type": "regular",
+  "modeling_type": "zeroshot",
   "apply_topic_merging": true, 
-  "sample_size": 5000,
+  "similarity_threshold": 0.3,
+  "sample_size": 4000,
   "sampling_mode": "full_random",
   "document_split": "sentences",
   "random_seed": 43,
@@ -39,8 +40,8 @@
   "pca_components": 50,
   "output_dir": "../data/",
 
-  "zeroshot_min_similarity": 0.95,
-  "min_topic_size": 50,
+  "zeroshot_min_similarity": 0.1,
+  "min_topic_size": 200,
 
   "batch_size": 32,
 

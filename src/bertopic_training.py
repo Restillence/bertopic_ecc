@@ -1,3 +1,5 @@
+# bertopic_training_script.py
+
 import os
 import json
 import numpy as np
@@ -40,6 +42,9 @@ class BertopicModel:
 
         # Read the apply_topic_merging parameter from the config
         self.apply_topic_merging = config.get("apply_topic_merging", False)
+
+        # Read the similarity_threshold from the config
+        self.similarity_threshold = config.get('similarity_threshold', 0.5)
 
         # Select UMAP and HDBSCAN implementations
         self._select_umap_hdbscan()
@@ -339,16 +344,10 @@ class BertopicModel:
         updated_topic_info = self.topic_model.get_topic_info()
         print(updated_topic_info[['Topic', 'Name']])
 
-    def merge_similar_topics(self, topic_list, similarity_threshold=0.5):
+    def merge_similar_topics(self, topic_list):
         """
         Merge topics in the topic model that are similar to the topics in topic_list,
         based on a similarity threshold.
-
-        Parameters:
-        - topic_list: list of str
-            The list of topics to search for and merge similar topics.
-        - similarity_threshold: float
-            The minimum similarity score required to consider merging topics.
 
         The method finds topics similar to each topic in topic_list and merges them together
         if their similarity score exceeds the threshold. Once a topic is merged, it can still
@@ -362,7 +361,7 @@ class BertopicModel:
             similar_topics, similarities = current_model.find_topics(search_term=topic_name, top_n=10)
             topics_to_merge = []
             for topic_id, sim in zip(similar_topics, similarities):
-                if topic_id != -1 and sim >= similarity_threshold:
+                if topic_id != -1 and sim >= self.similarity_threshold:
                     topics_to_merge.append((topic_id, sim))
 
             if len(topics_to_merge) > 1:
@@ -404,6 +403,7 @@ class BertopicModel:
 
         # Update the topic model
         self.topic_model = current_model
+
     def save_topic_info(self):
         """Save topic information to a CSV file."""
         topic_info = self.topic_model.get_topic_info()
@@ -436,7 +436,7 @@ def main():
     # Start total execution time tracking
     total_start_time = time.time()
 
-    # Load configuration from config.json
+    # Load configuration from config_hlr.json
     print("Loading configuration...")
     with open('config_hlr.json', 'r') as config_file:
         config = json.load(config_file)
@@ -451,6 +451,7 @@ def main():
     document_split = config.get("document_split", "default_method")
     section_to_analyze = config.get("section_to_analyze", "default_section")
     max_documents = config.get("max_documents", 1000)
+    # Removed similarity_threshold from here since it's now handled in the class
 
     # Initialize FileHandler and TextProcessor with the imported configuration
     print("Initializing file handler and text processor...")
