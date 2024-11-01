@@ -343,3 +343,8 @@ print("Saving the final merged DataFrame...")
 merged_df.to_csv(merged_file_path, index=False)
 print(f"Final merged DataFrame saved to {merged_file_path}")
 
+#calculate the means of the similarity measures
+print("Calculating means of similarity measures...")
+print("Mean of similarity_to_overall_average:", merged_df['similarity_to_overall_average'].mean())
+print("Mean of similarity_to_industry_average:", merged_df['similarity_to_industry_average'].mean())
+print("Mean of similarity_to_company_average:", merged_df['similarity_to_company_average'].mean())
