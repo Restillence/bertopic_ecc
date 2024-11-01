@@ -251,3 +251,11 @@ merged_df = merged_df.sort_values(by=['gvkey', 'call_date'], ascending=[True, Tr
 print("Saving the final merged DataFrame...")
 merged_df.to_csv(merged_file_path, index=False)
 print(f"Final merged DataFrame saved to {merged_file_path}")
+
+"""
+#%%create random sample of 10 rows for manually validating the merge results. did the merges work properly and were the returns correctly calculated?
+df_sample = merged_df.sample(n=10)
+
+#filter the daily crsp data for permco 20240 and year 2018 (date column) so i can manually check if the returns are correct
+df_crsp_daily_sample = df_crsp_daily[df_crsp_daily['permco'] == 20240]
+"""
