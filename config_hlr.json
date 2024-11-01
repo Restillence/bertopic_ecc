@@ -26,10 +26,10 @@
     "6": "Risk"
   },
 
-  "modeling_type": "zeroshot",
+  "modeling_type": "regular",
   "apply_topic_merging": true, 
   "similarity_threshold": 0.3,
-  "sample_size": 4000,
+  "sample_size": 6000,
   "sampling_mode": "full_random",
   "document_split": "sentences",
   "random_seed": 43,
