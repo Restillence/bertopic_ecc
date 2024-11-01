@@ -27,7 +27,7 @@
   },
 
   "modeling_type": "zeroshot",
-  "apply_topic_merging": false, 
+  "apply_topic_merging": true, 
   "sample_size": 3000,
   "sampling_mode": "full_random",
   "document_split": "sentences",
