@@ -28,7 +28,7 @@
 
   "modeling_type": "regular",
   "apply_topic_merging": true, 
-  "similarity_threshold": 0.3,
+  "similarity_threshold": 0.7,
   "sample_size": 6000,
   "sampling_mode": "full_random",
   "document_split": "sentences",
@@ -58,7 +58,7 @@
       "low_memory": true
   },
   "hdbscan_model_params": {
-      "min_cluster_size": 50,
+      "min_cluster_size": 200,
       "metric": "euclidean",
       "cluster_selection_method": "eom",
       "prediction_data": true

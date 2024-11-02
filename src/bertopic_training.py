@@ -1,5 +1,3 @@
-# bertopic_training_script.py
-
 import os
 import json
 import numpy as np
@@ -39,6 +37,7 @@ class BertopicModel:
         self.nr_topics = config.get("nr_topics", None)
         self.model = self._select_embedding_model(config)
         self.docs = None  # Initialize self.docs
+        self.embeddings = None  # Initialize embeddings
 
         # Read the apply_topic_merging parameter from the config
         self.apply_topic_merging = config.get("apply_topic_merging", False)
@@ -205,6 +204,18 @@ class BertopicModel:
         # After training, display topic information and customize labels if zero-shot modeling
         self._post_training_tasks()
 
+        # Save the BERTopic model using safetensors after merging and label updates
+        try:
+            print("Saving BERTopic model...")
+            self.topic_model.save(
+                self.model_save_path,
+                serialization="safetensors",
+                save_ctfidf=True
+            )
+            print(f"BERTopic model saved to {self.model_save_path}.")
+        except Exception as e:
+            print(f"An error occurred while saving the model: {e}")
+
     def _train_regular(self, docs):
         # Initialize BERTopic model
         self.topic_model = self._initialize_bertopic_model()
@@ -217,6 +228,9 @@ class BertopicModel:
         self._print_gpu_usage()
         embeddings = self.model.encode(docs, show_progress_bar=True, batch_size=self.config["batch_size"])
         self._print_gpu_usage()
+
+        # Store embeddings in the class
+        self.embeddings = embeddings
 
         # End embeddings time tracking
         embeddings_end_time = time.time()
@@ -245,18 +259,6 @@ class BertopicModel:
         # Print information about the training process
         print(f"BERTopic model trained on {len(docs)} documents.")
         print(f"Number of topics generated: {len(self.topic_model.get_topic_info())}")
-
-        # Save the BERTopic model using safetensors
-        try:
-            print("Saving BERTopic model...")
-            self.topic_model.save(
-                self.model_save_path,
-                serialization="safetensors",
-                save_ctfidf=True
-            )
-            print(f"BERTopic model saved to {self.model_save_path}.")
-        except Exception as e:
-            print(f"An error occurred while saving the model: {e}")
 
     def _post_training_tasks(self):
         """Perform tasks after training, such as displaying topic info and customizing labels."""
@@ -367,35 +369,31 @@ class BertopicModel:
             if len(topics_to_merge) > 1:
                 # Sort topics by similarity in descending order
                 topics_to_merge.sort(key=lambda x: x[1], reverse=True)
-                # Prepare list of topic IDs to merge
-                merge_topic_ids = [topic_id for topic_id, _ in topics_to_merge]
-                print(f"\nMerging Topics {merge_topic_ids} ")
+                # Merge topics sequentially
+                while len(topics_to_merge) > 1:
+                    base_topic_id, base_sim = topics_to_merge.pop(0)
+                    next_topic_id, next_sim = topics_to_merge.pop(0)
+                    print(f"\nMerging Topic {base_topic_id} and Topic {next_topic_id}")
 
-                # Retrieve topic information
-                topic_info = current_model.get_topic_info()
+                    # Merge the topics
+                    current_model.merge_topics(
+                        self.docs,
+                        topics_to_merge=[base_topic_id, next_topic_id],
+                        embeddings=self.embeddings
+                    )
 
-                # Print topics before merging with counts
-                for topic_id in merge_topic_ids:
-                    count = topic_info[topic_info['Topic'] == topic_id]['Count'].values[0]
-                    print(f"\nTopic {topic_id} representation before merging (Count: {count}):")
-                    print(current_model.get_topic(topic_id))
+                    # Update topic representations
+                    current_model.update_topics(self.docs, embeddings=self.embeddings)
+                    print("Topics merged successfully.")
 
-                # Merge the topics
-                current_model.merge_topics(
-                    self.docs,
-                    topics_to_merge=merge_topic_ids
-                )
-                print("\nTopics merged successfully.")
-
-                # Retrieve updated topic information
-                updated_topic_info = current_model.get_topic_info()
-
-                # Assuming the first topic in merge_topic_ids is retained as the new merged topic
-                new_topic_id = merge_topic_ids[0]
-                new_topic_count = updated_topic_info[updated_topic_info['Topic'] == new_topic_id]['Count'].values[0]
-                print(f"\nNew merged Topic {new_topic_id} representation (Count: {new_topic_count}):")
-                print(current_model.get_topic(new_topic_id))
-
+                    # Re-fetch similar topics for the current topic_name
+                    similar_topics, similarities = current_model.find_topics(search_term=topic_name, top_n=10)
+                    topics_to_merge = []
+                    for topic_id, sim in zip(similar_topics, similarities):
+                        if topic_id != -1 and sim >= self.similarity_threshold:
+                            topics_to_merge.append((topic_id, sim))
+                    # Sort topics again
+                    topics_to_merge.sort(key=lambda x: x[1], reverse=True)
             elif len(topics_to_merge) == 1:
                 print(f"Only one topic found similar to '{topic_name}' with similarity above threshold. No merging performed.")
             else:
@@ -494,3 +492,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
