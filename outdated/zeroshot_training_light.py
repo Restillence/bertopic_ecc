@@ -36,7 +36,7 @@ def main():
     script_dir = os.path.dirname(os.path.abspath(__file__))
 
     # Construct the path to config_hlr.json relative to the script's directory
-    config_path = os.path.join(script_dir, '..', 'config_hlr.json')
+    config_path = os.path.join(script_dir, '..', 'config.json')
 
     # Start total execution time tracking
     total_start_time = time.time()

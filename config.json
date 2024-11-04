@@ -2,13 +2,13 @@
     "index_file_ecc_folder": "D:/daten_masterarbeit/",
     "folderpath_ecc": "D:/daten_masterarbeit/Transcripts_Masterarbeit_full/",
     "model_save_path": "D:/daten_masterarbeit/bertopic_model_dir", 
-    "model_load_path": "D:/daten_masterarbeit/bertopic_model_dir_6000_reg_null_50mincl", 
+    "model_load_path": "D:/daten_masterarbeit/bertopic_model_dir_3000full_zeroshot_08minsim_seed_huang_own", 
     "index_file_path": "D:/daten_masterarbeit/list_earnings_call_transcripts.csv",
     
-    "modeling_type": "regular",
+    "modeling_type": "zeroshot",
     "apply_topic_merging": true, 
     "similarity_threshold": 0.7,
-    "sample_size": 10,
+    "sample_size": 15,
     "nr_topics": "auto",
     "sampling_mode": "full_random",
     "document_split": "sentences",
@@ -19,7 +19,7 @@
     "pca_components": 50,
 
     "zeroshot_min_similarity": 0.8,
-    "min_topic_size": 150,
+    "min_topic_size": 5,
 
     "ecc_plots_folder": "C:/Users/nikla/OneDrive/Dokumente/winfoMaster/Masterarbeit/bertopic_ecc/plots/ecc_plots",
     "embedding_model_choice": "all-MiniLM-L12-v2", 
@@ -61,7 +61,7 @@
         "low_memory": true
     },
     "hdbscan_model_params": {
-        "min_cluster_size": 150,
+        "min_cluster_size": 10,
         "metric": "euclidean",
         "cluster_selection_method": "eom",
         "prediction_data": true

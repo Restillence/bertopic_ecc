@@ -267,14 +267,9 @@ class BertopicModel:
         topic_info = self.topic_model.get_topic_info()
         print(topic_info[['Topic', 'Count']])
 
-        # Customize topic labels if zero-shot modeling
-        if self.modeling_type == "zeroshot":
-            print("\nCustomizing topic labels with zero-shot topic names...")
-            self._customize_topic_labels()
-
         # Check if topic merging is enabled in the configuration
         if self.apply_topic_merging:
-            # Proceed to merge similar topics based on your topic_list
+            # Proceed to merge similar topics based on the huang-topics
             topic_list = [
                 "regulation and compliance",
                 "risk and forecasts",
@@ -298,6 +293,15 @@ class BertopicModel:
         else:
             print("\nSkipping topic merging as per configuration.")
 
+        # Customize topic labels if zero-shot modeling
+        if self.modeling_type == "zeroshot":
+            print("\nCustomizing topic labels with zero-shot topic names...")
+            self._customize_topic_labels()
+
+        # Display updated topic information
+        print("\nUpdated topic labels:")
+        updated_topic_info = self.topic_model.get_topic_info()
+        print(updated_topic_info[['Topic', 'Name']])
     def _customize_topic_labels(self):
         """Customize topic labels to include zero-shot topic names followed by top words."""
         # Get zero-shot topic list and seed words from config
@@ -436,7 +440,7 @@ def main():
 
     # Load configuration from config_hlr.json
     print("Loading configuration...")
-    with open('config_hlr.json', 'r') as config_file:
+    with open('config.json', 'r') as config_file:
         config = json.load(config_file)
     print_configuration(config)
 
@@ -492,4 +496,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+    
 

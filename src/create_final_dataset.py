@@ -3,17 +3,16 @@
 import json
 import pandas as pd
 import numpy as np
+import sys
 from utils import process_topics, compute_similarity_to_average
 
-# If git structure is not working properly:
-fallback_config_path = "C:/Users/nikla/OneDrive/Dokumente/winfoMaster/Masterarbeit/bertopic_ecc/config.json"
-
 # Load configuration variables from config.json
-try: 
+try:
     with open('config.json', 'r') as config_file:
         config = json.load(config_file)
         print("Config File Loaded.")
-except FileNotFoundError: 
+except FileNotFoundError:
+    fallback_config_path = "C:/Users/nikla/OneDrive/Dokumente/winfoMaster/Masterarbeit/bertopic_ecc/config.json"
     with open(fallback_config_path, 'r') as config_file:
         config = json.load(config_file)
         print("Config File Loaded.")
@@ -24,7 +23,7 @@ topics_to_keep = config['topics_to_keep']
 file_path_crsp_daily = config['file_path_crsp_daily']
 file_path_crsp_monthly = config['file_path_crsp_monthly']
 merged_file_path = config['merged_file_path']
-topic_threshold_percentage = config['topic_threshold_percentage']  # Add this to your config
+topic_threshold_percentage = config['topic_threshold_percentage']
 
 #%% Process the topics
 print("Processing topics...")
@@ -36,6 +35,7 @@ processed_df['permco'] = processed_df['permco'].astype(str)
 
 # Extract unique permcos from processed_df
 permcos = set(processed_df['permco'].unique())
+print(f"Number of unique permcos in processed_df: {len(permcos)}")
 
 # Process the CRSP daily data
 print("Processing CRSP/Daily data...")
@@ -43,6 +43,7 @@ chunksize = 10 ** 6
 daily_data = []
 for chunk in pd.read_csv(file_path_crsp_daily, chunksize=chunksize):
     chunk['permco'] = chunk['permco'].astype(str)
+    chunk['gvkey'] = chunk['gvkey'].astype(str)
     filtered_chunk = chunk[chunk['permco'].isin(permcos)]
     if not filtered_chunk.empty:
         daily_data.append(filtered_chunk)
@@ -53,11 +54,9 @@ df_crsp_daily = pd.concat(daily_data, ignore_index=True)
 df_crsp_daily['date'] = pd.to_datetime(df_crsp_daily['date'], errors='coerce')
 df_crsp_daily = df_crsp_daily[df_crsp_daily['date'].notna()]
 
-# Ensure 'permco' and 'gvkey' are strings
-df_crsp_daily['permco'] = df_crsp_daily['permco'].astype(str)
-df_crsp_daily['gvkey'] = df_crsp_daily['gvkey'].astype(str)
+# Convert 'gvkey' in df_crsp_daily to numeric and handle missing values
+df_crsp_daily['gvkey'] = pd.to_numeric(df_crsp_daily['gvkey'], errors='coerce')
 
-# Handle missing 'gvkey' values in df_crsp_daily
 missing_gvkey_daily = df_crsp_daily['gvkey'].isna().sum()
 print(f"Number of missing 'gvkey' values in df_crsp_daily before filling: {missing_gvkey_daily}")
 
@@ -69,12 +68,16 @@ if missing_gvkey_daily > 0:
     )
     # Map the most frequent gvkey back to df_crsp_daily
     df_crsp_daily['gvkey'] = df_crsp_daily.apply(
-        lambda row: most_common_gvkey_per_permco_daily[row['permco']] if pd.isna(row['gvkey']) else row['gvkey'],
+        lambda row: most_common_gvkey_per_permco_daily.get(row['permco'], np.nan) if pd.isna(row['gvkey']) else row['gvkey'],
         axis=1
     )
     # Check missing 'gvkey's again
     missing_gvkey_daily = df_crsp_daily['gvkey'].isna().sum()
     print(f"Number of missing 'gvkey' values in df_crsp_daily after filling: {missing_gvkey_daily}")
+
+# Remove rows with missing 'gvkey' in df_crsp_daily
+df_crsp_daily = df_crsp_daily[df_crsp_daily['gvkey'].notna()]
+df_crsp_daily['gvkey'] = df_crsp_daily['gvkey'].astype(int)
 
 # Convert 'date' in processed_df to 'call_date' in datetime
 processed_df['call_date'] = pd.to_datetime(processed_df['date'], utc=True, errors='coerce')
@@ -106,45 +109,54 @@ processed_df = processed_df.drop(columns=['date'])
 missing_gvkey = processed_df['gvkey'].isna().sum()
 print(f"Number of missing 'gvkey' values in processed_df after merging: {missing_gvkey}")
 
-# Fill missing 'gvkey' values in processed_df based on the most frequent 'gvkey' per 'permco'
-print("Filling missing 'gvkey' values in processed_df based on the most frequent 'gvkey' per 'permco'...")
-# Compute the most frequent gvkey per permco from df_crsp_daily (since it has more data)
-most_common_gvkey_per_permco = df_crsp_daily.groupby('permco')['gvkey'].apply(
-    lambda x: x.value_counts().idxmax() if x.notna().any() else np.nan
-)
+if missing_gvkey > 0:
+    print("Filling missing 'gvkey' values in processed_df based on the most frequent 'gvkey' per 'permco'...")
+    # Use the most common gvkey per permco from df_crsp_daily
+    processed_df['gvkey'] = processed_df.apply(
+        lambda row: most_common_gvkey_per_permco_daily.get(row['permco'], np.nan) if pd.isna(row['gvkey']) else row['gvkey'],
+        axis=1
+    )
 
-# Map the most frequent gvkey back to processed_df
-processed_df['gvkey'] = processed_df.apply(
-    lambda row: most_common_gvkey_per_permco[row['permco']] if pd.isna(row['gvkey']) else row['gvkey'],
-    axis=1
-)
-
-# Now, check how many NaNs are left
+# Check for remaining missing 'gvkey's
 missing_gvkey = processed_df['gvkey'].isna().sum()
 print(f"Number of missing 'gvkey' values in processed_df after filling: {missing_gvkey}")
 
-# Remove rows with missing 'gvkey' if necessary
+# Remove rows with missing 'gvkey'
 processed_df = processed_df[processed_df['gvkey'].notna()]
-processed_df['gvkey'] = processed_df['gvkey'].astype(str)
+processed_df['gvkey'] = processed_df['gvkey'].astype(int)
 
-# Process the CRSP monthly data
+# Extract updated set of gvkeys
+gvkeys = set(processed_df['gvkey'].unique())
+print(f"Number of unique gvkeys in processed_df after adding 'gvkey': {len(gvkeys)}")
+
+#%% Process the CRSP Monthly data
 print("Processing CRSP/Monthly data...")
 chunksize = 10 ** 6
 monthly_data = []
 for chunk in pd.read_csv(file_path_crsp_monthly, chunksize=chunksize):
-    chunk['gvkey'] = chunk['gvkey'].astype(str)
+    chunk['gvkey'] = pd.to_numeric(chunk['gvkey'], errors='coerce')
     chunk['permco'] = chunk['permco'].astype(str)
-    filtered_chunk = chunk[chunk['gvkey'].isin(processed_df['gvkey'].unique())]
-    if not filtered_chunk.empty:
-        monthly_data.append(chunk)
+    chunk = chunk[chunk['gvkey'].notna()]
+    chunk['gvkey'] = chunk['gvkey'].astype(int)
+    matching_gvkeys = chunk['gvkey'].isin(gvkeys)
+    num_matching = matching_gvkeys.sum()
+    print(f"Chunk read: {len(chunk)} rows, Matching gvkeys: {num_matching}")
+    if num_matching > 0:
+        filtered_chunk = chunk[matching_gvkeys]
+        monthly_data.append(filtered_chunk)
 
-df_crsp_monthly = pd.concat(monthly_data, ignore_index=True)
+if monthly_data:
+    df_crsp_monthly = pd.concat(monthly_data, ignore_index=True)
+else:
+    print("No matching data found in CRSP Monthly data.")
+    sys.exit()
 
 # Ensure 'datadate' in df_crsp_monthly is in datetime format and remove NaNs
 df_crsp_monthly = df_crsp_monthly[["datadate", "epsfxq", "gvkey", "siccd", "permco"]]
-df_crsp_monthly['datadate'] = pd.to_datetime(df_crsp_monthly['datadate'], errors='coerce')
+df_crsp_monthly['datadate'] = pd.to_datetime(df_crsp_monthly['datadate'], errors='coerce').dt.tz_localize(None)
 df_crsp_monthly = df_crsp_monthly[df_crsp_monthly['datadate'].notna()]
-df_crsp_monthly['gvkey'] = df_crsp_monthly['gvkey'].astype(str)
+df_crsp_monthly = df_crsp_monthly[df_crsp_monthly['gvkey'].notna()]
+df_crsp_monthly['gvkey'] = df_crsp_monthly['gvkey'].astype(int)
 df_crsp_monthly['permco'] = df_crsp_monthly['permco'].astype(str)
 
 # Handle missing 'siccd' values in df_crsp_monthly
@@ -159,58 +171,88 @@ if missing_siccd_monthly > 0:
     )
     # Map the most frequent siccd back to df_crsp_monthly
     df_crsp_monthly['siccd'] = df_crsp_monthly.apply(
-        lambda row: most_common_siccd_per_permco_monthly[row['permco']] if pd.isna(row['siccd']) else row['siccd'],
+        lambda row: most_common_siccd_per_permco_monthly.get(row['permco'], np.nan) if pd.isna(row['siccd']) else row['siccd'],
         axis=1
     )
     # Check missing 'siccd's again
     missing_siccd_monthly = df_crsp_monthly['siccd'].isna().sum()
     print(f"Number of missing 'siccd' values in df_crsp_monthly after filling: {missing_siccd_monthly}")
 
-# Ensure 'call_date' and 'datadate' are in datetime format
-processed_df['call_date'] = pd.to_datetime(processed_df['call_date'], errors='coerce')
-df_crsp_monthly['datadate'] = pd.to_datetime(df_crsp_monthly['datadate'], errors='coerce')
+# Ensure 'call_date' and 'datadate' are in datetime format and timezone naive
+processed_df['call_date'] = pd.to_datetime(processed_df['call_date'], errors='coerce').dt.tz_localize(None)
+df_crsp_monthly['datadate'] = pd.to_datetime(df_crsp_monthly['datadate'], errors='coerce').dt.tz_localize(None)
 
 # Remove rows with missing dates
 processed_df = processed_df[processed_df['call_date'].notna()]
 df_crsp_monthly = df_crsp_monthly[df_crsp_monthly['datadate'].notna()]
 
-# Ensure both DataFrames are sorted properly
-print("Ensuring both DataFrames are properly sorted...")
-processed_df = processed_df.sort_values(by=['call_date', 'gvkey']).reset_index(drop=True)
-df_crsp_monthly = df_crsp_monthly.sort_values(by=['datadate', 'gvkey']).reset_index(drop=True)
+# Create 'epsfxq_next'
+print("Creating 'epsfxq_next' in df_crsp_monthly...")
 
-# Verify that 'call_date' is globally sorted
-print("Checking if 'call_date' is globally sorted in processed_df...")
-is_call_date_sorted = processed_df['call_date'].is_monotonic_increasing
-print(f"Is 'call_date' globally sorted? {is_call_date_sorted}")
-
-print("Checking if 'datadate' is globally sorted in df_crsp_monthly...")
-is_datadate_sorted = df_crsp_monthly['datadate'].is_monotonic_increasing
-print(f"Is 'datadate' globally sorted? {is_datadate_sorted}")
-
-# Proceed with the merge if sorting checks pass
-if is_call_date_sorted and is_datadate_sorted:
-    # Merge using merge_asof with direction='backward' to get 'epsfxq' and 'siccd' using 'gvkey'
-    print("Merging processed_df with df_crsp_monthly using 'gvkey' and merge_asof...")
-    print(f"Number of rows in processed_df before merging: {len(processed_df)}")
-    
-    # Exclude 'permco' from df_crsp_monthly to avoid column conflict
-    merged_df = pd.merge_asof(
-        processed_df,
-        df_crsp_monthly[['gvkey', 'datadate', 'epsfxq', 'siccd']],  # Exclude 'permco' here
-        left_on='call_date',
-        right_on='datadate',
-        by='gvkey',
-        direction='backward',
-        allow_exact_matches=True
+def get_epsfxq_next(group):
+    group = group.sort_values('datadate').reset_index(drop=True)
+    group['epsfxq_next'] = group['epsfxq'].shift(-1)
+    # Only keep 'epsfxq_next' where the next 'datadate' is approximately 90 days after current 'datadate'
+    days_diff = group['datadate'].diff(-1).abs().dt.days
+    group['epsfxq_next'] = np.where(
+        (days_diff >= 60) & (days_diff <= 120),
+        group['epsfxq_next'],
+        np.nan
     )
-    
-    print(f"Number of rows in merged_df after merging: {len(merged_df)}")
-else:
-    print("Cannot proceed with merge_asof because DataFrames are not properly sorted.")
-    exit()
+    return group
 
-# Continue with the rest of your code
+df_crsp_monthly = df_crsp_monthly.groupby('gvkey', group_keys=False).apply(get_epsfxq_next)
+print("Columns after adding 'epsfxq_next':", df_crsp_monthly.columns.tolist())
+
+# Prepare df_crsp_monthly_for_merge
+df_crsp_monthly_for_merge = df_crsp_monthly[['gvkey', 'datadate', 'epsfxq', 'epsfxq_next', 'siccd']]
+
+# Remove rows with missing merge keys
+print("Dropping rows with missing 'gvkey' or date keys...")
+processed_df = processed_df.dropna(subset=['gvkey', 'call_date'])
+df_crsp_monthly_for_merge = df_crsp_monthly_for_merge.dropna(subset=['gvkey', 'datadate'])
+
+# Ensure data types are correct
+processed_df['gvkey'] = processed_df['gvkey'].astype(int)
+df_crsp_monthly_for_merge['gvkey'] = df_crsp_monthly_for_merge['gvkey'].astype(int)
+processed_df['call_date'] = pd.to_datetime(processed_df['call_date'])
+df_crsp_monthly_for_merge['datadate'] = pd.to_datetime(df_crsp_monthly_for_merge['datadate'])
+
+# Remove duplicates
+processed_df = processed_df.drop_duplicates(subset=['gvkey', 'call_date'])
+df_crsp_monthly_for_merge = df_crsp_monthly_for_merge.drop_duplicates(subset=['gvkey', 'datadate'])
+
+# Sort DataFrames
+print("Sorting DataFrames...")
+processed_df = processed_df.sort_values(by=['gvkey', 'call_date']).reset_index(drop=True)
+df_crsp_monthly_for_merge = df_crsp_monthly_for_merge.sort_values(by=['gvkey', 'datadate']).reset_index(drop=True)
+
+# Verify sorting within groups
+def is_sorted_within_group(df, group_col, sort_col):
+    return df.groupby(group_col)[sort_col].apply(lambda x: x.is_monotonic_increasing).all()
+
+if not is_sorted_within_group(processed_df, 'gvkey', 'call_date'):
+    print("Error: 'call_date' is not sorted within 'gvkey' in 'processed_df'.")
+if not is_sorted_within_group(df_crsp_monthly_for_merge, 'gvkey', 'datadate'):
+    print("Error: 'datadate' is not sorted within 'gvkey' in 'df_crsp_monthly_for_merge'.")
+
+# Perform the merge_asof
+print("Performing merge_asof...")
+merged_df = pd.merge_asof(
+    processed_df,
+    df_crsp_monthly_for_merge,
+    left_on='call_date',
+    right_on='datadate',
+    by='gvkey',
+    direction='backward',
+    allow_exact_matches=True
+)
+
+print(f"Number of rows in merged_df after merging: {len(merged_df)}")
+
+# Continue with the rest of your code...
+
+# Handle missing 'siccd' values in merged_df
 num_nan_siccd = merged_df['siccd'].isna().sum()
 print(f"Number of rows with NaN 'siccd': {num_nan_siccd}")
 
@@ -224,8 +266,9 @@ siccd_mapping = df_crsp_monthly.groupby('permco')['siccd'].apply(
 if 'permco' not in merged_df.columns:
     print("Error: 'permco' column is missing in 'merged_df'.")
 else:
+    merged_df['permco'] = merged_df['permco'].astype(str)
     merged_df['siccd'] = merged_df.apply(
-        lambda row: siccd_mapping[row['permco']] if pd.isna(row['siccd']) and row['permco'] in siccd_mapping else row['siccd'],
+        lambda row: siccd_mapping.get(row['permco'], np.nan) if pd.isna(row['siccd']) else row['siccd'],
         axis=1
     )
 
@@ -274,7 +317,7 @@ merged_df = pd.merge(
     right_on=['permco', 'date'],
     how='left'
 )
-merged_df = merged_df.drop(columns=['date'])
+merged_df = merged_df.drop(columns=['date'], errors='ignore')
 
 # Convert 'ret' to numeric, handling non-numeric values
 def clean_ret(value):
@@ -312,7 +355,7 @@ def compute_future_returns(group):
     group['ret_60_days'] = ret_60_days
     return group
 
-df_crsp_daily = df_crsp_daily.groupby('permco').apply(compute_future_returns).reset_index(drop=True)
+df_crsp_daily = df_crsp_daily.groupby('permco', group_keys=False).apply(compute_future_returns).reset_index(drop=True)
 
 # Verify future returns
 print("\nSummary statistics of future returns in df_crsp_daily:")
@@ -327,12 +370,14 @@ merged_df = pd.merge(
     right_on=['permco', 'date'],
     how='left'
 )
-merged_df = merged_df.drop(columns=['date', 'topics', 'text', 'consistent'], errors='ignore')
+merged_df = merged_df.drop(columns=['date'], errors='ignore')
 
-# Rearrange columns to include 'epsfxq' and similarity measures
-merged_df = merged_df[['gvkey', 'permco', 'siccd', 'call_id', 'call_date', 'fiscal_period_end', 'filtered_topics', 'filtered_texts',
-                       'prc', 'shrout', 'vol', 'ret', 'ret_next_day', 'ret_5_days', 'ret_20_days', 'ret_60_days',
-                       'epsfxq', 'similarity_to_overall_average', 'similarity_to_industry_average',"similarity_to_company_average"]]
+# Rearrange columns to include 'epsfxq_next' and similarity measures
+merged_df = merged_df[['gvkey', 'permco', 'siccd', 'call_id', 'call_date', 'fiscal_period_end',
+                       'filtered_topics', 'filtered_texts', 'prc', 'shrout', 'vol', 'ret',
+                       'ret_next_day', 'ret_5_days', 'ret_20_days', 'ret_60_days',
+                       'epsfxq', 'epsfxq_next',
+                       'similarity_to_overall_average', 'similarity_to_industry_average', 'similarity_to_company_average']]
 
 # Sort the final DataFrame by 'gvkey' and 'call_date' in ascending order
 print("Sorting the final DataFrame by 'gvkey' and 'call_date'...")
@@ -343,7 +388,7 @@ print("Saving the final merged DataFrame...")
 merged_df.to_csv(merged_file_path, index=False)
 print(f"Final merged DataFrame saved to {merged_file_path}")
 
-#calculate the means of the similarity measures
+# Calculate the means of the similarity measures
 print("Calculating means of similarity measures...")
 print("Mean of similarity_to_overall_average:", merged_df['similarity_to_overall_average'].mean())
 print("Mean of similarity_to_industry_average:", merged_df['similarity_to_industry_average'].mean())
