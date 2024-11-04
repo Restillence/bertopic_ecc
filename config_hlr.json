@@ -26,10 +26,10 @@
     "6": "Risk"
   },
 
-  "modeling_type": "regular",
+  "modeling_type": "zeroshot",
   "apply_topic_merging": true, 
   "similarity_threshold": 0.7,
-  "sample_size": 6000,
+  "sample_size": 4000,
   "sampling_mode": "full_random",
   "document_split": "sentences",
   "random_seed": 43,
@@ -40,8 +40,8 @@
   "pca_components": 50,
   "output_dir": "../data/",
 
-  "zeroshot_min_similarity": 0.1,
-  "min_topic_size": 200,
+  "zeroshot_min_similarity": 0.5,
+  "min_topic_size": 50,
 
   "batch_size": 32,
 
@@ -58,7 +58,7 @@
       "low_memory": true
   },
   "hdbscan_model_params": {
-      "min_cluster_size": 200,
+      "min_cluster_size": 50,
       "metric": "euclidean",
       "cluster_selection_method": "eom",
       "prediction_data": true
