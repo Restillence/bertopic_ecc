@@ -240,7 +240,7 @@ if num_nan_siccd > 0:
 # Optionally, rename 'datadate' to 'fiscal_period_end' for clarity
 merged_df.rename(columns={'datadate': 'fiscal_period_end'}, inplace=True)
 
-# Now that 'siccd' is available, compute similarities including similarity to industry average
+#%% Now that 'siccd' is available, compute similarities including similarity to industry average
 print("Computing similarities to overall, industry and firm specific averages...")
 num_topics = merged_df['filtered_topics'].apply(lambda x: max(x) if x else 0).max() + 1
 
@@ -250,7 +250,8 @@ merged_df['filtered_topics'] = merged_df['filtered_topics'].apply(lambda x: eval
 # Convert 'siccd' to integer (if possible)
 merged_df['siccd'] = merged_df['siccd'].astype(float).astype('Int64')
 
-# Compute similarities
+
+#Compute similarities
 similarity_df = compute_similarity_to_average(merged_df, num_topics)
 
 # Merge similarities back into merged_df
