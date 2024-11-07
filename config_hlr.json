@@ -35,12 +35,12 @@
   "random_seed": 43,
   "section_to_analyze": "Presentation",
   "max_documents": 300000000,
-  "nr_topics": "auto",
+  "nr_topics": null,
   "use_gpu": false,
   "pca_components": 50,
   "output_dir": "../data/",
 
-  "zeroshot_min_similarity": 0.0,
+  "zeroshot_min_similarity": 0.05,
   "min_topic_size": 200,
 
   "batch_size": 32,
