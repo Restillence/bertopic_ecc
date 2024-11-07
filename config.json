@@ -8,7 +8,7 @@
     "modeling_type": "zeroshot",
     "apply_topic_merging": true, 
     "similarity_threshold": 0.7,
-    "sample_size": 1000,
+    "sample_size": 800,
     "nr_topics": "auto",
     "sampling_mode": "random_company",
     "document_split": "paragraphs",
