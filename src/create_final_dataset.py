@@ -5,13 +5,8 @@ import pandas as pd
 import numpy as np
 import sys
 import warnings
+import ast
 from utils import process_topics, compute_similarity_to_average
-
-# Function to verify if a DataFrame is globally sorted by 'group_col' and 'sort_col'
-def verify_global_sorting(df, group_col, sort_col):
-    sorted_df = df.sort_values(by=[group_col, sort_col], ascending=[True, True]).reset_index(drop=True)
-    is_sorted = df.reset_index(drop=True).equals(sorted_df)
-    return is_sorted
 
 # Load configuration variables from config.json
 try:
@@ -33,7 +28,7 @@ file_path_crsp_monthly = config['file_path_crsp_monthly']
 merged_file_path = config['merged_file_path']
 topic_threshold_percentage = config['topic_threshold_percentage']
 
-#%% Process the topics
+# Process the topics
 print("Processing topics...")
 processed_df = process_topics(topic_input_path, topic_output_path, topics_to_keep, topic_threshold_percentage)
 print(f"Processed DataFrame columns: {processed_df.columns}")
@@ -45,15 +40,15 @@ processed_df['permco'] = processed_df['permco'].astype(str)
 permcos = set(processed_df['permco'].unique())
 print(f"Number of unique permcos in processed_df: {len(permcos)}")
 
+#%%
 # Process the CRSP daily data
 print("Processing CRSP/Daily data...")
 chunksize = 10 ** 6
 daily_data = []
 for chunk_num, chunk in enumerate(pd.read_csv(file_path_crsp_daily, chunksize=chunksize), start=1):
     chunk['permco'] = chunk['permco'].astype(str)
-    chunk['gvkey'] = chunk['gvkey'].astype(str)  # Ensure 'gvkey' is string
+    chunk['gvkey'] = chunk['gvkey'].astype(str)
     filtered_chunk = chunk[chunk['permco'].isin(permcos)]
-    filtered_chunk = filtered_chunk[filtered_chunk['gvkey'].notna()]
     if not filtered_chunk.empty:
         daily_data.append(filtered_chunk)
     print(f"Processed chunk {chunk_num}: {len(chunk)} rows, {len(filtered_chunk)} matching rows.")
@@ -70,34 +65,6 @@ df_crsp_daily['date'] = pd.to_datetime(df_crsp_daily['date'], errors='coerce')
 df_crsp_daily = df_crsp_daily[df_crsp_daily['date'].notna()]
 print(f"CRSP Daily data after removing NaN dates: {len(df_crsp_daily)} rows.")
 
-# Handle missing 'gvkey' values in df_crsp_daily
-missing_gvkey_daily = df_crsp_daily['gvkey'].isna().sum()
-print(f"Number of missing 'gvkey' values in df_crsp_daily before filling: {missing_gvkey_daily}")
-
-if missing_gvkey_daily > 0:
-    print("Filling missing 'gvkey' values in df_crsp_daily based on the most frequent 'gvkey' per 'permco'...")
-    # Compute the most frequent gvkey per permco
-    most_common_gvkey_per_permco_daily = df_crsp_daily.groupby('permco')['gvkey'].agg(
-        lambda x: x.mode().iloc[0] if not x.mode().empty else np.nan
-    )
-    
-    # Map the most frequent gvkey back to df_crsp_daily
-    df_crsp_daily['gvkey'] = df_crsp_daily.apply(
-        lambda row: most_common_gvkey_per_permco_daily[row['permco']] if pd.isna(row['gvkey']) else row['gvkey'],
-        axis=1
-    )
-    
-    # Check missing 'gvkey's again
-    missing_gvkey_daily = df_crsp_daily['gvkey'].isna().sum()
-    print(f"Number of missing 'gvkey' values in df_crsp_daily after filling: {missing_gvkey_daily}")
-
-# Remove rows with missing 'gvkey' in df_crsp_daily
-df_crsp_daily = df_crsp_daily[df_crsp_daily['gvkey'].notna()]
-print(f"CRSP Daily data after removing rows with missing 'gvkey': {len(df_crsp_daily)} rows.")
-
-# Convert 'gvkey' to string in df_crsp_daily
-df_crsp_daily['gvkey'] = df_crsp_daily['gvkey'].astype(str)
-
 # Convert 'date' in processed_df to 'call_date' in datetime
 processed_df['call_date'] = pd.to_datetime(processed_df['date'], utc=True, errors='coerce')
 processed_df = processed_df.drop(columns=['date'])
@@ -109,12 +76,15 @@ processed_df = processed_df[processed_df['call_date'].notna() & processed_df['pe
 print(f"Removed {initial_len - len(processed_df)} rows with missing 'call_date' or 'permco'.")
 
 # Convert 'call_date' to New York time and remove timezone information
-processed_df['call_date'] = processed_df['call_date'].dt.tz_convert('America/New_York').dt.tz_localize(None)
+processed_df['call_date'] = processed_df['call_date'].dt.tz_convert('America/New_York')
+processed_df['call_date_with_time'] = processed_df['call_date'].dt.tz_localize(None)
+print("Converted 'call_date' to New York time and stored in 'call_date_with_time'.")
 
 # Normalize 'call_date' to remove time component for merging
-processed_df['call_date'] = processed_df['call_date'].dt.normalize()
+processed_df['call_date'] = processed_df['call_date_with_time'].dt.normalize()
+print("Normalized 'call_date' to remove time component for merging.")
 
-#%% Merge processed_df with df_crsp_daily to get 'gvkey' into processed_df
+# Merge processed_df with df_crsp_daily to get 'gvkey' into processed_df
 print("Merging processed_df on permco and call_date with df_crsp_daily to get 'gvkey'...")
 processed_df = pd.merge(
     processed_df,
@@ -126,28 +96,44 @@ processed_df = pd.merge(
 processed_df = processed_df.drop(columns=['date'])
 print(f"Number of rows after initial merge: {len(processed_df)}")
 
-# Handle missing 'gvkey' values in processed_df
+# After merging processed_df with df_crsp_daily
 missing_gvkey = processed_df['gvkey'].isna().sum()
 print(f"Number of missing 'gvkey' values in processed_df after merging: {missing_gvkey}")
 
 if missing_gvkey > 0:
-    print("Removing rows with missing 'gvkey' values in processed_df...")
-    processed_df = processed_df.dropna(subset=['gvkey'])
-    print(f"Number of rows after removing missing 'gvkey': {len(processed_df)}")
+    print("Filling missing 'gvkey' values in processed_df based on the most frequent 'gvkey' per 'permco'...")
+    # Create mapping from 'permco' to most frequent 'gvkey' in df_crsp_daily
+    gvkey_mapping = df_crsp_daily.groupby('permco')['gvkey'].agg(
+        lambda x: x.mode().iloc[0] if not x.mode().empty else np.nan
+    )
+    # Fill missing 'gvkey's in processed_df
+    processed_df['gvkey'] = processed_df.apply(
+        lambda row: gvkey_mapping.get(row['permco'], np.nan) if pd.isna(row['gvkey']) else row['gvkey'],
+        axis=1
+    )
+    # Check how many 'gvkey's are still missing
+    missing_gvkey = processed_df['gvkey'].isna().sum()
+    print(f"Number of missing 'gvkey' values after filling: {missing_gvkey}")
 
-# Ensure 'gvkey' is string
-processed_df['gvkey'] = processed_df['gvkey'].astype(str)
+# Ensure 'gvkey' is numeric
+processed_df['gvkey'] = pd.to_numeric(processed_df['gvkey'], errors='coerce').astype('Int64')
+df_crsp_daily['gvkey'] = pd.to_numeric(df_crsp_daily['gvkey'], errors='coerce').astype('Int64')
+
+# Remove any remaining rows with missing 'gvkey' in processed_df
+processed_df = processed_df.dropna(subset=['gvkey'])
+processed_df['gvkey'] = processed_df['gvkey'].astype(int)
 
 # Extract updated set of gvkeys
 gvkeys = set(processed_df['gvkey'].unique())
 print(f"Number of unique gvkeys in processed_df after adding 'gvkey': {len(gvkeys)}")
 
-#%% Process the CRSP Monthly data
+#%%
+# Process the CRSP Monthly data
 print("Processing CRSP/Monthly data...")
 chunksize = 10 ** 6
 monthly_data = []
 for chunk_num, chunk in enumerate(pd.read_csv(file_path_crsp_monthly, chunksize=chunksize), start=1):
-    chunk['gvkey'] = chunk['gvkey'].astype(str)
+    chunk['gvkey'] = pd.to_numeric(chunk['gvkey'], errors='coerce').astype('Int64')
     chunk['permco'] = chunk['permco'].astype(str)
     filtered_chunk = chunk[chunk['gvkey'].isin(gvkeys)]
     if not filtered_chunk.empty:
@@ -159,10 +145,10 @@ if monthly_data:
     print(f"Total rows after concatenating monthly data: {len(df_crsp_monthly)}")
 else:
     print("No matching data found in CRSP Monthly data.")
-    sys.exit()
+    # Create an empty DataFrame with the necessary columns
+    df_crsp_monthly = pd.DataFrame(columns=['datadate', 'epsfxq', 'gvkey', 'siccd', 'permco'])
 
 # Ensure 'datadate' in df_crsp_monthly is in datetime format and remove NaNs
-df_crsp_monthly = df_crsp_monthly[["datadate", "epsfxq", "gvkey", "siccd", "permco"]]
 df_crsp_monthly['datadate'] = pd.to_datetime(df_crsp_monthly['datadate'], errors='coerce')
 df_crsp_monthly = df_crsp_monthly[df_crsp_monthly['datadate'].notna()]
 print(f"CRSP Monthly data after removing NaN 'datadate's: {len(df_crsp_monthly)} rows.")
@@ -177,13 +163,11 @@ if missing_siccd_monthly > 0:
     most_common_siccd_per_permco_monthly = df_crsp_monthly.groupby('permco')['siccd'].agg(
         lambda x: x.mode().iloc[0] if not x.mode().empty else np.nan
     )
-    
     # Map the most frequent siccd back to df_crsp_monthly
     df_crsp_monthly['siccd'] = df_crsp_monthly.apply(
-        lambda row: most_common_siccd_per_permco_monthly[row['permco']] if pd.isna(row['siccd']) else row['siccd'],
+        lambda row: most_common_siccd_per_permco_monthly.get(row['permco'], np.nan) if pd.isna(row['siccd']) else row['siccd'],
         axis=1
     )
-    
     # Check missing 'siccd's again
     missing_siccd_monthly = df_crsp_monthly['siccd'].isna().sum()
     print(f"Number of missing 'siccd' values in df_crsp_monthly after filling: {missing_siccd_monthly}")
@@ -191,112 +175,138 @@ if missing_siccd_monthly > 0:
 # Convert 'siccd' to integer (if possible)
 df_crsp_monthly['siccd'] = pd.to_numeric(df_crsp_monthly['siccd'], errors='coerce').astype('Int64')
 
-# Ensure 'datadate' is in datetime format and timezone naive
-df_crsp_monthly['datadate'] = pd.to_datetime(df_crsp_monthly['datadate'], errors='coerce').dt.tz_localize(None)
+# Ensure 'datadate' is timezone naive
+df_crsp_monthly['datadate'] = df_crsp_monthly['datadate'].dt.tz_localize(None)
 
-# Remove rows with missing dates
-processed_df = processed_df[processed_df['call_date'].notna()]
-df_crsp_monthly = df_crsp_monthly[df_crsp_monthly['datadate'].notna()]
-print(f"After removing rows with missing dates: processed_df={len(processed_df)}, df_crsp_monthly={len(df_crsp_monthly)}")
+# Remove duplicates
+processed_df = processed_df.drop_duplicates(subset=['gvkey', 'call_date'])
+df_crsp_monthly = df_crsp_monthly.drop_duplicates(subset=['gvkey', 'datadate'])
+print(f"After removing duplicates: processed_df={len(processed_df)}, df_crsp_monthly={len(df_crsp_monthly)}")
 
-# Create 'epsfxq_next'
+# Convert 'call_date' and 'datadate' to datetime64[ns] and ensure they are timezone naive
+processed_df['call_date'] = pd.to_datetime(processed_df['call_date']).dt.tz_localize(None)
+df_crsp_monthly['datadate'] = pd.to_datetime(df_crsp_monthly['datadate']).dt.tz_localize(None)
+
+# Drop rows with missing merge keys
+processed_df.dropna(subset=['gvkey', 'call_date'], inplace=True)
+df_crsp_monthly.dropna(subset=['gvkey', 'datadate'], inplace=True)
+
+# Sort DataFrames
+processed_df.sort_values(by=['gvkey', 'call_date'], inplace=True)
+df_crsp_monthly.sort_values(by=['gvkey', 'datadate'], inplace=True)
+
+# Reset indices
+processed_df.reset_index(drop=True, inplace=True)
+df_crsp_monthly.reset_index(drop=True, inplace=True)
+
+# Verify sorting within groups
+def check_sorted_within_group(df, group_col, date_col):
+    not_sorted = df.groupby(group_col)[date_col].apply(lambda x: not x.is_monotonic_increasing)
+    if not_sorted.any():
+        print(f"Data not sorted within groups in {date_col}:")
+        print(not_sorted[not_sorted])
+    else:
+        print(f"All groups in {date_col} are properly sorted.")
+
+check_sorted_within_group(processed_df, 'gvkey', 'call_date')
+check_sorted_within_group(df_crsp_monthly, 'gvkey', 'datadate')
+
+# Check for duplicates in date within gvkey
+duplicates_processed = processed_df[processed_df.duplicated(subset=['gvkey', 'call_date'], keep=False)]
+if not duplicates_processed.empty:
+    print("Duplicates found in processed_df:")
+    print(duplicates_processed)
+
+duplicates_monthly = df_crsp_monthly[df_crsp_monthly.duplicated(subset=['gvkey', 'datadate'], keep=False)]
+if not duplicates_monthly.empty:
+    print("Duplicates found in df_crsp_monthly:")
+    print(duplicates_monthly)
+
+# Check for NaT values in date columns
+print("Checking for NaT values in date columns...")
+print("processed_df 'call_date' NaT values:", processed_df['call_date'].isna().sum())
+print("df_crsp_monthly 'datadate' NaT values:", df_crsp_monthly['datadate'].isna().sum())
+
+# Ensure data types and no missing values
+print("Data types in processed_df:")
+print(processed_df[['gvkey', 'call_date']].dtypes)
+
+print("Data types in df_crsp_monthly:")
+print(df_crsp_monthly[['gvkey', 'datadate']].dtypes)
+
+print("Any missing gvkey in processed_df:", processed_df['gvkey'].isnull().any())
+print("Any missing call_date in processed_df:", processed_df['call_date'].isnull().any())
+print("Any missing gvkey in df_crsp_monthly:", df_crsp_monthly['gvkey'].isnull().any())
+print("Any missing datadate in df_crsp_monthly:", df_crsp_monthly['datadate'].isnull().any())
+
+# Create 'epsfxq_next' in df_crsp_monthly
 print("Creating 'epsfxq_next' in df_crsp_monthly...")
 
 def get_epsfxq_next(group):
     group = group.sort_values('datadate').reset_index(drop=True)
     group['epsfxq_next'] = group['epsfxq'].shift(-1)
-    # Only keep 'epsfxq_next' where the next 'datadate' is approximately 90 days after current 'datadate'
-    days_diff = group['datadate'].diff(-1).abs().dt.days
+    group['datadate_next'] = group['datadate'].shift(-1)
+    
+    # Calculate the difference in days between current and next datadate
+    group['days_diff'] = (group['datadate_next'] - group['datadate']).dt.days
+    
+    # Only assign epsfxq_next if the next datadate is approximately one quarter later
     group['epsfxq_next'] = np.where(
-        (days_diff >= 60) & (days_diff <= 120),
+        (group['days_diff'] >= 60) & (group['days_diff'] <= 120),
         group['epsfxq_next'],
         np.nan
     )
+    
+    # Drop helper columns
+    group = group.drop(columns=['datadate_next', 'days_diff'])
     return group
 
-# Suppress the DeprecationWarning temporarily
-with warnings.catch_warnings():
-    warnings.simplefilter("ignore", category=DeprecationWarning)
-    df_crsp_monthly = df_crsp_monthly.groupby('gvkey', group_keys=False).apply(get_epsfxq_next).reset_index(drop=True)
+df_crsp_monthly = df_crsp_monthly.groupby('gvkey', group_keys=False).apply(get_epsfxq_next)
 
-print("Columns after adding 'epsfxq_next':", df_crsp_monthly.columns.tolist())
+print("Completed 'epsfxq_next' computation with missing quarters adjusted.")
 
-# Prepare df_crsp_monthly_for_merge
-df_crsp_monthly_for_merge = df_crsp_monthly[['gvkey', 'datadate', 'epsfxq', 'epsfxq_next', 'siccd']]
+# Create small dataframes with the following columns - gvkey, datadate, epsfxq, epsfxq_next, siccd
+df_crsp_monthly_small = df_crsp_monthly[['permco','gvkey', 'datadate', 'epsfxq', 'epsfxq_next']]
+processed_df_small = processed_df[['permco','gvkey', 'call_date','filtered_topics']]
 
-# Remove rows with missing merge keys
-print("Dropping rows with missing 'gvkey' or 'datadate' in monthly data...")
-processed_df = processed_df.dropna(subset=['gvkey', 'call_date'])
-df_crsp_monthly_for_merge = df_crsp_monthly_for_merge.dropna(subset=['gvkey', 'datadate'])
-print(f"After dropping missing merge keys: processed_df={len(processed_df)}, df_crsp_monthly_for_merge={len(df_crsp_monthly_for_merge)}")
+#save both dataframes
+df_crsp_monthly_small.to_csv("D:/daten_masterarbeit/df_crsp_monthly_small.csv", index=False)
+processed_df_small.to_csv("D:/daten_masterarbeit/processed_df_small.csv", index=False)
 
-# Ensure data types are correct
-processed_df['gvkey'] = processed_df['gvkey'].astype(str)
-df_crsp_monthly_for_merge['gvkey'] = df_crsp_monthly_for_merge['gvkey'].astype(str)
-processed_df['call_date'] = pd.to_datetime(processed_df['call_date'])
-df_crsp_monthly_for_merge['datadate'] = pd.to_datetime(df_crsp_monthly_for_merge['datadate'])
 
-# Remove duplicates
-processed_df = processed_df.drop_duplicates(subset=['gvkey', 'call_date'])
-df_crsp_monthly_for_merge = df_crsp_monthly_for_merge.drop_duplicates(subset=['gvkey', 'datadate'])
-print(f"After removing duplicates: processed_df={len(processed_df)}, df_crsp_monthly_for_merge={len(df_crsp_monthly_for_merge)}")
 
-# Sort DataFrames explicitly by 'gvkey' and date columns
-print("Sorting DataFrames...")
-processed_df = processed_df.sort_values(by=['gvkey', 'call_date'], ascending=[True, True]).reset_index(drop=True)
-df_crsp_monthly_for_merge = df_crsp_monthly_for_merge.sort_values(by=['gvkey', 'datadate'], ascending=[True, True]).reset_index(drop=True)
 
-# Re-validate global sorting
-sorted_left = verify_global_sorting(df_crsp_monthly_for_merge, 'gvkey', 'datadate')
-sorted_right = verify_global_sorting(processed_df, 'gvkey', 'call_date')
+#this works!
+# Step 1: Perform a full merge on 'gvkey' to create all possible combinations.
+temp_merged = pd.merge(
+    processed_df,
+    df_crsp_monthly[['gvkey', 'datadate', 'epsfxq', 'epsfxq_next','siccd']],
+    on='gvkey'
+)
 
-print(f"Is 'df_crsp_monthly_for_merge' globally sorted by 'gvkey' and 'datadate'? {sorted_left}")
-print(f"Is 'processed_df' globally sorted by 'gvkey' and 'call_date'? {sorted_right}")
+# Step 2: Filter out rows where 'datadate' is after 'call_date' (keeping only those before or exactly on).
+temp_merged = temp_merged[temp_merged['datadate'] <= temp_merged['call_date']]
 
-# If not sorted, re-sort
-if not sorted_left:
-    print("Left DataFrame is not globally sorted. Re-sorting...")
-    df_crsp_monthly_for_merge = df_crsp_monthly_for_merge.sort_values(
-        by=['gvkey', 'datadate'],
-        ascending=[True, True]
-    ).reset_index(drop=True)
-    print("Left DataFrame re-sorted.")
+# Step 3: For each 'gvkey' and 'call_date' group, keep only the row with the most recent 'datadate'.
+merged_df = temp_merged.sort_values(['gvkey', 'call_date', 'datadate']).drop_duplicates(['gvkey', 'call_date'], keep='last')
 
-if not sorted_right:
-    print("Right DataFrame is not globally sorted. Re-sorting...")
-    processed_df = processed_df.sort_values(
-        by=['gvkey', 'call_date'],
-        ascending=[True, True]
-    ).reset_index(drop=True)
-    print("Right DataFrame re-sorted.")
 
-# Final check
-sorted_left = verify_global_sorting(df_crsp_monthly_for_merge, 'gvkey', 'datadate')
-sorted_right = verify_global_sorting(processed_df, 'gvkey', 'call_date')
+"""
+# Now perform the merge
+print("Merging processed_df with df_crsp_monthly using 'gvkey' and merge_asof...")
+merged_df = pd.merge_asof(
+    processed_df,
+    df_crsp_monthly[['gvkey', 'datadate', 'epsfxq', 'epsfxq_next', 'siccd']],
+    left_on='call_date',
+    right_on='datadate',
+    by='gvkey',
+    direction='backward',
+    allow_exact_matches=True
+)
+"""
+print(f"Number of rows in merged_df after merging: {len(merged_df)}")
 
-print(f"After re-sorting, is 'df_crsp_monthly_for_merge' sorted? {sorted_left}")
-print(f"After re-sorting, is 'processed_df' sorted? {sorted_right}")
-
-# Perform the adjusted merge_asof
-print("Performing merge_asof to match each call_date with the most recent datadate...")
-try:
-    merged_df = pd.merge_asof(
-        processed_df,                      # Left DataFrame: call_date
-        df_crsp_monthly_for_merge,         # Right DataFrame: datadate
-        left_on='call_date',
-        right_on='datadate',
-        by='gvkey',
-        direction='backward',              # Find the most recent datadate <= call_date
-        allow_exact_matches=True
-    )
-    print(f"Number of rows in merged_df after merge_asof: {len(merged_df)}")
-except ValueError as e:
-    print(f"Error during merge_asof: {e}")
-    # Save a subset for debugging
-    error_output_path = "merge_error_subset.csv"
-    pd.concat([processed_df.head(100), df_crsp_monthly_for_merge.head(100)], axis=1).to_csv(error_output_path, index=False)
-    print(f"Saved a subset of data that may be causing the issue to {error_output_path}")
-    sys.exit()
+# Continue with the rest of your script...
 
 # Handle missing 'siccd' values in merged_df
 num_nan_siccd = merged_df['siccd'].isna().sum()
@@ -312,13 +322,12 @@ siccd_mapping = df_crsp_monthly.groupby('permco')['siccd'].agg(
 if 'permco' not in merged_df.columns:
     print("Error: 'permco' column is missing in 'merged_df'.")
 else:
-    merged_df['permco'] = merged_df['permco'].astype(str)
     merged_df['siccd'] = merged_df.apply(
-        lambda row: siccd_mapping[row['permco']] if pd.isna(row['siccd']) and row['permco'] in siccd_mapping else row['siccd'],
+        lambda row: siccd_mapping.get(row['permco'], row['siccd']) if pd.isna(row['siccd']) else row['siccd'],
         axis=1
     )
 
-# Check how many NaNs are left in 'siccd'
+# Now, check how many NaNs are left
 num_nan_siccd = merged_df['siccd'].isna().sum()
 print(f"Number of rows with NaN 'siccd' after filling from df_crsp_monthly: {num_nan_siccd}")
 
@@ -329,10 +338,10 @@ if num_nan_siccd > 0:
 # Optionally, rename 'datadate' to 'fiscal_period_end' for clarity
 merged_df.rename(columns={'datadate': 'fiscal_period_end'}, inplace=True)
 
+#%%
 # Now that 'siccd' is available, compute similarities including similarity to industry average
-print("Computing similarities to overall and industry averages...")
+print("Computing similarities to overall, industry and firm-specific averages...")
 # Determine the number of topics
-# Assuming 'filtered_topics' is a list; adjust if it's stored differently
 try:
     num_topics = merged_df['filtered_topics'].apply(lambda x: max(x) if isinstance(x, list) and x else 0).max() + 1
 except Exception as e:
@@ -341,10 +350,7 @@ except Exception as e:
 print(f"Number of topics determined: {num_topics}")
 
 # Ensure 'filtered_topics' is evaluated as lists
-merged_df['filtered_topics'] = merged_df['filtered_topics'].apply(lambda x: eval(x) if isinstance(x, str) else x)
-
-# Ensure 'call_date' is in datetime format
-merged_df['call_date'] = pd.to_datetime(merged_df['call_date'], errors='coerce')
+merged_df['filtered_topics'] = merged_df['filtered_topics'].apply(lambda x: ast.literal_eval(x) if isinstance(x, str) else x)
 
 # Convert 'siccd' to integer (if possible)
 merged_df['siccd'] = merged_df['siccd'].astype(float).astype('Int64')
@@ -354,25 +360,14 @@ similarity_df = compute_similarity_to_average(merged_df, num_topics)
 print("Computed similarity measures.")
 
 # Merge similarities back into merged_df
-# Assuming 'compute_similarity_to_average' returns a DataFrame with 'call_id' to merge on
-# If 'call_id' is not present, adjust accordingly
 if 'call_id' in similarity_df.columns and 'call_id' in merged_df.columns:
     merged_df = merged_df.merge(similarity_df, on='call_id', how='left')
     print("Merged similarity measures into merged_df.")
 else:
     print("Warning: 'call_id' column not found in similarity_df or merged_df. Skipping similarity merge.")
 
-# Proceed with merging with CRSP daily data and calculating future returns
-# Ensure 'call_date' and 'date' are date-only (no time component)
-merged_df['call_date'] = pd.to_datetime(merged_df['call_date']).dt.normalize()
-df_crsp_daily['date'] = pd.to_datetime(df_crsp_daily['date']).dt.normalize()
-
-# Ensure 'permco' columns are of the same data type
-merged_df['permco'] = merged_df['permco'].astype(str)
-df_crsp_daily['permco'] = df_crsp_daily['permco'].astype(str)
-
-# Merge with CRSP daily data on 'permco' and 'call_date' == 'date'
-print("Merging with CRSP/Daily data after normalizing dates...")
+# Merge with CRSP daily data to get financial variables
+print("Merging with CRSP/Daily data to get financial variables...")
 merged_df = pd.merge(
     merged_df,
     df_crsp_daily[['permco', 'date', 'prc', 'shrout', 'ret', 'vol']],
@@ -391,11 +386,11 @@ def clean_ret(value):
         return np.nan
 
 merged_df['ret'] = merged_df['ret'].apply(clean_ret)
-print(f"\nNumber of NaNs in 'ret' after cleaning: {merged_df['ret'].isna().sum()}")
+print(f"Number of NaNs in 'ret' after cleaning: {merged_df['ret'].isna().sum()}")
 
-# Proceed with computing future returns
+# Compute future returns
 print("Computing future returns...")
-df_crsp_daily_sorted = df_crsp_daily.sort_values(['permco', 'date']).reset_index(drop=True)
+df_crsp_daily = df_crsp_daily.sort_values(['permco', 'date']).reset_index(drop=True)
 
 def compute_future_returns(group):
     group = group.sort_values('date').reset_index(drop=True)
@@ -405,42 +400,38 @@ def compute_future_returns(group):
     ret_5_days = np.full(n, np.nan)
     ret_20_days = np.full(n, np.nan)
     ret_60_days = np.full(n, np.nan)
-    
+
     for i in range(n):
         # Next day return
         if i + 1 < n and not np.isnan(ret_values[i+1]):
             ret_next_day[i] = ret_values[i+1]
-        
-        # 5 days return
-        if i + 5 < n and not np.isnan(ret_values[i+1:i+6]).any():
-            ret_5_days[i] = np.prod(1 + ret_values[i+1:i+6]) - 1
-        
+
+        # 5 days return (starting one day after ret_next_day)
+        if i + 6 < n and not np.isnan(ret_values[i+2:i+7]).any():
+            ret_5_days[i] = np.prod(1 + ret_values[i+2:i+7]) - 1
+
         # 20 days return
-        if i + 20 < n and not np.isnan(ret_values[i+1:i+21]).any():
-            ret_20_days[i] = np.prod(1 + ret_values[i+1:i+21]) - 1
-        
+        if i + 21 < n and not np.isnan(ret_values[i+2:i+22]).any():
+            ret_20_days[i] = np.prod(1 + ret_values[i+2:i+22]) - 1
+
         # 60 days return
-        if i + 60 < n and not np.isnan(ret_values[i+1:i+61]).any():
-            ret_60_days[i] = np.prod(1 + ret_values[i+1:i+61]) - 1
-    
+        if i + 61 < n and not np.isnan(ret_values[i+2:i+62]).any():
+            ret_60_days[i] = np.prod(1 + ret_values[i+2:i+62]) - 1
+
     group['ret_next_day'] = ret_next_day
     group['ret_5_days'] = ret_5_days
     group['ret_20_days'] = ret_20_days
     group['ret_60_days'] = ret_60_days
     return group
 
-df_crsp_daily_sorted = df_crsp_daily_sorted.groupby('permco', group_keys=False).apply(compute_future_returns).reset_index(drop=True)
+df_crsp_daily = df_crsp_daily.groupby('permco', group_keys=False).apply(compute_future_returns).reset_index(drop=True)
 print("Completed computation of future returns.")
-
-# Verify future returns
-print("\nSummary statistics of future returns in df_crsp_daily:")
-print(df_crsp_daily_sorted[['ret_next_day', 'ret_5_days', 'ret_20_days', 'ret_60_days']].describe())
 
 # Merge future returns into merged_df
 print("Merging future returns into the merged DataFrame...")
 merged_df = pd.merge(
     merged_df,
-    df_crsp_daily_sorted[['permco', 'date', 'ret_next_day', 'ret_5_days', 'ret_20_days', 'ret_60_days']],
+    df_crsp_daily[['permco', 'date', 'ret_next_day', 'ret_5_days', 'ret_20_days', 'ret_60_days']],
     left_on=['permco', 'call_date'],
     right_on=['permco', 'date'],
     how='left'
@@ -448,11 +439,65 @@ merged_df = pd.merge(
 merged_df = merged_df.drop(columns=['date'], errors='ignore')
 print(f"Number of rows after merging future returns: {len(merged_df)}")
 
-# Rearrange columns to include 'epsfxq_next' and similarity measures
+# Compute market returns
+print("Computing market returns...")
+market_returns = df_crsp_daily.groupby('date')['ret'].mean().reset_index()
+market_returns.rename(columns={'ret': 'market_ret'}, inplace=True)
+
+# Merge market returns into merged_df
+merged_df = pd.merge(
+    merged_df,
+    market_returns,
+    left_on='call_date',
+    right_on='date',
+    how='left'
+)
+merged_df = merged_df.drop(columns=['date'], errors='ignore')
+print("Merged market returns into merged_df.")
+
+# Compute excess returns
+print("Computing excess returns...")
+merged_df['excess_ret'] = merged_df['ret'] - merged_df['market_ret']
+merged_df['excess_ret_next_day'] = merged_df['ret_next_day'] - merged_df['market_ret']
+merged_df['excess_ret_5_days'] = merged_df['ret_5_days'] - merged_df['market_ret']
+merged_df['excess_ret_20_days'] = merged_df['ret_20_days'] - merged_df['market_ret']
+merged_df['excess_ret_60_days'] = merged_df['ret_60_days'] - merged_df['market_ret']
+
+# Shift future returns one day later
+print("Shifting future returns one day later...")
+def shift_future_returns(group):
+    group = group.sort_values('call_date').reset_index(drop=True)
+    group['excess_ret_5_days'] = group['excess_ret_5_days'].shift(-1)
+    group['excess_ret_20_days'] = group['excess_ret_20_days'].shift(-1)
+    group['excess_ret_60_days'] = group['excess_ret_60_days'].shift(-1)
+    return group
+
+merged_df = merged_df.groupby('permco', group_keys=False).apply(shift_future_returns).reset_index(drop=True)
+print("Future returns shifted.")
+
+# **Restore 'call_date' with time component**
+print("Restoring 'call_date' with time component from 'processed_df'...")
+# Merge 'call_date_with_time' back into merged_df using 'call_id'
+merged_df = pd.merge(
+    merged_df,
+    processed_df[['call_id', 'call_date_with_time']],
+    on='call_id',
+    how='left'
+)
+
+# Replace 'call_date' in merged_df with 'call_date_with_time'
+merged_df['call_date'] = merged_df['call_date_with_time']
+
+# Drop 'call_date_with_time' column
+merged_df = merged_df.drop(columns=['call_date_with_time'])
+print("Restored 'call_date' with time component in merged_df.")
+
+# Final DataFrame Preparation and Saving
+print("Finalizing the merged DataFrame...")
 desired_columns = [
     'gvkey', 'permco', 'siccd', 'call_id', 'call_date', 'fiscal_period_end',
     'filtered_topics', 'filtered_texts', 'prc', 'shrout', 'vol', 'ret',
-    'ret_next_day', 'ret_5_days', 'ret_20_days', 'ret_60_days',
+    'excess_ret', 'excess_ret_next_day', 'excess_ret_5_days', 'excess_ret_20_days', 'excess_ret_60_days',
     'epsfxq', 'epsfxq_next',
     'similarity_to_overall_average', 'similarity_to_industry_average', 'similarity_to_company_average'
 ]
@@ -468,7 +513,7 @@ merged_df = merged_df[final_columns]
 
 # Sort the final DataFrame by 'gvkey' and 'call_date' in ascending order
 print("Sorting the final DataFrame by 'gvkey' and 'call_date'...")
-merged_df = merged_df.sort_values(by=['gvkey', 'call_date'], ascending=[True, True]).reset_index(drop=True)
+merged_df = merged_df.sort_values(by=['gvkey', 'call_date']).reset_index(drop=True)
 
 # Save the final merged DataFrame
 print("Saving the final merged DataFrame...")
