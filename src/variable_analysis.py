@@ -3,18 +3,21 @@ import pandas as pd
 filepath = "D:/daten_masterarbeit/final_dataset.csv"
 df = pd.read_csv(filepath, index_col=0)
 
+print(f"Number of observations in the final_dataset: {len(df)}")
+
 #%% data preparation
 import numpy as np
 
-# List of variables to include in the analysis
+# Updated list of variables to include in the analysis
 variables = [
     'similarity_to_overall_average',
     'similarity_to_industry_average',
     'similarity_to_company_average',
-    'ret_next_day',
-    'ret_5_days',
-    'ret_20_days',
-    'ret_60_days',
+    'excess_ret',
+    'excess_ret_next_day',
+    'excess_ret_5_days',
+    'excess_ret_20_days',
+    'excess_ret_60_days',
     'epsfxq',
     'epsfxq_next'
 ]
@@ -32,17 +35,18 @@ import seaborn as sns
 # Set up the plotting style
 sns.set_style('whitegrid')
 
-# List of return variables
+# Updated list of return variables
 return_vars = [
-    'ret_next_day',
-    'ret_5_days',
-    'ret_20_days',
-    'ret_60_days',
+    'excess_ret',
+    'excess_ret_next_day',
+    'excess_ret_5_days',
+    'excess_ret_20_days',
+    'excess_ret_60_days',
     'epsfxq',
     'epsfxq_next'
 ]
 
-# List of similarity variables
+# List of similarity variables (unchanged)
 similarity_vars = [
     'similarity_to_overall_average',
     'similarity_to_industry_average',
