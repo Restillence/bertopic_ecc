@@ -29,7 +29,7 @@
   "modeling_type": "regular",
   "apply_topic_merging": true, 
   "similarity_threshold": 0.7,
-  "sample_size": 500,
+  "sample_size": 5000,
   "sampling_mode": "full_random",
   "document_split": "sentences",
   "random_seed": 43,
