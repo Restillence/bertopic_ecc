@@ -40,7 +40,6 @@ processed_df['permco'] = processed_df['permco'].astype(str)
 permcos = set(processed_df['permco'].unique())
 print(f"Number of unique permcos in processed_df: {len(permcos)}")
 
-#%%
 # Process the CRSP daily data
 print("Processing CRSP/Daily data...")
 chunksize = 10 ** 6
@@ -127,7 +126,6 @@ processed_df['gvkey'] = processed_df['gvkey'].astype(int)
 gvkeys = set(processed_df['gvkey'].unique())
 print(f"Number of unique gvkeys in processed_df after adding 'gvkey': {len(gvkeys)}")
 
-#%%
 # Process the CRSP Monthly data
 print("Processing CRSP/Monthly data...")
 chunksize = 10 ** 6
@@ -199,46 +197,6 @@ df_crsp_monthly.sort_values(by=['gvkey', 'datadate'], inplace=True)
 processed_df.reset_index(drop=True, inplace=True)
 df_crsp_monthly.reset_index(drop=True, inplace=True)
 
-# Verify sorting within groups
-def check_sorted_within_group(df, group_col, date_col):
-    not_sorted = df.groupby(group_col)[date_col].apply(lambda x: not x.is_monotonic_increasing)
-    if not_sorted.any():
-        print(f"Data not sorted within groups in {date_col}:")
-        print(not_sorted[not_sorted])
-    else:
-        print(f"All groups in {date_col} are properly sorted.")
-
-check_sorted_within_group(processed_df, 'gvkey', 'call_date')
-check_sorted_within_group(df_crsp_monthly, 'gvkey', 'datadate')
-
-# Check for duplicates in date within gvkey
-duplicates_processed = processed_df[processed_df.duplicated(subset=['gvkey', 'call_date'], keep=False)]
-if not duplicates_processed.empty:
-    print("Duplicates found in processed_df:")
-    print(duplicates_processed)
-
-duplicates_monthly = df_crsp_monthly[df_crsp_monthly.duplicated(subset=['gvkey', 'datadate'], keep=False)]
-if not duplicates_monthly.empty:
-    print("Duplicates found in df_crsp_monthly:")
-    print(duplicates_monthly)
-
-# Check for NaT values in date columns
-print("Checking for NaT values in date columns...")
-print("processed_df 'call_date' NaT values:", processed_df['call_date'].isna().sum())
-print("df_crsp_monthly 'datadate' NaT values:", df_crsp_monthly['datadate'].isna().sum())
-
-# Ensure data types and no missing values
-print("Data types in processed_df:")
-print(processed_df[['gvkey', 'call_date']].dtypes)
-
-print("Data types in df_crsp_monthly:")
-print(df_crsp_monthly[['gvkey', 'datadate']].dtypes)
-
-print("Any missing gvkey in processed_df:", processed_df['gvkey'].isnull().any())
-print("Any missing call_date in processed_df:", processed_df['call_date'].isnull().any())
-print("Any missing gvkey in df_crsp_monthly:", df_crsp_monthly['gvkey'].isnull().any())
-print("Any missing datadate in df_crsp_monthly:", df_crsp_monthly['datadate'].isnull().any())
-
 # Create 'epsfxq_next' in df_crsp_monthly
 print("Creating 'epsfxq_next' in df_crsp_monthly...")
 
@@ -265,22 +223,20 @@ df_crsp_monthly = df_crsp_monthly.groupby('gvkey', group_keys=False).apply(get_e
 
 print("Completed 'epsfxq_next' computation with missing quarters adjusted.")
 
-# Create small dataframes with the following columns - gvkey, datadate, epsfxq, epsfxq_next, siccd
-df_crsp_monthly_small = df_crsp_monthly[['permco','gvkey', 'datadate', 'epsfxq', 'epsfxq_next']]
-processed_df_small = processed_df[['permco','gvkey', 'call_date','filtered_topics']]
+# **Select necessary columns from processed_df**
+processed_df_columns = ['call_id', 'gvkey', 'call_date', 'call_date_with_time', 'permco', 'filtered_topics', 'filtered_texts']
+processed_df = processed_df[processed_df_columns]
 
-#save both dataframes
-df_crsp_monthly_small.to_csv("D:/daten_masterarbeit/df_crsp_monthly_small.csv", index=False)
-processed_df_small.to_csv("D:/daten_masterarbeit/processed_df_small.csv", index=False)
+# **Select necessary columns from df_crsp_monthly**
+df_crsp_monthly_columns = ['gvkey', 'datadate', 'epsfxq', 'epsfxq_next', 'siccd', 'permco']
+df_crsp_monthly = df_crsp_monthly[df_crsp_monthly_columns]
 
-
-
-
-#this works!
+# Merge processed_df with df_crsp_monthly
+print("Performing custom merge between processed_df and df_crsp_monthly...")
 # Step 1: Perform a full merge on 'gvkey' to create all possible combinations.
 temp_merged = pd.merge(
-    processed_df,
-    df_crsp_monthly[['gvkey', 'datadate', 'epsfxq', 'epsfxq_next','siccd']],
+    processed_df.drop(columns=['call_date_with_time']),  # Exclude 'call_date_with_time' to avoid duplication
+    df_crsp_monthly[['gvkey', 'datadate', 'epsfxq', 'epsfxq_next', 'siccd']],
     on='gvkey'
 )
 
@@ -290,23 +246,7 @@ temp_merged = temp_merged[temp_merged['datadate'] <= temp_merged['call_date']]
 # Step 3: For each 'gvkey' and 'call_date' group, keep only the row with the most recent 'datadate'.
 merged_df = temp_merged.sort_values(['gvkey', 'call_date', 'datadate']).drop_duplicates(['gvkey', 'call_date'], keep='last')
 
-
-"""
-# Now perform the merge
-print("Merging processed_df with df_crsp_monthly using 'gvkey' and merge_asof...")
-merged_df = pd.merge_asof(
-    processed_df,
-    df_crsp_monthly[['gvkey', 'datadate', 'epsfxq', 'epsfxq_next', 'siccd']],
-    left_on='call_date',
-    right_on='datadate',
-    by='gvkey',
-    direction='backward',
-    allow_exact_matches=True
-)
-"""
 print(f"Number of rows in merged_df after merging: {len(merged_df)}")
-
-# Continue with the rest of your script...
 
 # Handle missing 'siccd' values in merged_df
 num_nan_siccd = merged_df['siccd'].isna().sum()
@@ -338,7 +278,6 @@ if num_nan_siccd > 0:
 # Optionally, rename 'datadate' to 'fiscal_period_end' for clarity
 merged_df.rename(columns={'datadate': 'fiscal_period_end'}, inplace=True)
 
-#%%
 # Now that 'siccd' is available, compute similarities including similarity to industry average
 print("Computing similarities to overall, industry and firm-specific averages...")
 # Determine the number of topics
@@ -477,6 +416,10 @@ print("Future returns shifted.")
 
 # **Restore 'call_date' with time component**
 print("Restoring 'call_date' with time component from 'processed_df'...")
+
+# Drop 'call_date_with_time' from merged_df if exists
+merged_df = merged_df.drop(columns=['call_date_with_time'], errors='ignore')
+
 # Merge 'call_date_with_time' back into merged_df using 'call_id'
 merged_df = pd.merge(
     merged_df,
@@ -495,11 +438,12 @@ print("Restored 'call_date' with time component in merged_df.")
 # Final DataFrame Preparation and Saving
 print("Finalizing the merged DataFrame...")
 desired_columns = [
-    'gvkey', 'permco', 'siccd', 'call_id', 'call_date', 'fiscal_period_end',
-    'filtered_topics', 'filtered_texts', 'prc', 'shrout', 'vol', 'ret',
-    'excess_ret', 'excess_ret_next_day', 'excess_ret_5_days', 'excess_ret_20_days', 'excess_ret_60_days',
-    'epsfxq', 'epsfxq_next',
-    'similarity_to_overall_average', 'similarity_to_industry_average', 'similarity_to_company_average'
+    'filtered_topics', 'filtered_texts', 'call_id', 'permco', 'call_date', 'gvkey',
+    'fiscal_period_end', 'epsfxq', 'epsfxq_next', 'siccd',
+    'similarity_to_overall_average', 'similarity_to_industry_average',
+    'similarity_to_company_average', 'prc', 'shrout', 'ret', 'vol',
+    'market_ret', 'excess_ret', 'excess_ret_next_day', 'excess_ret_5_days',
+    'excess_ret_20_days', 'excess_ret_60_days'
 ]
 
 # Check if all desired columns are present

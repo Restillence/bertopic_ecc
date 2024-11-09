@@ -1,10 +1,10 @@
 # utils.py
+
 import json
 from bertopic import BERTopic
 import pandas as pd
 import numpy as np
 from scipy.spatial.distance import cosine
-import time
 import ast
 
 def print_configuration(config):
@@ -132,7 +132,7 @@ def compute_similarity_to_average(df, num_topics):
 
     grouped = df.groupby('call_id')
     for call_id, group in grouped:
-        topics = [topic for sublist in group['filtered_topics'] for topic in sublist]
+        topics = group['filtered_topics'].values[0]  # Get the list of topics
         if len(topics) < 2:
             # Cannot create a transition matrix with fewer than 2 topics
             continue
@@ -161,19 +161,18 @@ def compute_similarity_to_average(df, num_topics):
     # Flatten the transition matrices and create a DataFrame
     num_elements = num_topics * num_topics
     tm_flat_list = [tm.flatten() for tm in calls_df['transition_matrix']]
-    tm_flat_df = pd.DataFrame(tm_flat_list)
-    tm_flat_df.columns = [f'tm_{i}' for i in range(num_elements)]
+    tm_flat_df = pd.DataFrame(tm_flat_list, columns=[f'tm_{i}' for i in range(num_elements)], dtype=np.float64)
 
     # Concatenate calls_df and tm_flat_df
     calls_df = pd.concat([calls_df.reset_index(drop=True), tm_flat_df.reset_index(drop=True)], axis=1)
 
     ### Compute similarities to overall average ###
     similarities_overall = []
-    overall_mean = np.zeros(num_elements)
+    overall_mean = np.zeros(num_elements, dtype=np.float64)
     count = 0
 
     for i in range(len(calls_df)):
-        tm_vector = calls_df.iloc[i][tm_flat_df.columns].values
+        tm_vector = calls_df.iloc[i][tm_flat_df.columns].values.astype(np.float64)
         if count > 0:
             similarity = 1 - cosine(tm_vector, overall_mean)
         else:
@@ -191,14 +190,14 @@ def compute_similarity_to_average(df, num_topics):
     counts = {}
 
     # Sort calls_df by 'siccd' and 'call_date'
-    calls_df = calls_df.sort_values(['siccd', 'call_date']).reset_index(drop=True)
+    calls_df_industry = calls_df.sort_values(['siccd', 'call_date']).reset_index(drop=True)
 
-    for i in range(len(calls_df)):
-        siccd = calls_df['siccd'].iloc[i]
-        tm_vector = calls_df.iloc[i][tm_flat_df.columns].values
+    for i in range(len(calls_df_industry)):
+        siccd = calls_df_industry['siccd'].iloc[i]
+        tm_vector = calls_df_industry.iloc[i][tm_flat_df.columns].values.astype(np.float64)
 
         if siccd not in running_means:
-            running_means[siccd] = np.zeros(num_elements)
+            running_means[siccd] = np.zeros(num_elements, dtype=np.float64)
             counts[siccd] = 0
 
         if counts[siccd] > 0:
@@ -212,7 +211,7 @@ def compute_similarity_to_average(df, num_topics):
         counts[siccd] += 1
         running_means[siccd] += (tm_vector - running_means[siccd]) / counts[siccd]
 
-    calls_df['similarity_to_industry_average'] = similarities_industry
+    calls_df_industry['similarity_to_industry_average'] = similarities_industry
 
     ### Compute similarities to company average ###
     similarities_company = []
@@ -220,14 +219,14 @@ def compute_similarity_to_average(df, num_topics):
     counts_company = {}
 
     # Sort calls_df by 'permco' and 'call_date'
-    calls_df = calls_df.sort_values(['permco', 'call_date']).reset_index(drop=True)
+    calls_df_company = calls_df.sort_values(['permco', 'call_date']).reset_index(drop=True)
 
-    for i in range(len(calls_df)):
-        permco = calls_df['permco'].iloc[i]
-        tm_vector = calls_df.iloc[i][tm_flat_df.columns].values
+    for i in range(len(calls_df_company)):
+        permco = calls_df_company['permco'].iloc[i]
+        tm_vector = calls_df_company.iloc[i][tm_flat_df.columns].values.astype(np.float64)
 
         if permco not in running_means_company:
-            running_means_company[permco] = np.zeros(num_elements)
+            running_means_company[permco] = np.zeros(num_elements, dtype=np.float64)
             counts_company[permco] = 0
 
         if counts_company[permco] > 0:
@@ -241,102 +240,20 @@ def compute_similarity_to_average(df, num_topics):
         counts_company[permco] += 1
         running_means_company[permco] += (tm_vector - running_means_company[permco]) / counts_company[permco]
 
-    calls_df['similarity_to_company_average'] = similarities_company
+    calls_df_company['similarity_to_company_average'] = similarities_company
 
-    # Return the DataFrame with similarities
-    similarity_df = calls_df[['call_id', 'similarity_to_overall_average', 'similarity_to_industry_average', 'similarity_to_company_average']]
-    return similarity_df
+    # Merge the similarities back into the original calls_df
+    calls_df = calls_df.merge(
+        calls_df_industry[['call_id', 'similarity_to_industry_average']],
+        on='call_id',
+        how='left'
+    )
 
-    import numpy as np
-    from scipy.spatial.distance import cosine
-    import pandas as pd
-
-    # Create transition matrices for each call and include call_date
-    transition_matrices = []
-    call_ids = []
-    siccds = []
-    permcos = []
-    call_dates = []
-
-    grouped = df.groupby('call_id')
-    for call_id, group in grouped:
-        topics = [topic for sublist in group['filtered_topics'] for topic in sublist]
-        if len(topics) < 2:
-            # Cannot create a transition matrix with fewer than 2 topics
-            continue
-        transition_matrix = create_transition_matrix(topics, num_topics)
-        transition_matrices.append(transition_matrix)
-        call_ids.append(call_id)
-        siccd = group['siccd'].iloc[0]  # Assuming 'siccd' is consistent within a call
-        permco = group['permco'].iloc[0]  # Assuming 'permco' is consistent within a call
-        call_date = group['call_date'].iloc[0]
-        siccds.append(siccd)
-        permcos.append(permco)
-        call_dates.append(call_date)
-
-    # Create a DataFrame to hold the data
-    calls_df = pd.DataFrame({
-        'call_id': call_ids,
-        'transition_matrix': transition_matrices,
-        'siccd': siccds,
-        'permco': permcos,
-        'call_date': call_dates
-    })
-
-    # Sort calls_df by 'call_date'
-    calls_df = calls_df.sort_values('call_date').reset_index(drop=True)
-
-    # Flatten the transition matrices and create a DataFrame
-    num_elements = num_topics * num_topics
-    tm_flat_list = [tm.flatten() for tm in calls_df['transition_matrix']]
-    tm_flat_df = pd.DataFrame(tm_flat_list)
-    tm_flat_df.columns = [f'tm_{i}' for i in range(num_elements)]
-
-    # Concatenate calls_df and tm_flat_df
-    calls_df = pd.concat([calls_df, tm_flat_df], axis=1)
-
-    # Overall expanding mean, shifted by 1 to exclude current call
-    overall_avg = calls_df[tm_flat_df.columns].expanding().mean().shift(1)
-
-    # Compute similarities to overall average
-    tm_vectors = calls_df[tm_flat_df.columns].values
-    overall_avg_vectors = overall_avg.values
-
-    # Compute cosine similarities
-    similarities_overall = np.array([
-        1 - cosine(tm_vectors[i], overall_avg_vectors[i]) if not np.isnan(overall_avg_vectors[i]).all() else np.nan
-        for i in range(len(calls_df))
-    ])
-
-    # For industry averages
-    similarities_industry = np.full(len(calls_df), np.nan)
-    calls_df['siccd'] = calls_df['siccd'].fillna(-1)  # Handle NaNs
-
-    industry_avg = calls_df.groupby('siccd')[tm_flat_df.columns].expanding().mean().shift(1).reset_index(level=0, drop=True)
-    industry_avg_vectors = industry_avg.values
-
-    # Compute similarities to industry average
-    similarities_industry = np.array([
-        1 - cosine(tm_vectors[i], industry_avg_vectors[i]) if calls_df['siccd'].iloc[i] != -1 and not np.isnan(industry_avg_vectors[i]).all() else np.nan
-        for i in range(len(calls_df))
-    ])
-
-    # For company averages
-    similarities_company = np.full(len(calls_df), np.nan)
-
-    company_avg = calls_df.groupby('permco')[tm_flat_df.columns].expanding().mean().shift(1).reset_index(level=0, drop=True)
-    company_avg_vectors = company_avg.values
-
-    # Compute similarities to company average
-    similarities_company = np.array([
-        1 - cosine(tm_vectors[i], company_avg_vectors[i]) if not np.isnan(company_avg_vectors[i]).all() else np.nan
-        for i in range(len(calls_df))
-    ])
-
-    # Add similarities to calls_df
-    calls_df['similarity_to_overall_average'] = similarities_overall
-    calls_df['similarity_to_industry_average'] = similarities_industry
-    calls_df['similarity_to_company_average'] = similarities_company
+    calls_df = calls_df.merge(
+        calls_df_company[['call_id', 'similarity_to_company_average']],
+        on='call_id',
+        how='left'
+    )
 
     # Return the DataFrame with similarities
     similarity_df = calls_df[['call_id', 'similarity_to_overall_average', 'similarity_to_industry_average', 'similarity_to_company_average']]
