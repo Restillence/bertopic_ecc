@@ -88,20 +88,21 @@ for sim_var in similarity_vars:
 #%% linear regression using statsmodels
 import statsmodels.api as sm
 
-# Function to perform regression and display results
-def perform_regression(y_var, x_vars):
+# Function to perform regression with statsmodels and display p-values
+def perform_regression_with_statsmodels(y_var, x_vars):
     X = analysis_df[x_vars]
     y = analysis_df[y_var]
     X = sm.add_constant(X)  # Adds a constant term to the predictor
     model = sm.OLS(y, X).fit()
     print(f"Regression results for {y_var} ~ {', '.join(x_vars)}:")
-    print(model.summary())
+    print(model.summary())  # This will include p-values, R-squared, and other stats
     print("\n")
     return model
 
-# Perform regression of return variables on similarity variables
+# Perform regression for each return variable on similarity variables
 for ret_var in return_vars:
-    model = perform_regression(ret_var, similarity_vars)
+    model = perform_regression_with_statsmodels(ret_var, similarity_vars)
+
 
 #%% linear regression using scikit-learn
 from sklearn.linear_model import LinearRegression
