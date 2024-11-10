@@ -29,7 +29,7 @@ print(f"Random seed set to {random_seed}.")
 
 # Step 2: Initialize FileHandler and TextProcessor, read index file, create ECC sample, and extract relevant sections
 # Load configuration from config.json
-config_file_path = r'C:\Users\nikla\OneDrive\Dokumente\winfoMaster\Masterarbeit\bertopic_ecc\config.json'  # Update this path as needed
+config_file_path = r'C:\Users\nikla\OneDrive\Dokumente\winfoMaster\Masterarbeit\bertopic_ecc\config_hlr.json'  # Update this path as needed
 with open(config_file_path, 'r') as f:
     config = json.load(f)
 
