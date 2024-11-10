@@ -27,11 +27,16 @@ if torch.cuda.is_available():
     torch.cuda.manual_seed_all(random_seed)
 print(f"Random seed set to {random_seed}.")
 
-# Step 2: Initialize FileHandler and TextProcessor, read index file, create ECC sample, and extract relevant sections
-# Load configuration from config.json
-config_file_path = r'C:\Users\nikla\OneDrive\Dokumente\winfoMaster\Masterarbeit\bertopic_ecc\config_hlr.json'  # Update this path as needed
-with open(config_file_path, 'r') as f:
-    config = json.load(f)
+# Load configuration variables from config.json with fallback path
+try:
+    with open('config.json', 'r') as config_file:
+        config = json.load(config_file)
+        print("Config File Loaded from 'config.json'.")
+except FileNotFoundError:
+    fallback_config_path = r"C:/Users/nikla/OneDrive/Dokumente/winfoMaster/Masterarbeit/bertopic_ecc/config.json"
+    with open(fallback_config_path, 'r') as config_file:
+        config = json.load(config_file)
+        print(f"Config File Loaded from fallback path: {fallback_config_path}")
 
 # Display the loaded configuration
 print_configuration(config)
@@ -110,7 +115,6 @@ else:
 
     # (Optional) Save the results to a CSV file
     import pandas as pd
-    import json
 
     print("Saving transformation results to CSV...")
     records = []

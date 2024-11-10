@@ -438,12 +438,17 @@ def main():
     # Start total execution time tracking
     total_start_time = time.time()
 
-    # Load configuration from config_hlr.json
-    print("Loading configuration...")
-    with open('config_hlr.json', 'r') as config_file:
-        config = json.load(config_file)
-    print_configuration(config)
-
+    # Load configuration variables from config.json with fallback path
+    try:
+        with open('config.json', 'r') as config_file:
+            config = json.load(config_file)
+            print("Config File Loaded from 'config.json'.")
+    except FileNotFoundError:
+        fallback_config_path = r"C:/Users/nikla/OneDrive/Dokumente/winfoMaster/Masterarbeit/bertopic_ecc/config_hlr.json"
+        with open(fallback_config_path, 'r') as config_file:
+            config = json.load(config_file)
+            print(f"Config File Loaded from fallback path: {fallback_config_path}")
+            
     # Set random seed
     random_seed = config.get("random_seed", 42)
     np.random.seed(random_seed)
