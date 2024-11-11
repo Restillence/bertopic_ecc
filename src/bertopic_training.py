@@ -201,7 +201,7 @@ class BertopicModel:
         embeddings_and_training_duration = embeddings_and_training_end_time - embeddings_and_training_start_time
         print(f"Computing embeddings and training took {embeddings_and_training_duration:.2f} seconds.")
 
-        # After training, display topic information and customize labels if zero-shot modeling
+        # After training, perform post-training tasks
         self._post_training_tasks()
 
         # Save the BERTopic model using safetensors after merging and label updates
@@ -261,15 +261,10 @@ class BertopicModel:
         print(f"Number of topics generated: {len(self.topic_model.get_topic_info())}")
 
     def _post_training_tasks(self):
-        """Perform tasks after training, such as displaying topic info and customizing labels."""
-        # Display the number of documents assigned to each topic
-        print("\nGetting topic information...")
-        topic_info = self.topic_model.get_topic_info()
-        print(topic_info[['Topic', 'Count']])
-
+        """Perform tasks after training, such as merging topics and customizing labels."""
         # Check if topic merging is enabled in the configuration
         if self.apply_topic_merging:
-            # Proceed to merge similar topics based on the huang-topics
+            # Proceed to merge similar topics based on the topic_list
             topic_list = [
                 "regulation and compliance",
                 "risk and forecasts",
@@ -298,10 +293,34 @@ class BertopicModel:
             print("\nCustomizing topic labels with zero-shot topic names...")
             self._customize_topic_labels()
 
-        # Display updated topic information
-        print("\nUpdated topic labels:")
-        updated_topic_info = self.topic_model.get_topic_info()
-        print(updated_topic_info[['Topic', 'Name']])
+        # After merging and customizing labels, get the topic information
+        print("\nGetting updated topic information...")
+        topic_info = self.topic_model.get_topic_info()
+
+        # Prepare the topic information dataframe with required columns
+        # Add an index column (the default index)
+        topic_info.reset_index(inplace=True)
+        # Get topic representations
+        representations = []
+        for topic in topic_info['Topic']:
+            if topic == -1:
+                representations.append(None)
+            else:
+                words_weights = self.topic_model.get_topic(topic)
+                if words_weights:
+                    words = [word for word, _ in words_weights]
+                    representations.append(', '.join(words))
+                else:
+                    representations.append(None)
+        topic_info['Representation'] = representations
+
+        # Reorder or select columns as per requirement
+        topic_info = topic_info[['index', 'Topic', 'Count', 'Name', 'Representation']]
+
+        # Display the final topic information
+        print("\nFinal topic information:")
+        print(topic_info)
+
     def _customize_topic_labels(self):
         """Customize topic labels to include zero-shot topic names followed by top words."""
         # Get zero-shot topic list and seed words from config
@@ -344,11 +363,6 @@ class BertopicModel:
 
         # Update the topic labels in the model
         self.topic_model.set_topic_labels(topic_labels)
-
-        # Display updated topic labels
-        print("Updated topic labels:")
-        updated_topic_info = self.topic_model.get_topic_info()
-        print(updated_topic_info[['Topic', 'Name']])
 
     def merge_similar_topics(self, topic_list):
         """
@@ -492,7 +506,7 @@ def main():
     print("BERTopic model training and saving completed.")
 
     # Save topic information to CSV
-    #bertopic_model.save_topic_info()       #optional: save topic information
+    # bertopic_model.save_topic_info()       #optional: save topic information
 
     # End total execution time tracking
     total_end_time = time.time()
@@ -501,5 +515,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
-
