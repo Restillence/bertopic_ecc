@@ -440,7 +440,7 @@ def main():
 
     # Load configuration variables from config.json with fallback path
     try:
-        with open('config_hlr.json', 'r') as config_file:
+        with open('config.json', 'r') as config_file:
             config = json.load(config_file)
             print("Config File Loaded from 'config.json'.")
     except FileNotFoundError:
@@ -492,7 +492,7 @@ def main():
     print("BERTopic model training and saving completed.")
 
     # Save topic information to CSV
-    bertopic_model.save_topic_info()
+    #bertopic_model.save_topic_info()       #optional: save topic information
 
     # End total execution time tracking
     total_end_time = time.time()
