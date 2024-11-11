@@ -311,16 +311,13 @@ class BertopicModel:
         print("\nFinal topic information:")
         print(topic_info)
 
-        # Generate hierarchical topics and obtain the linkage matrix
+        # Generate hierarchical topics (optional, for saving to CSV)
         print("\nGenerating hierarchical topics...")
         try:
-            linkage_function = lambda x: sch.linkage(x, 'ward', optimal_ordering=True)
-            hierarchical_topics, linkage_matrix = self.topic_model.hierarchical_topics(
+            hierarchical_topics = self.topic_model.hierarchical_topics(
                 self.docs,
-                linkage_function=linkage_function,
-                return_linkage=True
+                linkage_function=lambda x: sch.linkage(x, 'ward', optimal_ordering=True)
             )
-            # Save hierarchical topics to a CSV file
             hierarchical_topics_output_path = os.path.join(self.config.get("output_dir", "."), 'hierarchical_topics.csv')
             hierarchical_topics.to_csv(hierarchical_topics_output_path, index=False)
             print(f"Hierarchical topics saved to {hierarchical_topics_output_path}.")
@@ -328,6 +325,17 @@ class BertopicModel:
             print(f"An error occurred while generating hierarchical topics: {e}")
             import traceback
             traceback.print_exc()
+
+        # Obtain topic embeddings
+        topic_embeddings = self.topic_model.topic_embeddings_
+
+        # Exclude the outlier topic (-1) if present
+        if -1 in self.topic_model.get_topic_freq().Topic.values:
+            topic_embeddings = topic_embeddings[1:]
+
+        # Compute the linkage matrix
+        from scipy.cluster.hierarchy import linkage
+        linkage_matrix = linkage(topic_embeddings, method='ward', optimal_ordering=True)
 
         # Save visualize_hierarchy before merging
         print("\nVisualizing hierarchy before merging...")
@@ -380,23 +388,16 @@ class BertopicModel:
             import traceback
             traceback.print_exc()
 
-        # After merging, generate hierarchical topics again
-        print("\nGenerating hierarchical topics after merging...")
-        try:
-            # Recompute hierarchical topics and linkage matrix
-            hierarchical_topics_after, linkage_matrix_after = self.topic_model.hierarchical_topics(
-                self.docs,
-                linkage_function=linkage_function,
-                return_linkage=True
-            )
-            # Save hierarchical topics after merging
-            hierarchical_topics_output_path_after = os.path.join(self.config.get("output_dir", "."), 'hierarchical_topics_after_merging.csv')
-            hierarchical_topics_after.to_csv(hierarchical_topics_output_path_after, index=False)
-            print(f"Hierarchical topics after merging saved to {hierarchical_topics_output_path_after}.")
-        except Exception as e:
-            print(f"An error occurred while generating hierarchical topics after merging: {e}")
-            import traceback
-            traceback.print_exc()
+        # After merging, regenerate topic embeddings and linkage matrix
+        # Obtain updated topic embeddings
+        topic_embeddings_after = self.topic_model.topic_embeddings_
+
+        # Exclude outlier topic (-1) if present
+        if -1 in self.topic_model.get_topic_freq().Topic.values:
+            topic_embeddings_after = topic_embeddings_after[1:]
+
+        # Compute the linkage matrix after merging
+        linkage_matrix_after = linkage(topic_embeddings_after, method='ward', optimal_ordering=True)
 
         # Save visualize_hierarchy after merging
         print("\nVisualizing hierarchy after merging...")
@@ -408,8 +409,6 @@ class BertopicModel:
             print(f"An error occurred while visualizing hierarchy after merging: {e}")
             import traceback
             traceback.print_exc()
-
-        # Proceed with any further post-training tasks
 
     def _customize_topic_labels(self):
         """Customize topic labels to include zero-shot topic names followed by top words."""
