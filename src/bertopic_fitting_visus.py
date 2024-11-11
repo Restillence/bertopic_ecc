@@ -13,12 +13,16 @@ from file_handling import FileHandler
 from text_processing import TextProcessor
 from utils import print_configuration
 from sentence_transformers import SentenceTransformer
+from scipy.cluster import hierarchy as sch  # For hierarchical topic modeling
 
 # Adjust the path to include 'src' if it's not already in the system path
 current_dir = os.getcwd()
 if "src" not in current_dir:
     src_path = os.path.abspath(os.path.join(current_dir, '..', 'src'))
     sys.path.append(src_path)
+
+# Import the evaluation module
+from evaluate_topics import generate_evaluation_file  # Import the evaluation function
 
 class CustomEmbeddingModel(BaseEmbedder):
     """
@@ -161,6 +165,19 @@ class BertopicFitting:
             # Ensure original documents are saved for visualization
             self.topic_model.original_documents = all_relevant_sections
 
+            # Generate hierarchical topics
+            print("Generating hierarchical topics...")
+            linkage_function = lambda x: sch.linkage(x, 'single', optimal_ordering=True)
+            hierarchical_topics = self.topic_model.hierarchical_topics(
+                self.topic_model.original_documents,
+                embeddings=embeddings,
+                linkage_function=linkage_function
+            )
+            # Save hierarchical topics to a file
+            hierarchical_topics_output_path = os.path.join(self.output_dir, 'hierarchical_topics.csv')
+            hierarchical_topics.to_csv(hierarchical_topics_output_path, index=False)
+            print(f"Hierarchical topics saved to {hierarchical_topics_output_path}.")
+
             total_end_time = time.time()
             total_duration = total_end_time - total_start_time
             print(f"Total processing time: {total_duration:.2f} seconds.")
@@ -170,15 +187,17 @@ class BertopicFitting:
             self.save_results(all_relevant_sections, self.topic_model.topics_, ecc_sample)
             print("Results saved.")
 
-            # Generate and save information and visualizations
+            # Save basic information
             print("Saving basic information...")
             self.save_basic_info()
             print("Basic information saved.")
 
+            # Save topic distribution
             print("Saving topic distribution...")
             self.save_topics_distribution()
             print("Topic distribution saved.")
 
+            # Generate and save visualizations
             print("Generating additional visualizations...")
             self.generate_additional_visualizations()
             print("Additional visualizations generated.")
@@ -195,7 +214,7 @@ class BertopicFitting:
         start_time = time.time()
         print("Saving basic information...")
         output_file = os.path.join(self.output_dir, "basic_info.txt")
-        with open(output_file, 'w') as f:
+        with open(output_file, 'w', encoding='utf-8') as f:
             # Get the number of topics
             topic_info = self.topic_model.get_topic_info()
             num_topics = len(topic_info)
@@ -357,9 +376,8 @@ class BertopicFitting:
             # Visualize topics over time with normalize_frequency=False
             fig = self.topic_model.visualize_topics_over_time(
                 topics_over_time,
-                topics_over_time,
-                normalize_frequency=True,  # Added the parameter here
-                top_n_topics=15
+                top_n_topics=15,
+                normalize_frequency=True
             )
             self.save_visualization(
                 fig,
@@ -382,7 +400,7 @@ def main():
     # Start total time tracking
     total_start_time = time.time()
 
-    # Load configuration from config_hlr.json
+    # Load configuration from config.json
     print("Loading configuration...")
     with open('config.json', 'r') as f:
         config = json.load(f)
@@ -438,6 +456,19 @@ def main():
     # Instantiate BertopicFitting and process the data
     bertopic_fitting = BertopicFitting(config, model_load_path)
     bertopic_fitting.fit_and_save(all_relevant_sections, ecc_sample)
+
+    # Generate evaluation file
+    eval_output_dir = os.path.join('eval')
+    try:
+        generate_evaluation_file(
+            topic_model=bertopic_fitting.topic_model,
+            results_df=bertopic_fitting.results_df,
+            output_dir=eval_output_dir
+        )
+    except Exception as e:
+        print(f"An error occurred while generating the evaluation file: {e}")
+        import traceback
+        traceback.print_exc()
 
     total_end_time = time.time()
     print(f"Total script execution time: {total_end_time - total_start_time:.2f} seconds.")
