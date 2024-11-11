@@ -451,6 +451,9 @@ missing_cols = set(desired_columns) - set(merged_df.columns)
 if missing_cols:
     print(f"Warning: The following expected columns are missing in merged_df and will be excluded from the final DataFrame: {missing_cols}")
 
+#take absolute values for the prc column
+merged_df['prc'] = merged_df['prc'].abs()
+
 # Select only the columns that exist
 final_columns = [col for col in desired_columns if col in merged_df.columns]
 merged_df = merged_df[final_columns]
