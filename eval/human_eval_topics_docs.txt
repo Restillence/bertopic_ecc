@@ -1,0 +1,346 @@
+Topic Information:
+ Topic                                              Name  Count
+    -1                  -1_costs_cost_increase_increased    263
+     0                  0_year_fourth quarter_costs_cost     80
+     1                         1_costs_cost_year_quarter     56
+     2                       2_increase_increased_costs_     46
+     3           3_results_fourth quarter_quarter_fourth     36
+     4             4_fourth quarter_quarter_million_year     34
+     5                             5_results_costs_cost_     32
+     6    6_quarter_million_fourth quarter_approximately     31
+     7                                             7____     23
+     8                      8_increase_year_cost_results     23
+     9                   9_cost_costs_increase_increased     22
+    10          10_fourth quarter_results_quarter_fourth     20
+    11                11_increased_increase_million_cost     18
+    12                                            12____     18
+    13             13_quarter_increased_increase_million     18
+    14          14_fourth quarter_quarter_fourth_results     17
+    15      15_increase_increased_fourth quarter_quarter     16
+    16            16_costs_million_approximately_quarter     16
+    17              17_cost_costs_increase_approximately     15
+    18           18_year_results_increased_approximately     15
+    19               19_costs_cost_approximately_quarter     14
+    20                               20_approximately___     14
+    21               21_increase_increased_costs_results     14
+    22 22_fourth quarter_quarter_increased_approximately     13
+    23                                     23_quarter___     13
+    24             24_cost_million_approximately_quarter     13
+    25         25_increase_increased_costs_approximately     13
+    26              26_costs_fourth quarter_quarter_cost     12
+    27          27_approximately_cost_increase_increased     12
+    28                         28_results_costs_quarter_     11
+    29                                            29____     11
+    30                30_increase_increased_quarter_cost     11
+    31           31_costs_increase_approximately_quarter     11
+    32                                            32____     10
+    33                              33_results_quarter__     10
+    34                  34_costs_cost_increased_increase     10
+    35                35_quarter_fourth quarter_million_      9
+    36                      36_quarter_cost_results_year      9
+    37                   37_increased_costs_results_year      9
+    38                                   38_costs_cost__      8
+    39             39_quarter_million_approximately_year      8
+    40                                     40_results___      7
+    41                                            41____      7
+    42                   42_costs_cost_quarter_increased      7
+    43               43_increase_increased_costs_quarter      7
+    44                                 44_results_year__      7
+    45                                            45____      6
+    46                           46_increased_increase__      6
+    47                                47_increase_year__      5
+    48                                       48_costs___      5
+
+Topic Representations:
+Topic 0 Representation: year, fourth quarter, costs, cost, increase, increased, quarter, million, results, approximately
+Topic 1 Representation: costs, cost, year, quarter, increased, fourth quarter, approximately, million, fourth, 
+Topic 2 Representation: increase, increased, costs, , , , , , , 
+Topic 3 Representation: results, fourth quarter, quarter, fourth, year, , , , , 
+Topic 4 Representation: fourth quarter, quarter, million, year, approximately, increased, fourth, results, , 
+Topic 5 Representation: results, costs, cost, , , , , , , 
+Topic 6 Representation: quarter, million, fourth quarter, approximately, results, year, fourth, , , 
+Topic 7 Representation: , , , , , , , , , 
+Topic 8 Representation: increase, year, cost, results, million, , , , , 
+Topic 9 Representation: cost, costs, increase, increased, approximately, quarter, million, fourth quarter, year, 
+Topic 10 Representation: fourth quarter, results, quarter, fourth, , , , , , 
+Topic 11 Representation: increased, increase, million, cost, approximately, year, quarter, results, , 
+Topic 12 Representation: , , , , , , , , , 
+Topic 13 Representation: quarter, increased, increase, million, year, , , , , 
+Topic 14 Representation: fourth quarter, quarter, fourth, results, increase, year, , , , 
+Topic 15 Representation: increase, increased, fourth quarter, quarter, cost, , , , , 
+Topic 16 Representation: costs, million, approximately, quarter, year, fourth quarter, results, , , 
+Topic 17 Representation: cost, costs, increase, approximately, year, quarter, fourth quarter, results, , 
+Topic 18 Representation: year, results, increased, approximately, , , , , , 
+Topic 19 Representation: costs, cost, approximately, quarter, , , , , , 
+Topic 20 Representation: approximately, , , , , , , , , 
+Topic 21 Representation: increase, increased, costs, results, cost, quarter, , , , 
+Topic 22 Representation: fourth quarter, quarter, increased, approximately, million, fourth, year, increase, , 
+Topic 23 Representation: quarter, , , , , , , , , 
+Topic 24 Representation: cost, million, approximately, quarter, fourth quarter, year, results, , , 
+Topic 25 Representation: increase, increased, costs, approximately, , , , , , 
+Topic 26 Representation: costs, fourth quarter, quarter, cost, increase, fourth, year, , , 
+Topic 27 Representation: approximately, cost, increase, increased, quarter, year, million, , , 
+Topic 28 Representation: results, costs, quarter, , , , , , , 
+Topic 29 Representation: , , , , , , , , , 
+Topic 30 Representation: increase, increased, quarter, cost, , , , , , 
+Topic 31 Representation: costs, increase, approximately, quarter, year, million, results, , , 
+Topic 32 Representation: , , , , , , , , , 
+Topic 33 Representation: results, quarter, , , , , , , , 
+Topic 34 Representation: costs, cost, increased, increase, million, year, approximately, quarter, fourth quarter, 
+Topic 35 Representation: quarter, fourth quarter, million, , , , , , , 
+Topic 36 Representation: quarter, cost, results, year, approximately, , , , , 
+Topic 37 Representation: increased, costs, results, year, , , , , , 
+Topic 38 Representation: costs, cost, , , , , , , , 
+Topic 39 Representation: quarter, million, approximately, year, , , , , , 
+Topic 40 Representation: results, , , , , , , , , 
+Topic 41 Representation: , , , , , , , , , 
+Topic 42 Representation: costs, cost, quarter, increased, fourth quarter, increase, million, year, fourth, 
+Topic 43 Representation: increase, increased, costs, quarter, million, year, , , , 
+Topic 44 Representation: results, year, , , , , , , , 
+Topic 45 Representation: , , , , , , , , , 
+Topic 46 Representation: increased, increase, , , , , , , , 
+Topic 47 Representation: increase, year, , , , , , , , 
+Topic 48 Representation: costs, , , , , , , , , 
+
+Random Document-Topic Pairs:
+Document: In October, we were very pleased to announce that we had won our first major design for the NETL7 processor, with one of the world's largest providers of enterprise security solutions and services, which is designing a next generation security appliance that is based on our NETL7 processor.
+Topic ID: 2
+Topic Name: 2_increase_increased_costs_
+Topic Count: 46
+Topic Representation: increase, increased, costs, , , , , , , 
+
+Document: A second key driver in 2006 will be the increasing support of advanced features that continue -- need to increase.
+Topic ID: 19
+Topic Name: 19_costs_cost_approximately_quarter
+Topic Count: 14
+Topic Representation: costs, cost, approximately, quarter, , , , , , 
+
+Document: This includes an estimated $5 million for stock-based compensation, $3.3 million in the amortization of intangible assets, and $0.5 million in a fair value adjustment for required inventory.
+Topic ID: 16
+Topic Name: 16_costs_million_approximately_quarter
+Topic Count: 16
+Topic Representation: costs, million, approximately, quarter, year, fourth quarter, results, , , 
+
+Document: Non-GAAP R&amp;D expenses were $10.1 million for Q4, as compared with $8.4 million for Q3.
+Topic ID: 42
+Topic Name: 42_costs_cost_quarter_increased
+Topic Count: 7
+Topic Representation: costs, cost, quarter, increased, fourth quarter, increase, million, year, fourth, 
+
+Document: With the strong growth in IPTV subscribers, carriers will be transitioning their CapEx spending from legacy circuit-based switches to IP based networks where our advanced solutions play a critical role.
+Topic ID: 15
+Topic Name: 15_increase_increased_fourth quarter_quarter
+Topic Count: 16
+Topic Representation: increase, increased, fourth quarter, quarter, cost, , , , , 
+
+Document: Both the NL7000 and NL8000 knowledge based processors hit their functionality and performance targets with first pass silicon, a tremendous achievement that will allow us to bring these new products to production on an expedited schedule.
+Topic ID: 18
+Topic Name: 18_year_results_increased_approximately
+Topic Count: 15
+Topic Representation: year, results, increased, approximately, , , , , , 
+
+Document: GAAP R&amp;D expenses for Q4 remained relatively stable at $9.2 million, compared with $9.6 million for Q3.
+Topic ID: 42
+Topic Name: 42_costs_cost_quarter_increased
+Topic Count: 7
+Topic Representation: costs, cost, quarter, increased, fourth quarter, increase, million, year, fourth, 
+
+Document: This compared favorably to our guidance of approximately 71%.
+Topic ID: 3
+Topic Name: 3_results_fourth quarter_quarter_fourth
+Topic Count: 36
+Topic Representation: results, fourth quarter, quarter, fourth, year, , , , , 
+
+Document: The convergence voice, video, data and mobility applications on the packet network, or quadruple play, continues to push the need for network aware processors out to a broader number of points across the network, including the access, aggregation and edge.
+Topic ID: 15
+Topic Name: 15_increase_increased_fourth quarter_quarter
+Topic Count: 16
+Topic Representation: increase, increased, fourth quarter, quarter, cost, , , , , 
+
+Document: During the second quarter we sampled, verified and loaded the line for the third version of the product for Cisco.
+Topic ID: 22
+Topic Name: 22_fourth quarter_quarter_increased_approximately
+Topic Count: 13
+Topic Representation: fourth quarter, quarter, increased, approximately, million, fourth, year, increase, , 
+
+Document: In the entry level desktop switching market, more and more equipment now utilizes knowledge based processors to accommodate high quality video and the additional functionality of IP phones.
+Topic ID: 25
+Topic Name: 25_increase_increased_costs_approximately
+Topic Count: 13
+Topic Representation: increase, increased, costs, approximately, , , , , , 
+
+Document: The integration should take three to six months and we estimate a smooth transition, as we understand the technology, the product portfolio and the production process.
+Topic ID: 11
+Topic Name: 11_increased_increase_million_cost
+Topic Count: 18
+Topic Representation: increased, increase, million, cost, approximately, year, quarter, results, , 
+
+Document: Then we'll open up the call for your questions.
+Topic ID: 7
+Topic Name: 7____
+Topic Count: 23
+Topic Representation: , , , , , , , , , 
+
+Document: Also in Q4, we expect interest income and other expenses to be consistent with the third quarter's 1.0 million.
+Topic ID: 4
+Topic Name: 4_fourth quarter_quarter_million_year
+Topic Count: 34
+Topic Representation: fourth quarter, quarter, million, year, approximately, increased, fourth, results, , 
+
+Document: However, our first production orders of the NL8000 product will begin shipping in the fourth quarter which will largely help to offset the impact of the Q4 VMI decline.
+Topic ID: 26
+Topic Name: 26_costs_fourth quarter_quarter_cost
+Topic Count: 12
+Topic Representation: costs, fourth quarter, quarter, cost, increase, fourth, year, , , 
+
+Document: We expect Aeluros will add approximately $2 million a quarter in non-GAAP operating expenses while the expenses for Q4 will be less given that it is a partial quarter.
+Topic ID: 42
+Topic Name: 42_costs_cost_quarter_increased
+Topic Count: 7
+Topic Representation: costs, cost, quarter, increased, fourth quarter, increase, million, year, fourth, 
+
+Document: Later we will conduct a
+Topic ID: 3
+Topic Name: 3_results_fourth quarter_quarter_fourth
+Topic Count: 36
+Topic Representation: results, fourth quarter, quarter, fourth, year, , , , , 
+
+Document: Q4 was the second consecutive quarter where we increased our revenue with Cisco while lowering the Cisco percentage from 70% in Q3 to 67% in Q4.
+Topic ID: 14
+Topic Name: 14_fourth quarter_quarter_fourth_results
+Topic Count: 17
+Topic Representation: fourth quarter, quarter, fourth, results, increase, year, , , , 
+
+Document: We currently have over 75% of our R&amp;D teams working on this advanced geometry and expect to announce our first products later this year.
+Topic ID: 3
+Topic Name: 3_results_fourth quarter_quarter_fourth
+Topic Count: 36
+Topic Representation: results, fourth quarter, quarter, fourth, year, , , , , 
+
+Document: Our tax expense for the third quarter 2007 is expected to be approximately $1 million, which reflects full utilization of our net operating loss carry-forwards.
+Topic ID: 6
+Topic Name: 6_quarter_million_fourth quarter_approximately
+Topic Count: 31
+Topic Representation: quarter, million, fourth quarter, approximately, results, year, fourth, , , 
+
+Document: This, combined with the continued strong operational execution, enabled us to report non-GAAP gross margins at 75.1%.
+Topic ID: 27
+Topic Name: 27_approximately_cost_increase_increased
+Topic Count: 12
+Topic Representation: approximately, cost, increase, increased, quarter, year, million, , , 
+
+Document: The development of 4G networks is particularly exciting because the base of knowledge based processors to achieve the increase significantly even from the currently content heavy 3G networks.
+Topic ID: 15
+Topic Name: 15_increase_increased_fourth quarter_quarter
+Topic Count: 16
+Topic Representation: increase, increased, fourth quarter, quarter, cost, , , , , 
+
+Document: Our momentum at Cisco is largely due to our strong competitive positioning as well as the tremendous execution by our engineering team.
+Topic ID: 2
+Topic Name: 2_increase_increased_costs_
+Topic Count: 46
+Topic Representation: increase, increased, costs, , , , , , , 
+
+Document: We had fully diluted shares of $22.2 million on a GAAP basis and $24.7 million on a non-GAAP basis.
+Topic ID: 6
+Topic Name: 6_quarter_million_fourth quarter_approximately
+Topic Count: 31
+Topic Representation: quarter, million, fourth quarter, approximately, results, year, fourth, , , 
+
+Document: We have subsequent to the IPO paid off our debt and working capital line, our cash position as of the end of July was approximately $36 million.
+Topic ID: 4
+Topic Name: 4_fourth quarter_quarter_million_year
+Topic Count: 34
+Topic Representation: fourth quarter, quarter, million, year, approximately, increased, fourth, results, , 
+
+Document: Before we get started with our financial results for the second quarter, I'd like to point out that during the course of this conference call, we will be making forward-looking statements that are based on certain assumptions and expectations of future events that are subject to a number of risks and uncertainties, and actual results may differ materially.
+Topic ID: 5
+Topic Name: 5_results_costs_cost_
+Topic Count: 32
+Topic Representation: results, costs, cost, , , , , , , 
+
+Document: Operating expenses also included approximately 300,000 of stock based compensation for Q4, as compared with $400,000 for Q3.
+Topic ID: 16
+Topic Name: 16_costs_million_approximately_quarter
+Topic Count: 16
+Topic Representation: costs, million, approximately, quarter, year, fourth quarter, results, , , 
+
+Document: There continues to be very strong interest from numerous potential customers for the new infrastructure platform we expect to make available within the next three months.
+Topic ID: 2
+Topic Name: 2_increase_increased_costs_
+Topic Count: 46
+Topic Representation: increase, increased, costs, , , , , , , 
+
+Document: This new product family delivers double the performance in IPv6 data density providing the cost point, feature set, and low power consumption required by customers to address the growing need for advanced functionality in high volume entry level switches and routers.
+Topic ID: 15
+Topic Name: 15_increase_increased_fourth quarter_quarter
+Topic Count: 16
+Topic Representation: increase, increased, fourth quarter, quarter, cost, , , , , 
+
+Document: Good afternoon, everyone.
+Topic ID: 12
+Topic Name: 12____
+Topic Count: 18
+Topic Representation: , , , , , , , , , 
+
+Random Outlier Document-Topic Pairs:
+Document: However, strong growth at Cisco, driven by several new designs that continue to ramp in volume, allowed us to once again exceed our revenue and profit goals for the quarter.
+Topic ID: -1 (Outlier)
+
+Document: We expect our revenue from ARRIS to continue to be strong in the third quarter.
+Topic ID: -1 (Outlier)
+
+Document: Given all these trends, we expect our fourth quarter 2007 revenue to increase by approximately 16% from the third quarter to $32 million.
+Topic ID: -1 (Outlier)
+
+Document: While the weakened demand environment caused a downturn in our revenues during the fourth quarter, there are several areas of our business that are demonstrating growth potential for 2009.
+Topic ID: -1 (Outlier)
+
+Document: With this strong growth Foundry was a 5% customer in the first quarter and we expect further growth with Foundry this quarter.
+Topic ID: -1 (Outlier)
+
+Document: In addition to 18% growth in our revenues and 39% growth in our non-GAAP net income, we delivered a strong year for R&amp;D productivity with the launch of four major new products.
+Topic ID: -1 (Outlier)
+
+Document: And our backlog in customer's forecast indicates continued growth in the second half of 2009.
+Topic ID: -1 (Outlier)
+
+Document: Please note that our first quarter 2007 results were disseminated by business wire after market close today and a copy of the Release can be downloaded from our website at netlogicmicro.com.
+Topic ID: -1 (Outlier)
+
+Document: As we look into Q2, we believe most of our customers' inventories are back to reasonable levels given the current demand environment.
+Topic ID: -1 (Outlier)
+
+Document: Indicating a very positive product cycle over the next several years.
+Topic ID: -1 (Outlier)
+
+Document: This strong growth was the result of the continued ramp of new designs, including initial preproduction revenues for some NL7000 designs, which are expected to go into volume production in Q4.
+Topic ID: -1 (Outlier)
+
+Document: Q2 days sales outstanding was 37.
+Topic ID: -1 (Outlier)
+
+Document: This one design win is expected to approach a $10 million annual run rate in the second half of this year, and is an indication of the enormous value we bring to this market.
+Topic ID: -1 (Outlier)
+
+Document: The yields this year that we've experience in late 2003 is well behind that.
+Topic ID: -1 (Outlier)
+
+Document: We expect other initial design wins to ramp through the year allowing us to hit our NETLite revenue targets for 2007.
+Topic ID: -1 (Outlier)
+
+Document: The low DSOs were the result of favorable sales linearity, coupled with strong collections.
+Topic ID: -1 (Outlier)
+
+Document: Our goal in working with these customers was to make sure that as much inventory as possible was consumed in the fourth quarter to limit the overhang going into 2007.
+Topic ID: -1 (Outlier)
+
+Document: We'll take about one quarter to move this product through the line but we will begin to see a gross margin benefit of this version in late Q3.
+Topic ID: -1 (Outlier)
+
+Document: The increase in cash was a result of the continued strong cash flows from operations during the quarter.
+Topic ID: -1 (Outlier)
+
+Document: As Ron mentioned, we believe the enterprise markets are soft, and will continue to be so in Q2.
+Topic ID: -1 (Outlier)
+

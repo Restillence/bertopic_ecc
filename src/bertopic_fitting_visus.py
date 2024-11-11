@@ -131,7 +131,6 @@ class BertopicFitting:
         # Save the DataFrame for later use (e.g., for topics over time)
         self.results_df = results_df
 
-
     def fit_and_save(self, all_relevant_sections, ecc_sample):
         """
         Fit the BERTopic model, save results, and generate visualizations.
@@ -165,27 +164,32 @@ class BertopicFitting:
             # Ensure original documents are saved for visualization
             self.topic_model.original_documents = all_relevant_sections
 
-            # Generate hierarchical topics
-            print("Generating hierarchical topics...")
-            linkage_function = lambda x: sch.linkage(x, 'single', optimal_ordering=True)
-            hierarchical_topics = self.topic_model.hierarchical_topics(
-                self.topic_model.original_documents,
-                embeddings=embeddings,
-                linkage_function=linkage_function
-            )
-            # Save hierarchical topics to a file
-            hierarchical_topics_output_path = os.path.join(self.output_dir, 'hierarchical_topics.csv')
-            hierarchical_topics.to_csv(hierarchical_topics_output_path, index=False)
-            print(f"Hierarchical topics saved to {hierarchical_topics_output_path}.")
-
-            total_end_time = time.time()
-            total_duration = total_end_time - total_start_time
-            print(f"Total processing time: {total_duration:.2f} seconds.")
-
             # Save the results to CSV and store results_df
             print("Saving results...")
             self.save_results(all_relevant_sections, self.topic_model.topics_, ecc_sample)
             print("Results saved.")
+
+            # Generate hierarchical topics
+            print("Generating hierarchical topics...")
+            try:
+                # Exclude outlier topics
+                unique_topics = set([topic for topic in topics if topic != -1])
+                if len(unique_topics) < 2:
+                    print("Not enough topics for hierarchical clustering.")
+                else:
+                    linkage_function = lambda x: sch.linkage(x, 'single', optimal_ordering=True)
+                    hierarchical_topics = self.topic_model.hierarchical_topics(
+                        self.topic_model.original_documents,
+                        linkage_function=linkage_function
+                    )
+                    # Save hierarchical topics to a file
+                    hierarchical_topics_output_path = os.path.join(self.output_dir, 'hierarchical_topics.csv')
+                    hierarchical_topics.to_csv(hierarchical_topics_output_path, index=False)
+                    print(f"Hierarchical topics saved to {hierarchical_topics_output_path}.")
+            except Exception as e:
+                print(f"An error occurred while generating hierarchical topics: {e}")
+                import traceback
+                traceback.print_exc()
 
             # Save basic information
             print("Saving basic information...")
@@ -202,10 +206,15 @@ class BertopicFitting:
             self.generate_additional_visualizations()
             print("Additional visualizations generated.")
 
+            total_end_time = time.time()
+            total_duration = total_end_time - total_start_time
+            print(f"Total processing time: {total_duration:.2f} seconds.")
+
         except Exception as e:
             print(f"An error occurred in fit_and_save: {e}")
             import traceback
             traceback.print_exc()
+
 
     def save_basic_info(self):
         """
