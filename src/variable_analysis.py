@@ -130,6 +130,7 @@ for ret_var in return_vars:
     model = perform_sklearn_regression(ret_var, similarity_vars)
 
 #%% additional plots
+"""
 # Plot histograms and density of 'epsfxq' and 'epsfxq_next'
 for eps_var in ['epsfxq', 'epsfxq_next']:
     plt.figure(figsize=(8, 6))
@@ -148,3 +149,4 @@ for sim_var in similarity_vars:
         plt.xlabel(f'{sim_var}')
         plt.ylabel(f'{eps_var}')
         plt.show()
+"""
