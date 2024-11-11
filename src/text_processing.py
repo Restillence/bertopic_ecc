@@ -203,7 +203,7 @@ class TextProcessor:
                 # Take everything after the 'Questions and Answers' heading
                 start_index = match.end()
                 text = text[start_index:]
-                print(f"'Questions and Answers' section extracted for call ID: {call_id}")
+                #print(f"'Questions and Answers' section extracted for call ID: {call_id}")
             else:
                 print(f"'Questions and Answers' section not found for call ID: {call_id}")
                 text = ''
@@ -220,7 +220,7 @@ class TextProcessor:
                 if end_match:
                     end_index = end_match.start()
                     text = text[start_index:end_index]
-                    print(f"'Presentation' section extracted for call ID: {call_id}")
+                    #print(f"'Presentation' section extracted for call ID: {call_id}")
                 else:
                     text = text[start_index:]
                     print(f"'Presentation' section extracted up to end of text for call ID: {call_id}")
