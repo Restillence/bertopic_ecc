@@ -1,5 +1,6 @@
 # text_processing.py
-# Allows to split the text into sentences or paragraphs, depending on the method specified.
+# Allows splitting the text into sentences or paragraphs, depending on the method specified.
+
 import re
 from nltk.tokenize import sent_tokenize
 
@@ -75,7 +76,7 @@ class TextProcessor:
     def remove_specific_string(self, text):
         """
         Forcefully remove "Presentation" from the text, regardless of where it appears.
-        
+
         Parameters
         ----------
         text : str
@@ -88,10 +89,10 @@ class TextProcessor:
         """
         # Remove "TEXT version of Transcript" case-insensitively
         text = re.sub(r"TEXT version of Transcript", '', text, flags=re.IGNORECASE)
-        
+
         # Forcefully remove "Presentation" anywhere it appears at the start of a line, along with optional whitespace
         text = re.sub(r'(?i)^\s*Presentation\s*\n', '', text, flags=re.MULTILINE)
-        
+
         return text.strip()
 
     def remove_separator_line(self, text):
@@ -142,7 +143,7 @@ class TextProcessor:
     def remove_presentation_from_final_list(self, text_list):
         """
         Ensure the string 'Presentation' is fully removed from the final list of sentences or paragraphs.
-        
+
         Parameters
         ----------
         text_list : list of str
@@ -158,7 +159,7 @@ class TextProcessor:
     def filter_short_elements(self, text_list):
         """
         Remove elements that have fewer than 3 words from the list.
-        
+
         Parameters
         ----------
         text_list : list of str
@@ -192,46 +193,47 @@ class TextProcessor:
         -------
         list of str
             A list of sentences or paragraphs, depending on the method.
-
-        Raises
-        ------
-        ValueError
-            If the method is not 'sentences', 'paragraphs', or 'custom'.
         """
-        #print(f"\nProcessing call ID: {call_id}")
-        #print("Original text length:", len(text))
-
-        # If 'Questions and Answers' is selected, extract that section first
+        # Proceed with the extraction based on the selected section
         if self.section_to_analyze.lower() == "questions and answers":
-            # Find 'Questions and Answers' section and remove everything before it
-            pattern = r'(?:.*?)(Questions?\s+and\s+Answers?.*)'
-            match = re.search(pattern, text, flags=re.IGNORECASE | re.DOTALL)
+            # Adjusted pattern to match 'Questions and Answers' as a section heading
+            pattern = r'^\s*(Questions?\s+and\s+Answers?)\s*$'
+            match = re.search(pattern, text, flags=re.IGNORECASE | re.MULTILINE)
             if match:
-                text = match.group(1)
-                #print(f"'Questions and Answers' section found for call ID: {call_id}")
+                # Take everything after the 'Questions and Answers' heading
+                start_index = match.end()
+                text = text[start_index:]
+                print(f"'Questions and Answers' section extracted for call ID: {call_id}")
             else:
                 print(f"'Questions and Answers' section not found for call ID: {call_id}")
                 text = ''
         elif self.section_to_analyze.lower() == "presentation":
-            # Try to find 'Presentation' section
-            pattern = r'(?:.*?)(Presentation.*?)(?=Questions?\s+and\s+Answers?|$)'
-            match = re.search(pattern, text, flags=re.IGNORECASE | re.DOTALL)
-            if match:
-                text = match.group(1)
-                #print(f"'Presentation' section found for call ID: {call_id}")
+            # Adjusted pattern to match 'Presentation' as a section heading
+            start_pattern = r'^\s*Presentation\s*$'
+            end_pattern = r'^\s*(Questions?\s+and\s+Answers?)\s*$'
+
+            start_match = re.search(start_pattern, text, flags=re.IGNORECASE | re.MULTILINE)
+            end_match = re.search(end_pattern, text, flags=re.IGNORECASE | re.MULTILINE)
+
+            if start_match:
+                start_index = start_match.end()
+                if end_match:
+                    end_index = end_match.start()
+                    text = text[start_index:end_index]
+                    print(f"'Presentation' section extracted for call ID: {call_id}")
+                else:
+                    text = text[start_index:]
+                    print(f"'Presentation' section extracted up to end of text for call ID: {call_id}")
             else:
-                # If 'Presentation' section not found, take from the start up to 'Questions and Answers'
                 print(f"'Presentation' section not found for call ID: {call_id}")
-                print("Attempting to extract text from start up to 'Questions and Answers' section...")
-                pattern = r'^(.*?)(?=Questions?\s+and\s+Answers?|$)'
-                match = re.search(pattern, text, flags=re.IGNORECASE | re.DOTALL)
-                if match:
-                    text = match.group(1)
+                # Attempt to extract from start up to 'Questions and Answers' section
+                if end_match:
+                    end_index = end_match.start()
+                    text = text[:end_index]
                     print(f"Extracted text up to 'Questions and Answers' for call ID: {call_id}")
                 else:
                     print(f"'Questions and Answers' section not found for call ID: {call_id}")
                     print("Using entire text as 'Presentation' section.")
-                    # Use the entire text as 'Presentation' section
                     text = text
 
         if not text.strip():
@@ -258,7 +260,6 @@ class TextProcessor:
         combined_text = self.remove_presentation_from_final_list(combined_text)
         combined_text = self.filter_short_elements(combined_text)
 
-        #print(f"Extracted {len(combined_text)} sections for call ID: {call_id}")
         return combined_text
 
     def split_text_by_visual_cues(self, text):
@@ -405,5 +406,4 @@ class TextProcessor:
             if document_count >= max_documents:
                 break
 
-        #print(f"Extracted {len(all_relevant_sections)} relevant sections.")
         return all_relevant_sections
