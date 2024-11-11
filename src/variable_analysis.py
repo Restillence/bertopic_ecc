@@ -52,7 +52,7 @@ similarity_vars = [
     'similarity_to_industry_average',
     'similarity_to_company_average'
 ]
-
+"""
 # Create scatter plots between similarity variables and return variables
 for sim_var in similarity_vars:
     for ret_var in return_vars:
@@ -71,7 +71,7 @@ for sim_var in similarity_vars:
     plt.xlabel(sim_var)
     plt.ylabel('Frequency')
     plt.show()
-
+"""
 #%% correlations
 # Calculate correlation coefficients
 correlations = analysis_df.corr(method='pearson')
