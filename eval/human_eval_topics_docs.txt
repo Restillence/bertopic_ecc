@@ -103,244 +103,244 @@ Topic 47 Representation: increase, year, , , , , , , ,
 Topic 48 Representation: costs, , , , , , , , , 
 
 Random Document-Topic Pairs:
-Document: In October, we were very pleased to announce that we had won our first major design for the NETL7 processor, with one of the world's largest providers of enterprise security solutions and services, which is designing a next generation security appliance that is based on our NETL7 processor.
-Topic ID: 2
-Topic Name: 2_increase_increased_costs_
-Topic Count: 46
-Topic Representation: increase, increased, costs, , , , , , , 
+Document: We expect our non-GAAP EPS for the third quarter to be $0.36 per share.
+Topic ID: 6
+Topic Name: 6_quarter_million_fourth quarter_approximately
+Topic Count: 31
+Topic Representation: quarter, million, fourth quarter, approximately, results, year, fourth, , , 
 
-Document: A second key driver in 2006 will be the increasing support of advanced features that continue -- need to increase.
-Topic ID: 19
-Topic Name: 19_costs_cost_approximately_quarter
-Topic Count: 14
-Topic Representation: costs, cost, approximately, quarter, , , , , , 
-
-Document: This includes an estimated $5 million for stock-based compensation, $3.3 million in the amortization of intangible assets, and $0.5 million in a fair value adjustment for required inventory.
-Topic ID: 16
-Topic Name: 16_costs_million_approximately_quarter
-Topic Count: 16
-Topic Representation: costs, million, approximately, quarter, year, fourth quarter, results, , , 
-
-Document: Non-GAAP R&amp;D expenses were $10.1 million for Q4, as compared with $8.4 million for Q3.
-Topic ID: 42
-Topic Name: 42_costs_cost_quarter_increased
-Topic Count: 7
-Topic Representation: costs, cost, quarter, increased, fourth quarter, increase, million, year, fourth, 
-
-Document: With the strong growth in IPTV subscribers, carriers will be transitioning their CapEx spending from legacy circuit-based switches to IP based networks where our advanced solutions play a critical role.
-Topic ID: 15
-Topic Name: 15_increase_increased_fourth quarter_quarter
-Topic Count: 16
-Topic Representation: increase, increased, fourth quarter, quarter, cost, , , , , 
-
-Document: Both the NL7000 and NL8000 knowledge based processors hit their functionality and performance targets with first pass silicon, a tremendous achievement that will allow us to bring these new products to production on an expedited schedule.
-Topic ID: 18
-Topic Name: 18_year_results_increased_approximately
-Topic Count: 15
-Topic Representation: year, results, increased, approximately, , , , , , 
-
-Document: GAAP R&amp;D expenses for Q4 remained relatively stable at $9.2 million, compared with $9.6 million for Q3.
-Topic ID: 42
-Topic Name: 42_costs_cost_quarter_increased
-Topic Count: 7
-Topic Representation: costs, cost, quarter, increased, fourth quarter, increase, million, year, fourth, 
-
-Document: This compared favorably to our guidance of approximately 71%.
-Topic ID: 3
-Topic Name: 3_results_fourth quarter_quarter_fourth
-Topic Count: 36
-Topic Representation: results, fourth quarter, quarter, fourth, year, , , , , 
-
-Document: The convergence voice, video, data and mobility applications on the packet network, or quadruple play, continues to push the need for network aware processors out to a broader number of points across the network, including the access, aggregation and edge.
-Topic ID: 15
-Topic Name: 15_increase_increased_fourth quarter_quarter
-Topic Count: 16
-Topic Representation: increase, increased, fourth quarter, quarter, cost, , , , , 
-
-Document: During the second quarter we sampled, verified and loaded the line for the third version of the product for Cisco.
-Topic ID: 22
-Topic Name: 22_fourth quarter_quarter_increased_approximately
-Topic Count: 13
-Topic Representation: fourth quarter, quarter, increased, approximately, million, fourth, year, increase, , 
-
-Document: In the entry level desktop switching market, more and more equipment now utilizes knowledge based processors to accommodate high quality video and the additional functionality of IP phones.
-Topic ID: 25
-Topic Name: 25_increase_increased_costs_approximately
-Topic Count: 13
-Topic Representation: increase, increased, costs, approximately, , , , , , 
-
-Document: The integration should take three to six months and we estimate a smooth transition, as we understand the technology, the product portfolio and the production process.
-Topic ID: 11
-Topic Name: 11_increased_increase_million_cost
-Topic Count: 18
-Topic Representation: increased, increase, million, cost, approximately, year, quarter, results, , 
-
-Document: Then we'll open up the call for your questions.
+Document: At this point, I will turn the call back over to Don to discuss guidance for the third quarter, then we'll open up the call for your questions.
 Topic ID: 7
 Topic Name: 7____
 Topic Count: 23
 Topic Representation: , , , , , , , , , 
 
-Document: Also in Q4, we expect interest income and other expenses to be consistent with the third quarter's 1.0 million.
-Topic ID: 4
-Topic Name: 4_fourth quarter_quarter_million_year
-Topic Count: 34
-Topic Representation: fourth quarter, quarter, million, year, approximately, increased, fourth, results, , 
-
-Document: However, our first production orders of the NL8000 product will begin shipping in the fourth quarter which will largely help to offset the impact of the Q4 VMI decline.
-Topic ID: 26
-Topic Name: 26_costs_fourth quarter_quarter_cost
-Topic Count: 12
-Topic Representation: costs, fourth quarter, quarter, cost, increase, fourth, year, , , 
-
-Document: We expect Aeluros will add approximately $2 million a quarter in non-GAAP operating expenses while the expenses for Q4 will be less given that it is a partial quarter.
-Topic ID: 42
-Topic Name: 42_costs_cost_quarter_increased
-Topic Count: 7
-Topic Representation: costs, cost, quarter, increased, fourth quarter, increase, million, year, fourth, 
-
-Document: Later we will conduct a
-Topic ID: 3
-Topic Name: 3_results_fourth quarter_quarter_fourth
-Topic Count: 36
-Topic Representation: results, fourth quarter, quarter, fourth, year, , , , , 
-
-Document: Q4 was the second consecutive quarter where we increased our revenue with Cisco while lowering the Cisco percentage from 70% in Q3 to 67% in Q4.
-Topic ID: 14
-Topic Name: 14_fourth quarter_quarter_fourth_results
-Topic Count: 17
-Topic Representation: fourth quarter, quarter, fourth, results, increase, year, , , , 
-
-Document: We currently have over 75% of our R&amp;D teams working on this advanced geometry and expect to announce our first products later this year.
-Topic ID: 3
-Topic Name: 3_results_fourth quarter_quarter_fourth
-Topic Count: 36
-Topic Representation: results, fourth quarter, quarter, fourth, year, , , , , 
-
-Document: Our tax expense for the third quarter 2007 is expected to be approximately $1 million, which reflects full utilization of our net operating loss carry-forwards.
-Topic ID: 6
-Topic Name: 6_quarter_million_fourth quarter_approximately
-Topic Count: 31
-Topic Representation: quarter, million, fourth quarter, approximately, results, year, fourth, , , 
-
-Document: This, combined with the continued strong operational execution, enabled us to report non-GAAP gross margins at 75.1%.
-Topic ID: 27
-Topic Name: 27_approximately_cost_increase_increased
-Topic Count: 12
-Topic Representation: approximately, cost, increase, increased, quarter, year, million, , , 
-
-Document: The development of 4G networks is particularly exciting because the base of knowledge based processors to achieve the increase significantly even from the currently content heavy 3G networks.
-Topic ID: 15
-Topic Name: 15_increase_increased_fourth quarter_quarter
-Topic Count: 16
-Topic Representation: increase, increased, fourth quarter, quarter, cost, , , , , 
-
-Document: Our momentum at Cisco is largely due to our strong competitive positioning as well as the tremendous execution by our engineering team.
-Topic ID: 2
-Topic Name: 2_increase_increased_costs_
-Topic Count: 46
-Topic Representation: increase, increased, costs, , , , , , , 
-
-Document: We had fully diluted shares of $22.2 million on a GAAP basis and $24.7 million on a non-GAAP basis.
-Topic ID: 6
-Topic Name: 6_quarter_million_fourth quarter_approximately
-Topic Count: 31
-Topic Representation: quarter, million, fourth quarter, approximately, results, year, fourth, , , 
-
-Document: We have subsequent to the IPO paid off our debt and working capital line, our cash position as of the end of July was approximately $36 million.
-Topic ID: 4
-Topic Name: 4_fourth quarter_quarter_million_year
-Topic Count: 34
-Topic Representation: fourth quarter, quarter, million, year, approximately, increased, fourth, results, , 
-
-Document: Before we get started with our financial results for the second quarter, I'd like to point out that during the course of this conference call, we will be making forward-looking statements that are based on certain assumptions and expectations of future events that are subject to a number of risks and uncertainties, and actual results may differ materially.
+Document: For discussion of such risks and uncertainties, please see today's earnings release, the risk factors in our Form 10-K filed on March 11 and in our Form 10-Q filed on November 8th, 2005 as well as other reports the company files from time to time with the SEC.
 Topic ID: 5
 Topic Name: 5_results_costs_cost_
 Topic Count: 32
 Topic Representation: results, costs, cost, , , , , , , 
 
-Document: Operating expenses also included approximately 300,000 of stock based compensation for Q4, as compared with $400,000 for Q3.
-Topic ID: 16
-Topic Name: 16_costs_million_approximately_quarter
-Topic Count: 16
-Topic Representation: costs, million, approximately, quarter, year, fourth quarter, results, , , 
-
-Document: There continues to be very strong interest from numerous potential customers for the new infrastructure platform we expect to make available within the next three months.
-Topic ID: 2
-Topic Name: 2_increase_increased_costs_
-Topic Count: 46
-Topic Representation: increase, increased, costs, , , , , , , 
-
-Document: This new product family delivers double the performance in IPv6 data density providing the cost point, feature set, and low power consumption required by customers to address the growing need for advanced functionality in high volume entry level switches and routers.
+Document: This advanced algorithmic architecture is the result of more than 10 years of significant R&amp;D investment and is optimized for the efficient handling of IPv6 addresses.
 Topic ID: 15
 Topic Name: 15_increase_increased_fourth quarter_quarter
 Topic Count: 16
 Topic Representation: increase, increased, fourth quarter, quarter, cost, , , , , 
 
-Document: Good afternoon, everyone.
-Topic ID: 12
-Topic Name: 12____
+Document: As the technology leader in the market, this is yet another trend that plays into our strength and further separates us from our competition.
+Topic ID: 2
+Topic Name: 2_increase_increased_costs_
+Topic Count: 46
+Topic Representation: increase, increased, costs, , , , , , , 
+
+Document: Our newest NL7000 and NL8000 knowledge-based processors are achieving new design wins and ramping into production; and our NETLite and NETL7 processors continue to track our aggressive expectations for this year.
+Topic ID: 2
+Topic Name: 2_increase_increased_costs_
+Topic Count: 46
+Topic Representation: increase, increased, costs, , , , , , , 
+
+Document: GAAP SG&amp;A expenses for Q2 were $4.6 million, compared with $4 million in Q1.
+Topic ID: 42
+Topic Name: 42_costs_cost_quarter_increased
+Topic Count: 7
+Topic Representation: costs, cost, quarter, increased, fourth quarter, increase, million, year, fourth, 
+
+Document: Each NL71024 knowledge-based processor is capable of supporting either 256,000 IPv6 database entries or one million IPv4 entries, which is at least twice as large as existing solutions in the market.
+Topic ID: 22
+Topic Name: 22_fourth quarter_quarter_increased_approximately
+Topic Count: 13
+Topic Representation: fourth quarter, quarter, increased, approximately, million, fourth, year, increase, , 
+
+Document: Our accounts receivable was $41 million and represented 35 days and our ongoing target DSOs remains at 35 days.
+Topic ID: 16
+Topic Name: 16_costs_million_approximately_quarter
+Topic Count: 16
+Topic Representation: costs, million, approximately, quarter, year, fourth quarter, results, , , 
+
+Document: The market leading performance and rich feature set of the NL6000XS family of knowledge-based processors deliver the next level of performance required for customers, develop advanced voice-over-Internet protocol, IP TV, mobile multimedia, peer-to-peer networking, and IPv6 systems.
+Topic ID: 2
+Topic Name: 2_increase_increased_costs_
+Topic Count: 46
+Topic Representation: increase, increased, costs, , , , , , , 
+
+Document: Our Q4 GAAP tax provision was a benefit of $3.7 million, and our Q4 non-GAAP tax provision was a benefit of $2.1 million.
+Topic ID: 28
+Topic Name: 28_results_costs_quarter_
+Topic Count: 11
+Topic Representation: results, costs, quarter, , , , , , , 
+
+Document: As a result, we are seeing a strong increase in dollar content for our system as our customers utilize our KDPs to incrementally handle more of the forwarding tasks.
+Topic ID: 2
+Topic Name: 2_increase_increased_costs_
+Topic Count: 46
+Topic Representation: increase, increased, costs, , , , , , , 
+
+Document: In total, the collaboration and cooperation between our teams has been very positive and we are very excited to move forward together in order to build an enterprise that can scale beyond what either company can achieve on its own.
+Topic ID: 2
+Topic Name: 2_increase_increased_costs_
+Topic Count: 46
+Topic Representation: increase, increased, costs, , , , , , , 
+
+Document: For a discussion of such risks and uncertainties, please see today's earnings release, the risk factors in our Form 10-K filed on February 28, 2006, and our Form 10-Q filed on May 9, 2006, as well as other reports the Company files from time to time with the SEC.
+Topic ID: 5
+Topic Name: 5_results_costs_cost_
+Topic Count: 32
+Topic Representation: results, costs, cost, , , , , , , 
+
+Document: Our non-GAAP gross margins for the first quarter were 66.2%, which excludes stock-based compensation expense, the amortization of intangible assets, and the fair value adjustment related to acquired inventory.
+Topic ID: 27
+Topic Name: 27_approximately_cost_increase_increased
+Topic Count: 12
+Topic Representation: approximately, cost, increase, increased, quarter, year, million, , , 
+
+Document: Our non-GAAP gross margins for the fourth quarter were 66.9%, which excludes stock based compensation expense, the fair value adjustments related to inventory acquired from Cyprus Semiconductor and Aleros, and the amortization of intangible assets.
+Topic ID: 27
+Topic Name: 27_approximately_cost_increase_increased
+Topic Count: 12
+Topic Representation: approximately, cost, increase, increased, quarter, year, million, , , 
+
+Document: Net income in accordance with GAAP for the year ended December 31, 2005 was $16.4 million or $0.87 per share.
+Topic ID: 6
+Topic Name: 6_quarter_million_fourth quarter_approximately
+Topic Count: 31
+Topic Representation: quarter, million, fourth quarter, approximately, results, year, fourth, , , 
+
+Document: Quarter-over-quarter net inventory increased approximately $800,000 to 8.8 million at the end of Q4.
+Topic ID: 34
+Topic Name: 34_costs_cost_increased_increase
+Topic Count: 10
+Topic Representation: costs, cost, increased, increase, million, year, approximately, quarter, fourth quarter, 
+
+Document: Now turning to the balance sheet, cash and cash equivalents at the end of Q2 were 76 million, up from 69.6 million in the prior quarter and from 51 million in Q2 2005.
+Topic ID: 4
+Topic Name: 4_fourth quarter_quarter_million_year
+Topic Count: 34
+Topic Representation: fourth quarter, quarter, million, year, approximately, increased, fourth, results, , 
+
+Document: Today we reported that revenue for the second quarter of 2007 was $25.8 million, a sequential increase of 10.4% from $23.4 million for the first quarter of 2007.
+Topic ID: 9
+Topic Name: 9_cost_costs_increase_increased
+Topic Count: 22
+Topic Representation: cost, costs, increase, increased, approximately, quarter, million, fourth quarter, year, 
+
+Document: The result is that our business with advanced CMTS equipment manufacturers, such as ARRIS, continues to be strong.
+Topic ID: 2
+Topic Name: 2_increase_increased_costs_
+Topic Count: 46
+Topic Representation: increase, increased, costs, , , , , , , 
+
+Document: The breakthrough in performance of this device allows for a Layer 7 technology to be designed directly on the data plane of switch and router line cards and will be able to deterministically inspect every bit of every packet at wire speed.
+Topic ID: 15
+Topic Name: 15_increase_increased_fourth quarter_quarter
+Topic Count: 16
+Topic Representation: increase, increased, fourth quarter, quarter, cost, , , , , 
+
+Document: In addition, DaTang Mobile, who is partnering with Ericsson for TDF CDMA, selected our multi-core processors and knowledge based processes to power its advanced TDF CDMA mobile infrastructure solutions.
+Topic ID: 15
+Topic Name: 15_increase_increased_fourth quarter_quarter
+Topic Count: 16
+Topic Representation: increase, increased, fourth quarter, quarter, cost, , , , , 
+
+Document: And then we will give guidance for the first quarter of 2006.
+Topic ID: 3
+Topic Name: 3_results_fourth quarter_quarter_fourth
+Topic Count: 36
+Topic Representation: results, fourth quarter, quarter, fourth, year, , , , , 
+
+Document: The merger effectively doubled our headcount,which ended the year at 560 employees worldwide.
+Topic ID: 11
+Topic Name: 11_increased_increase_million_cost
 Topic Count: 18
-Topic Representation: , , , , , , , , , 
+Topic Representation: increased, increase, million, cost, approximately, year, quarter, results, , 
+
+Document: We also continue to be the exclusive supplier to ALAXALA Networks for their IPTV infrastructure equipment targeted to the Japan and Asian markets.
+Topic ID: 15
+Topic Name: 15_increase_increased_fourth quarter_quarter
+Topic Count: 16
+Topic Representation: increase, increased, fourth quarter, quarter, cost, , , , , 
+
+Document: These devices are optimal for data center applications, as they simultaneously support, these are cost effective, direct attach twinX copper or short range and long range optical cabling, to minimize power, latency and cost.
+Topic ID: 15
+Topic Name: 15_increase_increased_fourth quarter_quarter
+Topic Count: 16
+Topic Representation: increase, increased, fourth quarter, quarter, cost, , , , , 
+
+Document: On a GAAP basis, our Q3 net income was $5.2 million or $0.08 per share.
+Topic ID: 6
+Topic Name: 6_quarter_million_fourth quarter_approximately
+Topic Count: 31
+Topic Representation: quarter, million, fourth quarter, approximately, results, year, fourth, , , 
+
+Document: For a discussion of such risks and uncertainties, please see today's earnings release, the risk factors in our form 10-K filed with the SEC on February 16, 2011, as well as other reports the Company files from time to time with the SEC.
+Topic ID: 5
+Topic Name: 5_results_costs_cost_
+Topic Count: 32
+Topic Representation: results, costs, cost, , , , , , , 
+
+Document: I am confident that our combined operations and expertise will further enable enhanced product yields and lower cost manufacturing.
+Topic ID: 2
+Topic Name: 2_increase_increased_costs_
+Topic Count: 46
+Topic Representation: increase, increased, costs, , , , , , , 
 
 Random Outlier Document-Topic Pairs:
-Document: However, strong growth at Cisco, driven by several new designs that continue to ramp in volume, allowed us to once again exceed our revenue and profit goals for the quarter.
+Document: As we look into Q4, given the given the current economic backdrop, we will continue to be conservative in terms of our revenue guidance.
 Topic ID: -1 (Outlier)
 
-Document: We expect our revenue from ARRIS to continue to be strong in the third quarter.
+Document: We are still predicting that NTT will begin their initial purchases of their next generation equipment around the end of the year.
 Topic ID: -1 (Outlier)
 
-Document: Given all these trends, we expect our fourth quarter 2007 revenue to increase by approximately 16% from the third quarter to $32 million.
+Document: Also, we see incremental contribution from new design launches with our NL8000 and NL7000 with Cisco, which should provide increased revenue contribution throughout the year.
 Topic ID: -1 (Outlier)
 
-Document: While the weakened demand environment caused a downturn in our revenues during the fourth quarter, there are several areas of our business that are demonstrating growth potential for 2009.
+Document: We expect that these designs will continue to ramp in the second half of 2010 and throughout 2011.
+Topic ID: -1 (Outlier)
+
+Document: Also during Q4, as previously discussed, we experienced some near-term softness in our knowledge-based processor revenues in China and for the cable infrastructure.
+Topic ID: -1 (Outlier)
+
+Document: Our innovations in this area are driving away manufacturing yields higher than we had previously expected.
+Topic ID: -1 (Outlier)
+
+Document: Force 10 has the potential to reach the 5% level later this year.
+Topic ID: -1 (Outlier)
+
+Document: As a result, we believe that we will see incremental market share gains over time against (inaudible) solution as the migration to IPv6 plays out.
+Topic ID: -1 (Outlier)
+
+Document: Please note that our fourth quarter and 2008-year-end results were disseminated by business wire after market closed today, and a copy of the release can be downloaded from our website at www.netlogicmicro.com.
+Topic ID: -1 (Outlier)
+
+Document: Q1 was also the first full quarter of production revenues of our new SSP Plus device with EDC support for SR, LR, LRM and twin ex-copper cabling, and we expect continued ramp in Q2 as we penetrate this market.
 Topic ID: -1 (Outlier)
 
 Document: With this strong growth Foundry was a 5% customer in the first quarter and we expect further growth with Foundry this quarter.
 Topic ID: -1 (Outlier)
 
-Document: In addition to 18% growth in our revenues and 39% growth in our non-GAAP net income, we delivered a strong year for R&amp;D productivity with the launch of four major new products.
+Document: This growth is reflected by the increase in revenues from several of our customers.
 Topic ID: -1 (Outlier)
 
-Document: And our backlog in customer's forecast indicates continued growth in the second half of 2009.
+Document: However, despite this adjustment, we were able to exceed our corporate revenue goal with strong growth in other areas of our business.
 Topic ID: -1 (Outlier)
 
-Document: Please note that our first quarter 2007 results were disseminated by business wire after market close today and a copy of the Release can be downloaded from our website at netlogicmicro.com.
+Document: We expect the bulk of this inventory adjustment to occur in Q4.
 Topic ID: -1 (Outlier)
 
-Document: As we look into Q2, we believe most of our customers' inventories are back to reasonable levels given the current demand environment.
+Document: Non--and that was due to substantial investments in new product development as we prepare to bring to market the NL7000 and the NL8000 knowledge-based processors in the second half of 2006.
 Topic ID: -1 (Outlier)
 
-Document: Indicating a very positive product cycle over the next several years.
-Topic ID: -1 (Outlier)
-
-Document: This strong growth was the result of the continued ramp of new designs, including initial preproduction revenues for some NL7000 designs, which are expected to go into volume production in Q4.
+Document: Please note that our third quarter 2008 results were deciminated by business wire after market close today and a copy of the release can be downloaded from our website at www.netlogicmicro.com.
 Topic ID: -1 (Outlier)
 
 Document: Q2 days sales outstanding was 37.
 Topic ID: -1 (Outlier)
 
-Document: This one design win is expected to approach a $10 million annual run rate in the second half of this year, and is an indication of the enormous value we bring to this market.
+Document: Please note that our second quarter 2008 results were disseminated by Business Wire after the close of market today and a copy of the release can be downloaded from our website at netlogicmicro.com.
 Topic ID: -1 (Outlier)
 
-Document: The yields this year that we've experience in late 2003 is well behind that.
+Document: And, we expect to ramp to volume production in 2009.
 Topic ID: -1 (Outlier)
 
-Document: We expect other initial design wins to ramp through the year allowing us to hit our NETLite revenue targets for 2007.
-Topic ID: -1 (Outlier)
-
-Document: The low DSOs were the result of favorable sales linearity, coupled with strong collections.
-Topic ID: -1 (Outlier)
-
-Document: Our goal in working with these customers was to make sure that as much inventory as possible was consumed in the fourth quarter to limit the overhang going into 2007.
-Topic ID: -1 (Outlier)
-
-Document: We'll take about one quarter to move this product through the line but we will begin to see a gross margin benefit of this version in late Q3.
-Topic ID: -1 (Outlier)
-
-Document: The increase in cash was a result of the continued strong cash flows from operations during the quarter.
-Topic ID: -1 (Outlier)
-
-Document: As Ron mentioned, we believe the enterprise markets are soft, and will continue to be so in Q2.
+Document: Revenue from Alcatel-Lucent grew strongly to 12% of our Q2 revenues.
 Topic ID: -1 (Outlier)
 

@@ -6,7 +6,199 @@ My name is Rachel, and I'll be your coordinator today.
 
 At this time, all participants are in a listen-only mode.
 
-We will be facilitating a
+We will be facilitating a question and answer session towards the end of this conference.
+
+If at any time during the call you may require assistance, please press star, followed by zero, and a coordinator will be happy to assist you.
+
+As a reminder, this conference is being recorded for replay purposes.
+
+I would now like to turn the presentation over to your host for today's call, Mr. Don Witmer, Chief Financial Officer of NetLogic Microsystems.
+
+Please proceed, sir.
+
+Thank you, Rachel, and good afternoon, everyone.
+
+Welcome to NetLogic Microsystems' Third Quarter 2005 Earnings conference call.
+
+Please note that our third quarter results were disseminated by Business Wire after market closed today, and a copy of the release can be downloaded from our Web site at www.netlogicmicro.com.
+
+Before we get started, I'd like to point out that during the course of this conference call, we will be making forward-looking statements that are based on certain assumptions and expectations of future events that are subject to a number of risks and uncertainties, and actual results may differ, materially.
+
+For discussion of such risks and uncertainties, please see today's earnings release, the risk factors on our Form 10-K, filed on March 11, 2005, and in our Form 10-Q, filed on August 9, 2005, as well as other reports the company files from time to time with the SEC.
+
+All forward-looking statements are qualified in their entirety by this cautionary statement, and the company undertakes no obligation to update publicly any forward-looking statement for any reason except as required by law, even as new information becomes available or other events occur in the future.
+
+Also, on this call, I'll be making reference to non-GAAP financial measures.
+
+The reconciliation of non-GAAP to GAAP financial information is in today's earnings release.
+
+Reconciling the item between GAAP and non-GAAP is stock-based compensation, which is removed from the cost of revenue and operating expense line for non-GAAP reporting.
+
+I'll start by reviewing our third quarter results and financial position.
+
+After that, Ron will give you an update on our business, and then we'll give guidance for the fourth quarter.
+
+We delivered another strong quarter in Q3.
+
+Revenue is $20 million, an increase of 61% on a year-over-year basis, and up 7% over the second quarter of 2005, as customers continue to turn to our solutions to enable next-generation networking.
+
+ALAXALA Networks, a joint venture of the switching and routing divisions of Hitachi, Ltd. and NEC Corporation, contributed 11% of our overall revenue in Q3.
+
+One of the strongest highlights of the quarter was the increase in gross margin.
+
+Gross margin in Q3 was 61.1%, compared with 56.1% in Q2, and approximately 45% in Q3 of last year.
+
+A significant part of this margin increase was driven by version 4 of our knowledge-based processors.
+
+Beyond having a smaller die size than prior versions, version 4 also includes a larger and more sophisticated architecture or redundant computing, which enables recovery of die that would otherwise be lost due to manufacturing defects.
+
+Our innovations in this area are driving away manufacturing yields higher than we had previously expected.
+
+Additionally, demand was particularly strong in Q3 for our highest performance in most feature-rich products.
+
+This favorable shift in product mix also contributed to our higher margin.
+
+Operating expenses in Q3 were 8.9 million, up from 8.2 million in Q2, reflecting our continued investment in R&amp;D, both in the U.S. and overseas.
+
+This increase was primarily driven by R&amp;D expenses related to new products.
+
+SG&amp;A came in as expected at 2.4 million.
+
+Operating expenses also included approximately 400,000 of stock-based compensation for Q3, as compared with 450,000 for Q2.
+
+Non-GAAP net income in Q3 was $4 million or $0.21 per share.
+
+On a GAAP basis, our Q3 EPS was $0.19, the difference being stock-based compensation expense.
+
+We calculated taxes based on a 3% AMT tax rate, and we had fully diluted shares of 19.3 million.
+
+Now, turning to the Q3 balance sheet -- cash and cash equivalents at the end of Q3 were 60.5 million, up from 51 million in the prior quarter.
+
+The increase in cash is primarily the result of strong cash collection and an increase in our liability due to normal timing of our payments during the quarter.
+
+Net inventory was 8 million at the end of Q3, which is a normalized inventory level for us, and we're targeting inventory levels to be essentially flat in current quarter.
+
+Early payment activity from some customers resulted in lower-than-normal 21-day sales outstanding, based on quarterly sales volume, but long-term DSO is expected to be in the 30 to 40-day range.
+
+Now, I'd like to turn the call over to Ron.
+
+We had another great quarter in Q3.
+
+The CAM for our products continue to expand, and increased demand for our solutions enabled us to achieve strong revenue growth.
+
+As Don mentioned, our Q3 revenue was up 61% from the same quarter, a year ago.
+
+This revenue growth is being driven by the continued deployment of 10 gigabit switches and routers, which are being used to upgrade large enterprise networks, as well as cater class, core, metro, and access points for general Internet connectivity.
+
+Also, the increasing support advanced features, such as security, video-on-demand, voice over IP, and Internet Protocol Version 6 are driving higher content of knowledge-based processors into these new systems.
+
+For example, on October 17, Foundry Networks announced that it has equipped the world's largest public Internet exchange, The Amsterdam Internet Exchange, with high-performance BigIron RX-16 10 gigabit Ethernet switches.
+
+These award-winning switches, incorporating our knowledge-based processors, will form the backbone of the exchange network.
+
+The AMSIS (ph) connects the IP networks of more than 220 Internet service providers and carriers.
+
+Also this month, Force10 Networks announced that the Human Genome Sequencing Center at Baylor College of Medicine has deployed the Force10 TeraScale E-Series, which uses our knowledge-based processors to build reliable scalability in its network and speed the processing of complex genome data.
+
+During the quarter, Juniper Networks announced that B3G Telecom, one of Europe's leading broadband telephony operators, had deployed Juniper Network's E-Series edge routing platforms in its IP backbone network.
+
+The new routing platform will enable B3G Telecom to provide high quality, reliable voice-over IP services to business customers using multiple access technologies, including ADSL, SDSL, and Wi-Fi .
+
+Our ability to consistently be the first to deliver the performance and features that the high-end edge router market requires has allowed us to steadily increase our product content in Juniper's E-Series platform design.
+
+On August 16, Extreme Networks announced that it was selected by a subsidiary of the France Television Group to implement a 10 gigabit high-speed switching solution for the continued development of its LAN to support high definition programming.
+
+France Television selected Extreme Networks BlackDiamond 8810 switch to implement a secure and redundant 10 gigabit network.
+
+This capacity upgrade, along with intelligent networking features, will support France Television's growing requirements for video broadcasting.
+
+Extreme's BlackDiamond 8810 switch uses our NL5000 family of knowledge-based processors.
+
+As we mentioned, last quarter, ALAXALA Networks' new AX7702R compact gigabit router that supports 10 gigabit ethernet interfaces with IPv6 wire-speed performance represents the third switch/router system from ALAXALA, using our knowledge-based processors.
+
+To support these advanced features at wire speed, this product uses six of our knowledge-based processors per line card, doubling the number used in previous versions of ALAXALA products.
+
+As Don mentioned, ALAXALA contributed 11% of our revenue in the third quarter.
+
+ALAXALA Networks is a joint venture of the switching and router groups of Hitachi and NEC, and is now the largest Japanese manufacturer of 10 gigabit Ethernet switches and routers.
+
+ALAXALA supports large corporate enterprise customers as a major supplier to the rapidly advancing Japanese telecom Internet infrastructure, which is currently being upgraded to support Internet Protocol Version 6, as well as over 100,000 private and home installations each month.
+
+There is one thing that all of these customer applications have in common.
+
+They are powered by our knowledge-based processors that employ unique, parallel processing engines for the simultaneous processing of Layer 3 and Layer 4 information, enabling a new generation of high-performance applications.
+
+In addition, these new generation networks highlight the diversity of applications for systems using our products, and so the continued expansion of our customer and applications base.
+
+We expect this diversification to continue and to be driven by several factors.
+
+First, our existing customers are ramping new systems that incorporate our knowledge-based processors.
+
+Second, our products that have historically been deployed into corporate enterprise networks are now being included in more Tera-class core, metro, and access systems.
+
+Third, we continue to introduce new products, such as the NETLite family of processors, directly targeting new customers in the entry-level switch/router market, and the NL6000 knowledge-based processors, which appeals to both new and existing customers requiring advanced features and higher system performance.
+
+In fact, the NL6000 continues to be rapidly adopted by our customers, and we are already seeing a number of pre-production systems ramp.
+
+We're also achieving new design wins for this high-end product, and we added two new customers in Q3.
+
+The NL6000, with a top speed of 400MHz, is roughly twice as fast as our first generation of knowledge-based processors.
+
+The NL6000's intelligent, active, power management technology dramatically lowers chip power consumption.
+
+It enables the use of up to 12 devices per line card, helping to draw at higher levels of quality of service, security, and other advanced network features.
+
+In Q3, we also made initial production shipments of the NL3180GLQ NETLite processor.
+
+This is the second product in the company's NETLite product family, specifically designed for cost-sensitive, high-volume applications, such as entry-level switches, routers, and access equipment.
+
+The NETLite processor family leverages circuit techniques developed and refined during the design of our knowledge-based processor families, and greatly benefits from die-size optimization, low power dissipation, and redundant computing techniques.
+
+In addition, the NETLite processors' simplified pipeline architecture allows for lower cost of manufacture and lower cost system designs.
+
+The NL3180GLQ is our first NETLite processor supporting the network processor for LA1 Interface Protocol (ph), and this chip has been verified to seamlessly interface with network processors from Intel and Broadcom (ph).
+
+We are pleased to announce the opening of a state-of-the-art design center in India.
+
+A new Bangalore facility is setting a very strong overseas engineering presence to the company's main R&amp;D facilities in Mountain View, California, and is expected to accelerate the introduction of new products.
+
+Initially, the Bangalore facility is focusing on the development of second-generation NETLite processor products.
+
+As Don mentioned earlier, one of the highlights of the quarter was our strong increase in gross margin.
+
+Design for cost, using advanced, redundant computing technique, is one of our key strategic objectives, and we continue to dedicate engineering resources to product cost optimization.
+
+The results of these efforts are generating a higher product gross margin.
+
+Because of the complexities and high transistor count of knowledge-based processors, we feel that our advances in redundant computing are creating another (inaudible) entry for competitors and are providing us with a cost structure that would be difficult for others to match.
+
+We are continuing to innovate in this area and our NL6000 products, employing even more advanced scheme.
+
+In addition to our advances in designing for cost from our engineering organization, we're also making consistent progress, working with our foundry partner, TSMC, on process enhancements to further increase our yield, optimize performance, and decrease power consumption.
+
+And a special mention goes to our operations team, which has consistently outperformed cost targets throughout 2005.
+
+And just recently, we were ranked one of the top 100 fastest growing technology companies in North America on the 2005 Deloitte Technology Fast 500.
+
+For this, we want to thank all of our employees, whose innovation, commitment, focus, and execution allowed us to achieve this phenomenal revenue growth.
+
+At this point, I will turn the call back over to Don to discuss guidance for the fourth quarter, then we'll open the call for your questions.
+
+We expect fourth quarter 2005 revenue to increase approximately 3 to 5% over Q3 levels, to 20.6 million to 21 million.
+
+We anticipate fourth quarter gross margins to increase by approximately 100 basis points to 62%.
+
+Q4 2005 operating expenses, as a percent of revenue, are expected to be flat, just slightly up, compared to the third quarter, as we continue to invest in new product R&amp;D. In Q4, we expect interest income and other expenses to be consistent with Q3.
+
+Our tax rate for the fourth quarter is expected to be approximately 3% due to AMT.
+
+We expect non-GAAP EPS for the fourth quarter to be between $0.22 to $0.23 per share.
+
+And finally, we expect that share count to be approximately 19.4 million shares in Q4.
+
+Now, that concludes our prepared remarks for the call.
+
+We are now happy to answer any questions.
 
 Good afternoon and welcome to the NetLogic Microsystems Fourth Quarter and Year End 2005 Earnings Call.
 
@@ -310,7 +502,242 @@ Leading the call today will be Ron Jankov, President and Chief Executive Officer
 
 My name is Tony and I will be your coordinator for today.
 
-At this time all participants are on a listen-only mode and we will be facilitating a
+At this time all participants are on a listen-only mode and we will be facilitating a question and answer session towards the end of the conference.
+
+[OPERATOR INSTRUCTIONS]
+ And I would now like to turn the presentation over to your host for today's call, Mr. Don Witmer, Chief Financial Officer of NetLogic Microsystems.
+
+Please proceed sir.
+
+Thank you Tony and good afternoon everyone.
+
+Please note that our first quarter results were disseminated by Business Wire after market closed today and a copy of the release can be downloaded from our website at www.netlogicmicro.com.
+
+Before we get started, I would like to point out that during the course of this conference call, we would be making forward looking statements that are based on certain assumptions and expectations of future events that are subject to a number of risks and uncertainties and actual results may differ materially.
+
+For discussion of such risks and uncertainties, please see today's earnings release.
+
+The risk factors are in our Form 10-K files on February 28th 2006 as well as our other reports the company files from time to time with the SEC.
+
+All forward-looking statements are qualified in their entirety by this cautionary statement and the company undertakes no obligation to undertake publicly any forward-looking statement for any reason except as required by law even as new information becomes available or other evens occur in the future.
+
+Also in the call we will be making reference to non-GAAP financial measures, a reconciliation of the non-GAAP/GAAP financial information in today's earnings release.
+
+The reconciling guidance between GAAP and non-GAAP are in process, research and development -- are in process, research and development charge, amortization of intangible assets and the inventory fair value adjustment related to our acquisitions or the assets associated with Cypress's Network Search Engine as well as stock-based compensation, all have been removed from the cost of revenue and operating expense line for non-GAAP report.
+
+Now I will start by reviewing our first quarter results and after that Ron will give you an update on the business and then we will give guidance for the second quarter of 2006.
+
+So to begin, we close the acquisition of the assets associated with the Cypress's Network Search Engine on February 15th.
+
+Therefore, result for the first quarter includes the effects of the acquisition for the partial quarter.
+
+The integration is complete.
+
+It proceeded smoothly.
+
+We are pleased with the people that came over, the technology and the produce portfolio.
+
+And the completion of the acquisition means that there is now one less competitor in the market place.
+
+Now we turn to first quarter 2006, we are pleased to report solid results, revenues for the first quarter increased by 10% to 23.3 million from 21.2 million in the fourth quarter of 2005.
+
+Our customer diversification efforts continued to make progress, revenue outside of our [inaudible] grew by 50% from Q4 2005 to Q1 2006.
+
+Cisco Systems, our largest customer was approximately 57% of revenue in Q1.
+
+Alaxala Networks, a joint venture of the switching and routing divisions of Hitachi, Ltd. and NEC Corporation contributed 11% of our overall revenue in Q1.
+
+Non-GAAP gross margin Q1 was 64%, compared with 63% in Q4 and 57% in Q1 of last year.
+
+Our strong gross margins continued to be the result of improving way for manufacturing yields and favorable shift in our product mix towards our highest performance in most feature rich products.
+
+Q1 GAAP operating expenses were 22.4 million.
+
+This includes 10.7 million for in-process R&amp;D associated with the acquisition of the Cypress' NSE business and $2.5 million for stock-based compensation associated with the adoption of FAS 123(R) which became effective in 2006 as compared to GAAP operating expenses of 8.9 million in the fourth quarter of 2005, which included about $300,000 of stock-based compensation.
+
+Non-GAAP operating expenses during Q1 were 9.2 million as compared with 8.6 million for the previous quarter.
+
+Quarter-over-quarter, non-GAAP R&amp;D expenses increased about $800,000 from 5.7 million to 6.5 million.
+
+The increase is attributed to higher personnel cost from the increase in the headcount from the acquisition, including net increase in headcount in our India Design Center.
+
+Quarter-over-quarter, non-GAAP SG&amp;A expenses decreased approximately $200,000 in Q1 '06 from $2.9 million to 2.7 million, and the decrease is attributed to lower overall administrative costs.
+
+Tax expenses lowered than originally estimated due to the effect of tax deductions generated by employee stock options exercises during the quarter.
+
+Non-GAAP net income in Q1 was $6.4 million or $0.31 per share.
+
+This was an increase of 19% quarter-over-quarter.
+
+On GAAP basis our Q1 net loss was 7.3 million or a loss of $0.39 per share, the difference being the in-process R&amp;D charge, amortization of intangible assets of approximately $400,000.
+
+The fair value adjustment for the inventory acquired from Cypress at stock-based compensation expense.
+
+That is a full reconciliation of GAAP to non-GAAP in the earnings release that was distributed over the wire today.
+
+We had fully diluted shares of 20.7 million on a non-GAAP case basis and 18.8 million for a GAAP basis.
+
+Now, turning to the balance sheet, cash and cash equivalents at the end of Q1 were $69.6 million, up from 65.8 million in the prior quarter, and that was up from 46.3 million in Q1 2005.
+
+In Q1 2006, cash was generated primarily from our operating activities and proceeds from fully stock option exercises.
+
+Q1, day sales outstanding was 31 days and was 11 days higher than the previous quarter's 20 days, and this is due to the timing of certain payments.
+
+Quarter-over-quarter net inventory increased approximately $400,000 to 9.2 million at the end of Q1.
+
+Now this concludes the review of the quarterly results and now I'd like to turn the call over to Ron.
+
+Thank you Don.
+
+This is an exciting time for us.
+
+This week we announced the availability of the NLS1000HDK hardware reference platform that in combination with AMD's Opteron processors, delivers a industry's best-in-class Layer-7 content processing solution.
+
+This is an important development in the rollout of our NETL7 Family of knowledge based processors and we expect this collaborative solution to accelerate our penetration in the market by leveraging the strength of both processors to create enhanced performance and improved time-to-market for our customers.
+
+We expect our relationship with AMD to accelerate complex content processing, or an X-86 based platform which will allow us to effectively expand our market footprint from the current networking and communication sectors into the security appliance in high-end computing markets.
+
+The new reference platform incorporates our NETL7 knowledge-based processor that is capable of performing 10Gbps of deep-packet content processing and signature recognition.
+
+It is also highly optimized architecture that allows the NETL7 processor to connect directly to the AMD Opteron processor through a hyper-transport link.
+
+This results in much higher performance and enables customers to significantly enhance the functionality of X-86 based systems, and to offer a new class of performance and functionality to next generation service provider, enterprise networks, and high-end computing platforms.
+
+In addition to its highly coupled product solution, our collaboration with AMD also offers co-marketing opportunities whereby the AMD sales force will be able to reference market our NETL7 knowledge-based processors along with their Opteron processors.
+
+We expect our NETL7 knowledge based processor family to represent a significant part of our growth in diversification.
+
+Layer-7 networking and network security markets are expected to experience phenomenal growth in the coming years.
+
+[IT] predicts, the total market for application acceleration and security processing to exceed $15 billion in 2009.
+
+Further validating this growth trend is the strong and visible momentum among industry leaders to address the growing opportunity for Layer-7 networking and security.
+
+For example, networking OEM's such as Cisco, Juniper, F5 and 3Com have enough initiatives and made acquisitions to migrate from Layer 3-4 networking to Layer-7 networking in these markets.
+
+And leading security appliance OEM's such as Symantec and McAfee offer network security appliances that help secure corporate networks.
+
+Our expertise and experience in developing multiple generations of high performance packet inspection technologies as well as our successful track record in marketing and supporting tier-1 customers worldwide with complex silicon products positions us well to emerge as the leading supplier at intelligent silicon solutions for the Layer-7 networking, network security, and high-end computing markets.
+
+Because Layer-7 processing requires analysis of full-packet content versus header analysis, it is inherently more complex and requires much more computing power.
+
+This creates a large barrier to entry for competitive products.
+
+Also, Layer-7 processing adds new and important functionality to networking and computing platforms and therefore commands high value.
+
+The result is projected ASP, that are three times greater than our currently shipping Layer 3 and 4 knowledge based processors.
+
+Now, turning to our NETLite product line, we closed four new NETLite design wins during the quarter, which is a new record.
+
+Our design win momentum continues to accelerate as more manufacturers upgrade the functionality of their entry level Layer 2-3 switches to handle more complex traffic.
+
+With the acquisition of the Cypress' Ayama product family, we now have a more complete product offering for this market, and a significantly expanded customer base.
+
+We are very pleased to announce in the first quarter, the launch of our second generation NL3280GLQ, NETLite processor, which further reduces power and add functionality specifically required for the Layer 2-3 entry level market, increasing our differentiation in this key new market.
+
+We also announced the collaboration with Broadcom to provide Ethernet Routing solutions spanning the Enterprise to the Carrier market.
+
+This offering sets the foundation for Carriers to launch a new class of services based on cost effective, pervasively used, Ethernet Communications technologies.
+
+Our new NETLite processor seamlessly interfaces to Broadcom's StrataXGS® III 600 Series of Carrier class Ethernet Router devices to offer intelligent packet-based protocols at wire-speed on multiple Gigabit Ethernet ports.
+
+These capabilities support the deployment of next-generation IP converged networks, including IPv6 routing, protocol tunneling, virtual private LAN services, policy based routing, per-flow VoIP management, and service provider bridging.
+
+It is ideal for cost-sensitive, high-volume applications such as entry level switches, routers and access equipment.
+
+We are excited about this emerging entry level market, and we believe that the ability to handle voice and video in cost-sensitive, high-volume applications is very compelling.
+
+The only other product qualified to work with the Broadcom StrataXGS® III 600 series of products is the Ayama 20K, which was part of our acquisition.
+
+With the NL3180GLQ, NL3280GLQ and now the Ayama 20K, we are representing 100% of current customer engagements for this product.
+
+Our second generation NETLite Processor was designed by our rapidly growing India design center.
+
+IEC is a state-of-the-art design center, located in Bangalore, India, which currently represents about 25% of our worldwide engineering resources.
+
+We believe that IDC will enable us to accelerate product development efforts, and further expand our technology talent.
+
+It is an important step for our international expansion plans, a valuable addition to our worldwide R&amp;D team.
+
+Now, turning to our NL5000 and NL6000 product lines, in the first quarter of 2006, we saw strong design win activity.
+
+We continue deliveries of the new version of our NL6000 core, which is customized for Cisco.
+
+This product offers higher performance, lower power, and a more advanced feature set that any competing part for these next generation sockets.
+
+This technology leadership gives us confidence that we will continue to be a strong supplier to Cisco, as they continually upgrade their switches and routers to meet new performance and functionality levels.
+
+As an indication of this technology leadership, we secured two new design wins at Cisco in the first quarter, bringing our total NL6000 design wins at Cisco to 4.
+
+The momentum at other customers is equally strong.
+
+In the first quarter, revenue outside of our two largest customers increased by 50%, and we secured two new design wins for the NL6000.
+
+This revenue growth represents initial ramp of several new programs, as well as strong growth for existing platforms, examples of customers with growth in Q1 for Alcatel, ARIS, Extreme Networks, Force10 Networks, Foundry Networks, Huawei Technologies, NEC Technologies, and Nortel Networks among others.
+
+Growth in demand for knowledge based processors is being driven by strong macro-environment trends, such as 10 Gigabit Ethernet, Internet Protocol Version 6 and new Triple-Play applications, which require more routers and switches to use our knowledge based processors.
+
+With regard to 10 Gigabit Ethernet, projected to be the fastest growing segment in 2006 and 2007, our design win position is very strong.
+
+10 Gigabit Ethernet represents the majority of our business today and we expect to continue to growth in this area, as the industry moves rapidly to higher LAN speeds.
+
+The increase in the number of internet connected devices, such as third generation cell phones, MP3 music players and wireless computers, as well as proliferating residential broadband connections through DSL, Cable and Fiber to the home services, is starting to drive service providers to Internet Protocol Version 6.
+
+To handle this increase in IP addresses, Internet Protocol version 6 has a Header which is approximately 4 times larger and significantly more complicated than Internet Protocol Version 4 Header.
+
+To handle Internet Protocol Version 6 Headers, companies need larger and faster knowledge based processors.
+
+We expect the Transport Router that support IPv6 to rapidly accelerate over the next several years.
+
+Finally, the largest factor driving a knowledge based processor market is the rapid emergence of Triple-Play application.
+
+Examples include a rapid emergence of VoIP, which is the fastest growing segment in person-to-person verbal communications.
+
+Another example is streaming video and video-on-demand application.
+
+Video-on-demand, for applications such as TV shows and movie clips being delivered to 3G cell phones and other portable devices, and also newly emerging Internet Protocol television or IPTV whereby traditional phone carriers and other service providers provide video-on-demand to homes through VDSL's and fiber-to-the-home technologies.
+
+Triple-Play applications require higher content of knowledge based processing, and more advanced packet header processing, to support increased quality of service and security demands.
+
+To deliver 10 Gigabit Ethernet, Internet Protocol Version 6 and Triple-Play applications, our customers are moving to our highest performance knowledge based processors, and they are significantly increasing a number of knowledge based processors dedicated to each line cart.
+
+Over the last few quarters, a number of our customers, including Alcatel, Alaxala Networks, Foundry Networks, and Juniper Networks had shipped new boxes, powered by our knowledge based processors, which significantly increased the number of knowledge based processors dedicated to each line cart.
+
+We expect this trend to continue as more manufacturers introduce boxes with high knowledge based processor content.
+
+In closing, we made great progress in the first quarter, and one of our key corporate initiatives, which is to grow and diversify our product, customer, and revenue base.
+
+We secured a record eight new design wins, and revenue outside of our two largest customers increased by 50% in the first quarter demonstrating the increased market-wide demand for our knowledge based processors.
+
+In addition, our expanded product offering in the NETLite family of processors, is allowing us to advance our market share in emerging entry level applications, and will be a meaningful driver of our revenue growth late this year.
+
+Further, the launch of the NETL7 family of processors and our collaboration with AMD significantly expands our addressable market and should provide revenue growth drivers for 2007 and beyond.
+
+At this point, I will turn the call back over to Don, to discuss guidance for the second quarter, and we'll open up the call for your questions.
+
+We expect second quarter 2006 revenues to increase approximately 8 to 10% over Q1 and be in the range of 25.2 million to $25.7 million.
+
+We anticipate second quarter gross margins to be approximately equal to Q1 at 64%.
+
+Further, we expect total non-GAAP operating expenses to be 10 million, which is an increase of about 9% over the previous quarters 9.2 million.
+
+The breakout of operating expenses is as follows.
+
+Non-GAAP R&amp;D expenses for the second quarter should be approximately 7 million and non-GAAP SG&amp;A expenses should be around 3 million for the period and the increase is the result of our fully absorbing the costs associated with the Cypress transaction and accelerated product development efforts.
+
+Also in Q2, we expect interest income and other expenses to be consistent with the first quarter.
+
+Now, turning to our earnings per share guidance, we expect non-GAAP EPS for the second quarter to be $0.32 per share.
+
+GAAP EPS for the second quarter is expected to be $0.13 per share.
+
+We estimate that the non cash impact of FAS 123(R) using the Black-Scholes method is approximately 3.2 million, and the amortization expenses associated with the Cypress transaction will be approximately 950,000.
+
+Total earnings per share impact from non-cash item is expected to be approximately $0.19 per diluted share and finally, we expect the non-GAAP share count to be approximately 22.2 million in Q2.
+
+Now, that concludes our prepared remarks for the call.
+
+And now we would be happy to take questions.
 
 Good afternoon, and welcome to the Net Logic Microsystems Second Quarter Financial Results Conference Call.
 
@@ -2402,7 +2829,287 @@ My name is Karen, and I will be your coordinator today.
 
 At this time, all participants are in listen-only mode.
 
-We will be facilitating a
+We will be facilitating a question and answer session towards the end of this conference.
+
+As a reminder, this conference is being recorded for replay purposes.
+
+I would like to turn the call over to Mr. Mike Tate.
+
+Thank you, Karen, and good afternoon, everyone.
+
+Please note that our first quarter 2008 results disseminated by Business Wire after the market closed today, and a copy of the release can be downloaded from our website at www.netlogicmicro.com.
+
+Before we get started with our financial results for the first quarter, I would like to point out that during the course of this conference call, we will be making forward looking statements that are based on certain assumptions and expectations of future events that are subject to a number of risk and uncertainties and actual results may differ materially.
+
+For a discussion of such risks and uncertainties, please see today's earnings release, the risk factors in our Form 10K filed on March 14th 2008, as well as other reports the Company files from time to time with the SEC.
+
+All forward-looking statements are qualified in their entirety by this cautionary statement, and the Company undertakes no obligation to publicly update forward looking statements for any reason, except as required by law, even as new information becomes available or other events occur in the future.
+
+Also on the call we will be making reference to non-GAAP financial measures.
+
+A reconciliation of non-GAAP to GAAP financial information is in today's earnings release.
+
+The reconciling items between GAAP and non-GAAP are stock based compensation, amortization of intangible assets and a fair value adjustment to inventory acquired.
+
+These items have been remove from the cost of revenue and operating expenses for non-GAAP reporting.
+
+Now, turning to our first quarter results.
+
+Today we reported that revenue for the first quarter 2008 was $34.2 million which came ahead of our prior guidance at $33.8 million.
+
+Q1 revenues grew 6% sequentially from 32.2 million for the fourth quarter of 2007, and 46% from Q1 2007.
+
+Revenue from Cisco Systems, our largest customer, was approximately $12.7 million or 37% of the total revenues compared with $15.8 million or 49% of our total revenue for Q4 2007.
+
+We believe this decline in revenue reflects a work down of inventories at the board and component levels in the supply chain.
+
+Based on current activities, the adjustments appear to have run its course, as we have experienced a very strong April and we believe our revenues with Cisco in Q2 will be more in line with end demand, as well as benefiting from the ongoing ramp of our new design wins.
+
+The decline in our Cisco revenues did not impact our ability to exceed our first quarter revenue goals, as strong turns orders helped offset this decline in revenues with Cisco.
+
+These strong turns orders reflect the health of our business and the positive trends underway regarding the adoption of our technology in many growing and end markets and new applications.
+
+As a result, our Q1 non-Cisco revenues increased by more than 30% sequentially and over 123% from 2007 to represent a record 63% of our total revenues.
+
+Also, revenue from Alcatel-Lucent was $3.8 million or 11% of our total revenues for the first quarter compared with 3.1million or 10% of our revenues for Q4.. Our non-GAAP gross margins in the first quarter were 66.1%, which excludes stock-based compensation expense, the fair value adjustments related to inventory acquired from Cypress Semiconductor (inaudible), and the amortization of intangible assets.
+
+There is a complete reconciliation between GAAP and non-GAAP gross margins in today's earnings release.
+
+Our Q1 non-GAAP gross margins was ahead of our guided gross margins of 65%, given favorable product and customer mix.
+
+Q1 GAAP operating expenses were 18.7 million, which included 3.4 million of stock based compensation at $300,000 for the amortization of intangible assets.
+
+This compares with GAAP operating expenses of 21.1 million for the fourth quarter 2007, which included approximately 5 million of stock based compensation, 1.6 million for end process R&amp;D related to the Aeluros acquisition and $300,000 for the amortization of intangible assets.
+
+Non-GAAP operating expenses during Q1were $14.9 million compared with 14.2 million for Q4, 2007.
+
+Non-GAAP R&amp;D were 10.2 million for Q1 as compared with 10.1 million for Q4.
+
+Non-GAAP SG&amp;A expenses, excluding stock based compensation and the amortization of intangible assets, were 4.7 million for Q1 as compared with 4.1 million for Q4.
+
+The increase in SG&amp;A spending was largely attributed to higher legal and accounting expenses to support the final implementation phase of our international operating structure.
+
+Our Q1 tax provision was a benefit of $500,000 or $0.02 per diluted share and reflects the current positive mix of our foreign and domestic booking (inaudible) losses.
+
+On a GAAP basis, our Q1 net income was $1.1 million or $0.05 per diluted share compared with a net loss of $4.8 million or $0.23 per share for Q4, 2007.
+
+Non-GAAP net income for Q1 was $8.7 million, or $0.38 per share compared with 7.6 million or $0.33 per share for Q4, 2007.
+
+We had fully diluted shares of 22.1 million on a GAAP basis and 22.7 million on a non-GAAP basis.
+
+With represent to the balance sheet cash and cash (inaudible) at the end of Q1 were 55.8 million compared with 50.7 million at the end of the prior quarter.
+
+The increase in cash was a result of the continued positive cash flows from operations during the quarter.
+
+Our accounts receivable increased to $19.8 million.
+
+The increase in accounts receivable was due to some delays in our collection efforts during the quarter due to the implementation of a new ERP system that went live at the beginning of the year.
+
+Given our increased collection efforts and continued positive sales linearity in both Q1 and Q2, we believe our DSLs will decline at the end of Q2.
+
+First quarter net inventory $16.7 million compared to $12.9 million at the end of Q4.
+
+The increase in the inventory is largely due to our positioning of more units at the finished goods stage in order to support the record level of shipments we have now made in the first month of Q2.
+
+Also, given the unplanned decline in Cisco revenue during the quarter, we are carrying a higher amount of Cisco related inventories in the short term.
+
+Overall, we expect our inventory levels to move towards our more traditional carrying levels over the next two quarters.
+
+This concludes my review of the quarterly results, and now I will turn the call over the Ron.
+
+Thank you, Mike.
+
+This continues to be a very exciting time for us.
+
+Our engineering execution, product portfolio and design activity have never been stronger, as we address the rapidly evolving and emerging markets which are demanding increasingly higher performance, knowledge-based processing and high speed physical layer products.
+
+As the net work transforms in order to handle traffic for higher bandwidth requirements and greater complexity, we are seeing demand for our advanced technology in new markets, in new customers and in new applications that did not previously require advanced search processing capabilities and (inaudible) wire speeds.
+
+We have risen to these opportunities with near flawless execution in our product and technology development, including several new 55 nanometer products.
+
+And, ware seeing an unprecedented push by our customers to ramp our newest designs to volume production.
+
+This is resulting in a broad-based strength across our product applications, and a far more diverse customer and revenue base from which to grow.
+
+Our ongoing successful revenue diversification was an important factor in the first quarter, as our largest customer, Cisco, appears to have experienced some oversupply at the board level and adjusted inventories in their supply chain beyond what appears to be the current demand background.
+
+However, despite this adjustment, we were able to exceed our corporate revenue goal with strong growth in other areas of our business.
+
+It appears that the adjustment at Cisco has now run its course, and that our shipments to Cisco in the second quarter should more closely match the true demand.
+
+Quarter to date shipments to Cisco have been very strong, and our forecasted shipments and backlog continue to strengthen.
+
+One of the most exciting developments in the first quarter was the ramp of our newest design wins in Cisco.
+
+Our first two NL8000 design wins enjoyed their first full quarter of production, with volume increasing from the previous quarter.
+
+As we look into Q2, we expect to see continued ramp of the these designs, as well as the first shipments in to the data center switch program.
+
+We are also very pleased that we are now shipping preproduction NL7000 processors to Cisco, which are being used in a variety of new carrier-class boxes targeted to IPTV, wireless infrastructure, and other advance applications.
+
+We expect revenue of more than $1 million from these shipments to Cisco in the second quarter, which is a very encouraging sign of the rapid adoption of our most advanced parts of Cisco, where we have significant competitive advantages.
+
+As these content-heavy systems ramp, they should provide additional growth with us, for us, at Cisco in Q3 and Q4.
+
+Turning to our individual markets, the 10-Gigabit ethernet market continued to be strong for us in the first quarter, as both our physical layer products and our knowledge based processors experienced solid growth.
+
+We are beginning to see strong increases in the number of 10-Gigabit ports, as enterprises and data centers upgrade their legacy systems in order to accommodate the proliferation of video and virtualization applications.
+
+Further, we are also seeing the transition to next generation X2 modules for a low power -- where our low power physical layer products hold a market leading position.
+
+Q1 was also the first full quarter of production revenues of our new SSP Plus device with EDC support for SR, LR, LRM and twin ex-copper cabling, and we expect continued ramp in Q2 as we penetrate this market.
+
+These products offer the industry's lowest power consumption and smallest form factor.
+
+Especially critical as IO functionality and performance is being able to create a major bottleneck in the system performance of next-generation designs.
+
+We were also pleased to see a resumption of growth in the cable infrastructure area of our business, which came in a quarter earlier than we had expected following a soft Q4.
+
+The build out of the cable infrastructure continues to be a strong trend for the adoption of our knowledge based processor as cable service providers face increased competition from IPTV, as they worked to deliver faster internet connections, video on demand and Voice over IP services.
+
+Based on current forecasts, this cable infrastructure build out is expected to be strong for the remainder of the year.
+
+We are also excited with the continued positive development in the mobile wireless infrastructure market, as the need and investment in new advanced IP networks accelerates.
+
+Strong sales of video and smart phones from Apple, Samsung, Nokia, Rimm and others, are putting tremendous strain on the legacy carrier networks.
+
+And this will accelerate with the anticipated launches of Apple's 3G iPhone, and new higher video throughput models from Samsung, Nokia and others.
+
+As a indication of how much these new devices are changing the network, Google has recently reported in a interview with the Financial Times that they have received 50 times more web search requests from iPhones this year than from any other mobile hand set.
+
+Also, even as the iPhone is just a 2g device at this point, it's estimated that the iPhone users are 6 to 20 times more likely to view video content and 100 times more likely to access a social networking site.
+
+The next generation of advanced 3G phones will clearly accelerate these trends.
+
+These changes are causing a push to accelerate the upgrade of wireless networks to IP-based technology, which can greatly benefit from utilizing knowledge based processing to accommodate the increased bandwidth, quality of service and billing requirements.
+
+We are very excited about a large number of designs pending to ramp with our existing customers, such as Alcatel-Lucent, Cisco, Juniper and (inaudible), as well as new customers such as Ericsson and Nokia.
+
+IPTV was also very strong in Q1.
+
+Europe continues to outpace the rest of the world, but we are seeing momentum from our China-based customers shipping into Asia.
+
+The exciting thing is that this is a very young market with tremendous growth potential.
+
+All indications are that CapEx spending in all IP networks by major telecom carriers worldwide will increase to support the rapidly growing number of subscribers from the roughly 14 million subscribers today to what many expect to be over 100 million subscribers in the next three or four years.
+
+This bodes very well for us, because of the complex quality of service and high bandwidth requirements for video necessitates that these boxes have a very high dollar content of knowledge based processors.
+
+In addition to the IPTV opportunities, we are also seeing counted growth from upgrades of wire line networks as legacy, circuit based networks are replaced with all IP networks.
+
+For example, we are now seeing strong signs that the long anticipated next generation build outs in Japan and Korea are beginning to take place this quarter.
+
+The new Japanese and Korean wire line networks will be some of the most advanced networks in the world, and therefore will be a tremendous opportunity for the heaviest deployment of knowledge based processing capabilities.
+
+The strong trends that we are seeing in all of these service provider markets highlight our customer's ongoing need for higher performance, lower power and smaller footprint devices that can scale with technology requirements.
+
+In fact, we have seen a number of announcements recently regarding next generation switches and routers that can support the bandwidth, scale and service awareness requirements of IPTV, web TV, BPNs 3G, 4G mobile application.
+
+These next generation boxes represent a growing (inaudible) for us, as our knowledge based processors are being leveraged in applications that have not utilized them in the past.
+
+Our customers have recently been announcing their own internal next generation ASIC such as Cisco's briefly announced Quantum Flow Processor.
+
+The super high performance ASICs from our customers greatly add to the speeds and complexity of their system, which typically results in a step for the need of knowledge based processors in such equipment.
+
+The QFP was designed to utilize our NL8000 family of processors, and our ability to tightly interface with this new ASIC is giving us the opportunity to penetrate several new divisions at Cisco.
+
+As another example, earlier this month, Alcatel-Lucent announced that its 7750 service router, and its 7450 ethernet service switch now offer [terabit] performance in order to support converged internet traffic.
+
+This is great news for us, because not only does it underscore the strong trend toward the need for advanced search processing to support video delivered over the (inaudible) infrastructure, it also represents new mobile infrastructure opportunities for us at Alcatel-Lucent.
+
+To hit this new [terabit] performance level, Alcatel-Lucent announced its new 100 Gig FP2 chip set.
+
+Since the initial development of our NL7000, Alcatel-Lucent has continued to work closely with us to ensure that our NL7000 products are further optimized to deliver maximum performance to work alongside their next generation ASICs.
+
+As a result, we have recently announced the new NL71024XT that can process tens of thousands of IPB six headers at 100 gigabit wire speeds, which is approximately three times faster than the nearest competitive chip.
+
+As our customers design their new terabit routers with these new, advanced ASICs, we are seeing many of these new designs incorporate up to four knowledge based processors per ASIC, and up to 30 of our solutions per system.
+
+Given this trend of using an ever-increased number of knowledge based processors per system, our low powered technology has become even more important.
+
+Because of this, our customers are embracing the benefits of our integrated breakthrough hybrid technology that combines our advanced (inaudible) algorithmic engine with our leading hard wired knowledge based processors, which was first introduced with our NL9000.
+
+Since our announcement and sampling of this product at the beginning of this year, we continue to see tremendous design activity.
+
+Customers are excited to be able to hit unprecedented performance levels while dramatically lowering power consumption.
+
+Now turning to NETLite: The first quarter was a record quarter for design wins for our NETLite product family.
+
+This is clear evidence of the strong momentum of pushing Layer 3 functionality into the high volume enterprise switching segment.
+
+We are seeing traction into other cost-sensitive applications such as [GPod] aggregation and other internet access applications.
+
+Now that our customers have received the next generation packet processors from our partners, Broadcom and [Marvell], they are finalizing their product designs which are translating in to a record pace of design win closures for us.
+
+We continue to expect the first of our customers' boxes to go into production in the second half of 2008 and these boxes will provide us meaningful growth in 2009.
+
+We're also very pleased to announce new additions to our NetLite product family -- the NL56-615 and NL33A processors, developed on TSMC's advanced 55 nanometer process, and are designed to seamlessly interface the network processors offered by our merchant silicon partners, such as Broadcom and Marvell.
+
+These products have been optimized to support the deployment of next generation IP converged networks and meet the performance, cost point and low power consumption required by customers to grasp the growing demand for performing forwarding and classification functions closer to the end user.
+
+For (inaudible), we are very excited by the design momentum of our products.
+
+In order to leverage the investment in our unique technology across our product portfolio and incorporate deep packet inspection technology in many points of the network, our customers are playing a larger role in determining our product and technology road map.
+
+To meet our customers' demands, we developed the [NLS 205] family of nanoseven knowledge based processors, which is the industry's first single chip content processing solution that is capable of scaling from 250 megabits per second to 2.5 gigabits per second line ray Without requiring external memory.
+
+The [NLS 205] family of processors is targeted at high volume applications such as security and networking systems for small and medium sized businesses, and data center servers.
+
+This new family of processors is fully compatible with our high end 10-gigabit per second NLS1005 family processor allowing customers to scale their developments from entry level 250 megabit per second systems for the SMB solo market to high performance 10-gigabit solutions for the enterprise and service provider market.
+
+Unlike other depacket inspection solutions our nanoseven products leverage our unique capability to design semiconductors at the transistor circuit level.
+
+This enables the processing of the most mathematically complex Layer 7 task an order of magnitude faster at a fraction of the power that can be delivered with traditional semiconductor design.
+
+Additionally, our Layer 7 solution builds upon our years of investment in our industry leading Layer 4 knowledge based processors and advanced algorithmic technologies.
+
+The result is that our nanoseven solutions can handle the most challenging, real word attacks and intrusions at wire speed without compromise, a claim that no other solution can match.
+
+The demand for the new single chip solutions announced this month has been so strong that we have already achieved six design wins over two customers, including a tier one OEM vender.
+
+And, we expect to ramp to volume production in 2009.
+
+The introduction of these new products makes our advanced Layer 7 technology accessible to a wide range of applications, which means that we can potentially ship in volumes of hundreds of thousands of units, opening up new markets for us and further increasing the [TAMM] for our content processors.
+
+In closing, this is a great time for us.
+
+The industry continues to upgrade legacy networks, the capability to handle traffic with higher bandwidth requirements and greater complexity.
+
+This is driving the need for our most advanced knowledge based processors and physical layer products.
+
+We are experiencing an exciting expansion of our TAMM, as our products are being designed into many new applications, such as mainstream switching, data center switching, desktop switching, metro edge and aggregation, as well as core and high end edge routing.
+
+Further, our success in bringing to market the most innovative industry leading products continues with near flawless execution that is resulting in record numbers of design wins that will serve as the basis for our revenue growth for several years to come.
+
+At this point, I will turn the call back over to Mike to discuss guidance for the second quarter, then we'll open up the call for your questions.
+
+As we look in to Q2, we expect continued growth of our new designs at Cisco, as well as continued strength across our other customers and markets.
+
+Despite having a record first month of revenues in April and record backlog coverage, we continue to believe it is appropriate to be conservative with our guidance given the volatile economic backdrop.
+
+Based on our Q2 revenues to date and the remaining (inaudible) to ship, we expect our Q2 revenues to increase to $36.2 million, representing an approximate 6% sequential growth from Q1 and 40% year over year.
+
+We expect our non-GAAP gross margins to be approximately 65.5%, which is slightly ahead of our long-term model.
+
+We expect non-GAAP operating expenses to increase to approximately $15.6 million, and non-GAAP R&amp;D expenses to be approximately $11.1 million.
+
+Non-GAAP SG&amp;A to be approximately $4.5 million.
+
+The increase in R&amp;D reflects our aggressive product development schedule during the quarter.
+
+Also in Q2, we expect interest and other income to decrease to approximately $400,000 due to the decline in market interest rates.
+
+We expect our tax expense for Q2 to be approximately 0 to 1% of our non-GAAP income before taxes.
+
+We expect non-GAAP EPS for the second quarter to be $0.37 per share.
+
+We expect GAAP EPS for the first quarter (see press release) to be $0.02 per share.
+
+This includes an estimated 4.4 million for SFAS 123R stock based compensation, 3.3 million in the amortization of intangible asset, and $400,000 in a fair value adjustment for acquired inventory.
+
+Finally, we expect our GAAP share count to be approximately 22.4 million shares and the non-GAAP share account to be approximately 23 million shares in Q2.
+
+This concludes our prepared remarks for the call, and now we are happy to take questions.
 
 Good afternoon, and welcome to NetLogic Microsystems' second quarter 2008 financial results conference call.
 
@@ -4388,7 +5095,245 @@ My name is Katrina, and I will be your operator for today.
 
 All lines have been placed on mute.
 
-Later we will conduct a
+Later we will conduct a question and answer session.
+
+I would now like to turn the conference over to Leslie Green, Investor Relations for NetLogic Microsystems.
+
+Thank you Katrina, and good afternoon everyone.
+
+Please note that our first-quarter 2010 results were disseminated by Business Wire after market close today, and a copy of the release can be downloaded from our website at NetLogicMicro.com.
+
+Before we get started with our financial results for the first quarter, I would like to point out that during the course of this conference call we will be making forward-looking statements that are based on certain assumptions and expectations of future events that are subject to a number of risks and uncertainties, and actual results may differ materially.
+
+For a discussion of such risks and uncertainties, please see today's earnings release, the risk factors in our Form 10-KA filed with the SEC on March 24, 2010, as well as other reports the company files from time to time with the SEC.
+
+Additionally we will be making specific forward-looking statements and financial guidance regarding our second quarter 2010 and fiscal year 2010 operating results.
+
+All forward-looking statements are qualified in their entirety by this cautionary statement.
+
+The company undertakes no obligation to publicly update forward-looking statements for any reason except as required by law, even if new information becomes available or other events occur in the future.
+
+Also on the call we'll be making reference to non-GAAP financial measures.
+
+A reconciliation of non-GAAP to GAAP financial information is in today's earnings release.
+
+The reconciling items between GAAP and non-GAAP are stock-based compensation and related payroll taxes, changes in contingent earnout liability, amortization of intangible assets, fair value adjustment related to acquired inventory, acquisition related costs, tax effects of inventory fair value adjustment, and the establishment of deferred tax asset valuation allowance.
+
+These items have been removed from the cost of revenue, operating expenses, interest income, and income taxes for non-GAAP reporting.
+
+I will now turn the call over to Mike to discuss our first-quarter 2010 results.
+
+Thank you Leslie.
+
+Good afternoon everyone.
+
+Today we reported that revenue for the first quarter 2010 was $86.3 million and represented a sequential increase of 24.1% from the prior quarter.
+
+This compares favorably with our previous guidance of $85 million and reflects the strong performance of our multi-core processors, knowledge based processors, and physical layers solutions.
+
+Q1 revenues from Cisco Systems, our largest customer, where $26.4 million or 31% of our total revenue, compared with $24.1 million or 35% of our total revenue for Q4 2009.
+
+This strong growth with Cisco was primarily due to continued revenue ramps of our knowledge based processors into new design.
+
+Revenue from Huawei was $10.3 million or 12% of our total revenue the first quarter and reflects solid contributions from sale of our NETLite processors, network search engines, and multi-core processors.
+
+There were no other customers that exceeded 10% of our revenues for the first quarter.
+
+During the quarter we experienced growth amongst all our product lines with double-digit sequential quarterly growth from our multi-core processors, knowledge based processors, NETLite processors, and physical layer products.
+
+Our non-GAAP gross margins for the first quarter were 66.2%, which excludes stock-based compensation expense, the amortization of intangible assets, and the fair value adjustment related to acquired inventory.
+
+Our gross margins came in better than our guided gross margins of 65% and reflect strong operational execution and a favorable product mix.
+
+Q1 GAAP operating expenses were $93.8 million, which included $12.8 million of stock-based compensation and related payroll taxes, $700,000 in acquisition related costs, $900,000 for the amortization of intangible assets, and $45.2 million for an increase in our contingent earnout liability to the RMI shareholders.
+
+The $45.2 million charge for the increase in the RMI earnout is due to an increase in our forecasted revenue for the RMI products and the increase in our stock price at the end of Q1 as compared to the end of last year.
+
+Total non-GAAP operating expenses for Q1 were $34.2 million compared with $28.3 million for Q4 2009.
+
+The increase in Q1 operating expenses reflect a full quarter of the RMI expenses as compared to a partial quarter in Q4.
+
+Non-GAAP R&amp;D expenses were $21.5 million.
+
+Non-GAAP SG&amp;A expenses were $12.7 million for Q1.
+
+Our Q1 GAAP tax provision was a benefit of $1.6 million.
+
+Excluding the tax effect of the fair value adjustment on acquired inventory, our Q1 non-GAAP tax provision was $2.7 million.
+
+On a GAAP basis our Q1 net loss was $57.3 million or $0.99 per diluted share.
+
+Non-GAAP net income for Q1 was $20.1 million or $0.31 per share, compared with $17.5 million or $0.30 per share for Q4 2009.
+
+For Q1 we had fully diluted shares of 58 million on a GAAP basis and 65.4 million on a non-GAAP basis.
+
+With respect to our balance sheet, our cash balance totaled $177.4 million at the end of the quarter.
+
+On March 31 we completed the sale of 4.1 million shares of our common stock, which resulted in net proceeds of $112.2 million.
+
+Our accounts receivable was $27.1 million and represented 28 days.
+
+Our ongoing target DSOs remains at 35 days.
+
+Inventory ended the quarter at $39.3 million and includes $3.8 million in fair market adjustments for acquired inventory.
+
+Excluding the fair market adjustment, our inventory approximates 110 days and is consistent with the prior quarter and our current targeted number of days.
+
+This concludes my review of the quarterly results, and now I would like to turn the call over to Ron.
+
+Thank you Mike.
+
+This is a very exciting time for us.
+
+From the core to the edge of the network, exponential increases in performance and functionality are driving greater adoption of our most valuable products and increasing the strategic importance of our advanced technologies and roadmaps with our customers.
+
+As a result, our revenue opportunities in the high end are growing rapidly, both with the proliferation of IP infrastructure as well as the significant increase in our dollar contribution per box.
+
+At the same time, our product penetration is also increasing in mass volume segments such as high volume switches, data center applications, and Ethernet access for WiMAX and fiber, where more intelligence is becoming necessary for IP traffic management and security.
+
+A great example of our growing market opportunity is the revenue growth we are poised to begin enjoying from the ramp of our knowledge based processors into core router equipment, where we have previously had very little contribution.
+
+Given the increasing speeds and complexity of the networks, more routers are now being designed to utilize our knowledge based processors for the first time in order to handle more sophisticated processing requirements.
+
+One such platform is Cisco's recently announced CRS3 router, which will be the first Cisco core router to use our knowledge based processors.
+
+Similarly, the new core router from Alcatel Lucent, which is just beginning to ramp, also incorporates for the first time a very high-dollar content of our knowledge based processors.
+
+A third example is the H3C SR8800 core router, a version of which will use a record number for the highest value NL7000 chips for line card.
+
+We are saying the same phenomena in the edge of the network.
+
+We have now won two generations of designs with Cisco's ASR 9000 high-end edge router, both of which use our proprietary knowledge based processors and represent a significant increase in content dollars versus previous generations of Cisco edge routers.
+
+Another example is H3C's SR6600 router, which is the industry's first router to adopt a multi-core, multithreaded CPU architecture, utilizing our most advanced multi-core processor.
+
+In high-volume segments such as the data center and Ethernet applications we are also starting to see the adoption of our technology to more intelligently manage complex traffic.
+
+For example, late this summer we expect to begin volume ramps with a major new design in data center switching for one of our tier 1 customers.
+
+This design represents incremental TAM for us and is significant because it demonstrates the evolving need to have this level of IP classification capability in the data center.
+
+Also our NETLite products continue to enjoy strong revenue growth as the ramp into entry-level switching and Ethernet access for WiMAX and fiber, where sophisticated layer 3 and 4 functionality is becoming necessary for IP traffic management and security.
+
+This year we are enjoying the product ramps of many new NETLite enabled boxes with customers such as Alcatel Lucent, Brocade, Cisco, Extreme, HP/H3C, Huawei, and ZTE.
+
+As our solutions move farther out into the network and closer to the end user, the volumes increase dramatically.
+
+With H3C in particular would have designs across their product line, including data centers switches, network switches, routers, wireless access products, and TippingPoint's high-performance intrusion prevention security appliances.
+
+We have more than 20 designs with H3C and TippingPoint for our multi-core processors, knowledge based processors, and physical layer solutions.
+
+Looking forward, we are poised to be one of their largest silicon suppliers.
+
+The majority of these designs have not yet ramped into volume production, with products slated to roll out in the second half 2010 and the first half 2011.
+
+With HP's acquisition of H3C and TippingPoint, we're even more excited about the volume potential these new program ramps given the combined strength of H3C's channel in China and HP's channel worldwide.
+
+Also, in the mobile wireless infrastructure network, the shift towards IP based networks continues worldwide, accelerating the adoption of our advanced solutions in many new applications in order to deliver increasing speed and performance requirements.
+
+As such we have won a significant number of designs in enhanced mobile packet core, edge routing, radio network controllers, backhaul, and advanced common platform base stations, with customers such as Alcatel Lucent, Cisco, Ericsson, Huawei, Nokia Siemens, and ZTE that are very early or have yet to ramp -- start their product ramps.
+
+For example, ZTE recently selected our multi-core multithreaded processors and NL7000 knowledge based processors for its next generation mobile core network products across TDF CDMA, CDMA2000, WiMAX, WCDMA, and GSM networks.
+
+In addition, DaTang Mobile, who is partnering with Ericsson for TDF CDMA, selected our multi-core processors and knowledge based processes to power its advanced TDF CDMA mobile infrastructure solutions.
+
+And at our second largest customer, Huawei, we continue to proliferate our designs throughout the mobile wireless infrastructure, including common platform base stations, base station controllers, radio network controllers, gateway routers, edge routers, and the advanced packet core.
+
+We expect that these designs will continue to ramp in the second half of 2010 and throughout 2011.
+
+But the true sweet spot for solutions is the nascent LTE 4G market, where systems will be required to deliver more than 10 times the raw bandwidth of today's 3G equipment, as well as a significant increase in processing power to support high-touch functions like new web-based services and applications, traffic shaping, and security.
+
+This presents meaningful incremental opportunity as LTE equipment will contain a much higher content of our most advanced solutions, spanning many more points across the network.
+
+We currently are experiencing tremendous design success with our multi-core processors, knowledge based processors, layer 7 solutions, and 10 Gb FiOS that are being designed into LTE node B base stations, cell side routers, gateways, edge, and core routers.
+
+We are also heavily represented with multi-core processor and knowledge based processor design wins in IP backhaul, where significant investment is occurring in order to alleviate the growing bottleneck caused by dramatic increases in high-bandwidth traffic.
+
+For example, Infonetics is expecting the number of IP backhaul connections to see a 67% compounded annual growth rate between 2009 and 2013.
+
+In total, these expanding opportunities are contributing to very strong performance across our product lines.
+
+Our knowledge based processes had another strong quarter in Q1, and we expect this part of our business to grow strongly again in Q2.
+
+Likewise, the 10 Gb Fi market is very strong, as we're seeing an acceleration in the transition from 1 gig to 10 gig in both data center and enterprise applications.
+
+Our multi-core business continues to outperform our initial expectations with significant new ramps starting at Dell, Huawei, HP/H3C, Juniper, Sun/Oracle, Symantec, and ZTE.
+
+After more than two years of healthy design wins, our processor product family is entering a phase of very strong revenue ramp that will play out for many years to come.
+
+This product family continues to be positioned strongly to expand at tier 1 customers across 3G and 4G wireless and WiMAX applications, IPTV wireline, enterprise, security, and storage as the industry shift to multi-core gains momentum.
+
+With this significant industry trend toward the use of multi-core technology, we were very pleased to announce this week the launch of the eNsemble Multi-Core Alliance to drive best in class innovations in multi-core parallel processing platforms and software development.
+
+Supported by a broad base of industry-leading hardware and software providers, this alliance provides a foundation upon which developers can create new breakthrough solutions that take advantage of the superior performance and functionality of multi-core processors.
+
+We are committed to an open programming model that will allow greater access and tighter coupling between networking software and our multi-core processors.
+
+This will accelerate the adoption of multi-core processors in the industry.
+
+We're very pleased to see the strong support of the alliance.
+
+More than 20 industry leaders have already joined, and we expect many more to join in the coming months.
+
+In closing, this is a great time for our company.
+
+We are seeing solid growth in our business as a result of the ramp of significant new designs that were won over the last several years and are now beginning to contribute to our results.
+
+In every market we serve we are broadening our customer base and penetrating new opportunities for our advanced multi-core processors, knowledge based processors, and physical layer solutions.
+
+Also we continue to drive industry-leading innovation into our product and technology roadmap.
+
+Our aggressive move in migrating our product portfolio to 40 nanometers has resulted in a very compelling competitive differentiation, as the 40 nanometer node offers a significant power, performance, and cost advantage over 65 nanometers.
+
+This process advantage is already delivering an acceleration in our design wins and market share.
+
+And now, just this morning, TSMC and NetLogic announced a collaboration agreement on the 28 nanometer node, which offers even more speed and power efficiency advantages over previous process nodes.
+
+From the edge of the network to the core, our products are extending the capability of advanced IP networks, and we believe that they will serve an increasing critical role in future generations of networking and communication systems.
+
+At this point, I will turn the call back over to Mike to discuss guidance for the second quarter.
+
+Then we'll open up the call for your questions.
+
+As we look into Q2, we are very encouraged by the continued broad strength of our business driven by strong secular trends in our end markets and our increasing ramp of new customer programs.
+
+For Q2 we believe our revenues will be approximately $95 million or up 10% sequentially from Q1 2010.
+
+We expect revenue growth for our knowledge based processors, 10 gigabit Ethernet Fi's, and multi-core processors, with growth from each of our top five customers and across all our major markets.
+
+We have more than full backlog coverage to meet this guidance.
+
+We expect our non-GAAP gross margins to be approximately 66%.
+
+We expect our non-GAAP operating expenses to increase to approximately $39 million.
+
+Our non-GAAP R&amp;D expenses to approximately $26.3 million.
+
+And our non-GAAP SG&amp;A to be approximately $12.7 million.
+
+We estimate interest and other income to be near zero dollars.
+
+We expect our income tax to be approximately 5% of our non-GAAP income before taxes.
+
+We expect our non-GAAP EPS for the first quarter to be $0.32 per share.
+
+We expect our GAAP EPS for the first quarter to be a loss of $0.08 per share.
+
+This includes an estimated $13 million for stock-based compensation, $3.6 million for fair value adjustments on acquired inventory, and $10.6 million in the amortization of intangible assets.
+
+We expect our non-GAAP share count to be approximately 70 million and our GAAP share count to be approximately 62.6 million shares.
+
+Finally, I would like to update our full-year guidance for 2010.
+
+On our Q4 earnings conference call last February, we guided our 2010 revenues to be approximately $350 million and our 2010 non-GAAP EPS to be approximately $1.15.
+
+Given continued strength in all of our businesses, we now believe that our 2010 revenues will be approximately $377 million and our 2010 GAAP EPS -- non-GAAP should be approximately $1.28.
+
+Our 2010 non-GAAP EPS excludes approximately $51.9 million of stock-based compensation and related payroll taxes, $42.4 million of the amortization of intangible assets, $15.8 million of fair value adjustments on inventory, and $45.2 million from our Q1 change in our contingent earnout liability.
+
+Including these items, our GAAP EPS for 2010 would be a loss of approximately $0.99.
+
+This concludes our prepared remarks for the call, and now we are happy to take questions.
 
 Good afternoon and welcome to the NetLogic Microsystems second quarter 2010 financial results conference call.
 
@@ -4396,7 +5341,251 @@ Leading the call today are Ron Jankov, President and Chief Executive Officer; Mi
 
 My name is Kianna, and I will be your coordinator for today.
 
-We will conduct a
+We will conduct a question and answer session at the end of the conference.
+
+I would now like to turn the call over to Ms. Leslie Green, Investor Relations for NetLogic Microsystems.
+
+You may proceed.
+
+Thank you, Kianna, and good afternoon everyone.
+
+Please note that our second quarter 2010 results were disseminated by business wire after market close today and a copy of the release can be downloaded from our website at NetLogicMicro.com.
+
+Before we get started with our financial results for the second quarter, I would like to point out that during the course of this conference call we will be making forward-looking statements that are based on certain assumptions and expectations of future events that are subject to a number of risks and uncertainties, and actual results may differ materially.
+
+For a discussion of such risks and uncertainties, please see today's earnings release, the risk factors in our Form 10-KA filed with the SEC on March 24, 2010, as well as other reports the Company files from time to time with the SEC.
+
+Additionally, we will be making specific forward-looking statements and providing financial guidance for the third quarter 2010 and fiscal year 2010 operating results.
+
+All forward-looking statements are qualified in their entirety by this cautionary statement and the Company undertakes no obligation to publicly update forward-looking statements for any reason except as required by law even if new information becomes available or other events occur in the future.
+
+Also on the call we'll be making reference to non-GAAP financial measures.
+
+A reconciliation of non-GAAP to GAAP financial information is in today's earnings release.
+
+The reconciling items between GAAP and non-GAAP include stock-based compensation and payroll related taxes, changes in contingent earn out liability, amortization of intangible assets, fair value adjustment related to acquired inventory, acquisition related costs, lease termination costs and the tax effects of inventory fair value adjustment.
+
+These items have been removed from the cost of revenue, operating expenses and income taxes for non-GAAP reporting.
+
+I will now turn the call over to Mike to discuss our second quarter 2010 results.
+
+Thank you, Leslie, and good afternoon everyone.
+
+Today we reported that revenue for the second quarter of 2010 was $95 million and represented a sequential increase of 10.2% from the prior quarter and 192% increase from the second quarter of 2009.
+
+Q2 revenues from Cisco systems, our largest customer, were $25.3 million or 27% of our total revenue.
+
+During the quarter we did see Cisco's contract manufacturers work down some inventory on some of their more mature run rate designs which was partially offset by a strong quarter of growth with our knowledge base processors shipping into high-end switching and routing with our NL7000 and NL8000 products.
+
+Revenue from our non-Cisco customer base continues a very strong trend with 16.5% sequential growth.
+
+This was driven by another strong quarter for multi-core processors, knowledge base processors and NETLite processors.
+
+Revenue from Alcatel-Lucent grew strongly to 12% of our Q2 revenues.
+
+The revenue growth with Alcatel reflects strong carrier spending on advanced 3G and emerging LT infrastructure buildout.
+
+Revenue from Huawei fell slightly below 10% of our Q2 revenues.
+
+During the quarter we transitioned most of our products in to a vendor managed inventory or VMI program with Huawei which created a temporary inventory draw down.
+
+Although the effect of the VMI program implementation will continue in to the current quarter, we still expect some growth in our Huawei Q3 revenues.
+
+There were no other customers exceeded 10% of our revenues for the second quarter.
+
+Across the board or financial results were boosted by favorable product mix up as we experienced strong double-digit sequential growth from our highest gross margin products including our high-end multi-core processors and knowledge based processors.
+
+This mix shift is driven by the need of our customers to significantly increase bandwidth security and quality service in wireline and wireless infrastructure, enterprise and data center to support the dramatic increase in quad place subscribers and applications.
+
+With this favorable mix shift, our non-GAAP gross margins for the second quarter improved to 69% which compares favorably to our guidance of 66%.
+
+Q2 GAAP operates up were $57.3 million which included $12.5 million of stock-based compensation and related payroll taxes, $900,000 for the amortization of intangible assets, $500,000 for cost determining our existing lease for our Mountain View, California, facility and $5.2 million for an increase in contingent earn out liability to RMI shareholders.
+
+The $5.2 million charge for the increase in the RMI earn out is due to an increase in our forecasted revenue of RMI products which is partially offset by a decrease in our stock price at the end of Q2 as compared to the end of Q1.
+
+Total non-GAAP operating expenses for Q2 were $38.3 million which compared favorably with our previous guidance of the $39 million.
+
+Non-GAAP R&amp;D senses was $24.9 million, non-GAAP SG&amp;A expenses was $13.4 million for Q2.
+
+Our Q2 GAAP tax provision was a benefit of $500,000.
+
+Excluding the tax effect of the fair value adjustment on acquired inventory, our Q2 non-GAAP tax provision was $800,000 of expense.
+
+On a GAAP basis our Q2 net loss was $4.8 million or $0.08 per diluted share.
+
+Non-GAAP net income for Q2 was $26.4 million or $0.38 per share compared with $20.1 million or $0.31 per share for Q1 and was $0.06 ahead of our guidance at $0.32.
+
+For Q1 we had fully diluted shares of $62.9 million on a GAAP basis and $70 million on a non-GAAP basis.
+
+With respect to our balance sheet our cash and investments increased by $23.7 million and totalled $201.1 million at the end of the quarter reflecting continued strong cash flows during the quarter.
+
+Our accounts receivable was $26.7 million and represented 25 days.
+
+Our ongoing target DSOs remains at 35 days.
+
+Inventory was at $46.9 million at the end of the quarter.
+
+We have built up our inventory balance in response to continued capacity constraints at our supply partners as well as request by our larger customers for us to carry buffer stock given the sole source nature of our designs and industry tightness of supply.
+
+We also stage more inventory of finished goods and inventory at the end of the quarter to support strong first month of July shipments.
+
+This concludes my review of the quarterly results and now I would like to turn the call over to Ron.
+
+Thank you, Mike.
+
+This is a very exciting time for us.
+
+When we announced the merger with RMI last June, we were committed to not only executing on both companies' highly ambitious technology road map but also to leveraging each company's best in class technologies to offer our customers highly valuable and unique system-level solutions for communications networking.
+
+In only nine months following the close of our merger with RMI, we are very pleased to be able to offer game changing products for our industry.
+
+The announcement of the XLP8128S multicore processor solution and the NLX321103A total systems solution underscore our successful execution and highlight the power of our combined knowledge, expertise and resources.
+
+On every front, our combined Company is executing to the highest level from an engineering team developing groundbreaking multi-core processors, knowledge base processors and physical layer products to our operations team bringing these products to market under unified and efficient manufacturing flows to our sales team effectively leveraging our entire combined customer base and opening up new opportunities to proliferate our full product portfolio.
+
+I could not be more proud of the way our organization has come together and delivered on the vision that we outlined only a year ago.
+
+In multi-core processing the design win success and strong ramp of that XLR and XLX product families demonstrates a significant and growing industry need for more robust processing capabilities at nearly every point in the network driving a major shift in the architecture of data playing processing for its multi-core and multi-threaded solutions.
+
+We are seeing a growing sense of urgency to dramatically increase [back up] processing performance at virtually every customer in all of our target markets.
+
+Q2 was another record quarter of revenue for our XLR and XLS product families and during the quarter we booked brand new designs in storage, enterprise network and LTE infrastructure.
+
+Customer feedback continues to validate that our 32 threaded XLR multi-core processor is the highest performing device on the market today even as compared to the most recently announced competitive solution.
+
+With this advantage we continue to win the most performance sensitive sockets in communications and networking.
+
+To build up our on multi-core leadership, we are very excited to be rolling out the revolutionary 40 nm XLT product family which will sample in the current quarter.
+
+This breakthrough processor, the result of four years of intense innovation and execution, takes communications processing ahead by an order of magnitude.
+
+Unlike anything else on the market, this processor family enables scalability of up to 128 NXCPUs and more than 160 programmable processing engines delivering an unprecedented 10 to 12 times performance increase over any solution currently in the market.
+
+The combination of up to 128 NXCPUs with quad issue capability and best in class tri-level cache memory subsystem architecture makes this solution ideally suited for data plane applications that are inherently sensitive to memory latencies such as high speed telecommunications.
+
+In fact, in the July 26 edition of the microprocessor report, the XLP multi-core processor was heavily praised for its expected performance compared with expected performance of competing embedded multi-core processors using numerous data plane and control plane performance metrics.
+
+In total, this product family offers a breakthrough performance that is absolutely unique in its class.
+
+In addition, one of the strongest things to emerge from the early discussions with customers about the combination of NetLogic Microsystems at RMI was the desire for us to couple our best in class multi-core processors, knowledge based processors and layer 7 technologies together in a tightly connected system level solution.
+
+We are very pleased to now be able to offer to our customers a solution that incorporates our XLT and multi-core processor along with our most advanced knowledge-based processing engine and market leading NETL7 processor technology tightly coupled to determine the process advance layers two through seven applications.
+
+This solution can be used for applications such as Internet security to detect malware and viruses while still allowing dramatic increases in bandwidth and functionality for better Internet access and mobile broadband.
+
+It is ideal for using 3G, 4G mobile backhaul, LTE gateways for mobile services, security appliances, network storage appliances and application layer routers.
+
+To date, our multi-core processors have been primarily targeted for the data plane market and with our new XLP architecture we are now very well positioned to target control plane applications as the XLP core is also perfectly suited for control plane processing with its unique quad issue architecture, out of order execution and tri-level cache, none of which is available on any existing competing multi-core control plane solution.
+
+This is a multibillion dollar TAM that we have not yet begun to penetrate.
+
+In order to support the very strong design activity for multi-core, we are executing a significant software strategy that we believe is creating the best infrastructure for our customers to write unique differentiated code for our processor cores and system solutions.
+
+This strategy has been very well received by our customers and is helping them accelerate the tie in the market for new products and optimize their code for the benefits of multi-threaded, multi-core architecture.
+
+In addition to the rapidly growing in-house software resources, we have also watched a major training initiative and will provide sophisticated instructions to hundreds of design engineers this quarter at a number of our targeted customers so they're able to maximize the significant advantages of our multi-threaded, multi-core processing.
+
+This group builds upon a sizable body of customer software engineers that are already writing code to our solution.
+
+Further, the ensemble multi-core line of which we are a founding member has 25 hardware and software providers.
+
+Together, these resources represent a tremendous body of knowledge and expertise around mult-threaded, multi-core architecture.
+
+We believe that building an environment to support each customer to create its own differentiated code is the best way to address the needs of tier 1 customers in the markets and applications that we target.
+
+Now, turning to our market we continue to see strong growth in our revenue from 3G/4G wireless infrastructure as demand steadily increases for smart phones and other wireless devices that continue to drive exponential growth in media rich network traffic.
+
+Apple reported last month it has sold more than 100 million IOS devices including iPhone, iTouch and iPad.
+
+Morgan Stanley is estimating that iPhone subscribers will grow from 30 million at the end of 2009 to more than 100 million by the end of 2011.
+
+Further, sales of Android phones from HCT, Motorola, Nokia, Samsung and others have also been very strong and Google is estimating that 4.8 million new Android handsets are going live every month.
+
+The continuing growth of bandwidth intensive application and services delivered to these devices is very positive for us as we are designed into all of the top 20 communications equipment manufacturers that provide infrastructure equipment to all of the top carriers in the world.
+
+Regardless of the relative success of the iPhone, Blackberry or the myriad of Android phones, as long as smart phones and their applications proliferate, we will increasingly benefit.
+
+The biggest incremental factor for us is not which phone is successful but which generation of network as necessary to support it.
+
+We have virtually no penetration in the Legacy GSM market and minimal content in the first generation of 3G networks.
+
+Our revenue in wireless infrastructure is growing today primarily due to our significant content in new HSDA plus upgrades currently occurring at AT&amp;T and other carriers worldwide as is evidenced by our very strong growth at Alcatel-Lucent.
+
+We expect that our (inaudible) in the coming 4G LTE network will take another step function up as more of our multicore processors and knowledge base processors will be incorporated in systems to support the increasing bandwidth of functionality.
+
+In addition, 4G marks our first expansion into the high-volume mobile access market with use of our processors in common platform base stations.
+
+Regarding LTE, NTG DoCoMo in Japan recently announced that it is verifying its LTE network prior to the launch of commercial service in December.
+
+Also, Verizon has said that it is launching its new LTE market in up to 30 markets before the end of the year with speeds reported up to 10 times that of the 3G network.
+
+Our multi-core, multi-threaded processors as well as our knowledge based processors and 10 gig 5 are designed throughout these new LTE solutions including soft common platform base stations, gateway routers, edge routers and the advanced packet core.
+
+We expect to begin seeing a benefit from LTE rollouts in late 2010 with contributions wrapping throughout 2011 and 2012.
+
+In both the enterprise and data center markets we are also seeing continued growth across product families.
+
+In the data center, our strong growth is a result of the market's continued option of 10 GB ethernet.
+
+This quarter we announced the availability of the industry's lowest power 10, 40 and 100 GB ethernet 5 for next generation datacenter applications.
+
+The solution simultaneously supports 40 and 100 GB ethernet over optical cabling as well as cost-effective direct attached Twinax copper for up to four 10 GB connections per device.
+
+Twinax copper is rapidly gaining popularity in the data center due to its low latency and power consumption which are critically important to time sensitive and mission critical data center applications.
+
+Our NETLite products are also continuing to enjoy strong revenue growth as they ramp into entry-level switching and ethernet access for WiMAX and fiber with customers such as Alcatel-Lucent, Brocade, Cisco, Extreme, HP, Huawei, and ZTE .
+
+A good example of this is Alcatel-Lucent [chifon] deployments in Australia where they were selected to roll out the nationwide super fast broadband network and in China where both China mobile and China telecom have selected Alcatel's [pawn] equipment for fiber to the [home] deployment in 32 provinces.
+
+In conclusion, this is a great time for NetLogic.
+
+In less than a year from the completion of our merger, our team has come together to execute on a very aggressive and highly differentiated product and technology road map.
+
+With our current portfolio, we can address a multibillion dollar TAM leveraging an impressive and growing list of tier 1 networking and communications customers.
+
+Further, we have a clear path to grow into new applications using current technology to significantly broaden our market.
+
+We are enjoying a launch of a host of a new customer solutions driving our near-term growth and our design win success indicates positive opportunity for many years to come.
+
+At this point I will turn the call back over to Mike to discuss guidance for the third quarter, then we will open up the call for your
+
+ Thanks, Ron.
+
+As we look into Q3, we believe our revenues will be up approximately 5% sequentially from Q2.
+
+We expect to continued revenue growth for our knowledge based processors, 10 GB ethernet (inaudible) and multi-core processors.
+
+We have more than full backlog coverage to meet this guidance.
+
+We expect our non-GAAP gross margins to be approximately 67.5% reflecting continued favorable product mix.
+
+We expect non-GAAP operating expenses to increase approximately $40.5 million, our non-GAAP R&amp;D expenses to be approximately $27.3 million and our non-GAAP SG&amp;A to be approximately $13.2 million.
+
+We estimate interest and other income to be zero dollars.
+
+We estimate interest and other income to be near tax to be approximately 5% of our non-GAAP income before taxes.
+
+We expect our non-GAAP EPS for the third quarter to be $0.36 per share.
+
+We expect our GAAP EPS for the third quarter to be a profit of $0.03 per share.
+
+This includes an estimated $12.6 million in stock-based compensation in related payroll taxes and $10.6 million in the amortization of intangible assets.
+
+We expect our non-GAAP share count to be approximately 71.5 million and our GAAP share to be approximately 69.1 million shares.
+
+Finally, I would like to update our full-year guidance of 2010.
+
+On our Q1 earnings conference call in April we guided 2010 revenues to be up $377 million and our 2010 non-GAAP EPS to be approximately $1.28.
+
+Given the continued strength in our businesses, we now believe that our 2010 revenues will be approximately $383 million and our 2010 non-GAAP EPS should be approximately $1.40.
+
+Our 2010 non-GAAP EPS excludes approximately $50.1 million of stock-based compensation and related payroll taxes, $43.2 million of the amortization of intangible assets, $50.4 million from our Q1 and Q2 year-to-date change in our contingent earn-out liability and our Q1 and Q2 fair value inventory adjustments net of tax, acquisition charges and lease termination charges totaling $11.7 million.
+
+Including these items are GAAP EPS would be a loss of approximately $0.89.
+
+We are encouraged by the continued product strength of our business driven by the strong secular trends in all our end markets and our increasing ramp of new customer programs.
+
+This concludes the prepared remarks for the call and now we are happy to take questions.
 
 Good afternoon and welcome to the NetLogic Microsystems third quarter 2010 financial results conference call.
 
@@ -4406,7 +5595,223 @@ My name is Nolelia, and I will be your coordinator for today.
 
 At this time, all participants are in a listen only mode.
 
-We will be facilitating a
+We will be facilitating a question and answer session towards the end of this conference.
+
+( Operator Instructions ) I would now like to turn the call over to Mr. Mike Tate, Chief Financial Officer for NetLogic Microsystems.
+
+You may begin.
+
+Good afternoon, everyone.
+
+Please, note that our third quarter 2010 results were disseminated by Business Wire after market close today.
+
+And a copy of the release can be downloaded from our website at www.netlogicmicro.com.
+
+Before we get started with our financial results for the third quarter, I would like to point out that during the course of this conference call, we will be making forward-looking statements that are based on certain assumptions and expectations of future events that are subject to a number of risks and uncertainties, and actual results may differ materially .
+
+For a discussion of such risks and uncertainties, please see today's earnings release, the risk factors on our form 10-KA filed with the SEC on March 24th, 2010, as well as other reports the company files from time to time with the SEC.
+
+Additionally, we will be making specific forward-looking statements and providing financial guidance regarding our fourth quarter 2010 operating results.
+
+All forward-looking statements are qualified in their entirety by this cautionary statement and the Company undertakes no obligation to publicly update forward-looking statements for any reason except as required by law even as new information becomes available or other events occur in the future.
+
+Also on this call, we will be making reference to non-GAAP financial measures.
+
+A reconciliation of non-GAAP to GAAP financial information is in today's earnings release.
+
+The reconciling items between GAAP and non-GAAP include stock-based compensation and related payroll taxes, changes in contingent earn out liability, and amortization of intangible assets.
+
+These items have been removed from the cost of revenue and operating expenses for non-GAAP reporting.
+
+Now, turning to our financial results for the third quarter.
+
+Today we reported that revenue for the third quarter of 2010 was $100.1 million.
+
+This represented a sequential increase of 5.3% from the prior quarter and included another double-digit sequential growth quarter for our multicore processors.
+
+The Q3 revenues also represented a 136% increase from the third quarter 2009.
+
+Q3 revenue from Cisco Systems, our largest customer, were $25.4 million or 25% of our total revenues.
+
+Which was in line with our expectations.
+
+The revenue from Huawei was $12.7 million, or 13% of our revenues.
+
+The revenue growth with Huawei reflects strong growth in our multicore processor revenues shipped against advance mobile wireless equipment.
+
+The revenue from Alcatel Lucent fell a little bit below 10% of our Q3 revenues, as we believe there was some inventory worked down during the quarter.
+
+In Q3, we continue to enjoy a combination of favorable product mix as well strong operational execution which enabled us to report non- GAAP gross margins at 69.3% which compared favorably to our guidance of 67.5%.
+
+Q3 GAAP operating expenses were $52.9 million which included $11.2 million of stock-based compensation and related payroll taxes, $900,000 for the amortization of intangible assets and a $700,000 charge for an increase in our contingent earnout liability payable to the RMI shareholders.
+
+Total non-GAAP operating expenses for Q3 for $40 million which compared favorably with our previous guidance of $40.5 million.
+
+Non-GAAP R&amp;D expenses were $26.2 million and non-GAAP SG&amp;A were $13.8 million for Q3.
+
+Our Q3 tax provisions was $1.3 million which is consistent with our previous guidance of 5% of our non-GAAP net income.
+
+On a GAAP basis, our Q3 net income was $5.2 million or $0.08 per share.
+
+Non-GAAP net income for Q3 was $27.9 million or $0.40 per share and was $0.04 ahead of our guidance of $0.36.
+
+For Q3, we had fully diluted shares of 67.9 million on a GAAP basis and 70.5 million on a non-GAAP basis.
+
+With respect to the balance sheet, our cash and investments balance totaled $225.1 million at the end of the quarter, reflecting continued strong cash flows during the quarter.
+
+Our accounts receivable was $31.1 million and represented 28 days.
+
+Our ongoing target DSO's remains at 35 days.
+
+Inventory decreased to $43.3 million at the end of the quarter.
+
+Our days of inventory at the end of Q3 was at 126 days down from 142 days at the end of Q2.
+
+We expect our days of inventory to decline again at the end of Q4 towards our long-term model of 110 days.
+
+This concludes my review of the quarterly results.
+
+And now I'd like to turn the call over to Ron.
+
+Thank you, Mike.
+
+This is an extraordinary time in our history.
+
+With the recent sampling of the XLP multicore processor, we are bringing to market a truly disruptive technology in communication processing at a time when processing requirements are hitting an inflection point.
+
+This breakthrough architecture is the result of four years of intense research and development and dramatically enhances our competitive position and strategic importance to communications OEMs.
+
+The XLP is coming in to market at an ideal time, when our customers are facing a critical need to dramatically increase system performance, to support huge increases in traffic bandwidth and network complexity driven by the explosion of video and mobile applications clogging the Internet.
+
+This has created a broad and urgent level of interest for our XLP processors across our entire customer base spanning multiple applications and market segments.
+
+Our XLP multicore processors uniquely enable scalability of up to 128 nxcpu with industry leading capabilities including processing for instructions for cross cycle, out of order execution and the best in class trilevel cache memory subsystem.
+
+All of which is enabling greater performance in data plane and control plane processing.
+
+Sophisticated multithreaded architectures makes it ideally suited for 3G, 4G wireless and wimax applications.
+
+Such as radio network controllers, summit platform base stations, cell site routers and gateways as well as host of applications in the enterprise security and storage markets.
+
+This processor is so extraordinary that although sampling has just started, we already have numerous design wins in wireless infrastructure, layer 7 security, networking and network storage.
+
+It is hard to overstate the strategic significance of delivering this product.
+
+As it sets our competitive position in the processor market over the next several years.
+
+And it's a basis for a roadmap that will drive the dramatic expansion of our cam.
+
+I want to congratulate our team on this tremendous accomplishment.
+
+Sampling of the XLP also marks another significant milestone in our overall company roadmap.
+
+As this marks the completion of the transition of our product portfolio of multicore processing, knowledge base processing and physical layer solutions to TSMC's advanced 40 nanometer process node.
+
+This is a considerable achievement given the size and complexity of our solution and further highlights the tremendous execution and expertise of our engineering and manufacturing team.
+
+It also underscores our commitment to technology leadership and demonstrates our ability to consistently deliver an ambitious roadmap that keeps pace with the rigorous demands of next-generation networking and communication.
+
+The benefits of the 40-nanometer process node are compelling.
+
+Compared to 65-nanometers, 40-nanometers is nearly half the size for the same functionality.
+
+30% higher performance and 40% lower in active power.
+
+By pushing our portfolio aggressively to this advanced node, we are able to deliver significant performance and feature set enhancements that create highly differentiated best in class products.
+
+Also by taking advantage of the significant savings in power consumption, we are addressing one of the most critical components of system design.
+
+Another example of our push into 40-nanometer is our recent announcement of the NL10k knowledge based processor that we are plan on sampling this quarter.
+
+This device leverages 40-nanometer technology to support enhanced IPv6 capability and richer LTE and ICTV services.
+
+It features 128 high performance knowledge based processing engines tightly coupled with our advanced Sashasra algorithmic engine and intelligent load balancer.
+
+To offer best in class performance and power efficiency.
+
+This knowledge based processors is ideally suited to manage the significant increase in knowledge based processing requirements to manage longer ICTV addresses.
+
+According to our markets, we continue to experience strong growth in our revenues from 3G, 4G wireless infrastructure.
+
+In nearly every major geographic center, we are seeing significant carrier investment in next generation wireless networks in an effort to provide a more competitive consumer experience.
+
+We are currently enjoying healthy growth in revenue contributions from 3G deployments as a third-generation network was the first to utilize our solution.
+
+We expect this growth to continue with active deployments occuring worldwide both in established markets as well as emerging markets such as India and Africa.
+
+But as the migration to more advanced networks such as HSPA Plus and 4G LCE, that believe, really believe, will truly drive the proliferation of our portfolio throughout wireless infrastructure.
+
+These networks utilize the heavy content of our multicore processor, knowledge base processors, and physical layer solution to achieve dramatic increases in performance over previous generations.
+
+We have significant design wins in a variety of applications including common platform base stations, base station aggregation, Gateway routers, edge routers, and the enhanced packet core.
+
+These fourth generation networks are just beginning to roll out.
+
+And will continue to ramp throughout 2011 and beyond providing significant opportunities for our solutions.
+
+For example, in the US, we have strong representation in the new HSPA plus upgrade currently occurring at AT&amp;T to our design wins at Alcatel Lucent, Cisco, and others.
+
+We also have heavy content in the 4G LTE networks that Verizon wireless will be launching in 38 metropolitan areas.
+
+Similarly, NTT Docomo Japan is also expected to begin the roll out of its LTG network and in 2011 we expect many more carriers to begin launching advanced networks.
+
+And we have broad-based exposure through an extensive portfolio of design wins at Alcatel Lucent, Cisco, Dton Mobile, Erickson, Fujitsu, Hauel, Juniper, NEC, Nokia, Siemens and ECE.
+
+In enterprise and data center segments, although we are still experiencing some near-term inventory digestion, the imminent challenge of handling ICG6 traffic and the increasing adoption of 10 gigabit ethernet are contributing to positive trends in our business for 2011.
+
+The current estimation is that available ICG4 address are likely to be exhausted within a year.
+
+Necessitating an accelerated migration to ICG6.
+
+As a result, we are seeing a robust effort on behalf of our customers to design additional capability into their systems to handle a greater percentage of the larger ICG6 headers.
+
+Across-the-board, new designs are incorporating significantly more knowledge-based processing capability then was previously required.
+
+We are now seeing at even mid-level platform solutions being designed to utilize high end knowledge based processors and high end boxes will need multiple fully featured knowledge based processors to accomplish this task.
+
+The result is that we expect a resurgence of growth in our enterprise business in the second half of 2011 continuing into 2012 and 2013.
+
+The other major technology driver in the enterprise and a data center market is 10 gigabit ethernet.
+
+Worldwide growth in mobile applications, broadband services, clause computing, virtualization and rich media content is creating significant bottlenecks and greater bandwidth demands on enterprise and data center networks.
+
+Infonetics recently increased its forecast for 10 gigabit core shipments indicating that it expects (inaudible) to more than triple in the next three years.
+
+2011 looks to be a significant turning point in this market and we believe that we are very well-positioned to take advantage of strong market growth with an extensive and innovative portfolio 10 40 and 100 gigabit ethernet physical layer solution.
+
+In conclusion, this is a really exciting time for us.
+
+We have delivered a truly groundbreaking CPU to the market, completed the migration of our product lines supporting nanometer technology and demonstrated our unique cross development capabilities.
+
+Our operations team has brought all of our products together under an efficient manufacturing flow and our sales team has effectively leveraged our broad product line and deep customer relationships to achieve record design win success and market penetration.
+
+These accomplishments have come at a great time when the performance capability of our advanced portfolio is ideally suited for multiple market windows that are opening up this year and that provide tremendous opportunities for many years to come.
+
+At this point, I will turn the call back over to Mike to discuss guidance for the fourth quarter, then we'll open up the call for questions.
+
+Based on recent customer input, we believe during the fourth quarter, we will experience some inventory rebalancing with our knowledge base processors, primarily for enterprise applications.
+
+Given this view, we believe our fourth quarter revenues will be approximately $100 million.
+
+We do expect sequential growth from our multicore processors, 10 gigabit ethernet PHYs, and knowledge based processors designed to advance mobile wireless applications in the fourth quarter which we believe will largely be offset by the expected inventory rebalancing from enterprise application.
+
+We expect our non-GAAP gross margin to be approximately 69% ,reflecting continued favorable product mix.
+
+We expect our non-GAAP operating expenses to be -- to increase to approximately $41.5 million, non-GAAP R&amp;D expenses to be approximately $28.2 million , and non-GAAP SG&amp;A to be approximately $13.3 million.
+
+We estimate interest and other income to be near $0.
+
+We expect our income tax to be approximately 5% of our non-GAAP income before taxes.
+
+We expect our non-GAAP EPS for the fourth quarter to be approximately $0.36 per share.
+
+We expect our GAAP EPS for the fourth quarter to be $0.04 per share.
+
+This includes an estimated $11.5 million in stock -based compensation and related payroll taxes and $11.6 million in the amortization of intangible assets.
+
+We expect our non-GAAP share count to be approximately 73 million shares and our GAAP share count to be approximately 71 million shares.
+
+This concludes our prepared remarks for the call and now we're happy to take questions.
 
 Good afternoon and welcome to the NetLogic Microsystems fourth quarter 2010 financial results conference call.
 
@@ -4676,7 +6081,239 @@ My name is Jeremy, and I'll be your coordinator for today.
 
 At this time, all participants are on a listen-only mode.
 
-Later, we will conduct a
+Later, we will conduct a question and answer session.
+
+I would like to turn the call over to Leslie Green, Investor Relations for NetLogic Microsystems.
+
+Thank you, Jeremy, and good afternoon, everyone.
+
+Please note that our first-quarter 2011 results were disseminated by Business Wire after market close today, and a copy of the release can be downloaded from our website at NetLogicMicro.com.
+
+Before we get started with our financial results for the first quarter, I would like to point out that during the course of this conference call, we will be making forward-looking statements that are based on certain assumptions and expectations of future events, that are subject to a number of risks and uncertainties, and actual results may differ materially.
+
+For a discussion of such risks and uncertainties, please see today's earnings release, the risk factors in our form 10-K filed with the SEC on February 16, 2011, as well as other reports the Company files from time to time with the SEC.
+
+Additionally, we will be making specific forward-looking statements and providing financial guidance regarding our second-quarter 2011 operating results.
+
+All forward-looking statements are qualified in their entirety by this cautionary statement, and the Company undertakes no obligation to publicly update forward-looking statements for any reason, except as required by law, even as new information becomes available or other events occur in the future.
+
+Also on the call we'll be making reference to non-GAAP financial measures.
+
+A reconciliation of non-GAAP to GAAP financial information is in today's earnings release.
+
+The reconciling items between GAAP and non-GAAP include stock-based compensation and related payroll taxes, acquisition-related costs, change in contingent earnout liability, amortization of intangible assets, and fair value adjustment related to acquired inventory and related tax effects.
+
+These items have been removed from the cost of revenue, operating expenses, and income taxes for non-GAAP reporting.
+
+I would like to now turn the call over to Mike Tate to discuss the financial results of the quarter.
+
+Today, we reported that revenue for the first quarter of 2011 was $98.7 million, compared with $100.4 million reported in the prior quarter.
+
+This was slightly below our previous guidance of flat sequential revenues.
+
+Towards the end of the quarter, we saw continued inventory rebalancing with certain enterprise customers.
+
+As a result, we worked with the customers to minimize their inventory levels and held off some shipments until 2Q.
+
+Additionally, Chinese carrier spending was soft in Q1, which impacted our business in China.
+
+However, based on our strong revenues in the month of April, we believe our China revenues will grow in Q2.
+
+In Q1, our top 3 customers that were above or at 10% of our revenues were Cisco Systems at 22%, Huawei at 11%, and Alcatel at 10% of our Q1 revenues.
+
+Revenue from customers outside of these top 3 customers were up $6.1 million, or 12% sequentially, as we continued to benefit from the ramp of new designs from our physical layer products, multi-core processors and knowledge-based processors with these customers.
+
+In Q1, we enjoyed a combination of favorable product mix as well as strong operational execution, which enabled us to report our non-GAAP gross margins at 72.3%.
+
+This compares favorably to our guidance of approximately 70%.
+
+Q1 GAAP operating expenses were $53.7 million, which included $10.9 million of stock-based compensation and related payroll taxes, and $900,000 for the amortization of intangible assets.
+
+Total non-GAAP operating expenses for Q1 were $41.5 million, which was in line with our previous guidance.
+
+Non-GAAP R&amp;D expenses were $26.9 million, and non-GAAP SG&amp;A expenses were $14.6 million for Q1.
+
+Our Q1 tax provision was an expense of $1 million, which was 3% of our non-GAAP income before taxes.
+
+On a GAAP basis, our Q1 net income was $6 million, or $0.08 per diluted share.
+
+Non-GAAP net income for Q1 was $29.2 million, or $0.39 per share, and was $0.03 ahead of our guidance of $0.36.
+
+For Q1, we had fully diluted shares of 72.7 million on a GAAP basis, and 74.7 million a non-GAAP basis.
+
+With respect to the balance sheet, our cash and invested balances totaled $277.4 million at the end of the quarter, reflecting continued strong cash flows during the quarter.
+
+Our accounts receivable was $40 million, and represented 37 days.
+
+Our ongoing target DSOs remains at 35 days.
+
+Inventory decreased to end Q1 at $33 million, representing 108 days, which is close to our target days of inventory of 110.
+
+This concludes my review of the quarterly results.
+
+Now I would like to turn the call over to Ron.
+
+Building upon our tremendous engineering achievement in 2010, we have continued to execute on an ambitious road map that highlights our commitment to technology leadership.
+
+Our design activity is very strong across all of our product categories, as our solutions are setting new standards in their respective markets for performance and power efficiency.
+
+We continue to enhance our growth opportunities, targeting some of the most significant technology trends in communications today, including deployment of advanced wireless infrastructure, the adoption of cloud computing, the migration to internet protocol version 6, and transition to 10 gigabit ethernet.
+
+Our product portfolio is ideally suited to address the complex architectural requirements of these trends, which we expect to drive a significant increase in our TAM as they play out over time.
+
+In multi-core processing, we expect 2011 to be a record year for design wins, given a very large number of data plane and control plane designs we are closing on right now.
+
+We are seeing robust design activity for our multi-core, multi-threaded processors, with customers aggressively moving to this technology in order to take advantage of the increased capabilities and programmability, which extends its field life.
+
+We also expect to see additional ramps of our current volume production XLR and XLS processors, as we approach the second half of the year, and these products continue to proliferate in wireless infrastructure applications.
+
+For the 40-nanometer XLP family, we had an increasing number of design wins during the quarter, across a variety of applications, including wireless infrastructure, storage, and network security.
+
+We are building a healthy backlog of XLP processor designs, and expect pre-production volumes late this year, trapping the higher volume in 2012.
+
+But a launch of this extraordinary processor family was in itself a major achievement.
+
+Our engineering team has continued an impressive pace of innovation to begin proliferating the XLP processor core into new iterations of the product.
+
+This January, we have announced a number of new additions to the XLP processor family, targeted at significantly increasing the number of sockets that we could pursue.
+
+These include our newest XLP864 processor with 64 NXCPUs, which is double our already industry-leading XLP832 processor.
+
+We also announced a processor specifically optimized for next generation LTE and LTE advanced base stations, and a device targeted at security applications that combines on a single chip our industry-leading XLP processor cores with our field-proven best in class NetL7 Layer 7 knowledge-based processor technology.
+
+Additionally, we announced our first XLP processor designed specifically for the communications control plane market, which is estimated to more than double our existing multi-core processor TAM.
+
+Customer response has been tremendous, and we have won multiple control plane designs with Tier 1 customers, where the need for greater performance and power efficiency is critical.
+
+The demands on control plane processors have been increasing rapidly, as they are tasked with configuring and managing ever-faster and more complex networks.
+
+The processors used in the control plane have to deliver increasingly better single-threaded performance, and handle larger amounts of complex code, covering a wide range of communications protocol.
+
+Our newest XLP processor is designed to meet these requirements, with its best-in-class CPU, architecture supporting quad-issue, out-of-order execution, sophisticated branch handling and large on-chip caching.
+
+As a result of these innovations, the XLP processor delivers best-in-class single-threaded performance.
+
+This, when combined with the XLP processor's multi-threading and multi-core technology, delivers a 400% increase in performance in a wide range of control plane applications, including managing security policies and intrusion detection and prevention systems, signaling protocols in wireless infrastructure, and network topology management in switching and routing platforms.
+
+For these applications and many others, the XLP processor's architecture is perfectly suited.
+
+The combination of our leading-edge architecture and advanced 40-nanometer process gives us strong competitive advantages in delivering the highest performance and lowest profile to meet increasingly stringent processing requirements.
+
+We expect to announce additional control plane products during the year, which will further expand our offering, and allow us to address a wide variety of applications within the communications market.
+
+Turning to our knowledge-based processors, the migration to IPv6 continues to be a major driver of our design activity.
+
+Over the last 12 months, this move to IPv6 has resulted in the highest pace of design wins for knowledge-based processors in our history, as customers are rapidly preparing for the additional IPv6 requirements.
+
+TSMC has been very supportive in our efforts to quickly bring our 40-nanometer knowledge-based processors to market, which offer greatly enhanced V6 capability.
+
+We expect to begin shipping these new products and production in the second half of this year.
+
+With the last of the IPv4 addresses allocated in February, the percentage of v6 network traffic is expected to steadily increase over the next several years.
+
+As more IPv6 traffic runs across the network, we believe that our customers will need to increase their usage of knowledge-based processors, to manage the four-times increase in header length and additional classification and security requirements.
+
+Moving to our physical layer solutions, with the growth in size and capability of data centers and the adoption of virtualization in cloud computing technologies, the migration to 10 gigabit ethernet is quickly gaining momentum.
+
+We are seeing healthy growth in revenues from our advanced 10 and 100 gigabit ethernet PHYs and are booking a growing backlog of designs for our highest port density PHY products.
+
+These devices are optimal for data center applications, as they simultaneously support, these are cost effective, direct attach twinX copper or short range and long range optical cabling, to minimize power, latency and cost.
+
+During Q1, we announced a new PHY product that features ultra low latency at 70-nanoseconds, which is nearly half of existing solutions.
+
+Industry leaders such as Arista are leveraging this break-through performance to achieve the lowest latency possible for the most time-sensitive applications, such as financial trading, where nanoseconds of delay can have a major impact to the pricing and profits.
+
+Across our multi-core processors, knowledge-based processors, and PHYs, our new devices each feature an extremely low power profile, thanks in part to TSMC's advanced 40-nanometer process technology.
+
+Now, turning to our market.
+
+While we expect to experience some lingering effects of inventory rebalancing in the second quarter, we are seeing positive signs of renewed growth beginning in the second half of the year.
+
+We believe that as our customers work through this inventory in Q2, our revenue shipments will come in line with demand as we move into Q3.
+
+Also, we are seeing positive developments and good growth from a number of our more recent customers, such as HP, Ericsson and ZTE, that are early in their ramp phases with our product.
+
+HP, with whom we have a broad portfolio of design wins, and expected to provide positive growth this year, as they continue to ramp our multi-core knowledge-based processors and 10 gigabit PHYs.
+
+In wireless infrastructure, ZTE and Ericsson are poised to drive solid growth for a number of our products, tied to the worldwide rollout of 3G-Plus and 4G LTE networks.
+
+Given the breadth of our designs with ZTE, they have the potential to quickly become a top five customer for us.
+
+Our extensive design wins with all of the leading customers in the wireless infrastructure space, including Alcatel-Lucent, Cisco, [Viton Mobile], Ericsson, Fujitsu, Huawei, Juniper, NEC, Nokia Siemens and ZTE provide us with great exposure across a variety of applications and geographic regions.
+
+Further, our presence in this exciting growth market continues to expand.
+
+In April, we closed our acquisition of Optichron, a leading provider of 3G, 4G LTE base station digital front-end processors.
+
+Optichron has delivered a highly differentiated break-through solution that we believe will be critical enabling technology for LTE.
+
+As the market transitions from 2G to 3G to 4G LTE, service providers are challenged to fit more signals into their limited spectrum allocation, to enable multiple protocols in each spectrum.
+
+Therefore, common platform base stations that can support wider bandwidth, significantly more signal channels and more protocols in each band are likely to become the technology of choice in next-generation networks.
+
+Optichron's highly-differentiated solution for common platform base stations delivers unparalleled performance of up to 5X increase in signal bandwidth and up to 9X increase in instantaneous bandwidth, which dramatically improves 3G, 4G LTE data rates.
+
+In addition, Optichron's break-through products enable the industry's highest spectrum efficiency for the simultaneous processing of multiple signal channels per frequency band, as well as the multi-mode coexistence of 4G LTE, 3G and 2G protocol.
+
+Beyond these significant feature enhancements, Optichron's innovative DSE processors greatly improve the cost and power profile for next generation base stations.
+
+This acquisition is very exciting for us, as it allows us to have a growing strategic presence with our wireless infrastructure customers, and to provide a portfolio of critical technologies for the enablement of LTE.
+
+Like our previous acquisitions of Aeluros and RMI, Optichron was brought to our attention by multiple customers, who wanted to leverage the break-through performance that Optichron's technology offers, but needed the assurance of long-term financial strength and public company transparency.
+
+As we worked closely together over the past year, we realized there were a number of synergies that made Optichron a great fit for our strategic direction.
+
+First, Optichron's DSE device goes into the very same boxes as our multi-core processors, allowing us to further leverage and cross-sell a broad base of solutions to customers with whom we already have established relationships.
+
+Second, Optichron has a similar business model, offering high-end, high-value products with long product cycles sticky design wins, and limited leading edge competition.
+
+Third, Optichron is currently designing in 40-nanometer technology at TSMC, and we expect to be able to accelerate its migration by leveraging our expertise in designing on this advanced node.
+
+Finally, our culture at NetLogic has always been defined by innovation, as evidenced by our recently-issued 500th patent.
+
+The Optichron team is equally inventive and tremendously talented, and I believe that their energy and dedication will be a great compliment to our organization.
+
+I want to take this opportunity to welcome the Optichron employees to the NetLogic Microsystems family.
+
+In closing, Q1 was another strong quarter of execution.
+
+Our new products are allowing us to expand our addressable market into additional high-growth areas that leverage our strong relationships with the Tier 1 companies in our space.
+
+Our continued strong design win success is a strong testament that the capabilities of our product are closely aligned with our customers' performance requirements.
+
+Over the course of 2011, we will continue to drive our differentiated technology road map, create advanced solutions that raise the bar for communications in networking solutions, and broaden our influence in the design of next generation architectures.
+
+At this point, I will turn the call back over to Mike to discuss guidance for the second quarter.
+
+Then we'll open up the call for your questions.
+
+As we look into Q2, we expect to complete the inventory balancing with our largest customers.
+
+Besides this, our growth will be driven by continued new product ramps with multi-core processors, knowledge-based processors, and our physical layer solutions.
+
+Also, our recently-closed acquisition of Optichron will contribute initial product revenues during the quarter.
+
+With this, we believe our Q2 revenues will be up approximately 5% sequentially from Q1.
+
+We expect our non-GAAP gross margins to be approximately 71%.
+
+We expect our non-GAAP operating expenses to be approximately $44 million, which includes the operations of Optichron.
+
+Non-GAAP R&amp;D expenses are expected to be approximately $29.3 million, and non-GAAP SG&amp;A expenses are expected to be approximately $14.7 million.
+
+We estimate interest and other income to be near $0.
+
+We expect our income tax expense to be approximately 5% of our non-GAAP income before taxes.
+
+We expect our non-GAAP EPS for the second quarter to be $0.37 per share.
+
+We expect our non-GAAP share count to be approximately 75.4 million.
+
+Given that we have not finalized the purchase accounting related to our recently-closed acquisition of Optichron, we are not in a position to estimate our GAAP EPS results.
+
+Our non-GAAP EPS excludes our stock-based compensation and related payroll taxes, amortization of intangible assets, inventory fair value adjustment, and acquisition integration costs.
+
+This concludes our prepared remarks for the call, and now we're happy to take questions.
 
 Good afternoon and welcome to the NetLogic Microsystems second-quarter 2011 financial results conference call.
 

@@ -40,6 +40,8 @@
   "pca_components": 50,
   "output_dir": "../data/",
 
+  "hierarchical_clustering_threshold": 1.5,
+
   "zeroshot_min_similarity": 0.05,
   "min_topic_size": 200,
 
