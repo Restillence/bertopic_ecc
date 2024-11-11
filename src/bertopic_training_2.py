@@ -19,8 +19,9 @@ from sentence_transformers import SentenceTransformer
 from sklearn.feature_extraction.text import CountVectorizer
 from utils import print_configuration
 from scipy.cluster import hierarchy as sch  # For hierarchical topic modeling
-from scipy.cluster.hierarchy import fcluster
+from scipy.cluster.hierarchy import fcluster, linkage
 from collections import defaultdict
+
 
 
 class BertopicModel:
@@ -311,7 +312,7 @@ class BertopicModel:
         print("\nFinal topic information:")
         print(topic_info)
 
-        # Generate hierarchical topics (optional, for saving to CSV)
+        # Generate hierarchical topics
         print("\nGenerating hierarchical topics...")
         try:
             hierarchical_topics = self.topic_model.hierarchical_topics(
@@ -326,21 +327,10 @@ class BertopicModel:
             import traceback
             traceback.print_exc()
 
-        # Obtain topic embeddings
-        topic_embeddings = self.topic_model.topic_embeddings_
-
-        # Exclude the outlier topic (-1) if present
-        if -1 in self.topic_model.get_topic_freq().Topic.values:
-            topic_embeddings = topic_embeddings[1:]
-
-        # Compute the linkage matrix
-        from scipy.cluster.hierarchy import linkage
-        linkage_matrix = linkage(topic_embeddings, method='ward', optimal_ordering=True)
-
         # Save visualize_hierarchy before merging
         print("\nVisualizing hierarchy before merging...")
         try:
-            hierarchy_fig_before = self.topic_model.visualize_hierarchy(linkage_matrix=linkage_matrix)
+            hierarchy_fig_before = self.topic_model.visualize_hierarchy(hierarchical_topics=hierarchical_topics)
             hierarchy_fig_before.write_html(os.path.join(self.config.get("output_dir", "."), 'topic_hierarchy_before_merging.html'))
             print("Hierarchy visualization before merging saved.")
         except Exception as e:
@@ -353,21 +343,24 @@ class BertopicModel:
         try:
             threshold = self.config.get("hierarchical_clustering_threshold", 1.5)
             from scipy.cluster.hierarchy import fcluster
+            # Obtain topic embeddings and topic IDs, excluding -1
+            topic_ids = sorted([topic_id for topic_id in self.topic_model.get_topics().keys() if topic_id != -1])
+            topic_embeddings = []
+            for topic_id in topic_ids:
+                embedding = self.topic_model.topic_embeddings_[topic_id]
+                topic_embeddings.append(embedding)
+            topic_embeddings = np.array(topic_embeddings)
+            # Compute the linkage matrix
+            linkage_matrix = sch.linkage(topic_embeddings, method='ward', optimal_ordering=True)
             # Assign cluster labels based on the threshold
             cluster_labels = fcluster(linkage_matrix, t=threshold, criterion='distance')
-
-            # Get sorted topic IDs excluding -1 (outliers)
-            sorted_topic_ids = sorted([topic_id for topic_id in self.topic_model.get_topic_freq().Topic if topic_id != -1])
-
             # Map topic IDs to cluster labels
-            topic_id_to_cluster_label = dict(zip(sorted_topic_ids, cluster_labels))
-
+            topic_id_to_cluster_label = dict(zip(topic_ids, cluster_labels))
             # Create a mapping from cluster labels to topic IDs
             from collections import defaultdict
             cluster_to_topic_ids = defaultdict(list)
             for topic_id, cluster_label in topic_id_to_cluster_label.items():
                 cluster_to_topic_ids[cluster_label].append(topic_id)
-
             # Merge topics in each cluster
             for cluster_label, topic_ids in cluster_to_topic_ids.items():
                 if len(topic_ids) > 1:
@@ -375,40 +368,50 @@ class BertopicModel:
                     try:
                         self.topic_model.merge_topics(
                             self.docs,
-                            topics_to_merge=topic_ids,
-                            embeddings=self.embeddings
+                            topics_to_merge=topic_ids
                         )
                         # Update topics and embeddings
-                        self.topic_model.update_topics(self.docs, embeddings=self.embeddings)
+                        self.topic_model.update_topics(self.docs)
                     except Exception as e:
                         print(f"An error occurred while merging topics {topic_ids}: {e}")
             print("Topic merging based on hierarchical clustering completed.")
+
+            # Verify the updated topic information
+            print("\nGetting updated topic information after merging...")
+            topic_info_after_merging = self.topic_model.get_topic_info()
+            print(topic_info_after_merging)
+
         except Exception as e:
             print(f"An error occurred during topic merging: {e}")
             import traceback
             traceback.print_exc()
 
-        # After merging, regenerate topic embeddings and linkage matrix
-        # Obtain updated topic embeddings
-        topic_embeddings_after = self.topic_model.topic_embeddings_
-
-        # Exclude outlier topic (-1) if present
-        if -1 in self.topic_model.get_topic_freq().Topic.values:
-            topic_embeddings_after = topic_embeddings_after[1:]
-
-        # Compute the linkage matrix after merging
-        linkage_matrix_after = linkage(topic_embeddings_after, method='ward', optimal_ordering=True)
+        # After merging, generate hierarchical topics again
+        print("\nGenerating hierarchical topics after merging...")
+        try:
+            hierarchical_topics_after = self.topic_model.hierarchical_topics(
+                self.docs,
+                linkage_function=lambda x: sch.linkage(x, 'ward', optimal_ordering=True)
+            )
+            hierarchical_topics_output_path_after = os.path.join(self.config.get("output_dir", "."), 'hierarchical_topics_after_merging.csv')
+            hierarchical_topics_after.to_csv(hierarchical_topics_output_path_after, index=False)
+            print(f"Hierarchical topics after merging saved to {hierarchical_topics_output_path_after}.")
+        except Exception as e:
+            print(f"An error occurred while generating hierarchical topics after merging: {e}")
+            import traceback
+            traceback.print_exc()
 
         # Save visualize_hierarchy after merging
         print("\nVisualizing hierarchy after merging...")
         try:
-            hierarchy_fig_after = self.topic_model.visualize_hierarchy(linkage_matrix=linkage_matrix_after)
+            hierarchy_fig_after = self.topic_model.visualize_hierarchy(hierarchical_topics=hierarchical_topics_after)
             hierarchy_fig_after.write_html(os.path.join(self.config.get("output_dir", "."), 'topic_hierarchy_after_merging.html'))
             print("Hierarchy visualization after merging saved.")
         except Exception as e:
             print(f"An error occurred while visualizing hierarchy after merging: {e}")
             import traceback
             traceback.print_exc()
+
 
     def _customize_topic_labels(self):
         """Customize topic labels to include zero-shot topic names followed by top words."""

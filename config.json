@@ -18,7 +18,7 @@
     "use_gpu": false,
     "pca_components": 50,
 
-    "hierarchical_clustering_threshold": 1.5,
+    "hierarchical_clustering_threshold": 0.5,
 
 
     "zeroshot_min_similarity": 0.3,
