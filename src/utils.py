@@ -72,7 +72,8 @@ def process_topics(path, output_path, topics_to_keep, threshold_percentage=None)
 
 def determine_topics_to_keep(df, threshold_percentage):
     """
-    Determine topics that appear in at least 1 call for the specified percentage of companies.
+    Determine topics that appear in at least 1 call for the specified percentage of companies,
+    excluding the outlier category (-1).
     """
     # Get the total number of companies
     total_companies = df['permco'].nunique()
@@ -85,9 +86,10 @@ def determine_topics_to_keep(df, threshold_percentage):
 
     for topics in topics_per_company['topics']:
         for topic in topics:
-            if topic not in topic_counts:
-                topic_counts[topic] = 0
-            topic_counts[topic] += 1
+            if topic != -1:  # Exclude outlier category
+                if topic not in topic_counts:
+                    topic_counts[topic] = 0
+                topic_counts[topic] += 1
 
     # Determine the threshold number of companies
     company_threshold = total_companies * (threshold_percentage / 100)
@@ -104,6 +106,7 @@ def determine_topics_to_keep(df, threshold_percentage):
     print(f"Percentage Threshold: {threshold_percentage}%")
     
     return topics_to_keep
+
 
 def create_transition_matrix(topic_sequence, num_topics):
     transition_matrix = np.zeros((num_topics, num_topics))

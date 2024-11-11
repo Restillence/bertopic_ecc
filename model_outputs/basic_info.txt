@@ -1,57 +1,53 @@
-Number of Topics: 50
+Number of Topics: 46
 
 Topics by Frequency:
-    Topic  Count                                               Name                                                                                      Representation  Representative_Docs
-0      -1    263                   -1_costs_cost_increase_increased  [costs, cost, increase, increased, approximately, million, fourth quarter, quarter, results, year]                  NaN
-1       0     80                   0_year_fourth quarter_costs_cost  [year, fourth quarter, costs, cost, increase, increased, quarter, million, results, approximately]                  NaN
-2       1     56                          1_costs_cost_year_quarter           [costs, cost, year, quarter, increased, fourth quarter, approximately, million, fourth, ]                  NaN
-3       2     46                        2_increase_increased_costs_                                                          [increase, increased, costs, , , , , , , ]                  NaN
-4       3     36            3_results_fourth quarter_quarter_fourth                                          [results, fourth quarter, quarter, fourth, year, , , , , ]                  NaN
-5       4     34              4_fourth quarter_quarter_million_year             [fourth quarter, quarter, million, year, approximately, increased, fourth, results, , ]                  NaN
-6       5     32                              5_results_costs_cost_                                                                [results, costs, cost, , , , , , , ]                  NaN
-7       6     31     6_quarter_million_fourth quarter_approximately                      [quarter, million, fourth quarter, approximately, results, year, fourth, , , ]                  NaN
-8       7     23                                              7____                                                                                [, , , , , , , , , ]                  NaN
-9       8     23                       8_increase_year_cost_results                                                  [increase, year, cost, results, million, , , , , ]                  NaN
-10      9     22                    9_cost_costs_increase_increased         [cost, costs, increase, increased, approximately, quarter, million, fourth quarter, year, ]                  NaN
-11     10     20           10_fourth quarter_results_quarter_fourth                                              [fourth quarter, results, quarter, fourth, , , , , , ]                  NaN
-12     11     18                 11_increased_increase_million_cost                     [increased, increase, million, cost, approximately, year, quarter, results, , ]                  NaN
-13     12     18                                             12____                                                                                [, , , , , , , , , ]                  NaN
-14     13     18              13_quarter_increased_increase_million                                             [quarter, increased, increase, million, year, , , , , ]                  NaN
-15     14     17           14_fourth quarter_quarter_fourth_results                                  [fourth quarter, quarter, fourth, results, increase, year, , , , ]                  NaN
-16     15     16       15_increase_increased_fourth quarter_quarter                                      [increase, increased, fourth quarter, quarter, cost, , , , , ]                  NaN
-17     16     16             16_costs_million_approximately_quarter                       [costs, million, approximately, quarter, year, fourth quarter, results, , , ]                  NaN
-18     17     15               17_cost_costs_increase_approximately                  [cost, costs, increase, approximately, year, quarter, fourth quarter, results, , ]                  NaN
-19     18     15            18_year_results_increased_approximately                                               [year, results, increased, approximately, , , , , , ]                  NaN
-20     19     14                19_costs_cost_approximately_quarter                                                   [costs, cost, approximately, quarter, , , , , , ]                  NaN
-21     20     14                                20_approximately___                                                                   [approximately, , , , , , , , , ]                  NaN
-22     21     14                21_increase_increased_costs_results                                        [increase, increased, costs, results, cost, quarter, , , , ]                  NaN
-23     22     13  22_fourth quarter_quarter_increased_approximately            [fourth quarter, quarter, increased, approximately, million, fourth, year, increase, , ]                  NaN
-24     23     13                                      23_quarter___                                                                         [quarter, , , , , , , , , ]                  NaN
-25     24     13              24_cost_million_approximately_quarter                        [cost, million, approximately, quarter, fourth quarter, year, results, , , ]                  NaN
-26     25     13          25_increase_increased_costs_approximately                                             [increase, increased, costs, approximately, , , , , , ]                  NaN
-27     26     12               26_costs_fourth quarter_quarter_cost                                [costs, fourth quarter, quarter, cost, increase, fourth, year, , , ]                  NaN
-28     27     12           27_approximately_cost_increase_increased                            [approximately, cost, increase, increased, quarter, year, million, , , ]                  NaN
-29     28     11                          28_results_costs_quarter_                                                             [results, costs, quarter, , , , , , , ]                  NaN
-30     29     11                                             29____                                                                                [, , , , , , , , , ]                  NaN
-31     30     11                 30_increase_increased_quarter_cost                                                    [increase, increased, quarter, cost, , , , , , ]                  NaN
-32     31     11            31_costs_increase_approximately_quarter                             [costs, increase, approximately, quarter, year, million, results, , , ]                  NaN
-33     32     10                                             32____                                                                                [, , , , , , , , , ]                  NaN
-34     33     10                               33_results_quarter__                                                                  [results, quarter, , , , , , , , ]                  NaN
-35     34     10                   34_costs_cost_increased_increase         [costs, cost, increased, increase, million, year, approximately, quarter, fourth quarter, ]                  NaN
-36     35      9                 35_quarter_fourth quarter_million_                                                    [quarter, fourth quarter, million, , , , , , , ]                  NaN
-37     36      9                       36_quarter_cost_results_year                                             [quarter, cost, results, year, approximately, , , , , ]                  NaN
-38     37      9                    37_increased_costs_results_year                                                       [increased, costs, results, year, , , , , , ]                  NaN
-39     38      8                                    38_costs_cost__                                                                       [costs, cost, , , , , , , , ]                  NaN
-40     39      8              39_quarter_million_approximately_year                                                 [quarter, million, approximately, year, , , , , , ]                  NaN
-41     40      7                                      40_results___                                                                         [results, , , , , , , , , ]                  NaN
-42     41      7                                             41____                                                                                [, , , , , , , , , ]                  NaN
-43     42      7                    42_costs_cost_quarter_increased                [costs, cost, quarter, increased, fourth quarter, increase, million, year, fourth, ]                  NaN
-44     43      7                43_increase_increased_costs_quarter                                        [increase, increased, costs, quarter, million, year, , , , ]                  NaN
-45     44      7                                  44_results_year__                                                                     [results, year, , , , , , , , ]                  NaN
-46     45      6                                             45____                                                                                [, , , , , , , , , ]                  NaN
-47     46      6                            46_increased_increase__                                                               [increased, increase, , , , , , , , ]                  NaN
-48     47      5                                 47_increase_year__                                                                    [increase, year, , , , , , , , ]                  NaN
-49     48      5                                        48_costs___                                                                           [costs, , , , , , , , , ]                  NaN
+    Topic  Count                                Name                                                        CustomName                                              Representation  Representative_Docs
+0      -1    192  -1_quarter_business_expect_company                                                          Outliers        [quarter, business, expect, company, year, , , , , ]                  NaN
+1       0     10                0_company_business__                         GROWTH: company, business, , , , , , , ,                          [company, business, , , , , , , , ]                  NaN
+2       1     41      1_company_year_business_expect    GROWTH: company, year, business, expect, quarter, time, , , ,     [company, year, business, expect, quarter, time, , , , ]                  NaN
+3       2      9                   2_business_year__                            GROWTH: business, year, , , , , , , ,                             [business, year, , , , , , , , ]                  NaN
+4       3     23                3_business_company__                         GROWTH: business, company, , , , , , , ,                          [business, company, , , , , , , , ]                  NaN
+5       4      8            4_business_quarter_year_                     GROWTH: business, quarter, year, , , , , , ,                      [business, quarter, year, , , , , , , ]                  NaN
+6       5    169     5_business_company_year_quarter    GROWTH: business, company, year, quarter, second, time, , , ,     [business, company, year, quarter, second, time, , , , ]                  NaN
+7       6     31                6_business_year_new_                         GROWTH: business, year, new, , , , , , ,                          [business, year, new, , , , , , , ]                  NaN
+8       7     90     7_quarter_year_business_company        GROWTH: quarter, year, business, company, second, , , , ,         [quarter, year, business, company, second, , , , , ]                  NaN
+9       8     23            8_business_quarter_time_                     GROWTH: business, quarter, time, , , , , , ,                      [business, quarter, time, , , , , , , ]                  NaN
+10      9     50     9_business_company_quarter_year              GROWTH: business, company, quarter, year, , , , , ,               [business, company, quarter, year, , , , , , ]                  NaN
+11     10     11            10_business_year_second_                      GROWTH: business, year, second, , , , , , ,                       [business, year, second, , , , , , , ]                  NaN
+12     11     82    11_business_company_quarter_year              GROWTH: business, company, quarter, year, , , , , ,               [business, company, quarter, year, , , , , , ]                  NaN
+13     12      6                   12_quarter_year__                           Topic 12: quarter, year, , , , , , , ,                              [quarter, year, , , , , , , , ]                  NaN
+14     13     52    13_business_company_year_quarter     GROWTH: business, company, year, quarter, expect, new, , , ,      [business, company, year, quarter, expect, new, , , , ]                  NaN
+15     14     15                      14_business___                                GROWTH: business, , , , , , , , ,                                 [business, , , , , , , , , ]                  NaN
+16     15      9            15_quarter_company_year_                    Topic 15: quarter, company, year, , , , , , ,                       [quarter, company, year, , , , , , , ]                  NaN
+17     16     13                          16_time___                                  Topic 16: time, , , , , , , , ,                                     [time, , , , , , , , , ]                  NaN
+18     17     17              17_new_second_quarter_                      Topic 17: new, second, quarter, , , , , , ,                         [new, second, quarter, , , , , , , ]                  NaN
+19     18     10                              18____                                      Topic 18: , , , , , , , , ,                                         [, , , , , , , , , ]                  NaN
+20     19     17                              19____                                      Topic 19: , , , , , , , , ,                                         [, , , , , , , , , ]                  NaN
+21     20     28    20_business_quarter_year_company    GROWTH: business, quarter, year, company, time, new, end, , ,     [business, quarter, year, company, time, new, end, , , ]                  NaN
+22     21      9       21_quarter_end_company_second               Topic 21: quarter, end, company, second, , , , , ,                  [quarter, end, company, second, , , , , , ]                  NaN
+23     22      7                          22_time___                                  Topic 22: time, , , , , , , , ,                                     [time, , , , , , , , , ]                  NaN
+24     23     12                    23_second_time__                            Topic 23: second, time, , , , , , , ,                               [second, time, , , , , , , , ]                  NaN
+25     24     17                24_company_time_new_                        Topic 24: company, time, new, , , , , , ,                           [company, time, new, , , , , , , ]                  NaN
+26     25      8        25_year_quarter_company_time                Topic 25: year, quarter, company, time, , , , , ,                   [year, quarter, company, time, , , , , , ]                  NaN
+27     26     22                          26_time___                                  Topic 26: time, , , , , , , , ,                                     [time, , , , , , , , , ]                  NaN
+28     27     15                          27_time___                                  Topic 27: time, , , , , , , , ,                                     [time, , , , , , , , , ]                  NaN
+29     28     18                           28_new___                                   Topic 28: new, , , , , , , , ,                                      [new, , , , , , , , , ]                  NaN
+30     29     19    29_business_company_quarter_year              GROWTH: business, company, quarter, year, , , , , ,               [business, company, quarter, year, , , , , , ]                  NaN
+31     30      9                      30_business___                                GROWTH: business, , , , , , , , ,                                 [business, , , , , , , , , ]                  NaN
+32     31      9                          31_year___                                  Topic 31: year, , , , , , , , ,                                     [year, , , , , , , , , ]                  NaN
+33     32     43          32_expect_year_new_quarter                  Topic 32: expect, year, new, quarter, , , , , ,                     [expect, year, new, quarter, , , , , , ]                  NaN
+34     33      8          33_new_company_expect_year                  Topic 33: new, company, expect, year, , , , , ,                     [new, company, expect, year, , , , , , ]                  NaN
+35     34     12     34_company_business_year_expect               GROWTH: company, business, year, expect, , , , , ,                [company, business, year, expect, , , , , , ]                  NaN
+36     35     15    35_business_company_year_quarter              GROWTH: business, company, year, quarter, , , , , ,               [business, company, year, quarter, , , , , , ]                  NaN
+37     36      6            36_new_business_quarter_                      GROWTH: new, business, quarter, , , , , , ,                       [new, business, quarter, , , , , , , ]                  NaN
+38     37     20                       37_new_time__                               Topic 37: new, time, , , , , , , ,                                  [new, time, , , , , , , , ]                  NaN
+39     38     24                    38_second_time__                            Topic 38: second, time, , , , , , , ,                               [second, time, , , , , , , , ]                  NaN
+40     39     27                   39_business_new__                             GROWTH: business, new, , , , , , , ,                              [business, new, , , , , , , , ]                  NaN
+41     40     24     40_quarter_second_year_business               GROWTH: quarter, second, year, business, , , , , ,                [quarter, second, year, business, , , , , , ]                  NaN
+42     41      6       41_quarter_year_second_expect               Topic 41: quarter, year, second, expect, , , , , ,                  [quarter, year, second, expect, , , , , , ]                  NaN
+43     42     23    42_quarter_year_business_company  GROWTH: quarter, year, business, company, expect, second, , , ,   [quarter, year, business, company, expect, second, , , , ]                  NaN
+44     43      8          43_quarter_year_end_expect                  Topic 43: quarter, year, end, expect, , , , , ,                     [quarter, year, end, expect, , , , , , ]                  NaN
+45     44      7                   44_quarter_year__                           Topic 44: quarter, year, , , , , , , ,                              [quarter, year, , , , , , , , ]                  NaN
 
 Top words for each topic:
 
@@ -59,589 +55,541 @@ Topic -1 (Outliers):
   No words available for outlier topic.
 
 Topic 0:
-  - year: 0.22028444707393646
-  - fourth quarter: 0.21518220007419586
-  - costs: 0.2012355625629425
-  - cost: 0.19705745577812195
-  - increase: 0.17083972692489624
-  - increased: 0.1641959547996521
-  - quarter: 0.16352790594100952
-  - million: 0.15374509990215302
-  - results: 0.12743423879146576
-  - approximately: 0.11827924847602844
+  - company: 0.3886815309524536
+  - business: 0.3689470887184143
+  - : 0.15607698261737823
+  - : 0.15607698261737823
+  - : 0.15607698261737823
+  - : 0.15607698261737823
+  - : 0.15607698261737823
+  - : 0.15607698261737823
+  - : 0.15607698261737823
+  - : 0.15607698261737823
 
 Topic 1:
-  - costs: 0.32149577140808105
-  - cost: 0.28935617208480835
-  - year: 0.2547326982021332
-  - quarter: 0.23829691112041473
-  - increased: 0.22708912193775177
-  - fourth quarter: 0.22072085738182068
-  - approximately: 0.20104366540908813
-  - million: 0.18301266431808472
-  - fourth: 0.04084189981222153
-  - : 0.016668276861310005
+  - company: 0.28814053535461426
+  - year: 0.16002899408340454
+  - business: 0.13463948667049408
+  - expect: 0.12553219497203827
+  - quarter: 0.057293642312288284
+  - time: 0.03714568912982941
+  - : 0.03657151013612747
+  - : 0.03657151013612747
+  - : 0.03657151013612747
+  - : 0.03657151013612747
 
 Topic 2:
-  - increase: 0.2865355908870697
-  - increased: 0.19501397013664246
-  - costs: 0.18881136178970337
-  - : 0.14193189144134521
-  - : 0.14193189144134521
-  - : 0.14193189144134521
-  - : 0.14193189144134521
-  - : 0.14193189144134521
-  - : 0.14193189144134521
-  - : 0.14193189144134521
+  - business: 0.4387493431568146
+  - year: 0.2787201404571533
+  - : 0.23802515864372253
+  - : 0.23802515864372253
+  - : 0.23802515864372253
+  - : 0.23802515864372253
+  - : 0.23802515864372253
+  - : 0.23802515864372253
+  - : 0.23802515864372253
+  - : 0.23802515864372253
 
 Topic 3:
-  - results: 0.40677744150161743
-  - fourth quarter: 0.36589330434799194
-  - quarter: 0.33905866742134094
-  - fourth: 0.2014089822769165
-  - year: 0.17836955189704895
-  - : 0.15006917715072632
-  - : 0.15006917715072632
-  - : 0.15006917715072632
-  - : 0.15006917715072632
-  - : 0.15006917715072632
+  - business: 0.41664785146713257
+  - company: 0.3279048800468445
+  - : 0.12141658365726471
+  - : 0.12141658365726471
+  - : 0.12141658365726471
+  - : 0.12141658365726471
+  - : 0.12141658365726471
+  - : 0.12141658365726471
+  - : 0.12141658365726471
+  - : 0.12141658365726471
 
 Topic 4:
-  - fourth quarter: 0.25270330905914307
-  - quarter: 0.2523078918457031
-  - million: 0.24605903029441833
-  - year: 0.2309686243534088
-  - approximately: 0.23083087801933289
-  - increased: 0.22737500071525574
-  - fourth: 0.08936355262994766
-  - results: 0.053025998175144196
-  - : 0.027459681034088135
-  - : 0.027459681034088135
+  - business: 0.33798667788505554
+  - quarter: 0.306424617767334
+  - year: 0.25905418395996094
+  - : 0.16421538591384888
+  - : 0.16421538591384888
+  - : 0.16421538591384888
+  - : 0.16421538591384888
+  - : 0.16421538591384888
+  - : 0.16421538591384888
+  - : 0.16421538591384888
 
 Topic 5:
-  - results: 0.3331754803657532
-  - costs: 0.14436295628547668
-  - cost: 0.057764146476984024
-  - : 0.03218333423137665
-  - : 0.03218333423137665
-  - : 0.03218333423137665
-  - : 0.03218333423137665
-  - : 0.03218333423137665
-  - : 0.03218333423137665
-  - : 0.03218333423137665
+  - business: 0.4866143465042114
+  - company: 0.3836978077888489
+  - year: 0.2775592505931854
+  - quarter: 0.23539870977401733
+  - second: 0.13093070685863495
+  - time: 0.09295818954706192
+  - : 0.07476375997066498
+  - : 0.07476375997066498
+  - : 0.07476375997066498
+  - : 0.07476375997066498
 
 Topic 6:
-  - quarter: 0.3050706088542938
-  - million: 0.26976680755615234
-  - fourth quarter: 0.2533935308456421
-  - approximately: 0.24538446962833405
-  - results: 0.1730363368988037
-  - year: 0.1198415756225586
-  - fourth: 0.05107875168323517
-  - : 0.00499853165820241
-  - : 0.00499853165820241
-  - : 0.00499853165820241
+  - business: 0.5037344098091125
+  - year: 0.18785211443901062
+  - new: 0.18228992819786072
+  - : 0.1397816240787506
+  - : 0.1397816240787506
+  - : 0.1397816240787506
+  - : 0.1397816240787506
+  - : 0.1397816240787506
+  - : 0.1397816240787506
+  - : 0.1397816240787506
 
 Topic 7:
-  - : 0.16439291834831238
-  - : 0.16439291834831238
-  - : 0.16439291834831238
-  - : 0.16439291834831238
-  - : 0.16439291834831238
-  - : 0.16439291834831238
-  - : 0.16439291834831238
-  - : 0.16439291834831238
-  - : 0.16439291834831238
-  - : 0.16439291834831238
+  - quarter: 0.47379082441329956
+  - year: 0.32298439741134644
+  - business: 0.18521246314048767
+  - company: 0.1739673763513565
+  - second: 0.08815516531467438
+  - : 0.08329977840185165
+  - : 0.08329977840185165
+  - : 0.08329977840185165
+  - : 0.08329977840185165
+  - : 0.08329977840185165
 
 Topic 8:
-  - increase: 0.3553393483161926
-  - year: 0.204395592212677
-  - cost: 0.20138278603553772
-  - results: 0.1441754847764969
-  - million: 0.11909811943769455
-  - : 0.08696393668651581
-  - : 0.08696393668651581
-  - : 0.08696393668651581
-  - : 0.08696393668651581
-  - : 0.08696393668651581
+  - business: 0.37331622838974
+  - quarter: 0.22597017884254456
+  - time: 0.220098078250885
+  - : 0.1714828759431839
+  - : 0.1714828759431839
+  - : 0.1714828759431839
+  - : 0.1714828759431839
+  - : 0.1714828759431839
+  - : 0.1714828759431839
+  - : 0.1714828759431839
 
 Topic 9:
-  - cost: 0.43443867564201355
-  - costs: 0.42029425501823425
-  - increase: 0.40070465207099915
-  - increased: 0.3879817724227905
-  - approximately: 0.25455331802368164
-  - quarter: 0.2406052052974701
-  - million: 0.23125460743904114
-  - fourth quarter: 0.19835877418518066
-  - year: 0.11748292297124863
-  - : 0.043174173682928085
+  - business: 0.30497485399246216
+  - company: 0.23195523023605347
+  - quarter: 0.15619716048240662
+  - year: 0.07457666844129562
+  - : 0.04860234260559082
+  - : 0.04860234260559082
+  - : 0.04860234260559082
+  - : 0.04860234260559082
+  - : 0.04860234260559082
+  - : 0.04860234260559082
 
 Topic 10:
-  - fourth quarter: 0.3207893967628479
-  - results: 0.2665916681289673
-  - quarter: 0.2308116853237152
-  - fourth: 0.22074651718139648
-  - : 0.2102830708026886
-  - : 0.2102830708026886
-  - : 0.2102830708026886
-  - : 0.2102830708026886
-  - : 0.2102830708026886
-  - : 0.2102830708026886
+  - business: 0.26820969581604004
+  - year: 0.17283332347869873
+  - second: 0.15471333265304565
+  - : 0.128943532705307
+  - : 0.128943532705307
+  - : 0.128943532705307
+  - : 0.128943532705307
+  - : 0.128943532705307
+  - : 0.128943532705307
+  - : 0.128943532705307
 
 Topic 11:
-  - increased: 0.32617104053497314
-  - increase: 0.29402491450309753
-  - million: 0.28507155179977417
-  - cost: 0.2768580913543701
-  - approximately: 0.21946951746940613
-  - year: 0.11269345134496689
-  - quarter: 0.07155406475067139
-  - results: 0.07111461460590363
-  - : 0.00023394078016281128
-  - : 0.00023394078016281128
+  - business: 0.45927533507347107
+  - company: 0.3691539764404297
+  - quarter: 0.1757538616657257
+  - year: 0.15781483054161072
+  - : 0.14980170130729675
+  - : 0.14980170130729675
+  - : 0.14980170130729675
+  - : 0.14980170130729675
+  - : 0.14980170130729675
+  - : 0.14980170130729675
 
 Topic 12:
-  - : 0.2800135314464569
-  - : 0.2800135314464569
-  - : 0.2800135314464569
-  - : 0.2800135314464569
-  - : 0.2800135314464569
-  - : 0.2800135314464569
-  - : 0.2800135314464569
-  - : 0.2800135314464569
-  - : 0.2800135314464569
-  - : 0.2800135314464569
+  - quarter: 0.24079325795173645
+  - year: 0.1631244570016861
+  - : 0.07648750394582748
+  - : 0.07648750394582748
+  - : 0.07648750394582748
+  - : 0.07648750394582748
+  - : 0.07648750394582748
+  - : 0.07648750394582748
+  - : 0.07648750394582748
+  - : 0.07648750394582748
 
 Topic 13:
-  - quarter: 0.33428293466567993
-  - increased: 0.2832653522491455
-  - increase: 0.2624184787273407
-  - million: 0.19139711558818817
-  - year: 0.1400110274553299
-  - : 0.05970323085784912
-  - : 0.05970323085784912
-  - : 0.05970323085784912
-  - : 0.05970323085784912
-  - : 0.05970323085784912
+  - business: 0.2876758575439453
+  - company: 0.21627922356128693
+  - year: 0.1970336139202118
+  - quarter: 0.1356963813304901
+  - expect: 0.07460090517997742
+  - new: 0.05181655287742615
+  - : 0.013532448559999466
+  - : 0.013532448559999466
+  - : 0.013532448559999466
+  - : 0.013532448559999466
 
 Topic 14:
-  - fourth quarter: 0.5926229357719421
-  - quarter: 0.4311763048171997
-  - fourth: 0.25463366508483887
-  - results: 0.1594010591506958
-  - increase: 0.14595887064933777
-  - year: 0.12837249040603638
-  - : 0.12390711903572083
-  - : 0.12390711903572083
-  - : 0.12390711903572083
-  - : 0.12390711903572083
+  - business: 0.38822197914123535
+  - : 0.20870307087898254
+  - : 0.20870307087898254
+  - : 0.20870307087898254
+  - : 0.20870307087898254
+  - : 0.20870307087898254
+  - : 0.20870307087898254
+  - : 0.20870307087898254
+  - : 0.20870307087898254
+  - : 0.20870307087898254
 
 Topic 15:
-  - increase: 0.304096519947052
-  - increased: 0.28020018339157104
-  - fourth quarter: 0.23473501205444336
-  - quarter: 0.23297461867332458
-  - cost: 0.1709817349910736
-  - : 0.15581262111663818
-  - : 0.15581262111663818
-  - : 0.15581262111663818
-  - : 0.15581262111663818
-  - : 0.15581262111663818
+  - quarter: 0.22751882672309875
+  - company: 0.19620460271835327
+  - year: 0.1462835967540741
+  - : 0.037627656012773514
+  - : 0.037627656012773514
+  - : 0.037627656012773514
+  - : 0.037627656012773514
+  - : 0.037627656012773514
+  - : 0.037627656012773514
+  - : 0.037627656012773514
 
 Topic 16:
-  - costs: 0.5343794226646423
-  - million: 0.3431737422943115
-  - approximately: 0.24312011897563934
-  - quarter: 0.10100729018449783
-  - year: 0.09053176641464233
-  - fourth quarter: 0.07346294075250626
-  - results: 0.05206131935119629
-  - : 0.0032352153211832047
-  - : 0.0032352153211832047
-  - : 0.0032352153211832047
+  - time: 0.20888462662696838
+  - : 0.17861174046993256
+  - : 0.17861174046993256
+  - : 0.17861174046993256
+  - : 0.17861174046993256
+  - : 0.17861174046993256
+  - : 0.17861174046993256
+  - : 0.17861174046993256
+  - : 0.17861174046993256
+  - : 0.17861174046993256
 
 Topic 17:
-  - cost: 0.4402279853820801
-  - costs: 0.4341352581977844
-  - increase: 0.2985416054725647
-  - approximately: 0.2738547623157501
-  - year: 0.21828721463680267
-  - quarter: 0.0987463966012001
-  - fourth quarter: 0.0763319656252861
-  - results: 0.07188655436038971
-  - : 0.026214612647891045
-  - : 0.026214612647891045
+  - new: 0.26813337206840515
+  - second: 0.24422907829284668
+  - quarter: 0.23435720801353455
+  - : 0.18056488037109375
+  - : 0.18056488037109375
+  - : 0.18056488037109375
+  - : 0.18056488037109375
+  - : 0.18056488037109375
+  - : 0.18056488037109375
+  - : 0.18056488037109375
 
 Topic 18:
-  - year: 0.4014851450920105
-  - results: 0.18894419074058533
-  - increased: 0.1675826609134674
-  - approximately: 0.13682904839515686
-  - : 0.0914183259010315
-  - : 0.0914183259010315
-  - : 0.0914183259010315
-  - : 0.0914183259010315
-  - : 0.0914183259010315
-  - : 0.0914183259010315
+  - : 0.2656782269477844
+  - : 0.2656782269477844
+  - : 0.2656782269477844
+  - : 0.2656782269477844
+  - : 0.2656782269477844
+  - : 0.2656782269477844
+  - : 0.2656782269477844
+  - : 0.2656782269477844
+  - : 0.2656782269477844
+  - : 0.2656782269477844
 
 Topic 19:
-  - costs: 0.50919109582901
-  - cost: 0.46315768361091614
-  - approximately: 0.1608039289712906
-  - quarter: 0.13905416429042816
-  - : 0.09954658150672913
-  - : 0.09954658150672913
-  - : 0.09954658150672913
-  - : 0.09954658150672913
-  - : 0.09954658150672913
-  - : 0.09954658150672913
+  - : 0.30240049958229065
+  - : 0.30240049958229065
+  - : 0.30240049958229065
+  - : 0.30240049958229065
+  - : 0.30240049958229065
+  - : 0.30240049958229065
+  - : 0.30240049958229065
+  - : 0.30240049958229065
+  - : 0.30240049958229065
+  - : 0.30240049958229065
 
 Topic 20:
-  - approximately: 0.2000339925289154
-  - : 0.19113579392433167
-  - : 0.19113579392433167
-  - : 0.19113579392433167
-  - : 0.19113579392433167
-  - : 0.19113579392433167
-  - : 0.19113579392433167
-  - : 0.19113579392433167
-  - : 0.19113579392433167
-  - : 0.19113579392433167
+  - business: 0.2059202939271927
+  - quarter: 0.18101388216018677
+  - year: 0.17471422255039215
+  - company: 0.15760880708694458
+  - time: 0.06485087424516678
+  - new: 0.06479065120220184
+  - end: 0.04978819936513901
+  - : 0.012709577567875385
+  - : 0.012709577567875385
+  - : 0.012709577567875385
 
 Topic 21:
-  - increase: 0.3540346622467041
-  - increased: 0.3479463458061218
-  - costs: 0.23299628496170044
-  - results: 0.2236804962158203
-  - cost: 0.2158288210630417
-  - quarter: 0.16287533938884735
-  - : 0.13889266550540924
-  - : 0.13889266550540924
-  - : 0.13889266550540924
-  - : 0.13889266550540924
+  - quarter: 0.4343128800392151
+  - end: 0.13607321679592133
+  - company: 0.1331252157688141
+  - second: 0.04206274449825287
+  - : 0.006288706324994564
+  - : 0.006288706324994564
+  - : 0.006288706324994564
+  - : 0.006288706324994564
+  - : 0.006288706324994564
+  - : 0.006288706324994564
 
 Topic 22:
-  - fourth quarter: 0.398065984249115
-  - quarter: 0.2985818684101105
-  - increased: 0.22348341345787048
-  - approximately: 0.2065003365278244
-  - million: 0.20306390523910522
-  - fourth: 0.19658485054969788
-  - year: 0.18879738450050354
-  - increase: 0.17827370762825012
-  - : 0.08841484785079956
-  - : 0.08841484785079956
+  - time: 0.10261985659599304
+  - : 0.0964774340391159
+  - : 0.0964774340391159
+  - : 0.0964774340391159
+  - : 0.0964774340391159
+  - : 0.0964774340391159
+  - : 0.0964774340391159
+  - : 0.0964774340391159
+  - : 0.0964774340391159
+  - : 0.0964774340391159
 
 Topic 23:
-  - quarter: 0.19824472069740295
-  - : 0.13471613824367523
-  - : 0.13471613824367523
-  - : 0.13471613824367523
-  - : 0.13471613824367523
-  - : 0.13471613824367523
-  - : 0.13471613824367523
-  - : 0.13471613824367523
-  - : 0.13471613824367523
-  - : 0.13471613824367523
+  - second: 0.24812784790992737
+  - time: 0.2022707760334015
+  - : 0.19805070757865906
+  - : 0.19805070757865906
+  - : 0.19805070757865906
+  - : 0.19805070757865906
+  - : 0.19805070757865906
+  - : 0.19805070757865906
+  - : 0.19805070757865906
+  - : 0.19805070757865906
 
 Topic 24:
-  - cost: 0.3234420716762543
-  - million: 0.2961268424987793
-  - approximately: 0.2312326580286026
-  - quarter: 0.1681574434041977
-  - fourth quarter: 0.16461403667926788
-  - year: 0.15057432651519775
-  - results: 0.11361859738826752
-  - : 0.0528092160820961
-  - : 0.0528092160820961
-  - : 0.0528092160820961
+  - company: 0.26304739713668823
+  - time: 0.12739934027194977
+  - new: 0.051072441041469574
+  - : 0.004756408743560314
+  - : 0.004756408743560314
+  - : 0.004756408743560314
+  - : 0.004756408743560314
+  - : 0.004756408743560314
+  - : 0.004756408743560314
+  - : 0.004756408743560314
 
 Topic 25:
-  - increase: 0.3173440098762512
-  - increased: 0.26698264479637146
-  - costs: 0.20510534942150116
-  - approximately: 0.12631340324878693
-  - : 0.11721928417682648
-  - : 0.11721928417682648
-  - : 0.11721928417682648
-  - : 0.11721928417682648
-  - : 0.11721928417682648
-  - : 0.11721928417682648
+  - year: 0.3194981515407562
+  - quarter: 0.2806798815727234
+  - company: 0.18997156620025635
+  - time: 0.15862500667572021
+  - : 0.07167504727840424
+  - : 0.07167504727840424
+  - : 0.07167504727840424
+  - : 0.07167504727840424
+  - : 0.07167504727840424
+  - : 0.07167504727840424
 
 Topic 26:
-  - costs: 0.31821227073669434
-  - fourth quarter: 0.314317524433136
-  - quarter: 0.31404197216033936
-  - cost: 0.298187255859375
-  - increase: 0.28906428813934326
-  - fourth: 0.1467028260231018
-  - year: 0.11654913425445557
-  - : 0.09570294618606567
-  - : 0.09570294618606567
-  - : 0.09570294618606567
+  - time: 0.23530732095241547
+  - : 0.19314493238925934
+  - : 0.19314493238925934
+  - : 0.19314493238925934
+  - : 0.19314493238925934
+  - : 0.19314493238925934
+  - : 0.19314493238925934
+  - : 0.19314493238925934
+  - : 0.19314493238925934
+  - : 0.19314493238925934
 
 Topic 27:
-  - approximately: 0.26197636127471924
-  - cost: 0.2282702624797821
-  - increase: 0.195130854845047
-  - increased: 0.17765271663665771
-  - quarter: 0.1364709883928299
-  - year: 0.05500376969575882
-  - million: 0.035974279046058655
-  - : -0.042885780334472656
-  - : -0.042885780334472656
-  - : -0.042885780334472656
+  - time: 0.2624295949935913
+  - : 0.1974397599697113
+  - : 0.1974397599697113
+  - : 0.1974397599697113
+  - : 0.1974397599697113
+  - : 0.1974397599697113
+  - : 0.1974397599697113
+  - : 0.1974397599697113
+  - : 0.1974397599697113
+  - : 0.1974397599697113
 
 Topic 28:
-  - results: 0.31817710399627686
-  - costs: 0.168525829911232
-  - quarter: 0.13544918596744537
-  - : 0.04728149250149727
-  - : 0.04728149250149727
-  - : 0.04728149250149727
-  - : 0.04728149250149727
-  - : 0.04728149250149727
-  - : 0.04728149250149727
-  - : 0.04728149250149727
+  - new: 0.1733468472957611
+  - : 0.15869373083114624
+  - : 0.15869373083114624
+  - : 0.15869373083114624
+  - : 0.15869373083114624
+  - : 0.15869373083114624
+  - : 0.15869373083114624
+  - : 0.15869373083114624
+  - : 0.15869373083114624
+  - : 0.15869373083114624
 
 Topic 29:
-  - : 0.11449284851551056
-  - : 0.11449284851551056
-  - : 0.11449284851551056
-  - : 0.11449284851551056
-  - : 0.11449284851551056
-  - : 0.11449284851551056
-  - : 0.11449284851551056
-  - : 0.11449284851551056
-  - : 0.11449284851551056
-  - : 0.11449284851551056
+  - business: 0.2923431396484375
+  - company: 0.24421462416648865
+  - quarter: 0.15778401494026184
+  - year: 0.1283496469259262
+  - : 0.1267712414264679
+  - : 0.1267712414264679
+  - : 0.1267712414264679
+  - : 0.1267712414264679
+  - : 0.1267712414264679
+  - : 0.1267712414264679
 
 Topic 30:
-  - increase: 0.31453192234039307
-  - increased: 0.30302542448043823
-  - quarter: 0.18904802203178406
-  - cost: 0.1728033423423767
-  - : 0.1499982476234436
-  - : 0.1499982476234436
-  - : 0.1499982476234436
-  - : 0.1499982476234436
-  - : 0.1499982476234436
-  - : 0.1499982476234436
+  - business: 0.3066921532154083
+  - : 0.13415198028087616
+  - : 0.13415198028087616
+  - : 0.13415198028087616
+  - : 0.13415198028087616
+  - : 0.13415198028087616
+  - : 0.13415198028087616
+  - : 0.13415198028087616
+  - : 0.13415198028087616
+  - : 0.13415198028087616
 
 Topic 31:
-  - costs: 0.364274799823761
-  - increase: 0.26675570011138916
-  - approximately: 0.23860615491867065
-  - quarter: 0.22545625269412994
-  - year: 0.22347944974899292
-  - million: 0.14502909779548645
-  - results: 0.11149580776691437
-  - : 0.047131821513175964
-  - : 0.047131821513175964
-  - : 0.047131821513175964
+  - year: 0.18149857223033905
+  - : 0.09431235492229462
+  - : 0.09431235492229462
+  - : 0.09431235492229462
+  - : 0.09431235492229462
+  - : 0.09431235492229462
+  - : 0.09431235492229462
+  - : 0.09431235492229462
+  - : 0.09431235492229462
+  - : 0.09431235492229462
 
 Topic 32:
-  - : 0.20630887150764465
-  - : 0.20630887150764465
-  - : 0.20630887150764465
-  - : 0.20630887150764465
-  - : 0.20630887150764465
-  - : 0.20630887150764465
-  - : 0.20630887150764465
-  - : 0.20630887150764465
-  - : 0.20630887150764465
-  - : 0.20630887150764465
+  - expect: 0.2024345099925995
+  - year: 0.19418032467365265
+  - new: 0.1667102724313736
+  - quarter: 0.12634553015232086
+  - : 0.05389673635363579
+  - : 0.05389673635363579
+  - : 0.05389673635363579
+  - : 0.05389673635363579
+  - : 0.05389673635363579
+  - : 0.05389673635363579
 
 Topic 33:
-  - results: 0.23486635088920593
-  - quarter: 0.19164294004440308
-  - : 0.18535345792770386
-  - : 0.18535345792770386
-  - : 0.18535345792770386
-  - : 0.18535345792770386
-  - : 0.18535345792770386
-  - : 0.18535345792770386
-  - : 0.18535345792770386
-  - : 0.18535345792770386
+  - new: 0.19546718895435333
+  - company: 0.17012456059455872
+  - expect: 0.13704289495944977
+  - year: 0.11962129175662994
+  - : 0.05816824361681938
+  - : 0.05816824361681938
+  - : 0.05816824361681938
+  - : 0.05816824361681938
+  - : 0.05816824361681938
+  - : 0.05816824361681938
 
 Topic 34:
-  - costs: 0.5493373870849609
-  - cost: 0.5326400399208069
-  - increased: 0.44165533781051636
-  - increase: 0.4400011897087097
-  - million: 0.2550543546676636
-  - year: 0.18407602608203888
-  - approximately: 0.16421955823898315
-  - quarter: 0.09484968334436417
-  - fourth quarter: 0.0939922034740448
-  - : -0.0013403594493865967
+  - company: 0.4330250322818756
+  - business: 0.3665173649787903
+  - year: 0.22830289602279663
+  - expect: 0.14973732829093933
+  - : 0.1388462781906128
+  - : 0.1388462781906128
+  - : 0.1388462781906128
+  - : 0.1388462781906128
+  - : 0.1388462781906128
+  - : 0.1388462781906128
 
 Topic 35:
-  - quarter: 0.26382875442504883
-  - fourth quarter: 0.18730813264846802
-  - million: 0.1470663845539093
-  - : 0.11700956523418427
-  - : 0.11700956523418427
-  - : 0.11700956523418427
-  - : 0.11700956523418427
-  - : 0.11700956523418427
-  - : 0.11700956523418427
-  - : 0.11700956523418427
+  - business: 0.2640898525714874
+  - company: 0.24276164174079895
+  - year: 0.2011823207139969
+  - quarter: 0.17368941009044647
+  - : 0.10343895852565765
+  - : 0.10343895852565765
+  - : 0.10343895852565765
+  - : 0.10343895852565765
+  - : 0.10343895852565765
+  - : 0.10343895852565765
 
 Topic 36:
-  - quarter: 0.20617301762104034
-  - cost: 0.18190914392471313
-  - results: 0.12489014118909836
-  - year: 0.07168854027986526
-  - approximately: 0.06781037896871567
-  - : 0.02854125387966633
-  - : 0.02854125387966633
-  - : 0.02854125387966633
-  - : 0.02854125387966633
-  - : 0.02854125387966633
+  - new: 0.28770750761032104
+  - business: 0.22441917657852173
+  - quarter: 0.150197833776474
+  - : 0.12110892683267593
+  - : 0.12110892683267593
+  - : 0.12110892683267593
+  - : 0.12110892683267593
+  - : 0.12110892683267593
+  - : 0.12110892683267593
+  - : 0.12110892683267593
 
 Topic 37:
-  - increased: 0.4057019054889679
-  - costs: 0.2508794069290161
-  - results: 0.1776588410139084
-  - year: 0.11006294190883636
-  - : 0.08932947367429733
-  - : 0.08932947367429733
-  - : 0.08932947367429733
-  - : 0.08932947367429733
-  - : 0.08932947367429733
-  - : 0.08932947367429733
+  - new: 0.2569267749786377
+  - time: 0.13500827550888062
+  - : 0.13305208086967468
+  - : 0.13305208086967468
+  - : 0.13305208086967468
+  - : 0.13305208086967468
+  - : 0.13305208086967468
+  - : 0.13305208086967468
+  - : 0.13305208086967468
+  - : 0.13305208086967468
 
 Topic 38:
-  - costs: 0.36706462502479553
-  - cost: 0.30767616629600525
-  - : 0.06326635181903839
-  - : 0.06326635181903839
-  - : 0.06326635181903839
-  - : 0.06326635181903839
-  - : 0.06326635181903839
-  - : 0.06326635181903839
-  - : 0.06326635181903839
-  - : 0.06326635181903839
+  - second: 0.3112310767173767
+  - time: 0.24551910161972046
+  - : 0.24206843972206116
+  - : 0.24206843972206116
+  - : 0.24206843972206116
+  - : 0.24206843972206116
+  - : 0.24206843972206116
+  - : 0.24206843972206116
+  - : 0.24206843972206116
+  - : 0.24206843972206116
 
 Topic 39:
-  - quarter: 0.27490994334220886
-  - million: 0.2714575231075287
-  - approximately: 0.26069343090057373
-  - year: 0.21804600954055786
-  - : 0.06538939476013184
-  - : 0.06538939476013184
-  - : 0.06538939476013184
-  - : 0.06538939476013184
-  - : 0.06538939476013184
-  - : 0.06538939476013184
+  - business: 0.33500123023986816
+  - new: 0.27999547123908997
+  - : 0.16002997756004333
+  - : 0.16002997756004333
+  - : 0.16002997756004333
+  - : 0.16002997756004333
+  - : 0.16002997756004333
+  - : 0.16002997756004333
+  - : 0.16002997756004333
+  - : 0.16002997756004333
 
 Topic 40:
-  - results: 0.2717389464378357
-  - : 0.20446205139160156
-  - : 0.20446205139160156
-  - : 0.20446205139160156
-  - : 0.20446205139160156
-  - : 0.20446205139160156
-  - : 0.20446205139160156
-  - : 0.20446205139160156
-  - : 0.20446205139160156
-  - : 0.20446205139160156
+  - quarter: 0.4352458715438843
+  - second: 0.2449682652950287
+  - year: 0.20824424922466278
+  - business: 0.13851577043533325
+  - : 0.13180594146251678
+  - : 0.13180594146251678
+  - : 0.13180594146251678
+  - : 0.13180594146251678
+  - : 0.13180594146251678
+  - : 0.13180594146251678
 
 Topic 41:
-  - : 0.18257910013198853
-  - : 0.18257910013198853
-  - : 0.18257910013198853
-  - : 0.18257910013198853
-  - : 0.18257910013198853
-  - : 0.18257910013198853
-  - : 0.18257910013198853
-  - : 0.18257910013198853
-  - : 0.18257910013198853
-  - : 0.18257910013198853
+  - quarter: 0.2998321056365967
+  - year: 0.2050221860408783
+  - second: 0.13986918330192566
+  - expect: 0.13242466747760773
+  - : 0.07402653247117996
+  - : 0.07402653247117996
+  - : 0.07402653247117996
+  - : 0.07402653247117996
+  - : 0.07402653247117996
+  - : 0.07402653247117996
 
 Topic 42:
-  - costs: 0.542747974395752
-  - cost: 0.5283594131469727
-  - quarter: 0.270015686750412
-  - increased: 0.2370114028453827
-  - fourth quarter: 0.22693152725696564
-  - increase: 0.211679145693779
-  - million: 0.2012096643447876
-  - year: 0.11766050010919571
-  - fourth: 0.07496917992830276
-  - : 0.019714491441845894
+  - quarter: 0.272362619638443
+  - year: 0.21796905994415283
+  - business: 0.18150711059570312
+  - company: 0.14817212522029877
+  - expect: 0.056645844131708145
+  - second: 0.055749207735061646
+  - : 0.028749123215675354
+  - : 0.028749123215675354
+  - : 0.028749123215675354
+  - : 0.028749123215675354
 
 Topic 43:
-  - increase: 0.3225998878479004
-  - increased: 0.3150513172149658
-  - costs: 0.30384084582328796
-  - quarter: 0.21596311032772064
-  - million: 0.1356707662343979
-  - year: 0.13112691044807434
-  - : 0.05117802321910858
-  - : 0.05117802321910858
-  - : 0.05117802321910858
-  - : 0.05117802321910858
+  - quarter: 0.575665295124054
+  - year: 0.1588342785835266
+  - end: 0.15435940027236938
+  - expect: 0.15121769905090332
+  - : 0.1382087916135788
+  - : 0.1382087916135788
+  - : 0.1382087916135788
+  - : 0.1382087916135788
+  - : 0.1382087916135788
+  - : 0.1382087916135788
 
 Topic 44:
-  - results: 0.2599552869796753
-  - year: 0.12283872812986374
-  - : 0.09768786281347275
-  - : 0.09768786281347275
-  - : 0.09768786281347275
-  - : 0.09768786281347275
-  - : 0.09768786281347275
-  - : 0.09768786281347275
-  - : 0.09768786281347275
-  - : 0.09768786281347275
-
-Topic 45:
-  - : 0.2132205367088318
-  - : 0.2132205367088318
-  - : 0.2132205367088318
-  - : 0.2132205367088318
-  - : 0.2132205367088318
-  - : 0.2132205367088318
-  - : 0.2132205367088318
-  - : 0.2132205367088318
-  - : 0.2132205367088318
-  - : 0.2132205367088318
-
-Topic 46:
-  - increased: 0.16265900433063507
-  - increase: 0.15877526998519897
-  - : -0.029688986018300056
-  - : -0.029688986018300056
-  - : -0.029688986018300056
-  - : -0.029688986018300056
-  - : -0.029688986018300056
-  - : -0.029688986018300056
-  - : -0.029688986018300056
-  - : -0.029688986018300056
-
-Topic 47:
-  - increase: 0.50677090883255
-  - year: 0.19434280693531036
-  - : 0.10545971989631653
-  - : 0.10545971989631653
-  - : 0.10545971989631653
-  - : 0.10545971989631653
-  - : 0.10545971989631653
-  - : 0.10545971989631653
-  - : 0.10545971989631653
-  - : 0.10545971989631653
-
-Topic 48:
-  - costs: 0.2924307584762573
-  - : 0.14725357294082642
-  - : 0.14725357294082642
-  - : 0.14725357294082642
-  - : 0.14725357294082642
-  - : 0.14725357294082642
-  - : 0.14725357294082642
-  - : 0.14725357294082642
-  - : 0.14725357294082642
-  - : 0.14725357294082642
+  - quarter: 0.2529510259628296
+  - year: 0.23188099265098572
+  - : 0.11065354943275452
+  - : 0.11065354943275452
+  - : 0.11065354943275452
+  - : 0.11065354943275452
+  - : 0.11065354943275452
+  - : 0.11065354943275452
+  - : 0.11065354943275452
+  - : 0.11065354943275452
