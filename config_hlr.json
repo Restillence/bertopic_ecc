@@ -26,11 +26,11 @@
     "6": "Risk"
   },
 
-  "modeling_type": "regular",
+  "modeling_type": "zeroshot",
   "apply_topic_merging": true, 
   "similarity_threshold": 0.7,
-  "sample_size": 5,
-  "sampling_mode": "random_company",
+  "sample_size": 30,
+  "sampling_mode": "full_random",
   "document_split": "sentences",
   "random_seed": 43,
   "section_to_analyze": "Presentation",
