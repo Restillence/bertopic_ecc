@@ -29,8 +29,8 @@
   "modeling_type": "regular",
   "apply_topic_merging": true, 
   "similarity_threshold": 0.7,
-  "sample_size": 5,
-  "sampling_mode": "random_company",
+  "sample_size": 30,
+  "sampling_mode": "full_random",
   "document_split": "sentences",
   "random_seed": 43,
   "section_to_analyze": "Presentation",
@@ -43,7 +43,7 @@
   "hierarchical_clustering_threshold": 0.5,
 
   "zeroshot_min_similarity": 0.05,
-  "min_topic_size": 200,
+  "min_topic_size": 5,
 
   "batch_size": 32,
 
@@ -60,7 +60,7 @@
       "low_memory": true
   },
   "hdbscan_model_params": {
-      "min_cluster_size": 200,
+      "min_cluster_size": 10,
       "metric": "euclidean",
       "cluster_selection_method": "eom",
       "prediction_data": true
