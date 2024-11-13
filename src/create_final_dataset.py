@@ -278,6 +278,11 @@ if num_nan_siccd > 0:
 # Optionally, rename 'datadate' to 'fiscal_period_end' for clarity
 merged_df.rename(columns={'datadate': 'fiscal_period_end'}, inplace=True)
 
+#remove duplicates in merged_df where fiscal_period_end and gvkey and permco are the same, they happen when there are data errors
+merged_df = merged_df.drop_duplicates(subset=['fiscal_period_end', 'gvkey', 'permco'])
+#print how many rows have been removed
+print(f"Number of rows in merged_df after removing duplicates: {len(merged_df)}")
+
 # Now that 'siccd' is available, compute similarities including similarity to industry average
 print("Computing similarities to overall, industry and firm-specific averages...")
 # Determine the number of topics

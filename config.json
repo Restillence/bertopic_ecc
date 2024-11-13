@@ -2,7 +2,7 @@
     "index_file_ecc_folder": "D:/daten_masterarbeit/",
     "folderpath_ecc": "D:/daten_masterarbeit/Transcripts_Masterarbeit_full/",
     "model_save_path": "D:/daten_masterarbeit/bertopic_model_dir", 
-    "model_load_path": "D:/daten_masterarbeit/bertopic_model_dir", 
+    "model_load_path": "D:/daten_masterarbeit/bertopic_model_dir_3000full_zeroshot_03minsim_seed_huang_own", 
     "index_file_path": "D:/daten_masterarbeit/list_earnings_call_transcripts.csv",
     
     "modeling_type": "regular",
@@ -31,7 +31,7 @@
     "file_path_crsp_monthly": "D:/daten_masterarbeit/CRSP_monthly_Compustat_quarterly_merged.csv",
     "merged_file_path": "D:/daten_masterarbeit/final_dataset.csv",
     
-    "topics_input_path": "D:/daten_masterarbeit/topics_output.csv",
+    "topics_input_path": "D:/daten_masterarbeit/topics_output3000full_zeroshot_03minsim_huang_own.csv",
     "topics_output_path": "D:/daten_masterarbeit/topics_output_outlier_removed.csv",
     "output_dir": "D:/daten_masterarbeit/",
 
