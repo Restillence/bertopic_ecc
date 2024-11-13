@@ -178,3 +178,35 @@ class FileHandler:
             raise ValueError(f"Unknown sampling mode: {sampling_mode}")
 
         return ecc_sample
+
+
+    def get_word_count_percentile(self, ecc_sample, percentile=1):
+        """
+        Calculates the word count at a specified percentile for the ECC sample.
+
+        Parameters
+        ----------
+        ecc_sample : dict
+            Dictionary containing the earnings call transcripts.
+        percentile : float
+            The percentile to calculate (default is 1 for the 1st percentile).
+
+        Returns
+        -------
+        float
+            The word count at the specified percentile.
+        """
+        # List to store word counts
+        word_counts = []
+
+        # Iterate through the sample and count words
+        for permco, calls in ecc_sample.items():
+            for ecc_key, ecc_data in calls.items():
+                # Count words in the 'text_content' field
+                word_count = len(ecc_data['text_content'].split())
+                word_counts.append(word_count)
+
+        # Calculate the percentile
+        word_count_percentile = np.percentile(word_counts, percentile)
+        print(f"The {percentile}th percentile word count is: {word_count_percentile}")
+        return word_count_percentile
