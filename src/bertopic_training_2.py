@@ -586,7 +586,7 @@ def main():
 
     # Load configuration variables from config.json with fallback path
     try:
-        with open('config.json', 'r') as config_file:
+        with open('config_hlr.json', 'r') as config_file:
             config = json.load(config_file)
             print("Config File Loaded from 'config.json'.")
     except FileNotFoundError:
