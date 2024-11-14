@@ -72,6 +72,9 @@ class FileHandler:
         all_files = os.listdir(self.folderpath_ecc)
         print("First 10 files in directory:", all_files[:10])
 
+        # Regular expression pattern to match the expected filename format
+        pattern = re.compile(r'^earnings_call_(\d+)_(\d+)\.txt$')
+
         # Get the sampling mode from the config, default to 'random_company'
         sampling_mode = self.config.get('sampling_mode', 'random_company')
 
@@ -86,13 +89,14 @@ class FileHandler:
                     if len(ecc_sample) >= sample_size:
                         break
 
-                    # Extract permco and SE_ID from the file name
-                    parts = ecc_file.replace('.txt', '').split('_')
-                    if len(parts) != 4 or parts[0] != 'earnings' or parts[1] != 'call':
-                        print(f"File name {ecc_file} does not match expected pattern.")
+                    # Match filename against the pattern
+                    match = pattern.match(ecc_file)
+                    if not match:
+                        print(f"File name {ecc_file} does not match expected pattern. Skipping file.")
                         continue
                     
-                    permco, se_id = int(parts[2]), int(parts[3])
+                    # Extract permco and SE_ID from the match groups
+                    permco, se_id = int(match.group(1)), int(match.group(2))
                     ecc_key = f"earnings_call_{permco}_{se_id}"
 
                     # Get company information from the index file
@@ -142,9 +146,16 @@ class FileHandler:
                         if len(ecc_sample) >= sample_size:
                             break
 
-                        se_id = ecc_file.split('_')[3].replace('.txt', '')
+                        # Match filename against the pattern
+                        match = pattern.match(ecc_file)
+                        if not match:
+                            print(f"File name {ecc_file} does not match expected pattern. Skipping file.")
+                            continue
+                        
+                        # Extract SE ID from the filename
+                        se_id = int(match.group(2))
                         ecc_key = f"earnings_call_{permco}_{se_id}"
-                        specific_row = company_rows[company_rows['SE_ID'] == int(se_id)]
+                        specific_row = company_rows[company_rows['SE_ID'] == se_id]
                         date = specific_row.iloc[0]['date'] if not specific_row.empty else 'Unknown'
 
                         with open(os.path.join(self.folderpath_ecc, ecc_file), 'r', encoding='utf-8') as file:
