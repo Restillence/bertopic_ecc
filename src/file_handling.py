@@ -116,9 +116,9 @@ class FileHandler:
                         continue  # Skip this file if below the word count threshold
 
                     # Add to sample if word count is sufficient
-                    if permco not in ecc_sample:
-                        ecc_sample[permco] = {}
-                    ecc_sample[permco][ecc_key] = {
+                    ecc_sample[ecc_key] = {
+                        'permco': permco,
+                        'se_id': se_id,
                         'company_name': company_name,
                         'date': date,
                         'text_content': text_content
@@ -169,9 +169,9 @@ class FileHandler:
                             continue  # Skip this file if below the word count threshold
 
                         # Add to sample if word count is sufficient
-                        if permco not in ecc_sample:
-                            ecc_sample[permco] = {}
-                        ecc_sample[permco][ecc_key] = {
+                        ecc_sample[ecc_key] = {
+                            'permco': permco,
+                            'se_id': se_id,
                             'company_name': company_name,
                             'date': date,
                             'text_content': text_content
@@ -183,8 +183,6 @@ class FileHandler:
         print(f"Excluded {excluded_count} calls due to having fewer than 1600 words (below 0.5% percentile).")
         
         return ecc_sample
-
-
     def get_word_count_percentile(self, ecc_sample, percentile=1):
         """
         Calculates the word count at a specified percentile for the ECC sample.
