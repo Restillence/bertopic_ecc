@@ -1,7 +1,7 @@
 {
   "index_file_ecc_folder": "../data/",
   "folderpath_ecc": "../data/Transcripts_Masterarbeit/",
-  "model_save_path": "../data/bertopic_model_dir_1000_reg_threshold2",
+  "model_save_path": "../data/bertopic_model_dir_2500_reg_null",
   "model_load_path": "../data/bertopic_model_dir",
   "index_file_path": "../data/list_earnings_call_transcripts.csv",
   "embedding_model_choice": "all-MiniLM-L12-v2",
@@ -29,13 +29,13 @@
   "modeling_type": "regular",
   "apply_topic_merging": true, 
   "similarity_threshold": 0.7,
-  "sample_size": 500,
+  "sample_size": 2500,
   "sampling_mode": "full_random",
   "document_split": "sentences",
   "random_seed": 43,
   "section_to_analyze": "Presentation",
   "max_documents": 30000000,
-  "nr_topics": "auto",
+  "nr_topics": "null",
   "use_gpu": false,
   "pca_components": 50,
   "output_dir": "../data/",
@@ -60,7 +60,7 @@
       "low_memory": true
   },
   "hdbscan_model_params": {
-      "min_cluster_size": 100,
+      "min_cluster_size": 200,
       "metric": "euclidean",
       "cluster_selection_method": "eom",
       "prediction_data": true
