@@ -1,7 +1,7 @@
 {
   "index_file_ecc_folder": "../data/",
   "folderpath_ecc": "../data/Transcripts_Masterarbeit/",
-  "model_save_path": "../data/bertopic_model_dir_2500_zeroshot_025",
+  "model_save_path": "../data/bertopic_model_dir_2500_zeroshot_075",
   "model_load_path": "../data/bertopic_model_dir",
   "index_file_path": "../data/list_earnings_call_transcripts.csv",
   "embedding_model_choice": "all-MiniLM-L12-v2",
@@ -26,7 +26,7 @@
     "6": "Risk"
   },
 
-  "modeling_type": "regular",
+  "modeling_type": "zeroshot",
   "apply_topic_merging": true, 
   "similarity_threshold": 0.7,
   "sample_size": 2500,
