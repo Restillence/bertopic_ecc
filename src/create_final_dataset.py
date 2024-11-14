@@ -278,9 +278,8 @@ if num_nan_siccd > 0:
 # Optionally, rename 'datadate' to 'fiscal_period_end' for clarity
 merged_df.rename(columns={'datadate': 'fiscal_period_end'}, inplace=True)
 
-#remove duplicates in merged_df where fiscal_period_end and gvkey and permco are the same, they happen when there are data errors
+# Remove duplicates in merged_df where fiscal_period_end and gvkey and permco are the same
 merged_df = merged_df.drop_duplicates(subset=['fiscal_period_end', 'gvkey', 'permco'])
-#print how many rows have been removed
 print(f"Number of rows in merged_df after removing duplicates: {len(merged_df)}")
 
 # Now that 'siccd' is available, compute similarities including similarity to industry average
@@ -310,17 +309,105 @@ if 'call_id' in similarity_df.columns and 'call_id' in merged_df.columns:
 else:
     print("Warning: 'call_id' column not found in similarity_df or merged_df. Skipping similarity merge.")
 
-# Merge with CRSP daily data to get financial variables
-print("Merging with CRSP/Daily data to get financial variables...")
+# Compute market returns
+print("Computing market returns...")
+market_returns = df_crsp_daily.groupby('date')['ret'].mean().reset_index()
+market_returns.rename(columns={'ret': 'market_ret'}, inplace=True)
+
+# Merge market returns into df_crsp_daily
+df_crsp_daily = pd.merge(
+    df_crsp_daily,
+    market_returns,
+    on='date',
+    how='left'
+)
+print("Merged market returns into df_crsp_daily.")
+
+# Compute future returns
+print("Computing future returns...")
+df_crsp_daily = df_crsp_daily.sort_values(['permco', 'date']).reset_index(drop=True)
+
+def compute_future_returns(group):
+    group = group.sort_values('date').reset_index(drop=True)
+    n = len(group)
+    ret_values = group['ret'].values
+    market_ret_values = group['market_ret'].values
+
+    ret_short_term = np.full(n, np.nan)
+    ret_one_week = np.full(n, np.nan)
+    ret_medium_term = np.full(n, np.nan)
+    ret_long_term = np.full(n, np.nan)
+
+    excess_ret_short_term = np.full(n, np.nan)
+    excess_ret_one_week = np.full(n, np.nan)
+    excess_ret_medium_term = np.full(n, np.nan)
+    excess_ret_long_term = np.full(n, np.nan)
+
+    for i in range(n):
+        # Short-term market reaction: t-1 to t+1
+        if i - 1 >= 0 and i + 1 < n:
+            returns = ret_values[i - 1 : i + 2]  # i-1 to i+1 inclusive
+            market_returns = market_ret_values[i - 1 : i + 2]
+            if not np.isnan(returns).any() and not np.isnan(market_returns).any():
+                ret_short_term[i] = np.prod(1 + returns) - 1
+                market_return = np.prod(1 + market_returns) - 1
+                excess_ret_short_term[i] = ret_short_term[i] - market_return
+
+        # One-week market reaction: t+2 to t+6
+        if i + 6 < n:
+            returns = ret_values[i + 2 : i + 7]  # t+2 to t+6 inclusive
+            market_returns = market_ret_values[i + 2 : i + 7]
+            if not np.isnan(returns).any() and not np.isnan(market_returns).any():
+                ret_one_week[i] = np.prod(1 + returns) - 1
+                market_return = np.prod(1 + market_returns) - 1
+                excess_ret_one_week[i] = ret_one_week[i] - market_return
+
+        # Medium-term market reaction: t+2 to t+21
+        if i + 21 < n:
+            returns = ret_values[i + 2 : i + 22]  # t+2 to t+21 inclusive
+            market_returns = market_ret_values[i + 2 : i + 22]
+            if not np.isnan(returns).any() and not np.isnan(market_returns).any():
+                ret_medium_term[i] = np.prod(1 + returns) - 1
+                market_return = np.prod(1 + market_returns) - 1
+                excess_ret_medium_term[i] = ret_medium_term[i] - market_return
+
+        # Long-term market reaction: t+2 to t+60
+        if i + 61 < n:
+            returns = ret_values[i + 2 : i + 62]  # t+2 to t+61 inclusive
+            market_returns = market_ret_values[i + 2 : i + 62]
+            if not np.isnan(returns).any() and not np.isnan(market_returns).any():
+                ret_long_term[i] = np.prod(1 + returns) - 1
+                market_return = np.prod(1 + market_returns) - 1
+                excess_ret_long_term[i] = ret_long_term[i] - market_return
+
+    group['ret_short_term'] = ret_short_term
+    group['ret_one_week'] = ret_one_week
+    group['ret_medium_term'] = ret_medium_term
+    group['ret_long_term'] = ret_long_term
+
+    group['excess_ret_short_term'] = excess_ret_short_term
+    group['excess_ret_one_week'] = excess_ret_one_week
+    group['excess_ret_medium_term'] = excess_ret_medium_term
+    group['excess_ret_long_term'] = excess_ret_long_term
+
+    return group
+
+df_crsp_daily = df_crsp_daily.groupby('permco', group_keys=False).apply(compute_future_returns).reset_index(drop=True)
+print("Completed computation of future returns.")
+
+# Merge future returns into merged_df
+print("Merging future returns into the merged DataFrame...")
 merged_df = pd.merge(
     merged_df,
-    df_crsp_daily[['permco', 'date', 'prc', 'shrout', 'ret', 'vol']],
+    df_crsp_daily[['permco', 'date', 'ret', 'prc', 'shrout', 'vol',
+                   'ret_short_term', 'ret_one_week', 'ret_medium_term', 'ret_long_term',
+                   'excess_ret_short_term', 'excess_ret_one_week', 'excess_ret_medium_term', 'excess_ret_long_term']],
     left_on=['permco', 'call_date'],
     right_on=['permco', 'date'],
     how='left'
 )
 merged_df = merged_df.drop(columns=['date'], errors='ignore')
-print(f"Number of rows after merging with CRSP/Daily data: {len(merged_df)}")
+print(f"Number of rows after merging future returns: {len(merged_df)}")
 
 # Convert 'ret' to numeric, handling non-numeric values
 def clean_ret(value):
@@ -331,93 +418,6 @@ def clean_ret(value):
 
 merged_df['ret'] = merged_df['ret'].apply(clean_ret)
 print(f"Number of NaNs in 'ret' after cleaning: {merged_df['ret'].isna().sum()}")
-
-# Compute future returns
-print("Computing future returns...")
-df_crsp_daily = df_crsp_daily.sort_values(['permco', 'date']).reset_index(drop=True)
-
-def compute_future_returns(group):
-    group = group.sort_values('date').reset_index(drop=True)
-    n = len(group)
-    ret_values = group['ret'].values
-    ret_next_day = np.full(n, np.nan)
-    ret_5_days = np.full(n, np.nan)
-    ret_20_days = np.full(n, np.nan)
-    ret_60_days = np.full(n, np.nan)
-
-    for i in range(n):
-        # Next day return
-        if i + 1 < n and not np.isnan(ret_values[i+1]):
-            ret_next_day[i] = ret_values[i+1]
-
-        # 5 days return (starting one day after ret_next_day)
-        if i + 6 < n and not np.isnan(ret_values[i+2:i+7]).any():
-            ret_5_days[i] = np.prod(1 + ret_values[i+2:i+7]) - 1
-
-        # 20 days return
-        if i + 21 < n and not np.isnan(ret_values[i+2:i+22]).any():
-            ret_20_days[i] = np.prod(1 + ret_values[i+2:i+22]) - 1
-
-        # 60 days return
-        if i + 61 < n and not np.isnan(ret_values[i+2:i+62]).any():
-            ret_60_days[i] = np.prod(1 + ret_values[i+2:i+62]) - 1
-
-    group['ret_next_day'] = ret_next_day
-    group['ret_5_days'] = ret_5_days
-    group['ret_20_days'] = ret_20_days
-    group['ret_60_days'] = ret_60_days
-    return group
-
-df_crsp_daily = df_crsp_daily.groupby('permco', group_keys=False).apply(compute_future_returns).reset_index(drop=True)
-print("Completed computation of future returns.")
-
-# Merge future returns into merged_df
-print("Merging future returns into the merged DataFrame...")
-merged_df = pd.merge(
-    merged_df,
-    df_crsp_daily[['permco', 'date', 'ret_next_day', 'ret_5_days', 'ret_20_days', 'ret_60_days']],
-    left_on=['permco', 'call_date'],
-    right_on=['permco', 'date'],
-    how='left'
-)
-merged_df = merged_df.drop(columns=['date'], errors='ignore')
-print(f"Number of rows after merging future returns: {len(merged_df)}")
-
-# Compute market returns
-print("Computing market returns...")
-market_returns = df_crsp_daily.groupby('date')['ret'].mean().reset_index()
-market_returns.rename(columns={'ret': 'market_ret'}, inplace=True)
-
-# Merge market returns into merged_df
-merged_df = pd.merge(
-    merged_df,
-    market_returns,
-    left_on='call_date',
-    right_on='date',
-    how='left'
-)
-merged_df = merged_df.drop(columns=['date'], errors='ignore')
-print("Merged market returns into merged_df.")
-
-# Compute excess returns
-print("Computing excess returns...")
-merged_df['excess_ret'] = merged_df['ret'] - merged_df['market_ret']
-merged_df['excess_ret_next_day'] = merged_df['ret_next_day'] - merged_df['market_ret']
-merged_df['excess_ret_5_days'] = merged_df['ret_5_days'] - merged_df['market_ret']
-merged_df['excess_ret_20_days'] = merged_df['ret_20_days'] - merged_df['market_ret']
-merged_df['excess_ret_60_days'] = merged_df['ret_60_days'] - merged_df['market_ret']
-
-# Shift future returns one day later
-print("Shifting future returns one day later...")
-def shift_future_returns(group):
-    group = group.sort_values('call_date').reset_index(drop=True)
-    group['excess_ret_5_days'] = group['excess_ret_5_days'].shift(-1)
-    group['excess_ret_20_days'] = group['excess_ret_20_days'].shift(-1)
-    group['excess_ret_60_days'] = group['excess_ret_60_days'].shift(-1)
-    return group
-
-merged_df = merged_df.groupby('permco', group_keys=False).apply(shift_future_returns).reset_index(drop=True)
-print("Future returns shifted.")
 
 # **Restore 'call_date' with time component**
 print("Restoring 'call_date' with time component from 'processed_df'...")
@@ -447,8 +447,8 @@ desired_columns = [
     'fiscal_period_end', 'epsfxq', 'epsfxq_next', 'siccd',
     'similarity_to_overall_average', 'similarity_to_industry_average',
     'similarity_to_company_average', 'prc', 'shrout', 'ret', 'vol',
-    'market_ret', 'excess_ret', 'excess_ret_next_day', 'excess_ret_5_days',
-    'excess_ret_20_days', 'excess_ret_60_days'
+    'ret_short_term', 'ret_one_week', 'ret_medium_term', 'ret_long_term',
+    'excess_ret_short_term', 'excess_ret_one_week', 'excess_ret_medium_term', 'excess_ret_long_term'
 ]
 
 # Check if all desired columns are present
@@ -456,7 +456,7 @@ missing_cols = set(desired_columns) - set(merged_df.columns)
 if missing_cols:
     print(f"Warning: The following expected columns are missing in merged_df and will be excluded from the final DataFrame: {missing_cols}")
 
-#take absolute values for the prc column
+# Take absolute values for the prc column
 merged_df['prc'] = merged_df['prc'].abs()
 
 # Select only the columns that exist
