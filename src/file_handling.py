@@ -1,4 +1,3 @@
-# filehandling.py
 import os
 import pandas as pd
 import numpy as np
@@ -47,7 +46,6 @@ class FileHandler:
         index_file = pd.read_csv(self.index_file_path, sep=";")
         return index_file
 
-
     def create_ecc_sample(self, sample_size):
         """
         Creates a sample of earnings call transcripts based on the sampling mode specified in the config,
@@ -61,11 +59,11 @@ class FileHandler:
         Returns
         -------
         dict
-            A dictionary containing the sampled earnings call transcripts
+            A nested dictionary containing the sampled earnings call transcripts
         """
         # Read the index file
         index_file = self.read_index_file()
-        # Initialize the ECC sample
+        # Initialize the ECC sample as a nested dictionary
         ecc_sample = {}
         excluded_count = 0  # Counter for excluded calls
 
@@ -82,12 +80,12 @@ class FileHandler:
         if sampling_mode == 'full_random':
             # Sample earnings calls completely at random
             print("Sampling mode: full_random")
-            while len(ecc_sample) < sample_size:
-                remaining_sample_size = sample_size - len(ecc_sample)
+            while sum(len(calls) for calls in ecc_sample.values()) < sample_size:
+                remaining_sample_size = sample_size - sum(len(calls) for calls in ecc_sample.values())
                 selected_files = np.random.choice(all_files, size=remaining_sample_size, replace=False)
                 
                 for ecc_file in selected_files:
-                    if len(ecc_sample) >= sample_size:
+                    if sum(len(calls) for calls in ecc_sample.values()) >= sample_size:
                         break
 
                     # Match filename against the pattern
@@ -115,8 +113,10 @@ class FileHandler:
                         excluded_count += 1
                         continue  # Skip this file if below the word count threshold
 
-                    # Add to sample if word count is sufficient
-                    ecc_sample[ecc_key] = {
+                    # Before adding to sample, ensure ecc_sample[permco] is a dictionary
+                    if permco not in ecc_sample:
+                        ecc_sample[permco] = {}
+                    ecc_sample[permco][ecc_key] = {
                         'permco': permco,
                         'se_id': se_id,
                         'company_name': company_name,
@@ -129,12 +129,12 @@ class FileHandler:
             print("Sampling mode: random_company")
             unique_companies = index_file['permco'].unique()
 
-            while len(ecc_sample) < sample_size:
-                remaining_sample_size = sample_size - len(ecc_sample)
+            while sum(len(calls) for calls in ecc_sample.values()) < sample_size:
+                remaining_sample_size = sample_size - sum(len(calls) for calls in ecc_sample.values())
                 random_companies = np.random.choice(unique_companies, size=remaining_sample_size, replace=False)
                 
                 for permco in random_companies:
-                    if len(ecc_sample) >= sample_size:
+                    if sum(len(calls) for calls in ecc_sample.values()) >= sample_size:
                         break
 
                     company_rows = index_file[index_file['permco'] == permco]
@@ -144,7 +144,7 @@ class FileHandler:
                     print(f"Found {len(ecc_files)} files for permco {permco}")
 
                     for ecc_file in ecc_files:
-                        if len(ecc_sample) >= sample_size:
+                        if sum(len(calls) for calls in ecc_sample.values()) >= sample_size:
                             break
 
                         # Match filename against the pattern
@@ -168,8 +168,10 @@ class FileHandler:
                             excluded_count += 1
                             continue  # Skip this file if below the word count threshold
 
-                        # Add to sample if word count is sufficient
-                        ecc_sample[ecc_key] = {
+                        # Before adding to sample, ensure ecc_sample[permco] is a dictionary
+                        if permco not in ecc_sample:
+                            ecc_sample[permco] = {}
+                        ecc_sample[permco][ecc_key] = {
                             'permco': permco,
                             'se_id': se_id,
                             'company_name': company_name,
@@ -183,6 +185,7 @@ class FileHandler:
         print(f"Excluded {excluded_count} calls due to having fewer than 1600 words (below 0.5% percentile).")
         
         return ecc_sample
+
     def get_word_count_percentile(self, ecc_sample, percentile=1):
         """
         Calculates the word count at a specified percentile for the ECC sample.
@@ -213,7 +216,7 @@ class FileHandler:
         word_count_percentile = np.percentile(word_counts, percentile)
         print(f"The {percentile}th percentile word count is: {word_count_percentile}")
         return word_count_percentile
-    
+
     def get_character_count_percentile(self, ecc_sample, percentile=1):
         """
         Calculates the character count at a specified percentile for the ECC sample.
