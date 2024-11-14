@@ -41,8 +41,8 @@ descriptive_stats = {}
 def classify_similarity(df, similarity_col):
     mean = df[similarity_col].mean()
     std = df[similarity_col].std()
-    high_threshold = mean + 2 * std
-    low_threshold = mean - 2 * std
+    high_threshold = mean + 1 * std
+    low_threshold = mean - 1 * std
 
     df['similarity_group'] = 'Medium'
     df.loc[df[similarity_col] >= high_threshold, 'similarity_group'] = 'High Similarity'

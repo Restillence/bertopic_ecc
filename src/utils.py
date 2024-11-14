@@ -107,7 +107,6 @@ def determine_topics_to_keep(df, threshold_percentage):
     
     return topics_to_keep
 
-
 def create_transition_matrix(topic_sequence, num_topics):
     transition_matrix = np.zeros((num_topics, num_topics))
     for i in range(len(topic_sequence) - 1):
@@ -132,6 +131,9 @@ def compute_similarity_to_average(df, num_topics):
     siccds = []
     permcos = []
     call_dates = []
+
+    # Ensure 'call_date' is in datetime format
+    df['call_date'] = pd.to_datetime(df['call_date'])
 
     grouped = df.groupby('call_id')
     for call_id, group in grouped:
@@ -171,92 +173,83 @@ def compute_similarity_to_average(df, num_topics):
 
     ### Compute similarities to overall average ###
     similarities_overall = []
-    overall_mean = np.zeros(num_elements, dtype=np.float64)
-    count = 0
 
-    for i in range(len(calls_df)):
-        tm_vector = calls_df.iloc[i][tm_flat_df.columns].values.astype(np.float64)
-        if count > 0:
-            similarity = 1 - cosine(tm_vector, overall_mean)
-        else:
+    # Convert 'call_date' to datetime if not already
+    calls_df['call_date'] = pd.to_datetime(calls_df['call_date'])
+
+    for idx, row in calls_df.iterrows():
+        current_date = row['call_date']
+        tm_vector = row[tm_flat_df.columns].values.astype(np.float64)
+
+        # Define the time window: previous 1 year (365 days)
+        time_window_start = current_date - pd.DateOffset(days=365)
+
+        # Filter for calls within the time window and before the current call date
+        window_df = calls_df[(calls_df['call_date'] >= time_window_start) &
+                             (calls_df['call_date'] < current_date)]
+
+        if len(window_df) < 4:
             similarity = np.nan
+        else:
+            # Compute the average transition matrix
+            mean_vector = window_df[tm_flat_df.columns].mean().values.astype(np.float64)
+            # Compute similarity
+            similarity = 1 - cosine(tm_vector, mean_vector)
         similarities_overall.append(similarity)
-        # Update overall mean
-        count += 1
-        overall_mean += (tm_vector - overall_mean) / count
 
     calls_df['similarity_to_overall_average'] = similarities_overall
 
     ### Compute similarities to industry average ###
     similarities_industry = []
-    running_means = {}
-    counts = {}
 
-    # Sort calls_df by 'siccd' and 'call_date'
-    calls_df_industry = calls_df.sort_values(['siccd', 'call_date']).reset_index(drop=True)
+    for idx, row in calls_df.iterrows():
+        current_date = row['call_date']
+        tm_vector = row[tm_flat_df.columns].values.astype(np.float64)
+        siccd = row['siccd']
 
-    for i in range(len(calls_df_industry)):
-        siccd = calls_df_industry['siccd'].iloc[i]
-        tm_vector = calls_df_industry.iloc[i][tm_flat_df.columns].values.astype(np.float64)
+        # Define the time window: previous 1 year
+        time_window_start = current_date - pd.DateOffset(days=365)
 
-        if siccd not in running_means:
-            running_means[siccd] = np.zeros(num_elements, dtype=np.float64)
-            counts[siccd] = 0
+        # Filter for calls within the time window, same industry, and before the current call date
+        window_df = calls_df[(calls_df['call_date'] >= time_window_start) &
+                             (calls_df['call_date'] < current_date) &
+                             (calls_df['siccd'] == siccd)]
 
-        if counts[siccd] > 0:
-            mean_vector = running_means[siccd]
-            similarity = 1 - cosine(tm_vector, mean_vector)
-        else:
+        if len(window_df) < 4:
             similarity = np.nan
+        else:
+            # Compute the average transition matrix
+            mean_vector = window_df[tm_flat_df.columns].mean().values.astype(np.float64)
+            # Compute similarity
+            similarity = 1 - cosine(tm_vector, mean_vector)
         similarities_industry.append(similarity)
 
-        # Update running mean for the industry
-        counts[siccd] += 1
-        running_means[siccd] += (tm_vector - running_means[siccd]) / counts[siccd]
-
-    calls_df_industry['similarity_to_industry_average'] = similarities_industry
+    calls_df['similarity_to_industry_average'] = similarities_industry
 
     ### Compute similarities to company average ###
     similarities_company = []
-    running_means_company = {}
-    counts_company = {}
 
-    # Sort calls_df by 'permco' and 'call_date'
-    calls_df_company = calls_df.sort_values(['permco', 'call_date']).reset_index(drop=True)
+    for idx, row in calls_df.iterrows():
+        current_date = row['call_date']
+        tm_vector = row[tm_flat_df.columns].values.astype(np.float64)
+        permco = row['permco']
 
-    for i in range(len(calls_df_company)):
-        permco = calls_df_company['permco'].iloc[i]
-        tm_vector = calls_df_company.iloc[i][tm_flat_df.columns].values.astype(np.float64)
+        # Filter for previous 4 calls of the same company before the current call date
+        company_calls = calls_df[(calls_df['permco'] == permco) &
+                                 (calls_df['call_date'] < current_date)].sort_values('call_date', ascending=False)
 
-        if permco not in running_means_company:
-            running_means_company[permco] = np.zeros(num_elements, dtype=np.float64)
-            counts_company[permco] = 0
-
-        if counts_company[permco] > 0:
-            mean_vector = running_means_company[permco]
-            similarity = 1 - cosine(tm_vector, mean_vector)
-        else:
+        if len(company_calls) < 4:
             similarity = np.nan
+        else:
+            # Take the last 4 calls
+            window_df = company_calls.head(4)
+            # Compute the average transition matrix
+            mean_vector = window_df[tm_flat_df.columns].mean().values.astype(np.float64)
+            # Compute similarity
+            similarity = 1 - cosine(tm_vector, mean_vector)
         similarities_company.append(similarity)
 
-        # Update running mean for the company
-        counts_company[permco] += 1
-        running_means_company[permco] += (tm_vector - running_means_company[permco]) / counts_company[permco]
-
-    calls_df_company['similarity_to_company_average'] = similarities_company
-
-    # Merge the similarities back into the original calls_df
-    calls_df = calls_df.merge(
-        calls_df_industry[['call_id', 'similarity_to_industry_average']],
-        on='call_id',
-        how='left'
-    )
-
-    calls_df = calls_df.merge(
-        calls_df_company[['call_id', 'similarity_to_company_average']],
-        on='call_id',
-        how='left'
-    )
+    calls_df['similarity_to_company_average'] = similarities_company
 
     # Return the DataFrame with similarities
     similarity_df = calls_df[['call_id', 'similarity_to_overall_average', 'similarity_to_industry_average', 'similarity_to_company_average']]
