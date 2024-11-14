@@ -1,7 +1,7 @@
 {
   "index_file_ecc_folder": "../data/",
   "folderpath_ecc": "../data/Transcripts_Masterarbeit/",
-  "model_save_path": "../data/bertopic_model_dir_2500_zeroshot_075",
+  "model_save_path": "../data/bertopic_model_dir_2500_zeroshot_025",
   "model_load_path": "../data/bertopic_model_dir",
   "index_file_path": "../data/list_earnings_call_transcripts.csv",
   "embedding_model_choice": "all-MiniLM-L12-v2",
@@ -42,7 +42,7 @@
 
   "hierarchical_clustering_threshold": 2,
 
-  "zeroshot_min_similarity": 0.75,
+  "zeroshot_min_similarity": 0.25,
   "min_topic_size": 200,
 
   "batch_size": 32,
