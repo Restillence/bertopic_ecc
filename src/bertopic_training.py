@@ -5,15 +5,6 @@ import torch  # For checking if GPU is available
 import time  # For time tracking
 import threading  # For heartbeat functionality
 import datetime
-import gensim.corpora as corpora
-from gensim.models.coherencemodel import CoherenceModel
-from nltk.tokenize import word_tokenize
-import nltk
-
-# Ensure NLTK's punkt tokenizer and stopwords are downloaded
-nltk.download('punkt')
-nltk.download('stopwords')
-nltk.download('wordnet')
 
 # Disable parallelism in tokenizers to prevent CPU overutilization
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
@@ -26,8 +17,6 @@ from text_processing import TextProcessor  # Import the TextProcessor class
 from sentence_transformers import SentenceTransformer
 from sklearn.feature_extraction.text import CountVectorizer
 from utils import print_configuration
-from nltk.corpus import stopwords
-from nltk.stem import WordNetLemmatizer
 
 class BertopicModel:
     def __init__(self, config):
@@ -59,16 +48,9 @@ class BertopicModel:
         # Select UMAP and HDBSCAN implementations
         self._select_umap_hdbscan()
 
-        # Read coherence parameters from config
-        self.coherence_measure = config.get('coherence_measure', 'c_v')
-        self.coherence_top_n = config.get('coherence_top_n', 10)
-
-        # Read diversity parameters from config
-        self.diversity_top_n = config.get('diversity_top_n', 10)
-
     def _select_embedding_device(self):
         """Select device for embeddings based on GPU availability."""
-        if torch.cuda.is_available() and self.use_gpu:
+        if torch.cuda.is_available():
             print("GPU is available. Using GPU for embeddings...")
             return torch.device("cuda")
         else:
@@ -192,7 +174,7 @@ class BertopicModel:
             import GPUtil
             gpus = GPUtil.getGPUs()
             for gpu in gpus:
-                print(f"GPU {gpu.id} - Memory Usage: {gpu.memoryUsed}/{gpu.memoryTotal} MB - Utilization: {gpu.load*100:.2f}%")
+                print(f"GPU {gpu.id} - Memory Usage: {gpu.memoryUsed}/{gpu.memoryTotal} MB - Utilization: {gpu.load*100}%")
 
     def train(self, docs):
         """Train the BERTopic model using the specified modeling type.
@@ -339,107 +321,6 @@ class BertopicModel:
         print("\nFinal topic information:")
         print(topic_info)
 
-        # Compute topic coherence
-        print("\nComputing topic coherence...")
-        try:
-            coherence_score = self.calculate_coherence_score(
-                self.topic_model,
-                self.docs,
-                coherence_measure=self.coherence_measure,
-                top_n=self.coherence_top_n
-            )
-            print(f"Coherence Score ({self.coherence_measure}): {coherence_score:.4f}")
-        except Exception as e:
-            print(f"An error occurred while computing topic coherence: {e}")
-
-        # Compute topic diversity
-        print("\nComputing topic diversity...")
-        try:
-            diversity_score = self.calculate_topic_diversity(
-                self.topic_model,
-                top_n=self.diversity_top_n
-            )
-            print(f"Topic Diversity (top {self.diversity_top_n} words): {diversity_score:.4f}")
-        except Exception as e:
-            print(f"An error occurred while computing topic diversity: {e}")
-
-    def calculate_coherence_score(self, topic_model, docs, coherence_measure='c_v', top_n=10):
-        """
-        Calculate the coherence score for a BERTopic model.
-
-        Parameters:
-        - topic_model: Trained BERTopic model.
-        - docs: List of documents (strings).
-        - coherence_measure: Type of coherence measure (default: 'c_v').
-        - top_n: Number of top words per topic to consider.
-
-        Returns:
-        - coherence_score: Calculated coherence score.
-        """
-        # Preprocess documents: Tokenization, stop words removal, lemmatization
-        lemmatizer = WordNetLemmatizer()
-        stop_words_set = set(stopwords.words('english'))
-        tokenized_docs = [
-            [lemmatizer.lemmatize(token) for token in word_tokenize(doc.lower()) 
-             if token.isalpha() and token not in stop_words_set]
-            for doc in docs
-        ]
-
-        # Create a Gensim dictionary and corpus
-        dictionary = corpora.Dictionary(tokenized_docs)
-        corpus = [dictionary.doc2bow(token) for token in tokenized_docs]
-
-        # Extract topics and their top words
-        topic_info = topic_model.get_topic_info()
-        topics = topic_info[topic_info['Topic'] != -1]['Topic'].tolist()  # Exclude outliers
-
-        topic_words = [
-            [word for word, _ in topic_model.get_topic(topic_id)[:top_n]]
-            for topic_id in topics
-        ]
-
-        # Initialize CoherenceModel
-        coherence_model = CoherenceModel(
-            topics=topic_words,
-            texts=tokenized_docs,
-            dictionary=dictionary,
-            corpus=corpus,
-            coherence=coherence_measure
-        )
-
-        # Calculate coherence score
-        coherence_score = coherence_model.get_coherence()
-
-        return coherence_score
-
-    def calculate_topic_diversity(self, topic_model, top_n=10):
-        """
-        Calculate the topic diversity for a BERTopic model.
-
-        Topic diversity measures the uniqueness of words across all topics.
-        It is calculated as the ratio of unique words to the total number of words across all topics.
-
-        Parameters:
-        - topic_model: Trained BERTopic model.
-        - top_n: Number of top words per topic to consider.
-
-        Returns:
-        - diversity_score: Calculated topic diversity score.
-        """
-        unique_words = set()
-        total_words = 0
-        topic_info = topic_model.get_topic_info()
-        topics = topic_info[topic_info['Topic'] != -1]['Topic'].tolist()  # Exclude outliers
-
-        for topic_id in topics:
-            words = [word for word, _ in topic_model.get_topic(topic_id)[:top_n]]
-            unique_words.update(words)
-            total_words += len(words)
-
-        diversity_score = len(unique_words) / total_words if total_words > 0 else 0
-
-        return diversity_score
-
     def _customize_topic_labels(self):
         """Customize topic labels to include zero-shot topic names followed by top words."""
         # Get zero-shot topic list and seed words from config
@@ -545,8 +426,6 @@ class BertopicModel:
         output_file = os.path.join(self.config.get("output_dir", "."), "topic_info.csv")
         topic_info.to_csv(output_file, index=False)
         print(f"Topic information saved to {output_file}.")
-
-# Existing heartbeat and main functions remain unchanged
 
 def heartbeat():
     while True:
