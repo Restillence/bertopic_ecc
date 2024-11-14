@@ -333,34 +333,34 @@ def compute_future_returns(group):
     ret_values = group['ret'].values
     market_ret_values = group['market_ret'].values
 
-    ret_short_term = np.full(n, np.nan)
-    ret_one_week = np.full(n, np.nan)
+    ret_immediate = np.full(n, np.nan)  # Previously ret_short_term
+    ret_short_term = np.full(n, np.nan)  # Previously ret_one_week
     ret_medium_term = np.full(n, np.nan)
     ret_long_term = np.full(n, np.nan)
 
-    excess_ret_short_term = np.full(n, np.nan)
-    excess_ret_one_week = np.full(n, np.nan)
+    excess_ret_immediate = np.full(n, np.nan)  # Previously excess_ret_short_term
+    excess_ret_short_term = np.full(n, np.nan)  # Previously excess_ret_one_week
     excess_ret_medium_term = np.full(n, np.nan)
     excess_ret_long_term = np.full(n, np.nan)
 
     for i in range(n):
-        # Short-term market reaction: t-1 to t+1
+        # Immediate market reaction: t-1 to t+1
         if i - 1 >= 0 and i + 1 < n:
             returns = ret_values[i - 1 : i + 2]  # i-1 to i+1 inclusive
             market_returns = market_ret_values[i - 1 : i + 2]
             if not np.isnan(returns).any() and not np.isnan(market_returns).any():
-                ret_short_term[i] = np.prod(1 + returns) - 1
+                ret_immediate[i] = np.prod(1 + returns) - 1
                 market_return = np.prod(1 + market_returns) - 1
-                excess_ret_short_term[i] = ret_short_term[i] - market_return
+                excess_ret_immediate[i] = ret_immediate[i] - market_return
 
-        # One-week market reaction: t+2 to t+6
+        # Short-term market reaction: t+2 to t+6
         if i + 6 < n:
             returns = ret_values[i + 2 : i + 7]  # t+2 to t+6 inclusive
             market_returns = market_ret_values[i + 2 : i + 7]
             if not np.isnan(returns).any() and not np.isnan(market_returns).any():
-                ret_one_week[i] = np.prod(1 + returns) - 1
+                ret_short_term[i] = np.prod(1 + returns) - 1
                 market_return = np.prod(1 + market_returns) - 1
-                excess_ret_one_week[i] = ret_one_week[i] - market_return
+                excess_ret_short_term[i] = ret_short_term[i] - market_return
 
         # Medium-term market reaction: t+2 to t+21
         if i + 21 < n:
@@ -380,13 +380,13 @@ def compute_future_returns(group):
                 market_return = np.prod(1 + market_returns) - 1
                 excess_ret_long_term[i] = ret_long_term[i] - market_return
 
+    group['ret_immediate'] = ret_immediate
     group['ret_short_term'] = ret_short_term
-    group['ret_one_week'] = ret_one_week
     group['ret_medium_term'] = ret_medium_term
     group['ret_long_term'] = ret_long_term
 
+    group['excess_ret_immediate'] = excess_ret_immediate
     group['excess_ret_short_term'] = excess_ret_short_term
-    group['excess_ret_one_week'] = excess_ret_one_week
     group['excess_ret_medium_term'] = excess_ret_medium_term
     group['excess_ret_long_term'] = excess_ret_long_term
 
@@ -400,8 +400,8 @@ print("Merging future returns into the merged DataFrame...")
 merged_df = pd.merge(
     merged_df,
     df_crsp_daily[['permco', 'date', 'ret', 'prc', 'shrout', 'vol',
-                   'ret_short_term', 'ret_one_week', 'ret_medium_term', 'ret_long_term',
-                   'excess_ret_short_term', 'excess_ret_one_week', 'excess_ret_medium_term', 'excess_ret_long_term']],
+                   'ret_immediate', 'ret_short_term', 'ret_medium_term', 'ret_long_term',
+                   'excess_ret_immediate', 'excess_ret_short_term', 'excess_ret_medium_term', 'excess_ret_long_term']],
     left_on=['permco', 'call_date'],
     right_on=['permco', 'date'],
     how='left'
@@ -447,8 +447,8 @@ desired_columns = [
     'fiscal_period_end', 'epsfxq', 'epsfxq_next', 'siccd',
     'similarity_to_overall_average', 'similarity_to_industry_average',
     'similarity_to_company_average', 'prc', 'shrout', 'ret', 'vol',
-    'ret_short_term', 'ret_one_week', 'ret_medium_term', 'ret_long_term',
-    'excess_ret_short_term', 'excess_ret_one_week', 'excess_ret_medium_term', 'excess_ret_long_term'
+    'ret_immediate', 'ret_short_term', 'ret_medium_term', 'ret_long_term',
+    'excess_ret_immediate', 'excess_ret_short_term', 'excess_ret_medium_term', 'excess_ret_long_term'
 ]
 
 # Check if all desired columns are present

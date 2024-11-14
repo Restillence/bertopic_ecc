@@ -14,7 +14,7 @@
   "topics_input_path": "D:/daten_masterarbeit/topics_output.csv",
   "topics_output_path": "D:/daten_masterarbeit/topics_output_outlier_removed.csv",
   "topics_to_keep": "auto",
-  "topic_threshold_percentage": 90,
+  "topic_threshold_percentage": 100,
 
   "fuzzy_topic_labels": {
     "0": "Introduction",
@@ -29,7 +29,7 @@
   "modeling_type": "regular",
   "apply_topic_merging": true, 
   "similarity_threshold": 0.7,
-  "sample_size": 500,
+  "sample_size": 1000,
   "sampling_mode": "full_random",
   "document_split": "sentences",
   "random_seed": 43,
@@ -43,7 +43,7 @@
   "hierarchical_clustering_threshold": 1,
 
   "zeroshot_min_similarity": 0.05,
-  "min_topic_size": 5,
+  "min_topic_size": 200,
 
   "batch_size": 32,
 
@@ -60,7 +60,7 @@
       "low_memory": true
   },
   "hdbscan_model_params": {
-      "min_cluster_size": 50,
+      "min_cluster_size": 200,
       "metric": "euclidean",
       "cluster_selection_method": "eom",
       "prediction_data": true
