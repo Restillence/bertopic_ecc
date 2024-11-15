@@ -1,23 +1,31 @@
 # read csv file from filepath
 import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import r2_score, mean_squared_error
+
+# Path to the final dataset
 filepath = "D:/daten_masterarbeit/final_dataset.csv"
+
+# Read the CSV file, assuming 'call_id' is the index column if applicable
 df = pd.read_csv(filepath, index_col=0)
 
 print(f"Number of observations in the final_dataset: {len(df)}")
 
-#%% data preparation
-import numpy as np
+#%% Data Preparation
 
 # Updated list of variables to include in the analysis
 variables = [
     'similarity_to_overall_average',
     'similarity_to_industry_average',
     'similarity_to_company_average',
-    'excess_ret',
-    'excess_ret_next_day',
-    'excess_ret_5_days',
-    'excess_ret_20_days',
-    'excess_ret_60_days',
+    'excess_ret_immediate',
+    'excess_ret_short_term',
+    'excess_ret_medium_term',
+    'excess_ret_long_term',
     'epsfxq',
     'epsfxq_next'
 ]
@@ -28,20 +36,17 @@ analysis_df = df[variables].dropna()
 # Display the number of observations
 print(f"Number of observations after dropping NaNs: {len(analysis_df)}")
 
-#%% exploratory data analysis
-import matplotlib.pyplot as plt
-import seaborn as sns
+#%% Exploratory Data Analysis
 
 # Set up the plotting style
 sns.set_style('whitegrid')
 
 # Updated list of return variables
 return_vars = [
-    'excess_ret',
-    'excess_ret_next_day',
-    'excess_ret_5_days',
-    'excess_ret_20_days',
-    'excess_ret_60_days',
+    'excess_ret_immediate',
+    'excess_ret_short_term',
+    'excess_ret_medium_term',
+    'excess_ret_long_term',
     'epsfxq',
     'epsfxq_next'
 ]
@@ -52,6 +57,8 @@ similarity_vars = [
     'similarity_to_industry_average',
     'similarity_to_company_average'
 ]
+
+# Uncomment the following block to create scatter plots
 """
 # Create scatter plots between similarity variables and return variables
 for sim_var in similarity_vars:
@@ -72,7 +79,9 @@ for sim_var in similarity_vars:
     plt.ylabel('Frequency')
     plt.show()
 """
-#%% correlations
+
+#%% Correlations
+
 # Calculate correlation coefficients
 correlations = analysis_df.corr(method='pearson')
 
@@ -83,10 +92,9 @@ print(correlations)
 # Extract correlations of similarity variables with return variables
 for sim_var in similarity_vars:
     print(f"\nCorrelation coefficients between '{sim_var}' and return variables:")
-    print(correlations[sim_var][return_vars])
+    print(correlations.loc[sim_var, return_vars])
 
-#%% linear regression using statsmodels
-import statsmodels.api as sm
+#%% Linear Regression using Statsmodels
 
 # Function to perform regression with statsmodels and display p-values
 def perform_regression_with_statsmodels(y_var, x_vars):
@@ -101,12 +109,9 @@ def perform_regression_with_statsmodels(y_var, x_vars):
 
 # Perform regression for each return variable on similarity variables
 for ret_var in return_vars:
-    model = perform_regression_with_statsmodels(ret_var, similarity_vars)
+    perform_regression_with_statsmodels(ret_var, similarity_vars)
 
-
-#%% linear regression using scikit-learn
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import r2_score, mean_squared_error
+#%% Linear Regression using Scikit-learn
 
 # Function to perform regression and display results
 def perform_sklearn_regression(y_var, x_vars):
@@ -127,9 +132,10 @@ def perform_sklearn_regression(y_var, x_vars):
 
 # Perform regression of return variables on similarity variables
 for ret_var in return_vars:
-    model = perform_sklearn_regression(ret_var, similarity_vars)
+    perform_sklearn_regression(ret_var, similarity_vars)
 
-#%% additional plots
+#%% Additional Plots
+
 """
 # Plot histograms and density of 'epsfxq' and 'epsfxq_next'
 for eps_var in ['epsfxq', 'epsfxq_next']:
