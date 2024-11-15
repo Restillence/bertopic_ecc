@@ -454,11 +454,11 @@ def main():
 
     # Load configuration variables from config.json with fallback path
     try:
-        with open('config_hlr.json', 'r') as config_file:
+        with open('config.json', 'r') as config_file:
             config = json.load(config_file)
             print("Config File Loaded from 'config.json'.")
     except FileNotFoundError:
-        fallback_config_path = r"C:/Users/nikla/OneDrive/Dokumente/winfoMaster/Masterarbeit/bertopic_ecc/config_hlr.json"
+        fallback_config_path = r"C:/Users/nikla/OneDrive/Dokumente/winfoMaster/Masterarbeit/bertopic_ecc/config.json"
         with open(fallback_config_path, 'r') as config_file:
             config = json.load(config_file)
             print(f"Config File Loaded from fallback path: {fallback_config_path}")

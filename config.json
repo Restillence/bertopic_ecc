@@ -1,14 +1,13 @@
 {
     "index_file_ecc_folder": "D:/daten_masterarbeit/",
     "folderpath_ecc": "D:/daten_masterarbeit/Transcripts_Masterarbeit_full/",
-    "model_save_path": "D:/daten_masterarbeit/bertopic_model_dir", 
-    "model_load_path": "D:/daten_masterarbeit/bertopic_model_dir_regular_2500_auto", 
+    "model_save_path": "D:/daten_masterarbeit/bertopic_model_dir_regular_5000", 
+    "model_load_path": "D:/daten_masterarbeit/bertopic_model_dir", 
     "index_file_path": "D:/daten_masterarbeit/list_earnings_call_transcripts.csv",
-    
-    "modeling_type": "regular",
-    "apply_topic_merging": true, 
-    "similarity_threshold": 0.7,
-    "sample_size": 10,
+    "modeling_type": "regular",   
+    "sample_size": 5000,
+
+    "zeroshot_min_similarity": 0.25,
     "nr_topics": null,
     "sampling_mode": "full_random",
     "document_split": "sentences",
@@ -17,12 +16,10 @@
     "max_documents": 300000000,
     "use_gpu": false,
     "pca_components": 50,
-
+    "apply_topic_merging": true, 
+    "similarity_threshold": 0.7,
     "hierarchical_clustering_threshold": 0.5,
-
-
-    "zeroshot_min_similarity": 0.3,
-    "min_topic_size": 5,
+    "min_topic_size": 200,
 
     "ecc_plots_folder": "C:/Users/nikla/OneDrive/Dokumente/winfoMaster/Masterarbeit/bertopic_ecc/plots/ecc_plots",
     "embedding_model_choice": "all-MiniLM-L12-v2", 
@@ -47,7 +44,6 @@
       "5": "Strategy",
       "6": "Risk"
     },
-
   
     "batch_size": 32,
   
@@ -64,7 +60,7 @@
         "low_memory": true
     },
     "hdbscan_model_params": {
-        "min_cluster_size": 5,
+        "min_cluster_size": 200,
         "metric": "euclidean",
         "cluster_selection_method": "eom",
         "prediction_data": true
