@@ -25,7 +25,6 @@ class FileHandler:
             - 'index_file_path': Path to the index CSV file.
             - 'folderpath_ecc': Path to the folder containing ECC files.
             - 'sampling_mode': 'full_random' or 'random_company'.
-            - 'sample_size': Integer representing the number of transcripts or companies to sample.
         """
         # Set the configuration
         self.config = config
@@ -34,15 +33,14 @@ class FileHandler:
         self.index_file_path = self.config.get('index_file_path')
         self.folderpath_ecc = self.config.get('folderpath_ecc')
         self.sampling_mode = self.config.get('sampling_mode', 'random_company')
-        self.sample_size = self.config.get('sample_size')
 
         # Validate essential configuration parameters
         if not self.index_file_path:
             raise ValueError("Configuration must include 'index_file_path'.")
         if not self.folderpath_ecc:
             raise ValueError("Configuration must include 'folderpath_ecc'.")
-        if not isinstance(self.sample_size, int) or self.sample_size <= 0:
-            raise ValueError("'sample_size' must be a positive integer.")
+        if self.sampling_mode not in ['full_random', 'random_company']:
+            raise ValueError("Sampling mode must be either 'full_random' or 'random_company'.")
 
     def read_index_file(self):
         """
@@ -62,10 +60,16 @@ class FileHandler:
             print(f"Error reading index file: {e}")
             raise
 
-    def create_ecc_sample(self):
+    def create_ecc_sample(self, sample_size):
         """
         Creates a sample of earnings call transcripts based on the sampling mode specified in the config,
         excluding calls with fewer than 1600 words.
+
+        Parameters
+        ----------
+        sample_size : int
+            - If `sampling_mode` is 'full_random', represents the number of transcripts to sample.
+            - If `sampling_mode` is 'random_company', represents the number of unique companies to sample.
 
         Returns
         -------
@@ -86,7 +90,7 @@ class FileHandler:
             }
         """
         print("Creating ECC sample...")
-        
+
         # Read the index file
         index_file = self.read_index_file()
 
@@ -136,13 +140,13 @@ class FileHandler:
                     continue  # Skip if below word count threshold
                 eligible_files.append((permco, se_id, company_name, date, text_content))
 
-            if len(eligible_files) < self.sample_size:
-                print(f"Only {len(eligible_files)} eligible transcripts available, which is less than the requested sample size of {self.sample_size}.")
-                self.sample_size = len(eligible_files)
+            if len(eligible_files) < sample_size:
+                print(f"Only {len(eligible_files)} eligible transcripts available, which is less than the requested sample size of {sample_size}.")
+                sample_size = len(eligible_files)
 
             # Randomly select the desired number of transcripts without replacement
-            sampled_files = np.random.choice(len(eligible_files), size=self.sample_size, replace=False)
-            for idx in sampled_files:
+            sampled_indices = np.random.choice(len(eligible_files), size=sample_size, replace=False)
+            for idx in sampled_indices:
                 permco, se_id, company_name, date, text_content = eligible_files[idx]
                 ecc_key = f"earnings_call_{permco}_{se_id}"
                 if permco not in ecc_sample:
@@ -155,8 +159,8 @@ class FileHandler:
                     'text_content': text_content
                 }
 
-            print(f"Sampling completed.")
-            print(f"Total transcripts included: {len(sampled_files)}")
+            print("\nSampling completed.")
+            print(f"Total transcripts included: {len(sampled_indices)}")
             print(f"Excluded {excluded_count} calls due to having fewer than 1600 words.")
 
         elif self.sampling_mode == 'random_company':
@@ -167,11 +171,11 @@ class FileHandler:
             print(f"Total unique companies available: {total_unique_companies}")
 
             # Check if there are enough unique companies
-            if self.sample_size > total_unique_companies:
-                raise ValueError(f"Requested sample size ({self.sample_size}) exceeds the number of unique companies available ({total_unique_companies}).")
+            if sample_size > total_unique_companies:
+                raise ValueError(f"Requested sample size ({sample_size}) exceeds the number of unique companies available ({total_unique_companies}).")
 
             # Randomly select the desired number of unique companies without replacement
-            sampled_companies = np.random.choice(unique_companies, size=self.sample_size, replace=False)
+            sampled_companies = np.random.choice(unique_companies, size=sample_size, replace=False)
             print(f"Selected {len(sampled_companies)} unique companies for sampling.")
 
             # Iterate over each sampled company with a progress bar
@@ -187,7 +191,6 @@ class FileHandler:
                 ecc_files = [f for f in all_files if f.startswith(f'earnings_call_{permco}_')]
 
                 # Iterate over each file for the company
-                eligible_transcripts = 0
                 for ecc_file in ecc_files:
                     # Match filename against the pattern
                     match = pattern.match(ecc_file)
@@ -224,7 +227,6 @@ class FileHandler:
                         'date': date,
                         'text_content': text_content
                     }
-                    eligible_transcripts += 1
 
             # Summary of sampling
             total_transcripts = sum(len(calls) for calls in ecc_sample.values())
