@@ -30,7 +30,7 @@
   "apply_topic_merging": false, 
   "similarity_threshold": 0.7,
   "sample_size": 300,
-  "sampling_mode": "company_random",
+  "sampling_mode": "random_company",
   "document_split": "sentences",
   "random_seed": 43,
   "section_to_analyze": "Presentation",
