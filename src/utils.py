@@ -181,8 +181,8 @@ def compute_similarity_to_average(df, num_topics):
         current_date = row['call_date']
         tm_vector = row[tm_flat_df.columns].values.astype(np.float64)
 
-        # Define the time window: previous 1 year (365 days)
-        time_window_start = current_date - pd.DateOffset(days=365)
+        # Define the time window: previous 1 year (365 days) + 20 additional days for buffer
+        time_window_start = current_date - pd.DateOffset(days=365+20)
 
         # Filter for calls within the time window and before the current call date
         window_df = calls_df[(calls_df['call_date'] >= time_window_start) &
@@ -207,8 +207,8 @@ def compute_similarity_to_average(df, num_topics):
         tm_vector = row[tm_flat_df.columns].values.astype(np.float64)
         siccd = row['siccd']
 
-        # Define the time window: previous 1 year
-        time_window_start = current_date - pd.DateOffset(days=365)
+        # Define the time window: previous 1 year + 20 additional days for buffer
+        time_window_start = current_date - pd.DateOffset(days=365+20)
 
         # Filter for calls within the time window, same industry, and before the current call date
         window_df = calls_df[(calls_df['call_date'] >= time_window_start) &
