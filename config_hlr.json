@@ -1,8 +1,8 @@
 {
   "index_file_ecc_folder": "../data/",
   "folderpath_ecc": "../data/Transcripts_Masterarbeit/",
-  "model_save_path": "../data/bertopic_model_dir_regular_2500_40",
-  "model_load_path": "../data/bertopic_model_dir_regular_2500_40",
+  "model_save_path": "../data/bertopic_model_dir",
+  "model_load_path": "../data/bertopic_model_dir_2500_zeroshot_025",
   "index_file_path": "../data/list_earnings_call_transcripts.csv",
   "embedding_model_choice": "all-MiniLM-L12-v2",
   "ecc_plots_folder": "/plots/ecc_plots",
@@ -14,7 +14,7 @@
   "topics_input_path": "D:/daten_masterarbeit/topics_output.csv",
   "topics_output_path": "D:/daten_masterarbeit/topics_output_outlier_removed.csv",
   "topics_to_keep": "auto",
-  "topic_threshold_percentage": 100,
+  "topic_threshold_percentage": 0,
 
   "fuzzy_topic_labels": {
     "0": "Introduction",

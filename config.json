@@ -33,7 +33,7 @@
     "output_dir": "D:/daten_masterarbeit/",
 
     "topics_to_keep": "auto",
-    "topic_threshold_percentage": 100,
+    "topic_threshold_percentage": 0,
   
     "fuzzy_topic_labels": {
       "0": "Introduction",
