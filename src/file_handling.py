@@ -54,12 +54,13 @@ class FileHandler:
         Parameters
         ----------
         sample_size : int
-            The number of items to include in the sample
+            - If `sampling_mode` is 'full_random', represents the number of transcripts to sample.
+            - If `sampling_mode` is 'random_company', represents the number of unique companies to sample.
 
         Returns
         -------
         dict
-            A nested dictionary containing the sampled earnings call transcripts
+            A nested dictionary containing the sampled earnings call transcripts.
         """
         # Read the index file
         index_file = self.read_index_file()
@@ -69,7 +70,8 @@ class FileHandler:
 
         # Get all the files in the ECC folder
         all_files = os.listdir(self.folderpath_ecc)
-        print("First 10 files in directory:", all_files[:10])
+        logging.info(f"Total files found in ECC folder: {len(all_files)}")
+        logging.debug(f"First 10 files in directory: {all_files[:10]}")
 
         # Regular expression pattern to match the expected filename format
         pattern = re.compile(r'^earnings_call_(\d+)_(\d+)\.txt$')
@@ -78,34 +80,108 @@ class FileHandler:
         sampling_mode = self.config.get('sampling_mode', 'random_company')
 
         if sampling_mode == 'full_random':
-            # Sample earnings calls completely at random
-            print("Sampling mode: full_random")
-            while sum(len(calls) for calls in ecc_sample.values()) < sample_size:
-                remaining_sample_size = sample_size - sum(len(calls) for calls in ecc_sample.values())
-                selected_files = np.random.choice(all_files, size=remaining_sample_size, replace=False)
-                
-                for ecc_file in selected_files:
-                    if sum(len(calls) for calls in ecc_sample.values()) >= sample_size:
-                        break
+            logging.info("Sampling mode: full_random")
+            # Implement 'full_random' sampling logic
+            # Example Implementation:
+            # 1. Filter eligible transcripts
+            # 2. Randomly select 'sample_size' transcripts
+            # 3. Populate 'ecc_sample' accordingly
+            eligible_files = []
+            for ecc_file in all_files:
+                match = pattern.match(ecc_file)
+                if not match:
+                    logging.warning(f"File name {ecc_file} does not match expected pattern. Skipping file.")
+                    continue
+                permco, se_id = int(match.group(1)), int(match.group(2))
+                specific_row = index_file[(index_file['permco'] == permco) & (index_file['SE_ID'] == se_id)]
+                if specific_row.empty:
+                    logging.warning(f"No index entry for permco {permco} and SE_ID {se_id}. Skipping file.")
+                    continue
+                date = specific_row.iloc[0]['date']
+                company_name = specific_row.iloc[0]['company_name_TR']
+                try:
+                    with open(os.path.join(self.folderpath_ecc, ecc_file), 'r', encoding='utf-8') as file:
+                        text_content = file.read()
+                except Exception as e:
+                    logging.error(f"Error reading file {ecc_file}: {e}")
+                    continue
+                word_count = len(text_content.split())
+                if word_count < 1600:
+                    excluded_count += 1
+                    continue
+                eligible_files.append((permco, se_id, company_name, date, text_content))
+            
+            if len(eligible_files) < sample_size:
+                logging.warning(f"Only {len(eligible_files)} eligible transcripts available, which is less than the requested sample size of {sample_size}.")
+                sample_size = len(eligible_files)
+            
+            sampled_files = np.random.choice(eligible_files, size=sample_size, replace=False)
+            for permco, se_id, company_name, date, text_content in sampled_files:
+                ecc_key = f"earnings_call_{permco}_{se_id}"
+                if permco not in ecc_sample:
+                    ecc_sample[permco] = {}
+                ecc_sample[permco][ecc_key] = {
+                    'permco': permco,
+                    'se_id': se_id,
+                    'company_name': company_name,
+                    'date': date,
+                    'text_content': text_content
+                }
 
+            logging.info(f"Sampling completed. Total transcripts included: {len(sampled_files)}")
+            logging.info(f"Excluded {excluded_count} calls due to having fewer than 1600 words.")
+        
+        elif sampling_mode == 'random_company':
+            # Revised 'random_company' mode to sample a fixed number of unique companies
+            logging.info("Sampling mode: random_company")
+
+            unique_companies = index_file['permco'].unique()
+            total_unique_companies = len(unique_companies)
+            logging.info(f"Total unique companies available: {total_unique_companies}")
+
+            # Check if there are enough unique companies
+            if sample_size > total_unique_companies:
+                raise ValueError(f"Requested sample size ({sample_size}) exceeds the number of unique companies available ({total_unique_companies}).")
+
+            # Randomly select the desired number of unique companies without replacement
+            sampled_companies = np.random.choice(unique_companies, size=sample_size, replace=False)
+            logging.info(f"Selected {len(sampled_companies)} unique companies for sampling.")
+
+            # Iterate over each sampled company
+            for permco in tqdm(sampled_companies, desc="Processing Companies"):
+                company_rows = index_file[index_file['permco'] == permco]
+                if company_rows.empty:
+                    logging.warning(f"No entries found in index file for permco {permco}. Skipping company.")
+                    continue
+
+                company_name = company_rows.iloc[0]['company_name_TR']
+                logging.info(f"Processing company {permco}: {company_name}")
+
+                # Find all ECC files for the current company
+                ecc_files = [f for f in all_files if f.startswith(f'earnings_call_{permco}_')]
+                logging.debug(f"Found {len(ecc_files)} files for permco {permco}")
+
+                # Iterate over each file for the company
+                for ecc_file in ecc_files:
                     # Match filename against the pattern
                     match = pattern.match(ecc_file)
                     if not match:
-                        print(f"File name {ecc_file} does not match expected pattern. Skipping file.")
+                        logging.warning(f"File name {ecc_file} does not match expected pattern. Skipping file.")
                         continue
-                    
-                    # Extract permco and SE_ID from the match groups
-                    permco, se_id = int(match.group(1)), int(match.group(2))
-                    ecc_key = f"earnings_call_{permco}_{se_id}"
 
-                    # Get company information from the index file
-                    specific_row = index_file[(index_file['permco'] == permco) & (index_file['SE_ID'] == se_id)]
-                    company_name = specific_row.iloc[0]['company_name_TR'] if not specific_row.empty else 'Unknown'
+                    # Extract SE ID from the filename
+                    se_id = int(match.group(2))
+                    ecc_key = f"earnings_call_{permco}_{se_id}"
+                    specific_row = company_rows[company_rows['SE_ID'] == se_id]
                     date = specific_row.iloc[0]['date'] if not specific_row.empty else 'Unknown'
 
                     # Open and read text content
-                    with open(os.path.join(self.folderpath_ecc, ecc_file), 'r', encoding='utf-8') as file:
-                        text_content = file.read()
+                    try:
+                        with open(os.path.join(self.folderpath_ecc, ecc_file), 'r', encoding='utf-8') as file:
+                            text_content = file.read()
+                    except Exception as e:
+                        logging.error(f"Error reading file {ecc_file}: {e}")
+                        continue
 
                     # Check if the word count is above the threshold (1600 words)
                     word_count = len(text_content.split())
@@ -113,7 +189,7 @@ class FileHandler:
                         excluded_count += 1
                         continue  # Skip this file if below the word count threshold
 
-                    # Before adding to sample, ensure ecc_sample[permco] is a dictionary
+                    # Add transcript to the sample
                     if permco not in ecc_sample:
                         ecc_sample[permco] = {}
                     ecc_sample[permco][ecc_key] = {
@@ -124,66 +200,12 @@ class FileHandler:
                         'text_content': text_content
                     }
 
-        elif sampling_mode == 'random_company':
-            # Sample companies at random and include their earnings calls
-            print("Sampling mode: random_company")
-            unique_companies = index_file['permco'].unique()
-
-            while sum(len(calls) for calls in ecc_sample.values()) < sample_size:
-                remaining_sample_size = sample_size - sum(len(calls) for calls in ecc_sample.values())
-                random_companies = np.random.choice(unique_companies, size=remaining_sample_size, replace=False)
-                
-                for permco in random_companies:
-                    if sum(len(calls) for calls in ecc_sample.values()) >= sample_size:
-                        break
-
-                    company_rows = index_file[index_file['permco'] == permco]
-                    company_name = company_rows.iloc[0]['company_name_TR']
-
-                    ecc_files = [f for f in all_files if f.startswith(f'earnings_call_{permco}_')]
-                    print(f"Found {len(ecc_files)} files for permco {permco}")
-
-                    for ecc_file in ecc_files:
-                        if sum(len(calls) for calls in ecc_sample.values()) >= sample_size:
-                            break
-
-                        # Match filename against the pattern
-                        match = pattern.match(ecc_file)
-                        if not match:
-                            print(f"File name {ecc_file} does not match expected pattern. Skipping file.")
-                            continue
-                        
-                        # Extract SE ID from the filename
-                        se_id = int(match.group(2))
-                        ecc_key = f"earnings_call_{permco}_{se_id}"
-                        specific_row = company_rows[company_rows['SE_ID'] == se_id]
-                        date = specific_row.iloc[0]['date'] if not specific_row.empty else 'Unknown'
-
-                        with open(os.path.join(self.folderpath_ecc, ecc_file), 'r', encoding='utf-8') as file:
-                            text_content = file.read()
-
-                        # Check if the word count is above the threshold (1600 words)
-                        word_count = len(text_content.split())
-                        if word_count < 1600:
-                            excluded_count += 1
-                            continue  # Skip this file if below the word count threshold
-
-                        # Before adding to sample, ensure ecc_sample[permco] is a dictionary
-                        if permco not in ecc_sample:
-                            ecc_sample[permco] = {}
-                        ecc_sample[permco][ecc_key] = {
-                            'permco': permco,
-                            'se_id': se_id,
-                            'company_name': company_name,
-                            'date': date,
-                            'text_content': text_content
-                        }
+            logging.info(f"Sampling completed. Total transcripts included: {sum(len(calls) for calls in ecc_sample.values())}")
+            logging.info(f"Excluded {excluded_count} calls due to having fewer than 1600 words.")
+        
         else:
             raise ValueError(f"Unknown sampling mode: {sampling_mode}")
 
-        # Print the number of excluded calls
-        print(f"Excluded {excluded_count} calls due to having fewer than 1600 words (below 0.5% percentile).")
-        
         return ecc_sample
 
     def get_word_count_percentile(self, ecc_sample, percentile=1):
