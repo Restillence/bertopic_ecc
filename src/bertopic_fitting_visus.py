@@ -385,7 +385,7 @@ class BertopicFitting:
             # Visualize topics over time with normalize_frequency=False
             fig = self.topic_model.visualize_topics_over_time(
                 topics_over_time,
-                top_n_topics=15,
+                top_n_topics=10,
                 normalize_frequency=True
             )
             self.save_visualization(
