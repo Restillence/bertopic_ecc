@@ -417,7 +417,7 @@ def main():
 
     # Load configuration from config.json
     print("Loading configuration...")
-    with open('config_hlr.json', 'r') as f:
+    with open('config.json', 'r') as f:
         config = json.load(f)
     print_configuration(config)
 

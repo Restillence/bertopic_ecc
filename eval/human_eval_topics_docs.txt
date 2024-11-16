@@ -1,338 +1,326 @@
 Topic Information:
- Topic                               Name  Count
-    -1 -1_quarter_business_expect_company    192
-     0               0_company_business__     10
-     1     1_company_year_business_expect     41
-     2                  2_business_year__      9
-     3               3_business_company__     23
-     4           4_business_quarter_year_      8
-     5    5_business_company_year_quarter    169
-     6               6_business_year_new_     31
-     7    7_quarter_year_business_company     90
-     8           8_business_quarter_time_     23
-     9    9_business_company_quarter_year     50
-    10           10_business_year_second_     11
-    11   11_business_company_quarter_year     82
-    12                  12_quarter_year__      6
-    13   13_business_company_year_quarter     52
-    14                     14_business___     15
-    15           15_quarter_company_year_      9
-    16                         16_time___     13
-    17             17_new_second_quarter_     17
-    18                             18____     10
-    19                             19____     17
-    20   20_business_quarter_year_company     28
-    21      21_quarter_end_company_second      9
-    22                         22_time___      7
-    23                   23_second_time__     12
-    24               24_company_time_new_     17
-    25       25_year_quarter_company_time      8
-    26                         26_time___     22
-    27                         27_time___     15
-    28                          28_new___     18
-    29   29_business_company_quarter_year     19
-    30                     30_business___      9
-    31                         31_year___      9
-    32         32_expect_year_new_quarter     43
-    33         33_new_company_expect_year      8
-    34    34_company_business_year_expect     12
-    35   35_business_company_year_quarter     15
-    36           36_new_business_quarter_      6
-    37                      37_new_time__     20
-    38                   38_second_time__     24
-    39                  39_business_new__     27
-    40    40_quarter_second_year_business     24
-    41      41_quarter_year_second_expect      6
-    42   42_quarter_year_business_company     23
-    43         43_quarter_year_end_expect      8
-    44                  44_quarter_year__      7
+ Topic                                                                       Name  Count
+    -1                                         -1_revenue_revenues_sales_business 191859
+     0                                     0_gross margin_margin_margins_earnings  45637
+     1                                         1_clinical_phase_medical_treatment  15580
+     2                                2_earnings share_earnings_net income_shares  15300
+     3                                     3_customers_customer_marketing_clients  12458
+     4                                  4_ceo_board directors_executive_directors   9857
+     5 5_financial results_financial performance_quarter results_earnings release   8481
+     6                                               6_questions_open_ask_request   7875
+     7             7_quarter earnings_earnings_earnings release_financial results   6469
+     8       8_strong quarter_results quarter_quarter results_performance quarter   3995
+     9                             9_cash flows_cash flow_balance sheet_financial   3449
+    10                                           10_production_producing_12_years   3208
+    11                                               11_stores_store_retail_sales   2987
+    12                        12_litigation_statements_forward looking_securities   2773
+    13                                     13_customers_customer_clients_bookings   2766
+    14                                      14_slide_slides_presentation_let turn   2458
+    15                              15_obligations_update_updates_forward looking   2416
+    16                        16_non gaap_gaap_financial results_earnings release   2208
+    17                                              17_oil_production_fuel_supply   2168
+    18                                           18_morning_welcome_thank_evening   2139
+    19                         19_webcast_press release_recorded_earnings release   1996
+    20                                              20_risks_risk_factors_filings   1660
+    21                               21_video_communications_technologies_channel   1596
+    22                                 22_acquisitions_acquisition_acquire_merger   1548
+    23                                          23_risks_risk_caution_uncertainty   1155
+    24                                        24_currency_exchange_dollars_dollar   1064
+    25                                      25_inventory_inventories_stock_supply   1025
+    26                                                 26_ahead_mr_allowed_thanks    844
+    27                                   27_broadcast_audience_participants_audio    742
+    28                                             28_days_90 days_sales_decrease    733
+    29                                                  29_game_play_played_award    706
+    30                                 30_settlement_litigation_claims_commission    610
+    31                          31_flat_year quarter_quarter year_quarter revenue    497
+    32                                                32_begin_beginning_start_mr    373
+    33                                         33_fleet_deliveries_delivery_lease    327
+    34                                           34_cash flow_debt_cash_liquidity    246
+    35                                            35_numbers_number_digit_amounts    227
+    36                                           36_safety_safe_employees_protect    217
+    37                        37_manufacturing_production_transportation_industry    207
+    38                                       38_growth rate_growth_production_bit    205
 
 Topic Representations:
-Topic 0 Representation: company, business, , , , , , , , 
-Topic 1 Representation: company, year, business, expect, quarter, time, , , , 
-Topic 2 Representation: business, year, , , , , , , , 
-Topic 3 Representation: business, company, , , , , , , , 
-Topic 4 Representation: business, quarter, year, , , , , , , 
-Topic 5 Representation: business, company, year, quarter, second, time, , , , 
-Topic 6 Representation: business, year, new, , , , , , , 
-Topic 7 Representation: quarter, year, business, company, second, , , , , 
-Topic 8 Representation: business, quarter, time, , , , , , , 
-Topic 9 Representation: business, company, quarter, year, , , , , , 
-Topic 10 Representation: business, year, second, , , , , , , 
-Topic 11 Representation: business, company, quarter, year, , , , , , 
-Topic 12 Representation: quarter, year, , , , , , , , 
-Topic 13 Representation: business, company, year, quarter, expect, new, , , , 
-Topic 14 Representation: business, , , , , , , , , 
-Topic 15 Representation: quarter, company, year, , , , , , , 
-Topic 16 Representation: time, , , , , , , , , 
-Topic 17 Representation: new, second, quarter, , , , , , , 
-Topic 18 Representation: , , , , , , , , , 
-Topic 19 Representation: , , , , , , , , , 
-Topic 20 Representation: business, quarter, year, company, time, new, end, , , 
-Topic 21 Representation: quarter, end, company, second, , , , , , 
-Topic 22 Representation: time, , , , , , , , , 
-Topic 23 Representation: second, time, , , , , , , , 
-Topic 24 Representation: company, time, new, , , , , , , 
-Topic 25 Representation: year, quarter, company, time, , , , , , 
-Topic 26 Representation: time, , , , , , , , , 
-Topic 27 Representation: time, , , , , , , , , 
-Topic 28 Representation: new, , , , , , , , , 
-Topic 29 Representation: business, company, quarter, year, , , , , , 
-Topic 30 Representation: business, , , , , , , , , 
-Topic 31 Representation: year, , , , , , , , , 
-Topic 32 Representation: expect, year, new, quarter, , , , , , 
-Topic 33 Representation: new, company, expect, year, , , , , , 
-Topic 34 Representation: company, business, year, expect, , , , , , 
-Topic 35 Representation: business, company, year, quarter, , , , , , 
-Topic 36 Representation: new, business, quarter, , , , , , , 
-Topic 37 Representation: new, time, , , , , , , , 
-Topic 38 Representation: second, time, , , , , , , , 
-Topic 39 Representation: business, new, , , , , , , , 
-Topic 40 Representation: quarter, second, year, business, , , , , , 
-Topic 41 Representation: quarter, year, second, expect, , , , , , 
-Topic 42 Representation: quarter, year, business, company, expect, second, , , , 
-Topic 43 Representation: quarter, year, end, expect, , , , , , 
-Topic 44 Representation: quarter, year, , , , , , , , 
+Topic 0 Representation: gross margin, margin, margins, earnings, adjusted ebitda, revenues, operating income, quarter year, cash flow, revenue
+Topic 1 Representation: clinical, phase, medical, treatment, hospital, healthcare, covid 19, demonstrated, results, ongoing
+Topic 2 Representation: earnings share, earnings, net income, shares, income, revenues, stock, revenue, non gaap, share
+Topic 3 Representation: customers, customer, marketing, clients, consumers, businesses, business, consumer, innovation, market
+Topic 4 Representation: ceo, board directors, executive, directors, management team, president, leadership, corporate, corporation, management
+Topic 5 Representation: financial results, financial performance, quarter results, earnings release, review, results quarter, financial, earnings, financials, results
+Topic 6 Representation: questions, open, ask, request, closing, prepared remarks, question, ready, begin, plan
+Topic 7 Representation: quarter earnings, earnings, earnings release, financial results, morning, quarter results, results quarter, conference, quarter 2018, second quarter
+Topic 8 Representation: strong quarter, results quarter, quarter results, performance quarter, fourth quarter, second quarter, pleased report, strong performance, quarter quarter, strong
+Topic 9 Representation: cash flows, cash flow, balance sheet, financial, cash, earnings, bank, working capital, debt, liquidity
+Topic 10 Representation: production, producing, 12, years, development, 15, early, 10, months, year
+Topic 11 Representation: stores, store, retail, sales, seven, restaurants, customers, 12, opened, markets
+Topic 12 Representation: litigation, statements, forward looking, securities, discussed, remarks, future, discussion, financial results, regarding
+Topic 13 Representation: customers, customer, clients, bookings, growth, increase, market, sales, markets, increased
+Topic 14 Representation: slide, slides, presentation, let turn, number, seven, 12, let start, flow, fourth
+Topic 15 Representation: obligations, update, updates, forward looking, forward, assumptions, statements, statement, future, point
+Topic 16 Representation: non gaap, gaap, financial results, earnings release, accounting, earnings, measures, disclosures, measure, financial
+Topic 17 Representation: oil, production, fuel, supply, gas, produced, capacity, estimated, pipeline, refining
+Topic 18 Representation: morning, welcome, thank, evening, happy, afternoon, thanks, good, excellent, great
+Topic 19 Representation: webcast, press release, recorded, earnings release, conference, website, link, site, broadcast, presentation
+Topic 20 Representation: risks, risk, factors, filings, statements, filing, financial, securities, earnings release, filed
+Topic 21 Representation: video, communications, technologies, channel, network, technology, infrastructure, provider, media, wireless
+Topic 22 Representation: acquisitions, acquisition, acquire, merger, acquired, shareholder, companies, company, sales, revenues
+Topic 23 Representation: risks, risk, caution, uncertainty, assumptions, anticipated, forward looking, future, uncertain, expectations
+Topic 24 Representation: currency, exchange, dollars, dollar, earnings, foreign, revenues, markets, quarter, expenses
+Topic 25 Representation: inventory, inventories, stock, supply, shipments, sales, balance sheet, increase, production, increased
+Topic 26 Representation: ahead, mr, allowed, thanks, , , , , , 
+Topic 27 Representation: broadcast, audience, participants, audio, recorded, talking, webcast, discussing, allow, conference
+Topic 28 Representation: days, 90 days, sales, decrease, day, prior quarter, june, 71, 31st, 70
+Topic 29 Representation: game, play, played, award, release, platforms, franchise, second, digital, city
+Topic 30 Representation: settlement, litigation, claims, commission, pending, cases, contract, outcome, approval, decided
+Topic 31 Representation: flat, year quarter, quarter year, quarter revenue, compared quarter, prior quarter, sales, net sales, quarter, quarter expect
+Topic 32 Representation: begin, beginning, start, mr, ll turn, okay, ahead, afternoon, ll, don
+Topic 33 Representation: fleet, deliveries, delivery, lease, delivered, financing, schedule, announced, operational, scheduled
+Topic 34 Representation: cash flow, debt, cash, liquidity, balance sheet, 200 million, loan, bank, 250, 20 million
+Topic 35 Representation: numbers, number, digit, amounts, figures, lot, 34, 26, significant, briefly
+Topic 36 Representation: safety, safe, employees, protect, company, industry, maintain, employee, practices, priority
+Topic 37 Representation: manufacturing, production, transportation, industry, demand, maintenance, customers, market, track, markets
+Topic 38 Representation: growth rate, growth, production, bit, increasing, supply, demand, capacity, performance, 2018
 
 Random Document-Topic Pairs:
-Document: I could not be more proud of the way our organization has come together and delivered on the vision that we outlined only a year ago.
-Topic ID: 34
-Topic Name: 34_company_business_year_expect
-Topic Count: 12
-Topic Representation: company, business, year, expect, , , , , , 
+Document: Would you please turn to slide 7, and Peter will take you through the past, current, and future of our manufacturing processes.
+Topic ID: 14
+Topic Name: 14_slide_slides_presentation_let turn
+Topic Count: 2458
+Topic Representation: slide, slides, presentation, let turn, number, seven, 12, let start, flow, fourth
 
-Document: Our leading edge technology continues to allow us to take advantage of these opportunities and positions us well for continued growth.
-Topic ID: 11
-Topic Name: 11_business_company_quarter_year
-Topic Count: 82
-Topic Representation: business, company, quarter, year, , , , , , 
+Document: This chip can support over 1 million quality of service and/or access control entries, while delivering a [perk] entry power reduction of greater than 30% versus any other chip on the market including our own industry leading NL6000.
+Topic ID: 38
+Topic Name: 38_growth rate_growth_production_bit
+Topic Count: 205
+Topic Representation: growth rate, growth, production, bit, increasing, supply, demand, capacity, performance, 2018
 
-Document: My name is Anne-Marie and I will be your coordinator today.
+Document: We continue to monitor the natural gas market.
 Topic ID: 17
-Topic Name: 17_new_second_quarter_
-Topic Count: 17
-Topic Representation: new, second, quarter, , , , , , , 
+Topic Name: 17_oil_production_fuel_supply
+Topic Count: 2168
+Topic Representation: oil, production, fuel, supply, gas, produced, capacity, estimated, pipeline, refining
 
-Document: Given that we have not finalized the purchase accounting related to our recently-closed acquisition of Optichron, we are not in a position to estimate our GAAP EPS results.
-Topic ID: 7
-Topic Name: 7_quarter_year_business_company
-Topic Count: 90
-Topic Representation: quarter, year, business, company, second, , , , , 
+Document: Those factors are identified under the cautionary statement regarding forward-looking statements section of the earnings press release that was furnished to the SEC this morning on Form 8-K as well as other SEC filings, and you should refer to them.
+Topic ID: 20
+Topic Name: 20_risks_risk_factors_filings
+Topic Count: 1660
+Topic Representation: risks, risk, factors, filings, statements, filing, financial, securities, earnings release, filed
 
-Document: NL8000 is the highest performance generation for product on the market supporting 0.5 million IPv4 entries which is double the capability of competitive Gen4 products.
-Topic ID: 37
-Topic Name: 37_new_time__
-Topic Count: 20
-Topic Representation: new, time, , , , , , , , 
+Document: Let me move on to slide 15 and show you what the pipeline assets were in the path of the recent hurricanes.
+Topic ID: 14
+Topic Name: 14_slide_slides_presentation_let turn
+Topic Count: 2458
+Topic Representation: slide, slides, presentation, let turn, number, seven, 12, let start, flow, fourth
 
-Document: And finally, the amount of analysis required on each packet before an intelligent routing decision can be made is significantly greater due to the quality of service, security, and billing requirements.
-Topic ID: 37
-Topic Name: 37_new_time__
-Topic Count: 20
-Topic Representation: new, time, , , , , , , , 
+Document: Before turning the call to Tony for his comments, I'm pleased to announce that our Dolphin division has recently secured the RFID gaming chip order from Melco Crown Entertainment's much anticipated new State of Dreams casino and entertainment resort in Macao.
+Topic ID: 38
+Topic Name: 38_growth rate_growth_production_bit
+Topic Count: 205
+Topic Representation: growth rate, growth, production, bit, increasing, supply, demand, capacity, performance, 2018
 
-Document: I would also like to express my thanks to Shig Hamamatsu, our Corporate Controller, who has done an exceptional job as our interim CFO and we are all very grateful to him for his dedication and service to the company.
-Topic ID: 17
-Topic Name: 17_new_second_quarter_
-Topic Count: 17
-Topic Representation: new, second, quarter, , , , , , , 
-
-Document: Depending on the application, we're seeing anywhere from one or two processors, up to 12 dedicated to each line card.
-Topic ID: 33
-Topic Name: 33_new_company_expect_year
-Topic Count: 8
-Topic Representation: new, company, expect, year, , , , , , 
-
-Document: Third, Optichron is currently designing in 40-nanometer technology at TSMC, and we expect to be able to accelerate its migration by leveraging our expertise in designing on this advanced node.
-Topic ID: 37
-Topic Name: 37_new_time__
-Topic Count: 20
-Topic Representation: new, time, , , , , , , , 
-
-Document: This creates a large barrier to entry for competitive products.
-Topic ID: 2
-Topic Name: 2_business_year__
-Topic Count: 9
-Topic Representation: business, year, , , , , , , , 
-
-Document: And we have broad-based exposure through an extensive portfolio of design wins at Alcatel Lucent, Cisco, Dton Mobile, Erickson, Fujitsu, Hauel, Juniper, NEC, Nokia, Siemens and ECE.
-Topic ID: 6
-Topic Name: 6_business_year_new_
-Topic Count: 31
-Topic Representation: business, year, new, , , , , , , 
-
-Document: We estimate interest and other income to be near $0.
-Topic ID: 7
-Topic Name: 7_quarter_year_business_company
-Topic Count: 90
-Topic Representation: quarter, year, business, company, second, , , , , 
-
-Document: Carrier networks worldwide continue to face unprecedented growth in the usage of bandwidth intensive video and virtualization applications as a result of the strong adoption of smartphones, net books and other sophisticated internet connected devices.
-Topic ID: 37
-Topic Name: 37_new_time__
-Topic Count: 20
-Topic Representation: new, time, , , , , , , , 
-
-Document: Now, that concludes our prepared remarks for the call.
-Topic ID: 16
-Topic Name: 16_time___
-Topic Count: 13
-Topic Representation: time, , , , , , , , , 
-
-Document: The extent of which will become more visible to the general market over the next several years, as product cycles play out.
+Document: Given the fluidity of the tariff situation, we're fortunate to have a highly skilled global sourcing team to help us navigate the uncertain landscape.
 Topic ID: 3
-Topic Name: 3_business_company__
-Topic Count: 23
-Topic Representation: business, company, , , , , , , , 
+Topic Name: 3_customers_customer_marketing_clients
+Topic Count: 12458
+Topic Representation: customers, customer, marketing, clients, consumers, businesses, business, consumer, innovation, market
 
-Document: Additionally, although we will now slow down the development of our advanced products, we will work extra hard to control discretionary spending to minimize the total growth o operating expenses in this environment.
+Document: While our revenues in the first part of 2011 from these markets are expected to be somewhat muted given ongoing inventory work downs, we are seeing positive trends in the second half of 2011, and into 2012.
+Topic ID: 2
+Topic Name: 2_earnings share_earnings_net income_shares
+Topic Count: 15300
+Topic Representation: earnings share, earnings, net income, shares, income, revenues, stock, revenue, non gaap, share
+
+Document: We've got a large drilling inventory and we'll continue to drill wells faster and more cost effectively over time, and we'll continue to improve our completion design and well performance.
+Topic ID: 10
+Topic Name: 10_production_producing_12_years
+Topic Count: 3208
+Topic Representation: production, producing, 12, years, development, 15, early, 10, months, year
+
+Document: We have been experiencing first-hand the strong growth of the 10-Gigabit Ethernet market as our shipments of knowledge-based processors into this market is approximately doubling in 2007.
+Topic ID: 21
+Topic Name: 21_video_communications_technologies_channel
+Topic Count: 1596
+Topic Representation: video, communications, technologies, channel, network, technology, infrastructure, provider, media, wireless
+
+Document: Video-to-mobile represents much of the same functionality as IPTV; specifically, there are millions of unique subscribers who are watching unique video streams that have unique quality of service, access control, in billing monitoring requirements.
+Topic ID: 21
+Topic Name: 21_video_communications_technologies_channel
+Topic Count: 1596
+Topic Representation: video, communications, technologies, channel, network, technology, infrastructure, provider, media, wireless
+
+Document: This is especially impressive considering the relatively short period of time that the XLT processors have been sampling.
+Topic ID: 38
+Topic Name: 38_growth rate_growth_production_bit
+Topic Count: 205
+Topic Representation: growth rate, growth, production, bit, increasing, supply, demand, capacity, performance, 2018
+
+Document: Offsetting the mark-to-market gains in our gas book were $22 million in losses in our power book, which has an overall slightly short position and $78 million mark-to-market loss on our Cordova tolling agreement, due to the lower long-term spark spreads in the midwest.
+Topic ID: 2
+Topic Name: 2_earnings share_earnings_net income_shares
+Topic Count: 15300
+Topic Representation: earnings share, earnings, net income, shares, income, revenues, stock, revenue, non gaap, share
+
+Document: And this allows us to declare 2005 is the final year of turnaround, and you'll expect to seek a good solid quarterly quarter-on-quarter results, going forward.
+Topic ID: 8
+Topic Name: 8_strong quarter_results quarter_quarter results_performance quarter
+Topic Count: 3995
+Topic Representation: strong quarter, results quarter, quarter results, performance quarter, fourth quarter, second quarter, pleased report, strong performance, quarter quarter, strong
+
+Document: This will also result in a loss of reserves of about 50 BCF equivalent for both wells that are on the economic to redrill.
+Topic ID: 10
+Topic Name: 10_production_producing_12_years
+Topic Count: 3208
+Topic Representation: production, producing, 12, years, development, 15, early, 10, months, year
+
+Document: Our tax expense for the second quarter 2007 is expected to be $300,000 to $400,000.
+Topic ID: 0
+Topic Name: 0_gross margin_margin_margins_earnings
+Topic Count: 45637
+Topic Representation: gross margin, margin, margins, earnings, adjusted ebitda, revenues, operating income, quarter year, cash flow, revenue
+
+Document: While the financial impact was only felt for the last several weeks of the quarter, it was a significant accomplishment as the project remained on time and on budget.
+Topic ID: 8
+Topic Name: 8_strong quarter_results quarter_quarter results_performance quarter
+Topic Count: 3995
+Topic Representation: strong quarter, results quarter, quarter results, performance quarter, fourth quarter, second quarter, pleased report, strong performance, quarter quarter, strong
+
+Document: And remember that we have further protection because over 80% of our revenues come from monthly demand charges and this percentage will likely further increase as TGP goes to a more traditional rate design in its new rate case.
 Topic ID: 13
-Topic Name: 13_business_company_year_quarter
-Topic Count: 52
-Topic Representation: business, company, year, quarter, expect, new, , , , 
+Topic Name: 13_customers_customer_clients_bookings
+Topic Count: 2766
+Topic Representation: customers, customer, clients, bookings, growth, increase, market, sales, markets, increased
 
-Document: Quarter-over-quarter net inventory increased approximately $800,000 to 8.8 million at the end of Q4.
-Topic ID: 5
-Topic Name: 5_business_company_year_quarter
-Topic Count: 169
-Topic Representation: business, company, year, quarter, second, time, , , , 
+Document: We had a busy quarter and we've got a lot to report on this morning.
+Topic ID: 8
+Topic Name: 8_strong quarter_results quarter_quarter results_performance quarter
+Topic Count: 3995
+Topic Representation: strong quarter, results quarter, quarter results, performance quarter, fourth quarter, second quarter, pleased report, strong performance, quarter quarter, strong
 
-Document: SG&amp;A expenses of 2.9 million were higher than the previous quarter's 2.4 million and the increase is attributed to marketing efforts for our new Net Layer 7 product launch and sales and marketing efforts for existing products.
-Topic ID: 13
-Topic Name: 13_business_company_year_quarter
-Topic Count: 52
-Topic Representation: business, company, year, quarter, expect, new, , , , 
-
-Document: This includes 2.9 million for stock-based compensation associated with the adoption of FAS-123R, which became effective in 2006.
-Topic ID: 7
-Topic Name: 7_quarter_year_business_company
-Topic Count: 90
-Topic Representation: quarter, year, business, company, second, , , , , 
-
-Document: This concludes our prepared remarks for the call and now we are happy to take questions.
-Topic ID: 26
-Topic Name: 26_time___
-Topic Count: 22
-Topic Representation: time, , , , , , , , , 
-
-Document: 10 Gigabit Ethernet represented approximately 2% of the total port shipments industry wide last year, but that number could double in 2007 driven by the reduction in the cost of 10 Gigabit Optics and the dramatic increase in IP bandwidth usage.
-Topic ID: 37
-Topic Name: 37_new_time__
-Topic Count: 20
-Topic Representation: new, time, , , , , , , , 
-
-Document: The low DSOs were the result of favorable sales linearity, coupled with strong collections.
-Topic ID: 5
-Topic Name: 5_business_company_year_quarter
-Topic Count: 169
-Topic Representation: business, company, year, quarter, second, time, , , , 
-
-Document: Thank you Leslie.
-Topic ID: 19
-Topic Name: 19____
-Topic Count: 17
-Topic Representation: , , , , , , , , , 
-
-Document: For discussion of such risks and uncertainties, please see today's earnings release, the risk factors in our Form 10-K filed on March 11 and in our Form 10-Q filed on November 8th, 2005 as well as other reports the company files from time to time with the SEC.
-Topic ID: 25
-Topic Name: 25_year_quarter_company_time
-Topic Count: 8
-Topic Representation: year, quarter, company, time, , , , , , 
-
-Document: This concludes our prepared remarks for the call, and now we're happy to take questions.
-Topic ID: 26
-Topic Name: 26_time___
-Topic Count: 22
-Topic Representation: time, , , , , , , , , 
-
-Document: We also made first revenue shipment to Cisco for NL7000 knowledge based processors to three separate design wins, which are leveraging the density, low power and advanced instruction set of the NL7000.
+Document: After the speakers' remarks, there will be a question-and-answer session.
 Topic ID: 6
-Topic Name: 6_business_year_new_
-Topic Count: 31
-Topic Representation: business, year, new, , , , , , , 
+Topic Name: 6_questions_open_ask_request
+Topic Count: 7875
+Topic Representation: questions, open, ask, request, closing, prepared remarks, question, ready, begin, plan
 
-Document: Additionally, we will be making specific forward-looking statements and providing financial guidance regarding our second-quarter 2011 operating results.
-Topic ID: 24
-Topic Name: 24_company_time_new_
-Topic Count: 17
-Topic Representation: company, time, new, , , , , , , 
+Document: And we were at $0.85 in the second quarter, that is is a decrease of about 11% from last quarter, and from the full year of 2006 average.
+Topic ID: 2
+Topic Name: 2_earnings share_earnings_net income_shares
+Topic Count: 15300
+Topic Representation: earnings share, earnings, net income, shares, income, revenues, stock, revenue, non gaap, share
 
-Document: The solution simultaneously supports 40 and 100 GB ethernet over optical cabling as well as cost-effective direct attached Twinax copper for up to four 10 GB connections per device.
-Topic ID: 37
-Topic Name: 37_new_time__
-Topic Count: 20
-Topic Representation: new, time, , , , , , , , 
-
-Document: This great execution will increase our revenue content in these new generation switches and routers.
+Document: Then we'll open up the call for your questions.
 Topic ID: 6
-Topic Name: 6_business_year_new_
-Topic Count: 31
-Topic Representation: business, year, new, , , , , , , 
+Topic Name: 6_questions_open_ask_request
+Topic Count: 7875
+Topic Representation: questions, open, ask, request, closing, prepared remarks, question, ready, begin, plan
 
-Document: One of the most exciting end markets is 3G, 4G, mobile wireless and wireline IP infrastructure with our significant architectural changes underway creating a host of new opportunities.
-Topic ID: 37
-Topic Name: 37_new_time__
-Topic Count: 20
-Topic Representation: new, time, , , , , , , , 
+Document: On April 9, 2010, we entered into machine participation agreement with Grand Golden Company Limited to place approximately 16 of the 20 gaming machines seats on a participation basis at its new Grand Golden Casino in [Kampong Chen], Province, Cambodia near the Vietnam border.
+Topic ID: 11
+Topic Name: 11_stores_store_retail_sales
+Topic Count: 2987
+Topic Representation: stores, store, retail, sales, seven, restaurants, customers, 12, opened, markets
+
+Document: The quartz and the carbonates form brittle rocks that are easier to hydraulically frac and they tend to be more porous and permeable.
+Topic ID: 10
+Topic Name: 10_production_producing_12_years
+Topic Count: 3208
+Topic Representation: production, producing, 12, years, development, 15, early, 10, months, year
+
+Document: And then, way back in Q1, we closed the sale of the E&amp;P assets that generated about $640 million of proceeds, and completed our high-grading process.
+Topic ID: 0
+Topic Name: 0_gross margin_margin_margins_earnings
+Topic Count: 45637
+Topic Representation: gross margin, margin, margins, earnings, adjusted ebitda, revenues, operating income, quarter year, cash flow, revenue
+
+Document: And as a reminder, with our current asset mix, we plan to generally keep the Gulf of Mexico and south Louisiana in the 175 to 200 million a day range.
+Topic ID: 17
+Topic Name: 17_oil_production_fuel_supply
+Topic Count: 2168
+Topic Representation: oil, production, fuel, supply, gas, produced, capacity, estimated, pipeline, refining
+
+Document: A strong contributor to our success has been our operator partner relationship with NagaWorld, our sole venue in operations in Cambodia.
+Topic ID: 3
+Topic Name: 3_customers_customer_marketing_clients
+Topic Count: 12458
+Topic Representation: customers, customer, marketing, clients, consumers, businesses, business, consumer, innovation, market
+
+Document: In 2005, we focused the lion's share of our capital on the onshore region where we have a longer reserve life, significant low to medium-risk opportunities and a high confidence level that we can create repeatable results.
+Topic ID: 9
+Topic Name: 9_cash flows_cash flow_balance sheet_financial
+Topic Count: 3449
+Topic Representation: cash flows, cash flow, balance sheet, financial, cash, earnings, bank, working capital, debt, liquidity
+
+Document: First, we're not good prognosticators, and thus don't have a unique insight into when the financial markets will improve.
+Topic ID: 9
+Topic Name: 9_cash flows_cash flow_balance sheet_financial
+Topic Count: 3449
+Topic Representation: cash flows, cash flow, balance sheet, financial, cash, earnings, bank, working capital, debt, liquidity
+
+Document: The early August launch encompassed all of our key channels, including digital, social and TV, and our customers have responded positively.
+Topic ID: 21
+Topic Name: 21_video_communications_technologies_channel
+Topic Count: 1596
+Topic Representation: video, communications, technologies, channel, network, technology, infrastructure, provider, media, wireless
 
 Random Outlier Document-Topic Pairs:
-Document: Our first two NL8000 design wins enjoyed their first full quarter of production, with volume increasing from the previous quarter.
+Document: Before turning the call to Deb, I'd like to comment on the China tariffs in light of recent developments.
 Topic ID: -1 (Outlier)
 
-Document: Foundry has again exceeded the 5% level; and Force10 became a 5% customer in Q2, ahead of our expectations.
+Document: This year more of our increase is supply driven rather than demand driven.
 Topic ID: -1 (Outlier)
 
-Document: Now turning to NETLite: The first quarter was a record quarter for design wins for our NETLite product family.
+Document: At the same time, the cost-cutting actions we outlined under our fiscal 2020 action plan are expected to take hold throughout the second half.
 Topic ID: -1 (Outlier)
 
-Document: During the quarter, the California legislature enacted laws that allows companies to elect a new apportionment factor after 2010.
+Document: We also had somewhat offsetting gains and impairments, including a positive bankruptcy settlement with Calpine, and the write-off of our Essex project we mentioned at the April analyst meeting.
 Topic ID: -1 (Outlier)
 
-Document: Please note that our third quarter 2007 results were decimated by business wire after market close today and a copy of the release can be downloaded from our website at Netlogicmicro.com.
+Document: That size reduces our volatility of our total Company performance, but still provides us some exposure to the higher impact medium and higher risk opportunities.
 Topic ID: -1 (Outlier)
 
-Document: The current estimation is that available ICG4 address are likely to be exhausted within a year.
+Document: We successfully completed the divestiture program in the Q1.
 Topic ID: -1 (Outlier)
 
-Document: We are building a healthy backlog of XLP processor designs, and expect pre-production volumes late this year, trapping the higher volume in 2012.
+Document: First, the impact of rate cases and service restructurings on EPNG and CIG.
 Topic ID: -1 (Outlier)
 
-Document: Please note that our third quarter results were disseminated by Business Wire after market closed today, and a copy of the release can be downloaded from our Web site at www.netlogicmicro.com.
+Document: Our Q3 revenue guidance reflects a very strong first month of shipments to all of our major customers, including Cisco and Alcatel-Lucent and full backlog coverage for the rest of the quarter.
 Topic ID: -1 (Outlier)
 
-Document: Please note that our second quarter 2010 results were disseminated by business wire after market close today and a copy of the release can be downloaded from our website at NetLogicMicro.com.
+Document: I would generally break the vast majority of our remaining portfolio down into six major components.
 Topic ID: -1 (Outlier)
 
-Document: As evidence of this strength, we closed a record number of design wins in the fourth quarter, including three for the NL7000 and a second win for the NL8000.
+Document: At the high end of that range, our activity would look a lot like it does today.
 Topic ID: -1 (Outlier)
 
-Document: Finally, on June 1, in connection with our announcement of the merger with RMI, we provided a 2010 financial outlook.
+Document: As Doug said we've now committed to over $1 billion of our Marcellus expansions.
 Topic ID: -1 (Outlier)
 
-Document: As we look into Q2, we expect to see continued ramp of the these designs, as well as the first shipments in to the data center switch program.
+Document: Stage two is a committed focus on operations to expect the immediate short term value from venues secured.
 Topic ID: -1 (Outlier)
 
-Document: I am confident in saying that in the case of all three of these new devices, our engineering team has pushed the technology limits significantly beyond what even the largest semiconductor companies attempted in 2007.
+Document: We're on track for our sixth consecutive year of improved profitability, our balance sheet is in good shape to fund our backlog, our hedge program provides protection with upside to higher prices, and our '09 hedge program will provide excellent basis for higher revenues in 2009.
 Topic ID: -1 (Outlier)
 
-Document: R&amp;D was higher for 2006, due to the development efforts related to new products in our Knowledge based processor family.
+Document: This was in line with our previous guidance of 5% quarterly growth.
 Topic ID: -1 (Outlier)
 
-Document: Our first pass assess of the NL7000 and NL8000 processors also enabled us to tape out our next product earlier than planned, which is on the 65-nanometer node.
+Document: In sum on Ruby, construction activity continues to ramp up and as you know both we and our margin contractors are incentivized and focused on construction productivity.
 Topic ID: -1 (Outlier)
 
-Document: The yields this year that we've experience in late 2003 is well behind that.
+Document: If you look through the bars, lifting costs rose steadily during 2006, so the organization's been very focused on reducing our lifting costs, and we are starting to see progress.
 Topic ID: -1 (Outlier)
 
-Document: In addition to posting solid financial results, including year-over-year revenue growth of 38% and record quarterly profits, we made several significant announcements regarding our product line.
+Document: I wanted to talk a little about our production volume.
 Topic ID: -1 (Outlier)
 
-Document: Now, turning to our NETLite product line, we closed four new NETLite design wins during the quarter, which is a new record.
+Document: In that arena, I think you can expect to see us announce asset sales in the 200 to $300 million range, in that area and we're also making significant progress in cost reductions and capacity utilization of the facilities that we've got.
 Topic ID: -1 (Outlier)
 
-Document: Please note that our first quarter 2008 results disseminated by Business Wire after the market closed today, and a copy of the release can be downloaded from our website at www.netlogicmicro.com.
+Document: Our first quarter volumes increased 8 percent over last year's first quarter and this growth is really a combination of our 2007 acquisitions and organic growth from the capital program.
 Topic ID: -1 (Outlier)
 
-Document: Please note that our second quarter results were disseminated by business wire after market closed today, and a copy of the release can be downloaded from our website at www.netlogicmicro.com.
+Document: In addition to the cost savings, the improved efficiency also results in one additional well coming on production each month which also contributed to our Q4 and our Q1 production results.
 Topic ID: -1 (Outlier)
 
