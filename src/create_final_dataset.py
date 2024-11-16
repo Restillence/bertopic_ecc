@@ -203,7 +203,7 @@ for chunk_num, chunk in enumerate(pd.read_csv(file_path_crsp_monthly, chunksize=
     if not filtered_chunk.empty:
         monthly_data.append(filtered_chunk)
     print(f"Processed chunk {chunk_num}: {len(chunk)} rows, {len(filtered_chunk)} matching rows.")
-
+    
 if monthly_data:
     df_crsp_monthly = pd.concat(monthly_data, ignore_index=True)
     print(f"Total rows after concatenating monthly data: {len(df_crsp_monthly)}")
@@ -290,14 +290,51 @@ df_crsp_monthly = df_crsp_monthly.groupby('gvkey', group_keys=False).apply(get_e
 print("Completed 'epsfxq_next' computation with missing quarters adjusted.")
 
 # **Select necessary columns from processed_df**
-processed_df_columns = ['call_id', 'gvkey', 'call_date', 'call_date_with_time', 'permco', 'filtered_topics', 'filtered_texts', 'market_cap', 'ceo_participates', 'ceo_names', 'cfo_names']  # **Added 'market_cap', 'ceo_participates', 'ceo_names', 'cfo_names'**
+processed_df_columns = [
+    'call_id', 'gvkey', 'call_date', 'call_date_with_time', 'permco',
+    'filtered_topics', 'filtered_texts', 'market_cap',
+    'ceo_participates', 'ceo_names', 'cfo_names'  # **Added CEO/CFO information**
+]
 processed_df = processed_df[processed_df_columns]
 
 # **Select necessary columns from df_crsp_monthly**
 df_crsp_monthly_columns = ['gvkey', 'datadate', 'epsfxq', 'epsfxq_next', 'siccd', 'permco']
 df_crsp_monthly = df_crsp_monthly[df_crsp_monthly_columns]
 
-# Merge processed_df with df_crsp_monthly
+# -------------------------- #
+# **4. Calculate Earnings Call Word Length**
+# -------------------------- #
+
+print("Calculating earnings call word lengths...")
+
+def calculate_word_count(filtered_texts):
+    """
+    Calculate the total number of words in the earnings call.
+
+    Parameters
+    ----------
+    filtered_texts : list of str
+        The list of sentences or paragraphs from the earnings call.
+
+    Returns
+    -------
+    int
+        The total word count.
+    """
+    if isinstance(filtered_texts, list):
+        return sum(len(para.split()) for para in filtered_texts)
+    elif isinstance(filtered_texts, str):
+        return len(filtered_texts.split())
+    else:
+        return 0
+
+processed_df['word_count'] = processed_df['filtered_texts'].apply(calculate_word_count)
+print("Completed calculation of word counts.")
+
+# -------------------------- #
+# **5. Merge processed_df with df_crsp_monthly**
+# -------------------------- #
+
 print("Performing custom merge between processed_df and df_crsp_monthly...")
 # Step 1: Perform a full merge on 'gvkey' to create all possible combinations.
 temp_merged = pd.merge(
@@ -330,7 +367,7 @@ if 'permco' not in merged_df.columns:
     print("Error: 'permco' column is missing in 'merged_df'.")
 else:
     merged_df['siccd'] = merged_df.apply(
-        lambda row: siccd_mapping.get(row['permco'], row['siccd']) if pd.isna(row['siccd']) else row['siccd'],
+        lambda row: siccd_mapping.get(row['permco'], np.nan) if pd.isna(row['siccd']) else row['siccd'],
         axis=1
     )
 
@@ -349,7 +386,10 @@ merged_df.rename(columns={'datadate': 'fiscal_period_end'}, inplace=True)
 merged_df = merged_df.drop_duplicates(subset=['fiscal_period_end', 'gvkey', 'permco'])
 print(f"Number of rows in merged_df after removing duplicates: {len(merged_df)}")
 
-# Now that 'siccd' is available, compute similarities including similarity to industry average
+# -------------------------- #
+# **6. Compute Similarities**
+# -------------------------- #
+
 print("Computing similarities to overall, industry and firm-specific averages...")
 # Determine the number of topics
 try:
@@ -376,7 +416,10 @@ if 'call_id' in similarity_df.columns and 'call_id' in merged_df.columns:
 else:
     print("Warning: 'call_id' column not found in similarity_df or merged_df. Skipping similarity merge.")
 
-# Compute market returns
+# -------------------------- #
+# **7. Compute Market Returns**
+# -------------------------- #
+
 print("Computing market returns...")
 market_returns = df_crsp_daily.groupby('date')['ret'].mean().reset_index()
 market_returns.rename(columns={'ret': 'market_ret'}, inplace=True)
@@ -390,7 +433,10 @@ df_crsp_daily = pd.merge(
 )
 print("Merged market returns into df_crsp_daily.")
 
-# Compute future returns
+# -------------------------- #
+# **8. Compute Future Returns**
+# -------------------------- #
+
 print("Computing future returns...")
 df_crsp_daily = df_crsp_daily.sort_values(['permco', 'date']).reset_index(drop=True)
 
@@ -537,7 +583,47 @@ merged_df = merged_df.groupby('permco', group_keys=False).apply(compute_ceo_cfo_
 print("Added 'ceo_cfo_change' dummy variable to merged_df.")
 
 # -------------------------- #
-# **5. Final DataFrame Preparation and Saving**
+# **5. Calculate Earnings Call Word Length**
+# -------------------------- #
+
+print("Calculating earnings call word lengths...")
+
+def calculate_word_count(filtered_texts):
+    """
+    Calculate the total number of words in the earnings call.
+
+    Parameters
+    ----------
+    filtered_texts : list of str
+        The list of sentences or paragraphs from the earnings call.
+
+    Returns
+    -------
+    int
+        The total word count.
+    """
+    if isinstance(filtered_texts, list):
+        return sum(len(para.split()) for para in filtered_texts)
+    elif isinstance(filtered_texts, str):
+        return len(filtered_texts.split())
+    else:
+        return 0
+
+processed_df['word_count'] = processed_df['filtered_texts'].apply(calculate_word_count)
+print("Completed calculation of word counts.")
+
+# Merge 'word_count' into merged_df
+print("Merging 'word_count' into merged_df...")
+merged_df = pd.merge(
+    merged_df,
+    processed_df[['call_id', 'word_count']],
+    on='call_id',
+    how='left'
+)
+print("Merged 'word_count' into merged_df.")
+
+# -------------------------- #
+# **6. Final DataFrame Preparation and Saving**
 # -------------------------- #
 
 print("Finalizing the merged DataFrame...")
@@ -548,7 +634,7 @@ desired_columns = [
     'similarity_to_company_average', 'prc', 'shrout', 'ret', 'vol',
     'ret_immediate', 'ret_short_term', 'ret_medium_term', 'ret_long_term',
     'excess_ret_immediate', 'excess_ret_short_term', 'excess_ret_medium_term', 'excess_ret_long_term',
-    'market_cap', 'ceo_participates', 'ceo_cfo_change'  # **Added dummy variables**
+    'market_cap', 'ceo_participates', 'ceo_cfo_change', 'word_count'  # **Added 'word_count'**
 ]
 
 # Check if all desired columns are present
