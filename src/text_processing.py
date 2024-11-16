@@ -74,7 +74,7 @@ class TextProcessor:
                     # Split position_line on ' - ' to separate company and position
                     parts = re.split(r'\s*[-–:]\s*', position_line, maxsplit=1)
                     if len(parts) == 2:
-                        # company_name = parts[0]
+                        # company_name = parts[0]  # Not used here
                         position = parts[1]
                     else:
                         position = position_line
@@ -94,7 +94,7 @@ class TextProcessor:
 
     def clean_and_standardize_name(self, name):
         """
-        Clean and standardize the participant's name to 'First initial. Lastname' format.
+        Clean and standardize the participant's name to 'F. Lastname' format.
 
         Parameters
         ----------
@@ -106,37 +106,68 @@ class TextProcessor:
         str
             The cleaned and standardized name.
         """
-        # Remove any leading/trailing non-alphabetic characters
-        name = re.sub(r'^[^A-Za-z]+|[^A-Za-z]+$', '', name)
+        # Remove any leading/trailing non-alphabetic characters and whitespace
+        name = re.sub(r'^[^A-Za-z]+|[^A-Za-z]+$', '', name).strip()
 
-        # Split the name into parts
-        name_parts = name.split()
-        if len(name_parts) == 0:
-            return name  # Return as is if name is empty after cleaning
-
-        # Remove titles like Jr., Sr., III, etc.
+        # Remove suffixes like Jr., Sr., III, etc.
         suffixes = ['Jr.', 'Sr.', 'Jr', 'Sr', 'II', 'III', 'IV', 'V']
+        name_parts = name.split()
         name_parts = [part for part in name_parts if part not in suffixes]
 
-        # Get the first name (or initial) and last name
-        first_name = name_parts[0]
-        last_name = name_parts[-1]
+        if len(name_parts) == 0:
+            return name  # If all parts are suffixes, return the original name
 
-        # Get the first initial
-        first_initial = first_name[0].upper() + '.'
+        # Get the first word and the last word
+        first_word = name_parts[0]
+        last_word = name_parts[-1]
 
-        # Handle cases with middle names or initials
-        if len(name_parts) > 2:
-            # Include middle initial(s) if needed
-            middle_initials = ''
-            for part in name_parts[1:-1]:
-                if len(part) > 0:
-                    middle_initials += ' ' + part[0].upper() + '.'
-            standardized_name = f"{first_initial}{middle_initials} {last_name}"
+        # Extract the first initial using regex to handle cases like "R." or "R"
+        first_initial_match = re.match(r'^([A-Za-z])\.', first_word)
+        if first_initial_match:
+            first_initial = first_initial_match.group(1).upper() + '.'
         else:
-            standardized_name = f"{first_initial} {last_name}"
+            first_initial = first_word[0].upper() + '.'
+
+        # Combine as 'F. Lastname'
+        standardized_name = f"{first_initial} {last_word}"
 
         return standardized_name.strip()
+
+    def extract_analysts(self, text):
+        """
+        Extract the list of analyst participants from the transcript text.
+
+        Parameters
+        ----------
+        text : str
+            The transcript text.
+
+        Returns
+        -------
+        analysts : list of dict
+            A list of dictionaries with keys 'name' and 'firm'.
+        """
+        analysts = []
+        # Search for the 'Conference Call Participants' section
+        pattern = r'(?:\n|^)(Conference Call Participants|Analysts)\n=+\n(.*?)(?=\n=+\n|\Z)'
+        match = re.search(pattern, text, flags=re.DOTALL | re.IGNORECASE)
+        if match:
+            participants_text = match.group(2)
+            # Split participants by entries starting with '*'
+            participant_entries = re.split(r'\n\s*\*\s*', participants_text)
+            participant_entries = [entry.strip() for entry in participant_entries if entry.strip()]
+            for entry in participant_entries:
+                lines = entry.strip().split('\n')
+                if len(lines) >= 1:
+                    name_firm = lines[0].strip()
+                    # Split name and firm using ' - ' or '–' or ':' or similar delimiters
+                    parts = re.split(r'\s*[-–:]\s*', name_firm, maxsplit=1)
+                    name = self.clean_and_standardize_name(parts[0].strip())
+                    firm = parts[1].strip() if len(parts) > 1 else ''
+                    analysts.append({'name': name, 'firm': firm})
+        else:
+            print("Warning: 'Conference Call Participants' section not found in the transcript for analyst extraction.")
+        return analysts
 
     def remove_unwanted_sections(self, text):
         """
