@@ -43,6 +43,41 @@ class TextProcessor:
             r'\bChief Financial Officer and Chief Operating Officer\b'
         ]
 
+    def extract_participants(self, text):
+        """
+        Extract the list of corporate participants and their positions from the transcript text.
+
+        Parameters
+        ----------
+        text : str
+            The transcript text.
+
+        Returns
+        -------
+        participants : list of dict
+            A list of dictionaries with keys 'name' and 'position'.
+        """
+        participants = []
+        # Search for the 'Corporate Participants' section
+        # Adjusted pattern to be more flexible
+        pattern = r'(?:\n|^)(Corporate Participants|Company Participants|Participants)\n(.*?)(?=\n\n|\n\w|\Z)'
+        match = re.search(pattern, text, flags=re.DOTALL | re.IGNORECASE)
+        if match:
+            participants_text = match.group(2)
+            # Split participants by lines starting with '*'
+            participant_entries = re.findall(r'\*\s*(.*?)\n', participants_text)
+            for entry in participant_entries:
+                # Split the entry into name and position
+                entry = entry.strip()
+                # Split name and position using ' - ' or '–' or ':' or similar delimiters
+                name_position = re.split(r'\s*[-–:]\s*', entry, maxsplit=1)
+                name = name_position[0].strip()
+                position = name_position[1].strip() if len(name_position) > 1 else ''
+                participants.append({'name': name, 'position': position})
+        else:
+            print("Warning: 'Corporate Participants' section not found in the transcript for participant extraction.")
+        return participants
+
     def remove_unwanted_sections(self, text):
         """
         Remove blocks like "TEXT version of Transcript", "Corporate Participants", "Conference Call Participants" from a transcript text.
@@ -57,7 +92,7 @@ class TextProcessor:
         str
             The text with the unwanted sections removed.
         """
-        pattern = r'(TEXT version of Transcript|Corporate Participants|Conference Call Participants)\n=+\n(?:.*?\n)*?=+\n'
+        pattern = r'(TEXT version of Transcript|Corporate Participants|Company Participants|Participants|Conference Call Participants)\n=+\n(?:.*?\n)*?=+\n'
         cleaned_text = re.sub(pattern, '', text, flags=re.IGNORECASE)
         return cleaned_text
 
@@ -196,43 +231,6 @@ class TextProcessor:
         """
         return [element for element in text_list if len(element.split()) >= 3]
 
-    # New method to extract participants
-    def extract_participants(self, text):
-        """
-        Extract the list of corporate participants and their positions from the transcript text.
-
-        Parameters
-        ----------
-        text : str
-            The transcript text.
-
-        Returns
-        -------
-        participants : list of dict
-            A list of dictionaries with keys 'name' and 'position'.
-        """
-        participants = []
-        # Search for the 'Corporate Participants' section
-        pattern = r'(?:\n|^)={1,}\nCorporate Participants\n={1,}\n(.*?)\n={1,}\n'
-        match = re.search(pattern, text, flags=re.DOTALL | re.IGNORECASE)
-        if match:
-            participants_text = match.group(1)
-            # Split participants by lines starting with '*'
-            participant_entries = re.findall(r'\*\s*(.*?)\n', participants_text)
-            for entry in participant_entries:
-                # Split the entry into name and position
-                parts = entry.strip().split('\n')
-                # Sometimes the entry might have multiple lines
-                entry_text = ' '.join(parts)
-                # Split name and position using ' - ' or '–' or ':' or similar delimiters
-                name_position = re.split(r'\s*[-–:]\s*', entry_text, maxsplit=1)
-                name = name_position[0].strip()
-                position = name_position[1].strip() if len(name_position) > 1 else ''
-                participants.append({'name': name, 'position': position})
-        else:
-            print("Warning: 'Corporate Participants' section not found in the transcript.")
-        return participants
-
     def extract_and_split_section(self, company, call_id, company_info, date, text):
         """
         Extract and split the relevant section from the text.
@@ -255,6 +253,16 @@ class TextProcessor:
         dict
             A dictionary containing 'combined_text', 'participants', 'ceo_participates', 'ceo_names', and 'cfo_names'.
         """
+        # First, extract participants from the original text
+        participants = self.extract_participants(text)
+
+        # Determine if CEO participates
+        ceo_participates = any(self.is_ceo(p['position']) for p in participants)
+
+        # Store CEO and CFO names
+        ceo_names = [p['name'] for p in participants if self.is_ceo(p['position'])]
+        cfo_names = [p['name'] for p in participants if self.is_cfo(p['position'])]
+
         # Proceed with the extraction based on the selected section
         if self.section_to_analyze.lower() == "questions and answers":
             # Adjusted pattern to match 'Questions and Answers' as a section heading
@@ -321,20 +329,10 @@ class TextProcessor:
         combined_text = self.remove_presentation_from_final_list(combined_text)
         combined_text = self.filter_short_elements(combined_text)
 
-        # Extract participants
-        participants = self.extract_participants(text)
-
-        # Determine if CEO participates
-        ceo_participates = any(self.is_ceo(p['position']) for p in participants)
-
-        # Store CEO and CFO names
-        ceo_names = [p['name'] for p in participants if self.is_ceo(p['position'])]
-        cfo_names = [p['name'] for p in participants if self.is_cfo(p['position'])]
-
         result = {
             'combined_text': combined_text,
             'participants': participants,
-            'ceo_participates': ceo_participates,
+            'ceo_participates': int(ceo_participates),  # Ensure it's an integer (0 or 1)
             'ceo_names': ceo_names,
             'cfo_names': cfo_names
         }
