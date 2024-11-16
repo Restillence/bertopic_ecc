@@ -1,0 +1,19 @@
+Parent_ID,Parent_Name,Topics,Child_Left_ID,Child_Left_Name,Child_Right_ID,Child_Right_Name,Distance
+36,revenue_business_quarter_million_growth,"[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]",13,ahead_okay_ll turn_allowed_gentlemen,35,revenue_business_quarter_million_growth,0.9510265246557574
+35,revenue_business_quarter_million_growth,"[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16, 17, 18]",14,listen_broadcast_audience_mode_participants,34,revenue_business_quarter_million_growth,0.9243922304793165
+34,revenue_business_quarter_million_growth,"[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 15, 16, 17, 18]",33,revenue_business_quarter_million_growth,18,numbers_number_amounts_large number_calculation,0.8500641757361878
+33,revenue_business_quarter_million_growth,"[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 15, 16, 17]",32,revenue_business_quarter_million_growth,16,litigation_court_appeal_judgment_cases,0.7860749220624739
+32,revenue_business_quarter_million_growth,"[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 15, 17]",5,earnings conference_quarter earnings_earnings_morning_quarter 2008,31,revenue_business_million_quarter_growth,0.7568095154441561
+31,revenue_business_million_quarter_growth,"[0, 1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 15, 17]",11,webcast_available website_recorded_calling_press release,30,revenue_business_million_quarter_growth,0.7427994655517796
+30,revenue_business_million_quarter_growth,"[0, 1, 2, 3, 4, 6, 7, 8, 9, 10, 12, 15, 17]",10,non gaap_earnings press_earnings release_gaap basis_earnings,29,revenue_business_million_quarter_growth,0.7190622562949964
+29,revenue_business_million_quarter_growth,"[0, 1, 2, 3, 4, 6, 7, 8, 9, 12, 15, 17]",28,revenue_million_business_quarter_growth,2,chairman_ceo_president ceo_cfo_executive,0.7083279411542549
+28,revenue_million_business_quarter_growth,"[0, 1, 3, 4, 6, 7, 8, 9, 12, 15, 17]",20,statements_forward looking_looking statements_looking_forward,27,revenue_million_quarter_business_growth,0.7042402447610054
+27,revenue_million_quarter_business_growth,"[0, 1, 3, 4, 6, 7, 12, 15, 17]",26,revenue_million_quarter_business_growth,6,production_oil gas_natural gas_wells_drilling,0.6895578263360165
+26,revenue_million_quarter_business_growth,"[0, 1, 3, 4, 7, 12, 15, 17]",15,theater_disney_film_cinemark_sales,25,revenue_million_quarter_business_growth,0.6540510076400188
+25,revenue_million_quarter_business_growth,"[0, 1, 3, 4, 7, 12, 17]",24,revenue_million_growth_business_sales,4,financial results_financial performance_financials_quarter financial_earnings,0.62202241660599
+24,revenue_million_growth_business_sales,"[0, 1, 3, 7, 12, 17]",17,airlines_jet_airtran_fleet_deliveries,23,revenue_million_growth_business_sales,0.6163220784386896
+23,revenue_million_growth_business_sales,"[0, 1, 3, 7, 12]",22,business_growth_customers_strong_products,0,revenues_expenses_expenditures_revenue_expense,0.5908049296396801
+22,business_growth_customers_strong_products,"[1, 3, 7, 12]",21,business_customers_growth_products_product,7,performance quarter_quarter performance_results quarter_quarter results_solid quarter,0.5794100189800835
+21,business_customers_growth_products_product,"[1, 3, 12]",3,clinical_treatment_patients_patient_therapy,19,business_customers_growth_products_customer,0.5228326806078479
+20,statements_forward looking_looking statements_looking_forward,"[8, 9]",9,updates_obligation_forward looking_update_statements,8,uncertainties_risks_risk_future results_regarding future,0.4203537758877093
+19,business_customers_growth_products_customer,"[1, 12]",1,marketing_business_businesses_market_customers,12,broadband_telecom_service providers_providers_channel,0.418309006684334

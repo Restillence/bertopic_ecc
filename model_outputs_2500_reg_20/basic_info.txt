@@ -1,0 +1,257 @@
+Number of Topics: 20
+
+Topics by Frequency:
+    Topic   Count                                                                       Name                                                                                                                                                                    Representation  Representative_Docs
+0      -1  191859                                        -1_revenue_revenues_growth_business                                                                                    [revenue, revenues, growth, business, profit, earnings, increase, sales, production, industry]                  NaN
+1       0   64502                                   0_revenues_expenses_expenditures_revenue                                                                      [revenues, expenses, expenditures, revenue, expense, gross margin, earnings, costs, adjusted ebitda, profit]                  NaN
+2       1   23415                                     1_marketing_business_businesses_market                                                                                [marketing, business, businesses, market, customers, sales, growth, markets, customer, investment]                  NaN
+3       2   17732                                           2_chairman_ceo_president ceo_cfo                                                                    [chairman, ceo, president ceo, cfo, executive, vice president, corporate, director, investor relations, chief]                  NaN
+4       3   15797                                      3_clinical_treatment_patients_patient                                                                          [clinical, treatment, patients, patient, therapy, medical, healthcare, health care, hospital, hospitals]                  NaN
+5       4   12599     4_financial results_financial performance_financials_quarter financial                             [financial results, financial performance, financials, quarter financial, earnings, financial, investor relations, quarter results, reports, filings]                  NaN
+6       5    8608                    5_earnings conference_quarter earnings_earnings_morning                                  [earnings conference, quarter earnings, earnings, morning, quarter 2008, earnings release, quarter results, welcome, quarter 2009, quarter 2006]                  NaN
+7       6    5376                                     6_production_oil gas_natural gas_wells                                                                                       [production, oil gas, natural gas, wells, drilling, oil, increase, growth, fuel, increased]                  NaN
+8       7    3995  7_performance quarter_quarter performance_results quarter_quarter results  [performance quarter, quarter performance, results quarter, quarter results, solid quarter, strong quarter, strong performance, pleased results, quarter strong, strong results]                  NaN
+9       8    3928                                  8_uncertainties_risks_risk_future results                                                   [uncertainties, risks, risk, future results, regarding future, assumptions, forward looking, company future, future, prospects]                  NaN
+10      9    2416                                9_updates_obligation_forward looking_update                                                                           [updates, obligation, forward looking, update, statements, forward, statement, date, company, required]                  NaN
+11     10    2208                     10_non gaap_earnings press_earnings release_gaap basis                                    [non gaap, earnings press, earnings release, gaap basis, earnings, financial results, accounting, gaap, financial information, today earnings]                  NaN
+12     11    1996                              11_webcast_available website_recorded_calling                                                              [webcast, available website, recorded, calling, press release, recording, broadcast, company website, website, link]                  NaN
+13     12    1801                           12_broadband_telecom_service providers_providers                                                         [broadband, telecom, service providers, providers, channel, network, communications, technologies, infrastructure, video]                  NaN
+14     13    1217                                              13_ahead_okay_ll turn_allowed                                                                                                         [ahead, okay, ll turn, allowed, gentlemen, begin, mr, request, dr, start]                  NaN
+15     14     742                                          14_listen_broadcast_audience_mode                                                                                    [listen, broadcast, audience, mode, participants, participant, recorded, guests, pause, noise]                  NaN
+16     15     706                                            15_theater_disney_film_cinemark                                                                                            [theater, disney, film, cinemark, sales, revenue, releases, success, ratings, release]                  NaN
+17     16     610                                        16_litigation_court_appeal_judgment                                                                                             [litigation, court, appeal, judgment, cases, settlement, ruling, claims, case, trial]                  NaN
+18     17     327                                              17_airlines_jet_airtran_fleet                                                                                             [airlines, jet, airtran, fleet, deliveries, crew, transport, air, frontier, delivery]                  NaN
+19     18     227                                     18_numbers_number_amounts_large number                                                                                          [numbers, number, amounts, large number, calculation, figures, lot, 26, formula, figure]                  NaN
+
+Top words for each topic:
+
+Topic -1 (Outliers):
+  No words available for outlier topic.
+
+Topic 0:
+  - revenues: 0.498714804649353
+  - expenses: 0.4980253577232361
+  - expenditures: 0.46207696199417114
+  - revenue: 0.44785529375076294
+  - expense: 0.4470553994178772
+  - gross margin: 0.4424152374267578
+  - earnings: 0.4405350089073181
+  - costs: 0.4351006746292114
+  - adjusted ebitda: 0.43063464760780334
+  - profit: 0.4150291681289673
+
+Topic 1:
+  - marketing: 0.5241788625717163
+  - business: 0.49706676602363586
+  - businesses: 0.4823542833328247
+  - market: 0.47353851795196533
+  - customers: 0.47200149297714233
+  - sales: 0.4448198080062866
+  - growth: 0.43901997804641724
+  - markets: 0.4388526678085327
+  - customer: 0.4074175953865051
+  - investment: 0.40484508872032166
+
+Topic 2:
+  - chairman: 0.6079822778701782
+  - ceo: 0.6009615659713745
+  - president ceo: 0.5911009907722473
+  - cfo: 0.5769379734992981
+  - executive: 0.5173524022102356
+  - vice president: 0.5055182576179504
+  - corporate: 0.45213136076927185
+  - director: 0.4406760334968567
+  - investor relations: 0.4000338315963745
+  - chief: 0.3976033627986908
+
+Topic 3:
+  - clinical: 0.45032209157943726
+  - treatment: 0.43994688987731934
+  - patients: 0.4290027618408203
+  - patient: 0.4108426868915558
+  - therapy: 0.36576876044273376
+  - medical: 0.3585927486419678
+  - healthcare: 0.33439698815345764
+  - health care: 0.3177550435066223
+  - hospital: 0.2999321222305298
+  - hospitals: 0.29782694578170776
+
+Topic 4:
+  - financial results: 0.6247742772102356
+  - financial performance: 0.5216585397720337
+  - financials: 0.4806443154811859
+  - quarter financial: 0.47956383228302
+  - earnings: 0.47379475831985474
+  - financial: 0.4654342830181122
+  - investor relations: 0.45378515124320984
+  - quarter results: 0.41091275215148926
+  - reports: 0.3907036781311035
+  - filings: 0.38566797971725464
+
+Topic 5:
+  - earnings conference: 0.5075399875640869
+  - quarter earnings: 0.4773603677749634
+  - earnings: 0.4418373703956604
+  - morning: 0.4049953818321228
+  - quarter 2008: 0.40075406432151794
+  - earnings release: 0.40037575364112854
+  - quarter results: 0.3979942500591278
+  - welcome: 0.3941567540168762
+  - quarter 2009: 0.3921496868133545
+  - quarter 2006: 0.37739378213882446
+
+Topic 6:
+  - production: 0.49817249178886414
+  - oil gas: 0.3967821002006531
+  - natural gas: 0.34548455476760864
+  - wells: 0.34354454278945923
+  - drilling: 0.3431926369667053
+  - oil: 0.3179906904697418
+  - increase: 0.317451536655426
+  - growth: 0.3052156865596771
+  - fuel: 0.29032450914382935
+  - increased: 0.2895039916038513
+
+Topic 7:
+  - performance quarter: 0.6157550811767578
+  - quarter performance: 0.6095657348632812
+  - results quarter: 0.5933676958084106
+  - quarter results: 0.5918121933937073
+  - solid quarter: 0.56792151927948
+  - strong quarter: 0.5584630370140076
+  - strong performance: 0.5366779565811157
+  - pleased results: 0.5120574235916138
+  - quarter strong: 0.509325385093689
+  - strong results: 0.5067099332809448
+
+Topic 8:
+  - uncertainties: 0.4959387183189392
+  - risks: 0.47255510091781616
+  - risk: 0.4087842106819153
+  - future results: 0.4049389958381653
+  - regarding future: 0.3935333490371704
+  - assumptions: 0.35455766320228577
+  - forward looking: 0.3321572244167328
+  - company future: 0.3201242983341217
+  - future: 0.30254697799682617
+  - prospects: 0.29348117113113403
+
+Topic 9:
+  - updates: 0.2160973995923996
+  - obligation: 0.2123330980539322
+  - forward looking: 0.19292902946472168
+  - update: 0.18523724377155304
+  - statements: 0.16422009468078613
+  - forward: 0.15552374720573425
+  - statement: 0.13212889432907104
+  - date: 0.12835846841335297
+  - company: 0.11994804441928864
+  - required: 0.11791487783193588
+
+Topic 10:
+  - non gaap: 0.5171325206756592
+  - earnings press: 0.45928800106048584
+  - earnings release: 0.45856529474258423
+  - gaap basis: 0.43000125885009766
+  - earnings: 0.4294434189796448
+  - financial results: 0.42243653535842896
+  - accounting: 0.4217332601547241
+  - gaap: 0.40713441371917725
+  - financial information: 0.39861345291137695
+  - today earnings: 0.3687394857406616
+
+Topic 11:
+  - webcast: 0.5447686314582825
+  - available website: 0.42450419068336487
+  - recorded: 0.4162912368774414
+  - calling: 0.3939172625541687
+  - press release: 0.3902021646499634
+  - recording: 0.3896806240081787
+  - broadcast: 0.35773515701293945
+  - company website: 0.3456604480743408
+  - website: 0.3383201062679291
+  - link: 0.3329928517341614
+
+Topic 12:
+  - broadband: 0.5248714089393616
+  - telecom: 0.5191709995269775
+  - service providers: 0.49185776710510254
+  - providers: 0.46351945400238037
+  - channel: 0.4309661090373993
+  - network: 0.4222913086414337
+  - communications: 0.41078999638557434
+  - technologies: 0.4048890173435211
+  - infrastructure: 0.39197105169296265
+  - video: 0.3841204047203064
+
+Topic 13:
+  - ahead: 0.40341275930404663
+  - okay: 0.35229212045669556
+  - ll turn: 0.32409077882766724
+  - allowed: 0.3029510974884033
+  - gentlemen: 0.2865058183670044
+  - begin: 0.278220534324646
+  - mr: 0.27691060304641724
+  - request: 0.2744612991809845
+  - dr: 0.2640792429447174
+  - start: 0.256506085395813
+
+Topic 14:
+  - listen: 0.44412726163864136
+  - broadcast: 0.35534751415252686
+  - audience: 0.3353181481361389
+  - mode: 0.32276540994644165
+  - participants: 0.2979204058647156
+  - participant: 0.2947952151298523
+  - recorded: 0.2882465720176697
+  - guests: 0.28223323822021484
+  - pause: 0.258036732673645
+  - noise: 0.24809613823890686
+
+Topic 15:
+  - theater: 0.5058528184890747
+  - disney: 0.503572404384613
+  - film: 0.47143542766571045
+  - cinemark: 0.42955249547958374
+  - sales: 0.40129414200782776
+  - revenue: 0.4006102681159973
+  - releases: 0.3494838774204254
+  - success: 0.3168272376060486
+  - ratings: 0.3017914295196533
+  - release: 0.299060583114624
+
+Topic 16:
+  - litigation: 0.5969559550285339
+  - court: 0.5904937982559204
+  - appeal: 0.5126479268074036
+  - judgment: 0.48116645216941833
+  - cases: 0.42406684160232544
+  - settlement: 0.4068834185600281
+  - ruling: 0.39752525091171265
+  - claims: 0.39449596405029297
+  - case: 0.38631248474121094
+  - trial: 0.3855898380279541
+
+Topic 17:
+  - airlines: 0.5662004351615906
+  - jet: 0.5371053814888
+  - airtran: 0.45763713121414185
+  - fleet: 0.3605527877807617
+  - deliveries: 0.33168041706085205
+  - crew: 0.28680163621902466
+  - transport: 0.2776418626308441
+  - air: 0.25758880376815796
+  - frontier: 0.25755906105041504
+  - delivery: 0.2503257095813751
+
+Topic 18:
+  - numbers: 0.752678394317627
+  - number: 0.6335492134094238
+  - amounts: 0.4636118710041046
+  - large number: 0.41758090257644653
+  - calculation: 0.4064716696739197
+  - figures: 0.40021970868110657
+  - lot: 0.3435494005680084
+  - 26: 0.3147813677787781
+  - formula: 0.3135056793689728
+  - figure: 0.2774779498577118
