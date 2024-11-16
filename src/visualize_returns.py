@@ -22,6 +22,7 @@ except FileNotFoundError:
 
 # Extract configuration parameters
 merged_file_path = config.get('merged_file_path')
+merged_file_path = "D:/daten_masterarbeit/final_dataset_2500_zero_025.csv"
 
 if not merged_file_path:
     print("Merged file path not found in the configuration.")

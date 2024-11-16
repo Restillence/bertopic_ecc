@@ -9,6 +9,7 @@ from sklearn.metrics import r2_score, mean_squared_error
 
 # Path to the final dataset
 filepath = "D:/daten_masterarbeit/final_dataset.csv"
+filepath = "D:/daten_masterarbeit/final_dataset_2500_reg_20.csv"
 
 # Read the CSV file, assuming 'call_id' is the index column if applicable
 df = pd.read_csv(filepath, index_col=0)
