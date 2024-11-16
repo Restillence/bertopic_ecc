@@ -83,11 +83,15 @@ print("Converted 'call_date' to New York time and stored in 'call_date_with_time
 processed_df['call_date'] = processed_df['call_date_with_time'].dt.normalize()
 print("Normalized 'call_date' to remove time component for merging.")
 
-# Merge processed_df with df_crsp_daily to get 'gvkey' into processed_df
-print("Merging processed_df on permco and call_date with df_crsp_daily to get 'gvkey'...")
+# -------------------------- #
+# **1. Merge 'market_cap' into processed_df**
+# -------------------------- #
+
+# Merge processed_df with df_crsp_daily to get 'gvkey' and 'market_cap' into processed_df
+print("Merging processed_df on permco and call_date with df_crsp_daily to get 'gvkey' and 'market_cap'...")
 processed_df = pd.merge(
     processed_df,
-    df_crsp_daily[['permco', 'date', 'gvkey']],
+    df_crsp_daily[['permco', 'date', 'gvkey', 'market_cap']],  # **Added 'market_cap'**
     left_on=['permco', 'call_date'],
     right_on=['permco', 'date'],
     how='left'
@@ -95,7 +99,7 @@ processed_df = pd.merge(
 processed_df = processed_df.drop(columns=['date'])
 print(f"Number of rows after initial merge: {len(processed_df)}")
 
-# After merging processed_df with df_crsp_daily
+# Handle missing 'gvkey' values as before
 missing_gvkey = processed_df['gvkey'].isna().sum()
 print(f"Number of missing 'gvkey' values in processed_df after merging: {missing_gvkey}")
 
@@ -117,6 +121,35 @@ if missing_gvkey > 0:
 # Ensure 'gvkey' is numeric
 processed_df['gvkey'] = pd.to_numeric(processed_df['gvkey'], errors='coerce').astype('Int64')
 df_crsp_daily['gvkey'] = pd.to_numeric(df_crsp_daily['gvkey'], errors='coerce').astype('Int64')
+
+# -------------------------- #
+# **2. Handle Missing 'market_cap' Values**
+# -------------------------- #
+
+# Check for missing 'market_cap' values
+missing_market_cap = processed_df['market_cap'].isna().sum()
+print(f"Number of missing 'market_cap' values in processed_df after merging: {missing_market_cap}")
+
+if missing_market_cap > 0:
+    print("Filling missing 'market_cap' values in processed_df based on the most frequent 'market_cap' per 'permco'...")
+    # Create mapping from 'permco' to most frequent 'market_cap' in df_crsp_daily
+    market_cap_mapping = df_crsp_daily.groupby('permco')['market_cap'].agg(
+        lambda x: x.mode().iloc[0] if not x.mode().empty else np.nan
+    )
+    # Fill missing 'market_cap's in processed_df
+    processed_df['market_cap'] = processed_df.apply(
+        lambda row: market_cap_mapping.get(row['permco'], np.nan) if pd.isna(row['market_cap']) else row['market_cap'],
+        axis=1
+    )
+    # Recheck missing 'market_cap's
+    missing_market_cap = processed_df['market_cap'].isna().sum()
+    print(f"Number of missing 'market_cap' values after filling: {missing_market_cap}")
+
+# Proceeding without dropping rows with missing 'market_cap'
+if missing_market_cap > 0:
+    print(f"Proceeding with {missing_market_cap} rows with NaN 'market_cap'.")
+
+# Ensure 'gvkey' is numeric (already done above)
 
 # Remove any remaining rows with missing 'gvkey' in processed_df
 processed_df = processed_df.dropna(subset=['gvkey'])
@@ -224,7 +257,7 @@ df_crsp_monthly = df_crsp_monthly.groupby('gvkey', group_keys=False).apply(get_e
 print("Completed 'epsfxq_next' computation with missing quarters adjusted.")
 
 # **Select necessary columns from processed_df**
-processed_df_columns = ['call_id', 'gvkey', 'call_date', 'call_date_with_time', 'permco', 'filtered_topics', 'filtered_texts']
+processed_df_columns = ['call_id', 'gvkey', 'call_date', 'call_date_with_time', 'permco', 'filtered_topics', 'filtered_texts', 'market_cap']  # **Added 'market_cap'**
 processed_df = processed_df[processed_df_columns]
 
 # **Select necessary columns from df_crsp_monthly**
@@ -401,13 +434,14 @@ merged_df = pd.merge(
     merged_df,
     df_crsp_daily[['permco', 'date', 'ret', 'prc', 'shrout', 'vol',
                    'ret_immediate', 'ret_short_term', 'ret_medium_term', 'ret_long_term',
-                   'excess_ret_immediate', 'excess_ret_short_term', 'excess_ret_medium_term', 'excess_ret_long_term']],
+                   'excess_ret_immediate', 'excess_ret_short_term', 'excess_ret_medium_term', 'excess_ret_long_term',
+                   'market_cap']],  # **Added 'market_cap'**
     left_on=['permco', 'call_date'],
     right_on=['permco', 'date'],
     how='left'
 )
 merged_df = merged_df.drop(columns=['date'], errors='ignore')
-print(f"Number of rows after merging future returns: {len(merged_df)}")
+print(f"Number of rows after merging future returns and 'market_cap': {len(merged_df)}")
 
 # Convert 'ret' to numeric, handling non-numeric values
 def clean_ret(value):
@@ -440,7 +474,10 @@ merged_df['call_date'] = merged_df['call_date_with_time']
 merged_df = merged_df.drop(columns=['call_date_with_time'])
 print("Restored 'call_date' with time component in merged_df.")
 
-# Final DataFrame Preparation and Saving
+# -------------------------- #
+# **3. Final DataFrame Preparation and Saving**
+# -------------------------- #
+
 print("Finalizing the merged DataFrame...")
 desired_columns = [
     'filtered_topics', 'filtered_texts', 'call_id', 'permco', 'call_date', 'gvkey',
@@ -448,7 +485,8 @@ desired_columns = [
     'similarity_to_overall_average', 'similarity_to_industry_average',
     'similarity_to_company_average', 'prc', 'shrout', 'ret', 'vol',
     'ret_immediate', 'ret_short_term', 'ret_medium_term', 'ret_long_term',
-    'excess_ret_immediate', 'excess_ret_short_term', 'excess_ret_medium_term', 'excess_ret_long_term'
+    'excess_ret_immediate', 'excess_ret_short_term', 'excess_ret_medium_term', 'excess_ret_long_term',
+    'market_cap'  # **Added 'market_cap'**
 ]
 
 # Check if all desired columns are present
@@ -462,6 +500,11 @@ merged_df['prc'] = merged_df['prc'].abs()
 # Select only the columns that exist
 final_columns = [col for col in desired_columns if col in merged_df.columns]
 merged_df = merged_df[final_columns]
+
+# Example: Log-transform 'market_cap' if desired (Optional)
+if 'market_cap' in merged_df.columns:
+    merged_df['log_market_cap'] = np.log1p(merged_df['market_cap'])
+    print("Added 'log_market_cap' to the DataFrame.")
 
 # Sort the final DataFrame by 'gvkey' and 'call_date' in ascending order
 print("Sorting the final DataFrame by 'gvkey' and 'call_date'...")

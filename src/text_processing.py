@@ -191,8 +191,8 @@ class TextProcessor:
 
         Returns
         -------
-        list of str
-            A list of sentences or paragraphs, depending on the method.
+        list of str or None
+            A list of sentences or paragraphs, depending on the method, or None if no relevant sections found.
         """
         # Proceed with the extraction based on the selected section
         if self.section_to_analyze.lower() == "questions and answers":
@@ -233,12 +233,12 @@ class TextProcessor:
                     print(f"Extracted text up to 'Questions and Answers' for call ID: {call_id}")
                 else:
                     print(f"'Questions and Answers' section not found for call ID: {call_id}")
-                    print("Using entire text as 'Presentation' section.")
-                    text = text
+                    print(f"No 'Presentation' or 'Questions and Answers' section found for call ID: {call_id}")
+                    text = ''  # Set text to empty string
 
         if not text.strip():
             print(f"No relevant sections found for call ID: {call_id}")
-            return []
+            return None
 
         # Proceed with cleaning the text after extracting the section
         text = self.remove_unwanted_sections(text)

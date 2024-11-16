@@ -443,20 +443,32 @@ def main():
 
     # Extract texts for BERTopic analysis (processed sections/paragraphs)
     print("Extracting and processing relevant sections...")
-    all_relevant_sections = []
     extraction_start_time = time.time()  # Time tracking
+    all_relevant_sections = []
+    not_considered_count = 0  # Initialize counter
+    ecc_sample_filtered = {}  # Create a new dict to hold filtered earnings calls
+
     for permco, calls in ecc_sample.items():
+        calls_filtered = {}
         for call_id, value in calls.items():
             company_info = value['company_name']
             date = value['date']
             text = value['text_content']
             relevant_sections = text_processor.extract_and_split_section(permco, call_id, company_info, date, text)
-            all_relevant_sections.extend(relevant_sections)
-            # Add the relevant sections to the ECC sample
-            value['relevant_sections'] = relevant_sections
+            if relevant_sections:
+                all_relevant_sections.extend(relevant_sections)
+                # Add the relevant sections to the value
+                value['relevant_sections'] = relevant_sections
+                # Add the call to calls_filtered
+                calls_filtered[call_id] = value
+            else:
+                print(f"Earnings call {call_id} has neither 'Presentation' nor 'Questions and Answers' sections and will be excluded.")
+                not_considered_count +=1
+        if calls_filtered:
+            ecc_sample_filtered[permco] = calls_filtered
     extraction_end_time = time.time()
     print(f"Extraction and processing completed in {extraction_end_time - extraction_start_time:.2f} seconds.")
-
+    print(f"Total number of earnings calls not considered due to missing sections: {not_considered_count}")
 
     if not all_relevant_sections:
         print("No relevant sections found to fit BERTopic.")
@@ -464,7 +476,7 @@ def main():
 
     # Instantiate BertopicFitting and process the data
     bertopic_fitting = BertopicFitting(config, model_load_path)
-    bertopic_fitting.fit_and_save(all_relevant_sections, ecc_sample)
+    bertopic_fitting.fit_and_save(all_relevant_sections, ecc_sample_filtered)
 
     # Generate evaluation file
     eval_output_dir = os.path.join('eval')
