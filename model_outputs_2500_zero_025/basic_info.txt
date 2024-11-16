@@ -1,0 +1,998 @@
+Number of Topics: 77
+
+Topics by Frequency:
+    Topic  Count                                                              Name                                                                                                                                                     CustomName                                                                                                                                         Representation  Representative_Docs
+0      -1  56034                      -1_questions_session_conference_presentation                                                                                                                                                       Outliers                                                     [questions, session, conference, presentation, joining, remarks, orders, results, progress, going]                  NaN
+1       0   7047                  0_regulatory_approval_commission_forward looking                                  REGULATION: regulatory, approval, commission, forward looking, federal, contracts, press release, industry, product, products                                    [regulatory, approval, commission, forward looking, federal, contracts, press release, industry, product, products]                  NaN
+2       1  11074                           1_risk_prospects_forward looking_future                                             RISK: risk, prospects, forward looking, future, statements, projected, anticipated, results, anticipate, estimates                                         [risk, prospects, forward looking, future, statements, projected, anticipated, results, anticipate, estimates]                  NaN
+3       2   5433                              2_markets_market_marketing_strategic                                                 GEOGRAPHY: markets, market, marketing, strategic, acquisition, companies, sales, strategy, customers, industry                                                  [markets, market, marketing, strategic, acquisition, companies, sales, strategy, customers, industry]                  NaN
+4       3  10970                                3_demand_decline_markets_customers                                                             GEOGRAPHY: demand, decline, markets, customers, market, consumer, marketing, sales, retail, trends                                                              [demand, decline, markets, customers, market, consumer, marketing, sales, retail, trends]                  NaN
+5       4   6888                               4_markets_economic_market_financial                                                        GEOGRAPHY: markets, economic, market, financial, businesses, industry, business, growth, sales, revenue                                                         [markets, economic, market, financial, businesses, industry, business, growth, sales, revenue]                  NaN
+6       5  43452                                      5_sales_sale_selling_revenue                                                                    SALES: sales, sale, selling, revenue, decrease, markets, market, retail, decline, marketing                                                                 [sales, sale, selling, revenue, decrease, markets, market, retail, decline, marketing]                  NaN
+7       6  21584                              6_marketing_customers_market_product                                                 MARKETING: marketing, customers, market, product, businesses, products, customer, markets, companies, business                                                  [marketing, customers, market, product, businesses, products, customer, markets, companies, business]                  NaN
+8       7  30243           7_earnings_earnings release_financial results_cash flow                         EARNINGS: earnings, earnings release, financial results, cash flow, revenue, quarterly, financial, stock, quarter year, quarter fiscal                         [earnings, earnings release, financial results, cash flow, revenue, quarterly, financial, stock, quarter year, quarter fiscal]                  NaN
+9       8  15417                           8_operate_employees_operation_operating                                           OPERATIONS: operate, employees, operation, operating, management, operator, company, operational, corporate, joining                                             [operate, employees, operation, operating, management, operator, company, operational, corporate, joining]                  NaN
+10      9  20574                          9_cash flow_cash_balance sheet_financial                                             INVESTMENTS: cash flow, cash, balance sheet, financial, financing, investment, investor, investors, leverage, debt                                                [cash flow, cash, balance sheet, financial, financing, investment, investor, investors, leverage, debt]                  NaN
+11     10   1863                                    10_asia_region_regional_europe                                                                 GEOGRAPHY: asia, region, regional, europe, china, north america, pacific, eastern, japan, east                                                                  [asia, region, regional, europe, china, north america, pacific, eastern, japan, east]                  NaN
+12     11  33880                                   11_growth_growing_increase_grow                                                             GROWTH: growth, growing, increase, grow, business, development, businesses, revenue, sales, market                                                           [growth, growing, increase, grow, business, development, businesses, revenue, sales, market]                  NaN
+13     12   5036                               12_rates_percent_fiscal year_fiscal                                                       SALES: rates, percent, fiscal year, fiscal, rate, revenue, approximately, earnings, effective, estimated                                                    [rates, percent, fiscal year, fiscal, rate, revenue, approximately, earnings, effective, estimated]                  NaN
+14     13  21268                                    13_costs_cost_revenue_spending                                                                        COSTS: costs, cost, revenue, spending, price, financial, spent, total, increased, sales                                                                     [costs, cost, revenue, spending, price, financial, spent, total, increased, sales]                  NaN
+15     14    373                                             14_ahead_hand_thanks_                                                                                                                    Topic 14: ahead, hand, thanks, , , , , , ,                                                                                                                     [ahead, hand, thanks, , , , , , , ]                  NaN
+16     15    260                                   15_participants_time_currently_                                                                                                          Topic 15: participants, time, currently, , , , , , ,                                                                                                           [participants, time, currently, , , , , , , ]                  NaN
+17     16    364                                             16_morning_good_okay_                                                                                                                    Topic 16: morning, good, okay, , , , , , ,                                                                                                                     [morning, good, okay, , , , , , , ]                  NaN
+18     17    584                                            17_mr_ahead_ask_direct                                                                                       Topic 17: mr, ahead, ask, direct, mark, head, questions, yes, question,                                                                                        [mr, ahead, ask, direct, mark, head, questions, yes, question, ]                  NaN
+19     18    203                      18_participants_participate_parties_recorded                                                    Topic 18: participants, participate, parties, recorded, conference, able, allowed, limited, events, session                                                    [participants, participate, parties, recorded, conference, able, allowed, limited, events, session]                  NaN
+20     19    262                                         19_line_lines_hear_ground                                                                             Topic 19: line, lines, hear, ground, calls, talking, thanks, typical, thank, sorry                                                                             [line, lines, hear, ground, calls, talking, thanks, typical, thank, sorry]                  NaN
+21     20    342                                       20_begin_beginning_began_mr                                                                                     Topic 20: begin, beginning, began, mr, ll turn, ahead, okay, don, ll, turn                                                                                     [begin, beginning, began, mr, ll turn, ahead, okay, don, ll, turn]                  NaN
+22     21   2901      21_earnings_quarter results_results quarter_earnings release  EARNINGS: earnings, quarter results, results quarter, earnings release, conference, quarter 2003, quarter 2019, financial results, quarter 2018, quarter 2006  [earnings, quarter results, results quarter, earnings release, conference, quarter 2003, quarter 2019, financial results, quarter 2018, quarter 2006]                  NaN
+23     22    634              22_financial results_press release_measures_earnings                            EARNINGS: financial results, press release, measures, earnings, operating results, accounting, metrics, measure, reporting, results                            [financial results, press release, measures, earnings, operating results, accounting, metrics, measure, reporting, results]                  NaN
+24     23   2659                                    23_morning_welcome_happy_thank                                                                      Topic 23: morning, welcome, happy, thank, rest, afternoon, thanks, excellent, good, today                                                                      [morning, welcome, happy, thank, rest, afternoon, thanks, excellent, good, today]                  NaN
+25     24   1122                            24_welcome_joining_participating_thank                                                    Topic 24: welcome, joining, participating, thank, pleased, thanks, happy, participate, participation, today                                                    [welcome, joining, participating, thank, pleased, thanks, happy, participate, participation, today]                  NaN
+26     25    379                              25_margin_margins_adjusted_increased                                                 GROWTH: margin, margins, adjusted, increased, year quarter, lower, percentage, quarter year, percent, increase                                               [margin, margins, adjusted, increased, year quarter, lower, percentage, quarter year, percent, increase]                  NaN
+27     26    205                 26_presentation_participants_listeners_discussing                                                 Topic 26: presentation, participants, listeners, discussing, floor, open, channel, session, conference, opened                                                 [presentation, participants, listeners, discussing, floor, open, channel, session, conference, opened]                  NaN
+28     27    572                        27_recorded_conference_calls_press release                                                         Topic 27: recorded, conference, calls, press release, reminder, presented, remind, monday, today, note                                                         [recorded, conference, calls, press release, reminder, presented, remind, monday, today, note]                  NaN
+29     28   1338                                   28_calls_recorded_remind_monday                                                            Topic 28: calls, recorded, remind, monday, friday, today, press release, note, website, like remind                                                            [calls, recorded, remind, monday, friday, today, press release, note, website, like remind]                  NaN
+30     29    230                                    29_stock_share_count_increased                                                                  GROWTH: stock, share, count, increased, million, 000, reduced, acquisition, decrease, average                                                                [stock, share, count, increased, million, 000, reduced, acquisition, decrease, average]                  NaN
+31     30    998                   30_forward looking_scheduled_statements_updates                                                   Topic 30: forward looking, scheduled, statements, updates, date, update, future, statement, changes, forward                                                   [forward looking, scheduled, statements, updates, date, update, future, statement, changes, forward]                  NaN
+32     31    422                             31_days_quarter year_prior quarter_70                                                                                Topic 31: days, quarter year, prior quarter, 70, 75, 65, march 31, 48, june, 63                                                                                [days, quarter year, prior quarter, 70, 75, 65, march 31, 48, june, 63]                  NaN
+33     32   2376                              32_margin_margins_increased_increase                                                   GROWTH: margin, margins, increased, increase, improvement, improve, points, adjusted, improved, improvements                                                 [margin, margins, increased, increase, improvement, improve, points, adjusted, improved, improvements]                  NaN
+34     33    300                         33_shareholders_stock_quarterly_cash flow                                                          Topic 33: shareholders, stock, quarterly, cash flow, board, share, payment, increased, paid, approval                                                          [shareholders, stock, quarterly, cash flow, board, share, payment, increased, paid, approval]                  NaN
+35     34    450                                   34_stock_shareholders_buy_share                                                                GROWTH: stock, shareholders, buy, share, trading, company, acquisition, market, purchase, board                                                              [stock, shareholders, buy, share, trading, company, acquisition, market, purchase, board]                  NaN
+36     35    789                              35_acquisitions_stock_share_earnings                                                    EARNINGS: acquisitions, stock, share, earnings, quarter fiscal, acquisition, didn, financial, sale, company                                                    [acquisitions, stock, share, earnings, quarter fiscal, acquisition, didn, financial, sale, company]                  NaN
+37     36   4161                            36_debt_financing_balance sheet_credit                                                                   Topic 36: debt, financing, balance sheet, credit, leverage, bank, cash, rates, balance, rate                                                                   [debt, financing, balance sheet, credit, leverage, bank, cash, rates, balance, rate]                  NaN
+38     37    247                                 37_covid 19_covid_affected_health                                                              Topic 37: covid 19, covid, affected, health, 2020, challenges, began, communities, ongoing, focus                                                              [covid 19, covid, affected, health, 2020, challenges, began, communities, ongoing, focus]                  NaN
+39     38  10592                                  38_phase_research_second_results                                                                         Topic 38: phase, research, second, results, stage, medical, study, test, data, testing                                                                         [phase, research, second, results, stage, medical, study, test, data, testing]                  NaN
+40     39    306                              39_room_building_facilities_facility                                                               Topic 39: room, building, facilities, facility, office, space, construction, moved, market, area                                                               [room, building, facilities, facility, office, space, construction, moved, market, area]                  NaN
+41     40    286                    40_fiscal quarter_form_quarterly_press release                                              Topic 40: fiscal quarter, form, quarterly, press release, reports, second quarter, 10, fiscal, reporting, quarter                                              [fiscal quarter, form, quarterly, press release, reports, second quarter, 10, fiscal, reporting, quarter]                  NaN
+42     41    736                       41_forward looking_statements_calls_remarks                                                 Topic 41: forward looking, statements, calls, remarks, future, forward, discussed, regarding, plans, statement                                                 [forward looking, statements, calls, remarks, future, forward, discussed, regarding, plans, statement]                  NaN
+43     42    641                   42_financial results_factors_results_statements                                     Topic 42: financial results, factors, results, statements, analysis, reports, forward looking, material, regarding, report                                     [financial results, factors, results, statements, analysis, reports, forward looking, material, regarding, report]                  NaN
+44     43    587                          43_customers_customer_clients_additional                                                         CONSUMER: customers, customer, clients, additional, 300, increase, adding, increased, employees, count                                                         [customers, customer, clients, additional, 300, increase, adding, increased, employees, count]                  NaN
+45     44    908                       44_acquisitions_acquisition_merger_acquired                                          GROWTH: acquisitions, acquisition, merger, acquired, joint venture, financing, closing, company, fourth quarter, sale                                        [acquisitions, acquisition, merger, acquired, joint venture, financing, closing, company, fourth quarter, sale]                  NaN
+46     45    443                                45_cases_case_preliminary_decision                                                      Topic 45: cases, case, preliminary, decision, decided, approval, concluded, anticipate, pursue, insurance                                                      [cases, case, preliminary, decision, decided, approval, concluded, anticipate, pursue, insurance]                  NaN
+47     46    357                                      46_prices_pricing_price_cost                                                                                          COSTS: prices, pricing, price, cost, costs, oil, fuel, gas, gulf, low                                                                                       [prices, pricing, price, cost, costs, oil, fuel, gas, gulf, low]                  NaN
+48     47    832                                   47_weather_spring_summer_august                                                                    Topic 47: weather, spring, summer, august, september, october, season, january, june, march                                                                    [weather, spring, summer, august, september, october, season, january, june, march]                  NaN
+49     48    357                               48_fleet_delivery_delivered_deliver                                             OPERATIONS: fleet, delivery, delivered, deliver, financing, announced, additional, schedule, addition, operational                                               [fleet, delivery, delivered, deliver, financing, announced, additional, schedule, addition, operational]                  NaN
+50     49    646                            49_construction_building_build_planned                                                          Topic 49: construction, building, build, planned, later year, year end, soon, project, end year, june                                                          [construction, building, build, planned, later year, year end, soon, project, end year, june]                  NaN
+51     50    260                                          50_gas_fuel_oil_pipeline                                                                  PRODUCTS: gas, fuel, oil, pipeline, supply, production, increasing, markets, demand, capacity                                                                  [gas, fuel, oil, pipeline, supply, production, increasing, markets, demand, capacity]                  NaN
+52     51    455                               51_release_launch_upcoming_released                                                            Topic 51: release, launch, upcoming, released, announced, digital, anticipated, 2009, october, june                                                            [release, launch, upcoming, released, announced, digital, anticipated, 2009, october, june]                  NaN
+53     52    802                                    52_stores_store_retail_closing                                                        Topic 52: stores, store, retail, closing, end quarter, closed, quarter, opened, fourth quarter, opening                                                        [stores, store, retail, closing, end quarter, closed, quarter, opened, fourth quarter, opening]                  NaN
+54     53    754                                  53_customers_opening_open_opened                                                                CONSUMER: customers, opening, open, opened, business, markets, sales, introduced, new, launched                                                                [customers, opening, open, opened, business, markets, sales, introduced, new, launched]                  NaN
+55     54    398                               54_oil_production_produced_pipeline                                                                        PRODUCTS: oil, production, produced, pipeline, gas, estimated, 500, 300, capacity, gulf                                                                        [oil, production, produced, pipeline, gas, estimated, 500, 300, capacity, gulf]                  NaN
+56     55   1973                              55_production_development_areas_high                                                                  PRODUCTS: production, development, areas, high, oil, 500, valley, prospects, additional, gulf                                                                  [production, development, areas, high, oil, 500, valley, prospects, additional, gulf]                  NaN
+57     56    765            56_quarter year_fourth quarter_quarter_quarter quarter                        Topic 56: quarter year, fourth quarter, quarter, quarter quarter, quarters, second quarter, end quarter, increases, increase, increased                        [quarter year, fourth quarter, quarter, quarter quarter, quarters, second quarter, end quarter, increases, increase, increased]                  NaN
+58     57    945                              57_decline_decrease_lower_prior year                                              Topic 57: decline, decrease, lower, prior year, compared year, year quarter, reduced, fewer, quarter year, impact                                              [decline, decrease, lower, prior year, compared year, year quarter, reduced, fewer, quarter year, impact]                  NaN
+59     58   3726                        58_technologies_mobile_platform_technology                                   Topic 58: technologies, mobile, platform, technology, channel, infrastructure, digital, performance, network, communications                                   [technologies, mobile, platform, technology, channel, infrastructure, digital, performance, network, communications]                  NaN
+60     59    297                                     59_brands_brand_retail_stores                                                                 CONSUMER: brands, brand, retail, stores, products, trends, customers, items, specialty, design                                                                 [brands, brand, retail, stores, products, trends, customers, items, specialty, design]                  NaN
+61     60    270                                     60_open_questions_opening_ask                                                                    Topic 60: open, questions, opening, ask, ready, introduction, okay, question, start, points                                                                    [open, questions, opening, ask, ready, introduction, okay, question, start, points]                  NaN
+62     61    708                                       61_calls_questions_open_ask                                                                Topic 61: calls, questions, open, ask, opening, look forward, question, discussion, come, ready                                                                [calls, questions, open, ask, opening, look forward, question, discussion, come, ready]                  NaN
+63     62    797                               62_questions_ask_asked_look forward                                                            Topic 62: questions, ask, asked, look forward, question, regarding, remarks, taking, answer, issues                                                            [questions, ask, asked, look forward, question, regarding, remarks, taking, answer, issues]                  NaN
+64     63   1105                                 63_slide_slides_presentation_want                                                                           Topic 63: slide, slides, presentation, want, ask, fourth, ll turn, seven, 12, number                                                                           [slide, slides, presentation, want, ask, fourth, ll turn, seven, 12, number]                  NaN
+65     64   1611                      64_president_directors_corporation_corporate                                                          GROWTH: president, directors, corporation, corporate, behalf, role, kevin, company, general, business                                                        [president, directors, corporation, corporate, behalf, role, kevin, company, general, business]                  NaN
+66     65    705                 65_corporate_president_corporation_communications                                             Topic 65: corporate, president, corporation, communications, shareholders, company, pat, general, commercial, hear                                             [corporate, president, corporation, communications, shareholders, company, pat, general, commercial, hear]                  NaN
+67     66    847                           66_conference_investor_meeting_partners                                             Topic 66: conference, investor, meeting, partners, corporation, corporate, announce, presentation, partner, behalf                                             [conference, investor, meeting, partners, corporation, corporate, announce, presentation, partner, behalf]                  NaN
+68     67   3254        67_press release_quarter results_financial results_release                Topic 67: press release, quarter results, financial results, release, results quarter, released, news, website, operating results, year results                [press release, quarter results, financial results, release, results quarter, released, news, website, operating results, year results]                  NaN
+69     68   3187                                     68_little bit_okay_little_bit                                                                       Topic 68: little bit, okay, little, bit, tell, point, important, thing, comment, details                                                                       [little bit, okay, little, bit, tell, point, important, thing, comment, details]                  NaN
+70     69    396              69_look forward_progress_provide update_developments                                       Topic 69: look forward, progress, provide update, developments, announcement, excited, upcoming, pleased, status, future                                       [look forward, progress, provide update, developments, announcement, excited, upcoming, pleased, status, future]                  NaN
+71     70   1155                          70_progress_proud_success_pleased report                                                Topic 70: progress, proud, success, pleased report, successful, employees, commitment, happy, team, outstanding                                                [progress, proud, success, pleased report, successful, employees, commitment, happy, team, outstanding]                  NaN
+72     71   1080    71_financial results_quarter results_financial_results quarter                          Topic 71: financial results, quarter results, financial, results quarter, review, quarter fiscal, fiscal, quarterly, results, ll turn                          [financial results, quarter results, financial, results quarter, review, quarter fiscal, fiscal, quarterly, results, ll turn]                  NaN
+73     72   3113                                        72_chris_ll turn_tim_scott                                                                                  Topic 72: chris, ll turn, tim, scott, let turn, say, brian, turn, kevin, dave                                                                                  [chris, ll turn, tim, scott, let turn, say, brian, turn, kevin, dave]                  NaN
+74     73    421                                       73_year_year year_2006_2017                                                                                      Topic 73: year, year year, 2006, 2017, 2015, 2018, 2014, 2004, 2013, 2007                                                                                      [year, year year, 2006, 2017, 2015, 2018, 2014, 2004, 2013, 2007]                  NaN
+75     74    637  74_quarter results_results quarter_strong quarter_pleased report          Topic 74: quarter results, results quarter, strong quarter, pleased report, second quarter, fourth quarter, pleased, quarter, quarter 2008, quarterly          [quarter results, results quarter, strong quarter, pleased report, second quarter, fourth quarter, pleased, quarter, quarter 2008, quarterly]                  NaN
+76     75    775       75_strong quarter_second quarter_fourth quarter_end quarter       Topic 75: strong quarter, second quarter, fourth quarter, end quarter, quarter quarter, second half, quarter 2004, year quarter, quarter second, quarter       [strong quarter, second quarter, fourth quarter, end quarter, quarter quarter, second half, quarter 2004, year quarter, quarter second, quarter]                  NaN
+
+Top words for each topic:
+
+Topic -1 (Outliers):
+  No words available for outlier topic.
+
+Topic 0:
+  - regulatory: 0.583911120891571
+  - approval: 0.39371198415756226
+  - commission: 0.33882299065589905
+  - forward looking: 0.3090289831161499
+  - federal: 0.3046446740627289
+  - contracts: 0.30433934926986694
+  - press release: 0.27624621987342834
+  - industry: 0.27618297934532166
+  - product: 0.27461713552474976
+  - products: 0.27141493558883667
+
+Topic 1:
+  - risk: 0.4019973874092102
+  - prospects: 0.3086654543876648
+  - forward looking: 0.30477020144462585
+  - future: 0.28245678544044495
+  - statements: 0.27559614181518555
+  - projected: 0.26500850915908813
+  - anticipated: 0.2624424993991852
+  - results: 0.257922887802124
+  - anticipate: 0.253968209028244
+  - estimates: 0.23312479257583618
+
+Topic 2:
+  - markets: 0.5373871326446533
+  - market: 0.5217393636703491
+  - marketing: 0.49643674492836
+  - strategic: 0.4763162136077881
+  - acquisition: 0.46483343839645386
+  - companies: 0.45820534229278564
+  - sales: 0.4368070960044861
+  - strategy: 0.43562740087509155
+  - customers: 0.43328166007995605
+  - industry: 0.40944600105285645
+
+Topic 3:
+  - demand: 0.49352747201919556
+  - decline: 0.42939645051956177
+  - markets: 0.40345948934555054
+  - customers: 0.4032757580280304
+  - market: 0.3964787721633911
+  - consumer: 0.3910585641860962
+  - marketing: 0.3812747001647949
+  - sales: 0.3750491738319397
+  - retail: 0.3633827567100525
+  - trends: 0.33160221576690674
+
+Topic 4:
+  - markets: 0.5365662574768066
+  - economic: 0.5134254097938538
+  - market: 0.49102750420570374
+  - financial: 0.4390431046485901
+  - businesses: 0.41382288932800293
+  - industry: 0.3992977738380432
+  - business: 0.3980481028556824
+  - growth: 0.3974366784095764
+  - sales: 0.37532737851142883
+  - revenue: 0.3691982626914978
+
+Topic 5:
+  - sales: 0.633980393409729
+  - sale: 0.5264095067977905
+  - selling: 0.48828428983688354
+  - revenue: 0.4527146816253662
+  - decrease: 0.4292176365852356
+  - markets: 0.4176906943321228
+  - market: 0.4144766628742218
+  - retail: 0.39303669333457947
+  - decline: 0.3927018940448761
+  - marketing: 0.366871178150177
+
+Topic 6:
+  - marketing: 0.5521584749221802
+  - customers: 0.4859090745449066
+  - market: 0.4791076183319092
+  - product: 0.4676734507083893
+  - businesses: 0.44968530535697937
+  - products: 0.44800883531570435
+  - customer: 0.44407662749290466
+  - markets: 0.44129180908203125
+  - companies: 0.434824675321579
+  - business: 0.42925363779067993
+
+Topic 7:
+  - earnings: 0.7141187191009521
+  - earnings release: 0.590078592300415
+  - financial results: 0.5388737916946411
+  - cash flow: 0.39765262603759766
+  - revenue: 0.3958888649940491
+  - quarterly: 0.3755180239677429
+  - financial: 0.369334876537323
+  - stock: 0.3626580834388733
+  - quarter year: 0.34248822927474976
+  - quarter fiscal: 0.3368465304374695
+
+Topic 8:
+  - operate: 0.43953007459640503
+  - employees: 0.4214312732219696
+  - operation: 0.4064595401287079
+  - operating: 0.37851640582084656
+  - management: 0.3696880340576172
+  - operator: 0.3633805215358734
+  - company: 0.3500135540962219
+  - operational: 0.34993070363998413
+  - corporate: 0.34481993317604065
+  - joining: 0.3405459523200989
+
+Topic 9:
+  - cash flow: 0.6727063655853271
+  - cash: 0.4953734278678894
+  - balance sheet: 0.46375417709350586
+  - financial: 0.4546719789505005
+  - financing: 0.4484955668449402
+  - investment: 0.44115787744522095
+  - investor: 0.43192997574806213
+  - investors: 0.42405271530151367
+  - leverage: 0.4012616276741028
+  - debt: 0.38653481006622314
+
+Topic 10:
+  - asia: 0.6164789795875549
+  - region: 0.5608829259872437
+  - regional: 0.46825534105300903
+  - europe: 0.46469956636428833
+  - china: 0.4276655912399292
+  - north america: 0.4269587993621826
+  - pacific: 0.39994296431541443
+  - eastern: 0.39686888456344604
+  - japan: 0.3967730402946472
+  - east: 0.39093491435050964
+
+Topic 11:
+  - growth: 0.6197726726531982
+  - growing: 0.44609278440475464
+  - increase: 0.44571614265441895
+  - grow: 0.4145960807800293
+  - business: 0.3958749771118164
+  - development: 0.3934341073036194
+  - businesses: 0.3920230269432068
+  - revenue: 0.38030657172203064
+  - sales: 0.3713964819908142
+  - market: 0.36163705587387085
+
+Topic 12:
+  - rates: 0.36820971965789795
+  - percent: 0.34432655572891235
+  - fiscal year: 0.3289264738559723
+  - fiscal: 0.3204767107963562
+  - rate: 0.29543375968933105
+  - revenue: 0.2791571617126465
+  - approximately: 0.2615494728088379
+  - earnings: 0.24321922659873962
+  - effective: 0.24081407487392426
+  - estimated: 0.2233520746231079
+
+Topic 13:
+  - costs: 0.5804184675216675
+  - cost: 0.5226553678512573
+  - revenue: 0.34557679295539856
+  - spending: 0.33543580770492554
+  - price: 0.2922496199607849
+  - financial: 0.28892409801483154
+  - spent: 0.2870398163795471
+  - total: 0.2788102626800537
+  - increased: 0.2756471633911133
+  - sales: 0.2706598937511444
+
+Topic 14:
+  - ahead: 0.40313613414764404
+  - hand: 0.18108372390270233
+  - thanks: 0.12870019674301147
+  - : 0.08933470398187637
+  - : 0.08933470398187637
+  - : 0.08933470398187637
+  - : 0.08933470398187637
+  - : 0.08933470398187637
+  - : 0.08933470398187637
+  - : 0.08933470398187637
+
+Topic 15:
+  - participants: 0.34818845987319946
+  - time: 0.13160574436187744
+  - currently: 0.12033694982528687
+  - : 0.1133161336183548
+  - : 0.1133161336183548
+  - : 0.1133161336183548
+  - : 0.1133161336183548
+  - : 0.1133161336183548
+  - : 0.1133161336183548
+  - : 0.1133161336183548
+
+Topic 16:
+  - morning: 0.6940364241600037
+  - good: 0.3736071288585663
+  - okay: 0.2705629765987396
+  - : 0.2630941867828369
+  - : 0.2630941867828369
+  - : 0.2630941867828369
+  - : 0.2630941867828369
+  - : 0.2630941867828369
+  - : 0.2630941867828369
+  - : 0.2630941867828369
+
+Topic 17:
+  - mr: 0.375278502702713
+  - ahead: 0.3643484115600586
+  - ask: 0.28935521841049194
+  - direct: 0.18717704713344574
+  - mark: 0.17749381065368652
+  - head: 0.17175692319869995
+  - questions: 0.16911502182483673
+  - yes: 0.14030805230140686
+  - question: 0.13125492632389069
+  - : 0.09995295852422714
+
+Topic 18:
+  - participants: 0.3773062825202942
+  - participate: 0.29154494404792786
+  - parties: 0.26363345980644226
+  - recorded: 0.2593477666378021
+  - conference: 0.2484780251979828
+  - able: 0.23801398277282715
+  - allowed: 0.2278640866279602
+  - limited: 0.2270725667476654
+  - events: 0.22134414315223694
+  - session: 0.208611398935318
+
+Topic 19:
+  - line: 0.4028162956237793
+  - lines: 0.3980901539325714
+  - hear: 0.28941118717193604
+  - ground: 0.25372567772865295
+  - calls: 0.22372686862945557
+  - talking: 0.21940910816192627
+  - thanks: 0.1779976338148117
+  - typical: 0.15568801760673523
+  - thank: 0.1455044448375702
+  - sorry: 0.14012977480888367
+
+Topic 20:
+  - begin: 0.6400073766708374
+  - beginning: 0.5878019332885742
+  - began: 0.5371146202087402
+  - mr: 0.422824501991272
+  - ll turn: 0.3410448431968689
+  - ahead: 0.298101544380188
+  - okay: 0.296754390001297
+  - don: 0.2652198076248169
+  - ll: 0.2582383453845978
+  - turn: 0.24945658445358276
+
+Topic 21:
+  - earnings: 0.4323403537273407
+  - quarter results: 0.42380818724632263
+  - results quarter: 0.4219991862773895
+  - earnings release: 0.3973580002784729
+  - conference: 0.3958114981651306
+  - quarter 2003: 0.37698042392730713
+  - quarter 2019: 0.370893657207489
+  - financial results: 0.36775586009025574
+  - quarter 2018: 0.367024689912796
+  - quarter 2006: 0.3593652844429016
+
+Topic 22:
+  - financial results: 0.38525354862213135
+  - press release: 0.3744496703147888
+  - measures: 0.307796448469162
+  - earnings: 0.3044898509979248
+  - operating results: 0.3015355169773102
+  - accounting: 0.2785980999469757
+  - metrics: 0.2689753770828247
+  - measure: 0.25682663917541504
+  - reporting: 0.256244421005249
+  - results: 0.2436092346906662
+
+Topic 23:
+  - morning: 0.5387723445892334
+  - welcome: 0.46300214529037476
+  - happy: 0.3759757876396179
+  - thank: 0.36179158091545105
+  - rest: 0.3298279345035553
+  - afternoon: 0.30716216564178467
+  - thanks: 0.2986905574798584
+  - excellent: 0.27826201915740967
+  - good: 0.2732614576816559
+  - today: 0.26562824845314026
+
+Topic 24:
+  - welcome: 0.44209790229797363
+  - joining: 0.41890206933021545
+  - participating: 0.36758899688720703
+  - thank: 0.3539586067199707
+  - pleased: 0.34720784425735474
+  - thanks: 0.3246493935585022
+  - happy: 0.32092252373695374
+  - participate: 0.31195324659347534
+  - participation: 0.292508602142334
+  - today: 0.29027968645095825
+
+Topic 25:
+  - margin: 0.5125449895858765
+  - margins: 0.44311708211898804
+  - adjusted: 0.35909503698349
+  - increased: 0.2292417287826538
+  - year quarter: 0.21867144107818604
+  - lower: 0.2171347290277481
+  - percentage: 0.21231234073638916
+  - quarter year: 0.2122640609741211
+  - percent: 0.21199335157871246
+  - increase: 0.20090949535369873
+
+Topic 26:
+  - presentation: 0.43435245752334595
+  - participants: 0.41149479150772095
+  - listeners: 0.4009690284729004
+  - discussing: 0.37542396783828735
+  - floor: 0.2964703440666199
+  - open: 0.2928946316242218
+  - channel: 0.2884390950202942
+  - session: 0.2761359214782715
+  - conference: 0.2682412266731262
+  - opened: 0.26528650522232056
+
+Topic 27:
+  - recorded: 0.5977935194969177
+  - conference: 0.515460729598999
+  - calls: 0.45573729276657104
+  - press release: 0.4439084529876709
+  - reminder: 0.3650950491428375
+  - presented: 0.35957345366477966
+  - remind: 0.35208994150161743
+  - monday: 0.350233793258667
+  - today: 0.3391481935977936
+  - note: 0.3340614438056946
+
+Topic 28:
+  - calls: 0.49381670355796814
+  - recorded: 0.457052081823349
+  - remind: 0.33771514892578125
+  - monday: 0.33739590644836426
+  - friday: 0.3235962688922882
+  - today: 0.3080029785633087
+  - press release: 0.3068715035915375
+  - note: 0.2844190001487732
+  - website: 0.2811603248119354
+  - like remind: 0.27820682525634766
+
+Topic 29:
+  - stock: 0.42056599259376526
+  - share: 0.35647594928741455
+  - count: 0.31476664543151855
+  - increased: 0.3014153242111206
+  - million: 0.2787286043167114
+  - 000: 0.26119011640548706
+  - reduced: 0.2372984141111374
+  - acquisition: 0.23106476664543152
+  - decrease: 0.22895760834217072
+  - average: 0.22756122052669525
+
+Topic 30:
+  - forward looking: 0.2596317231655121
+  - scheduled: 0.2420537769794464
+  - statements: 0.23584742844104767
+  - updates: 0.22741581499576569
+  - date: 0.21486280858516693
+  - update: 0.20933909714221954
+  - future: 0.19964449107646942
+  - statement: 0.1881265938282013
+  - changes: 0.1843012273311615
+  - forward: 0.1806025207042694
+
+Topic 31:
+  - days: 0.5120449066162109
+  - quarter year: 0.36396318674087524
+  - prior quarter: 0.3320566415786743
+  - 70: 0.32343101501464844
+  - 75: 0.31147921085357666
+  - 65: 0.3022999167442322
+  - march 31: 0.29932302236557007
+  - 48: 0.29695677757263184
+  - june: 0.29476630687713623
+  - 63: 0.2902792692184448
+
+Topic 32:
+  - margin: 0.6593548059463501
+  - margins: 0.5810812711715698
+  - increased: 0.33114027976989746
+  - increase: 0.3310019075870514
+  - improvement: 0.31618553400039673
+  - improve: 0.3135010898113251
+  - points: 0.3134085237979889
+  - adjusted: 0.30489927530288696
+  - improved: 0.29619622230529785
+  - improvements: 0.28231945633888245
+
+Topic 33:
+  - shareholders: 0.3865744471549988
+  - stock: 0.3587707281112671
+  - quarterly: 0.3524790406227112
+  - cash flow: 0.3244430720806122
+  - board: 0.30261701345443726
+  - share: 0.2789410948753357
+  - payment: 0.2561790943145752
+  - increased: 0.25319308042526245
+  - paid: 0.24816176295280457
+  - approval: 0.24765700101852417
+
+Topic 34:
+  - stock: 0.5316588878631592
+  - shareholders: 0.5310672521591187
+  - buy: 0.3653208911418915
+  - share: 0.3302549421787262
+  - trading: 0.3274192214012146
+  - company: 0.30912166833877563
+  - acquisition: 0.3057706356048584
+  - market: 0.30000820755958557
+  - purchase: 0.28565841913223267
+  - board: 0.271462619304657
+
+Topic 35:
+  - acquisitions: 0.24321697652339935
+  - stock: 0.24212723970413208
+  - share: 0.18760831654071808
+  - earnings: 0.17613479495048523
+  - quarter fiscal: 0.16762995719909668
+  - acquisition: 0.1537870168685913
+  - didn: 0.14934810996055603
+  - financial: 0.1327434629201889
+  - sale: 0.12607011198997498
+  - company: 0.12553603947162628
+
+Topic 36:
+  - debt: 0.5599467754364014
+  - financing: 0.4503917098045349
+  - balance sheet: 0.41546982526779175
+  - credit: 0.41250890493392944
+  - leverage: 0.3683415949344635
+  - bank: 0.3485987186431885
+  - cash: 0.3133605718612671
+  - rates: 0.2691248655319214
+  - balance: 0.2464836835861206
+  - rate: 0.23554712533950806
+
+Topic 37:
+  - covid 19: 0.7655986547470093
+  - covid: 0.5929880142211914
+  - affected: 0.288890540599823
+  - health: 0.2769950032234192
+  - 2020: 0.2735239863395691
+  - challenges: 0.26618295907974243
+  - began: 0.22533300518989563
+  - communities: 0.22420039772987366
+  - ongoing: 0.2118399292230606
+  - focus: 0.2104422152042389
+
+Topic 38:
+  - phase: 0.3739596903324127
+  - research: 0.29032695293426514
+  - second: 0.2709455192089081
+  - results: 0.26506996154785156
+  - stage: 0.264011949300766
+  - medical: 0.2529919147491455
+  - study: 0.24048998951911926
+  - test: 0.22821864485740662
+  - data: 0.21838203072547913
+  - testing: 0.21453683078289032
+
+Topic 39:
+  - room: 0.5043590068817139
+  - building: 0.44035258889198303
+  - facilities: 0.42757412791252136
+  - facility: 0.42295390367507935
+  - office: 0.37567341327667236
+  - space: 0.36990436911582947
+  - construction: 0.2918194532394409
+  - moved: 0.279596745967865
+  - market: 0.2666458785533905
+  - area: 0.25555914640426636
+
+Topic 40:
+  - fiscal quarter: 0.42379137873649597
+  - form: 0.3968847692012787
+  - quarterly: 0.36388278007507324
+  - press release: 0.3261573910713196
+  - reports: 0.31658846139907837
+  - second quarter: 0.31636685132980347
+  - 10: 0.2999116778373718
+  - fiscal: 0.2972426414489746
+  - reporting: 0.29183706641197205
+  - quarter: 0.286542147397995
+
+Topic 41:
+  - forward looking: 0.5325927138328552
+  - statements: 0.4265860319137573
+  - calls: 0.39327356219291687
+  - remarks: 0.39100193977355957
+  - future: 0.3897886574268341
+  - forward: 0.3753265142440796
+  - discussed: 0.37023085355758667
+  - regarding: 0.3695402145385742
+  - plans: 0.3512421250343323
+  - statement: 0.3464757204055786
+
+Topic 42:
+  - financial results: 0.436383455991745
+  - factors: 0.38677316904067993
+  - results: 0.36846989393234253
+  - statements: 0.3398314118385315
+  - analysis: 0.265298068523407
+  - reports: 0.2565668821334839
+  - forward looking: 0.2555266320705414
+  - material: 0.25531089305877686
+  - regarding: 0.24867549538612366
+  - report: 0.23685608804225922
+
+Topic 43:
+  - customers: 0.5097240209579468
+  - customer: 0.42846912145614624
+  - clients: 0.3675132989883423
+  - additional: 0.2974242568016052
+  - 300: 0.28235363960266113
+  - increase: 0.27435004711151123
+  - adding: 0.26648369431495667
+  - increased: 0.2636190354824066
+  - employees: 0.2629964351654053
+  - count: 0.26286381483078003
+
+Topic 44:
+  - acquisitions: 0.6345016956329346
+  - acquisition: 0.6143556833267212
+  - merger: 0.5629353523254395
+  - acquired: 0.5041401386260986
+  - joint venture: 0.4399494528770447
+  - financing: 0.34986937046051025
+  - closing: 0.33558332920074463
+  - company: 0.32802343368530273
+  - fourth quarter: 0.3260209560394287
+  - sale: 0.30562061071395874
+
+Topic 45:
+  - cases: 0.4543341398239136
+  - case: 0.41482728719711304
+  - preliminary: 0.3544955253601074
+  - decision: 0.34469395875930786
+  - decided: 0.34067487716674805
+  - approval: 0.31856250762939453
+  - concluded: 0.30488789081573486
+  - anticipate: 0.27935537695884705
+  - pursue: 0.2700062692165375
+  - insurance: 0.2681734263896942
+
+Topic 46:
+  - prices: 0.48279547691345215
+  - pricing: 0.46039503812789917
+  - price: 0.44798141717910767
+  - cost: 0.4300857186317444
+  - costs: 0.36566978693008423
+  - oil: 0.3556465208530426
+  - fuel: 0.3329727053642273
+  - gas: 0.27412348985671997
+  - gulf: 0.26032358407974243
+  - low: 0.23301970958709717
+
+Topic 47:
+  - weather: 0.6969865560531616
+  - spring: 0.43982839584350586
+  - summer: 0.4282686114311218
+  - august: 0.3423457443714142
+  - september: 0.32353097200393677
+  - october: 0.31460386514663696
+  - season: 0.31020358204841614
+  - january: 0.30872243642807007
+  - june: 0.30538803339004517
+  - march: 0.3045400083065033
+
+Topic 48:
+  - fleet: 0.4589512348175049
+  - delivery: 0.35618412494659424
+  - delivered: 0.3101377487182617
+  - deliver: 0.29019424319267273
+  - financing: 0.28887757658958435
+  - announced: 0.27114611864089966
+  - additional: 0.22552233934402466
+  - schedule: 0.22066164016723633
+  - addition: 0.20965540409088135
+  - operational: 0.2049560546875
+
+Topic 49:
+  - construction: 0.6019154787063599
+  - building: 0.5717661380767822
+  - build: 0.5588928461074829
+  - planned: 0.44637471437454224
+  - later year: 0.3875190317630768
+  - year end: 0.38273605704307556
+  - soon: 0.37168407440185547
+  - project: 0.37138789892196655
+  - end year: 0.3637537360191345
+  - june: 0.3611079454421997
+
+Topic 50:
+  - gas: 0.5496058464050293
+  - fuel: 0.4932594299316406
+  - oil: 0.39257359504699707
+  - pipeline: 0.3354249596595764
+  - supply: 0.3064596652984619
+  - production: 0.2686763107776642
+  - increasing: 0.24971124529838562
+  - markets: 0.2440330535173416
+  - demand: 0.24334242939949036
+  - capacity: 0.2345891147851944
+
+Topic 51:
+  - release: 0.4349915385246277
+  - launch: 0.3607851266860962
+  - upcoming: 0.35781630873680115
+  - released: 0.3567051887512207
+  - announced: 0.3359595537185669
+  - digital: 0.28575390577316284
+  - anticipated: 0.2825908660888672
+  - 2009: 0.2788201570510864
+  - october: 0.2729519307613373
+  - june: 0.27278876304626465
+
+Topic 52:
+  - stores: 0.4822182357311249
+  - store: 0.4113227128982544
+  - retail: 0.38158074021339417
+  - closing: 0.3622148931026459
+  - end quarter: 0.36026060581207275
+  - closed: 0.3455510437488556
+  - quarter: 0.33289623260498047
+  - opened: 0.3050239682197571
+  - fourth quarter: 0.28312796354293823
+  - opening: 0.27149200439453125
+
+Topic 53:
+  - customers: 0.3535471558570862
+  - opening: 0.33350640535354614
+  - open: 0.2854886054992676
+  - opened: 0.27152788639068604
+  - business: 0.26645627617836
+  - markets: 0.26151689887046814
+  - sales: 0.251298725605011
+  - introduced: 0.22863486409187317
+  - new: 0.21801432967185974
+  - launched: 0.21396958827972412
+
+Topic 54:
+  - oil: 0.4167928099632263
+  - production: 0.38808345794677734
+  - produced: 0.28938156366348267
+  - pipeline: 0.25680190324783325
+  - gas: 0.2481081485748291
+  - estimated: 0.24639572203159332
+  - 500: 0.22085219621658325
+  - 300: 0.21985100209712982
+  - capacity: 0.21753498911857605
+  - gulf: 0.21340900659561157
+
+Topic 55:
+  - production: 0.46870553493499756
+  - development: 0.2675354480743408
+  - areas: 0.24536219239234924
+  - high: 0.23894241452217102
+  - oil: 0.23543184995651245
+  - 500: 0.22858789563179016
+  - valley: 0.22739428281784058
+  - prospects: 0.2227897197008133
+  - additional: 0.2214922308921814
+  - gulf: 0.21545511484146118
+
+Topic 56:
+  - quarter year: 0.5356214046478271
+  - fourth quarter: 0.4532097578048706
+  - quarter: 0.4491960406303406
+  - quarter quarter: 0.4431686997413635
+  - quarters: 0.43079084157943726
+  - second quarter: 0.429534912109375
+  - end quarter: 0.42816418409347534
+  - increases: 0.4260783791542053
+  - increase: 0.41824716329574585
+  - increased: 0.39950239658355713
+
+Topic 57:
+  - decline: 0.5517252683639526
+  - decrease: 0.5254626870155334
+  - lower: 0.3442992568016052
+  - prior year: 0.3169512152671814
+  - compared year: 0.31675705313682556
+  - year quarter: 0.31448283791542053
+  - reduced: 0.3140242099761963
+  - fewer: 0.2951713800430298
+  - quarter year: 0.2911454439163208
+  - impact: 0.2706856429576874
+
+Topic 58:
+  - technologies: 0.3473721444606781
+  - mobile: 0.33035770058631897
+  - platform: 0.297563761472702
+  - technology: 0.28711986541748047
+  - channel: 0.2721080183982849
+  - infrastructure: 0.2600300908088684
+  - digital: 0.25633877515792847
+  - performance: 0.2552754878997803
+  - network: 0.2447664588689804
+  - communications: 0.24250507354736328
+
+Topic 59:
+  - brands: 0.5902500748634338
+  - brand: 0.5198380947113037
+  - retail: 0.41552847623825073
+  - stores: 0.3781295716762543
+  - products: 0.3452228307723999
+  - trends: 0.3406441807746887
+  - customers: 0.2887832522392273
+  - items: 0.2882191240787506
+  - specialty: 0.282494455575943
+  - design: 0.2751658856868744
+
+Topic 60:
+  - open: 0.5215731859207153
+  - questions: 0.4984878897666931
+  - opening: 0.45936793088912964
+  - ask: 0.37677061557769775
+  - ready: 0.3308097720146179
+  - introduction: 0.2755524218082428
+  - okay: 0.26902616024017334
+  - question: 0.2662045359611511
+  - start: 0.25783365964889526
+  - points: 0.253662645816803
+
+Topic 61:
+  - calls: 0.5106744766235352
+  - questions: 0.4079076051712036
+  - open: 0.3923768103122711
+  - ask: 0.3520994782447815
+  - opening: 0.33312979340553284
+  - look forward: 0.32187891006469727
+  - question: 0.28646421432495117
+  - discussion: 0.2737868130207062
+  - come: 0.2713823616504669
+  - ready: 0.2595386803150177
+
+Topic 62:
+  - questions: 0.5864846706390381
+  - ask: 0.4722519516944885
+  - asked: 0.46510595083236694
+  - look forward: 0.33615654706954956
+  - question: 0.33182525634765625
+  - regarding: 0.33026814460754395
+  - remarks: 0.32458823919296265
+  - taking: 0.31080061197280884
+  - answer: 0.27271905541419983
+  - issues: 0.2722316384315491
+
+Topic 63:
+  - slide: 0.7482373714447021
+  - slides: 0.7204622626304626
+  - presentation: 0.3882177472114563
+  - want: 0.3598784804344177
+  - ask: 0.3244088292121887
+  - fourth: 0.3182958960533142
+  - ll turn: 0.3175443410873413
+  - seven: 0.3043813109397888
+  - 12: 0.29905954003334045
+  - number: 0.29033011198043823
+
+Topic 64:
+  - president: 0.5130404233932495
+  - directors: 0.4642795920372009
+  - corporation: 0.40999677777290344
+  - corporate: 0.4047256112098694
+  - behalf: 0.39570993185043335
+  - role: 0.3736568093299866
+  - kevin: 0.32430291175842285
+  - company: 0.3195558190345764
+  - general: 0.31291159987449646
+  - business: 0.30904829502105713
+
+Topic 65:
+  - corporate: 0.36715036630630493
+  - president: 0.36601370573043823
+  - corporation: 0.3562217950820923
+  - communications: 0.31627658009529114
+  - shareholders: 0.31529510021209717
+  - company: 0.30241072177886963
+  - pat: 0.2840668559074402
+  - general: 0.2649829387664795
+  - commercial: 0.2629389464855194
+  - hear: 0.251204252243042
+
+Topic 66:
+  - conference: 0.5580156445503235
+  - investor: 0.3789622485637665
+  - meeting: 0.369355708360672
+  - partners: 0.34109437465667725
+  - corporation: 0.3397757411003113
+  - corporate: 0.3324888348579407
+  - announce: 0.32914286851882935
+  - presentation: 0.32423269748687744
+  - partner: 0.31952372193336487
+  - behalf: 0.31481027603149414
+
+Topic 67:
+  - press release: 0.6833350658416748
+  - quarter results: 0.467548131942749
+  - financial results: 0.4570561647415161
+  - release: 0.44590550661087036
+  - results quarter: 0.44067656993865967
+  - released: 0.4384043216705322
+  - news: 0.4095306992530823
+  - website: 0.3723248243331909
+  - operating results: 0.35274046659469604
+  - year results: 0.35114485025405884
+
+Topic 68:
+  - little bit: 0.44711464643478394
+  - okay: 0.3343362808227539
+  - little: 0.31000083684921265
+  - bit: 0.3099849820137024
+  - tell: 0.3054519295692444
+  - point: 0.2986142635345459
+  - important: 0.29131531715393066
+  - thing: 0.2880136966705322
+  - comment: 0.279016375541687
+  - details: 0.26747164130210876
+
+Topic 69:
+  - look forward: 0.5983819961547852
+  - progress: 0.5578803420066833
+  - provide update: 0.45176249742507935
+  - developments: 0.44499796628952026
+  - announcement: 0.43646004796028137
+  - excited: 0.4141021966934204
+  - upcoming: 0.4000306725502014
+  - pleased: 0.3948308527469635
+  - status: 0.3775230646133423
+  - future: 0.3767024874687195
+
+Topic 70:
+  - progress: 0.445473313331604
+  - proud: 0.42923420667648315
+  - success: 0.41081398725509644
+  - pleased report: 0.37853917479515076
+  - successful: 0.3652152419090271
+  - employees: 0.3352178931236267
+  - commitment: 0.3348846137523651
+  - happy: 0.3339240550994873
+  - team: 0.3188681900501251
+  - outstanding: 0.31732669472694397
+
+Topic 71:
+  - financial results: 0.5207793712615967
+  - quarter results: 0.3929910659790039
+  - financial: 0.3871084451675415
+  - results quarter: 0.3716561496257782
+  - review: 0.37123000621795654
+  - quarter fiscal: 0.31369549036026
+  - fiscal: 0.3063550293445587
+  - quarterly: 0.2930634021759033
+  - results: 0.29160094261169434
+  - ll turn: 0.2836534380912781
+
+Topic 72:
+  - chris: 0.3639112114906311
+  - ll turn: 0.3636908531188965
+  - tim: 0.35128724575042725
+  - scott: 0.33902499079704285
+  - let turn: 0.33528047800064087
+  - say: 0.32513391971588135
+  - brian: 0.3228718042373657
+  - turn: 0.30324816703796387
+  - kevin: 0.3029334545135498
+  - dave: 0.29751741886138916
+
+Topic 73:
+  - year: 0.6956697702407837
+  - year year: 0.6750147342681885
+  - 2006: 0.5629085302352905
+  - 2017: 0.5586457252502441
+  - 2015: 0.5455576777458191
+  - 2018: 0.5350321531295776
+  - 2014: 0.5291059613227844
+  - 2004: 0.5103790163993835
+  - 2013: 0.5088169574737549
+  - 2007: 0.5052894949913025
+
+Topic 74:
+  - quarter results: 0.5530939102172852
+  - results quarter: 0.5508585572242737
+  - strong quarter: 0.5349880456924438
+  - pleased report: 0.48205235600471497
+  - second quarter: 0.46936339139938354
+  - fourth quarter: 0.4642159938812256
+  - pleased: 0.4352518320083618
+  - quarter: 0.406075119972229
+  - quarter 2008: 0.3905709981918335
+  - quarterly: 0.38055068254470825
+
+Topic 75:
+  - strong quarter: 0.706885039806366
+  - second quarter: 0.6800161600112915
+  - fourth quarter: 0.6748006343841553
+  - end quarter: 0.5706451535224915
+  - quarter quarter: 0.5552557706832886
+  - second half: 0.5174039602279663
+  - quarter 2004: 0.5002546906471252
+  - year quarter: 0.4951857924461365
+  - quarter second: 0.49182048439979553
+  - quarter: 0.47797495126724243
