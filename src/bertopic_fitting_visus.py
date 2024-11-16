@@ -1,3 +1,5 @@
+# bertopic_fitting_visus.py
+
 # Import necessary libraries
 import os
 import sys
@@ -101,13 +103,23 @@ class BertopicFitting:
                 # Get company_info
                 company_info = value['company_name']
 
+                # Get ceo_participates flag
+                ceo_participates = value.get('ceo_participates', False)
+
+                # Get CEO and CFO names
+                ceo_names = value.get('ceo_names', [])
+                cfo_names = value.get('cfo_names', [])
+
                 # Format sections and topics to be stored correctly in the CSV
                 result_dict[call_id] = {
                     "permco": permco,
                     "company_info": company_info,
                     "date": timestamp,
                     "sections": sections,
-                    "topics": section_topics
+                    "topics": section_topics,
+                    "ceo_participates": ceo_participates,
+                    "ceo_names": ceo_names,
+                    "cfo_names": cfo_names
                 }
                 topic_idx += num_sections
 
@@ -120,7 +132,10 @@ class BertopicFitting:
                 'company_info': call_data['company_info'],
                 'date': call_data['date'],
                 'text': json.dumps(call_data['sections']),
-                'topics': json.dumps(call_data['topics'])
+                'topics': json.dumps(call_data['topics']),
+                'ceo_participates': int(call_data['ceo_participates']),  # Convert bool to int (1/0)
+                'ceo_names': json.dumps(call_data['ceo_names']),
+                'cfo_names': json.dumps(call_data['cfo_names'])
             })
 
         results_df = pd.DataFrame(records)
@@ -215,7 +230,6 @@ class BertopicFitting:
             import traceback
             traceback.print_exc()
 
-
     def save_basic_info(self):
         """
         Save basic information about the model.
@@ -257,7 +271,6 @@ class BertopicFitting:
         print("Saving topic distribution...")
         output_file = os.path.join(self.output_dir, "topic_distribution.png")
         topic_info = self.topic_model.get_topic_info()
-
 
         # Exclude topic -1
         topic_info = topic_info[topic_info['Topic'] != -1]
@@ -302,13 +315,6 @@ class BertopicFitting:
         print("Visualizing topics...")
         fig = self.topic_model.visualize_topics()
         self.save_visualization(fig, os.path.join(self.output_dir, "topics.html"), file_format="html")
-
-        """
-        # Visualize Documents
-        print("Visualizing documents...")
-        fig = self.topic_model.visualize_documents(self.topic_model.original_documents)
-        self.save_visualization(fig, os.path.join(self.output_dir, "documents.html"), file_format="html")
-        """
 
         # Visualize Topic Hierarchy
         print("Visualizing topic hierarchy...")
@@ -382,7 +388,7 @@ class BertopicFitting:
                 print("No data available for topics over time visualization.")
                 return
 
-            # Visualize topics over time with normalize_frequency=False
+            # Visualize topics over time with normalize_frequency=True
             fig = self.topic_model.visualize_topics_over_time(
                 topics_over_time,
                 top_n_topics=10,
@@ -411,7 +417,7 @@ def main():
 
     # Load configuration from config.json
     print("Loading configuration...")
-    with open('config_hlr.json', 'r') as f:
+    with open('config.json', 'r') as f:
         config = json.load(f)
     print_configuration(config)
 
@@ -454,16 +460,20 @@ def main():
             company_info = value['company_name']
             date = value['date']
             text = value['text_content']
-            relevant_sections = text_processor.extract_and_split_section(permco, call_id, company_info, date, text)
-            if relevant_sections:
-                all_relevant_sections.extend(relevant_sections)
-                # Add the relevant sections to the value
-                value['relevant_sections'] = relevant_sections
+            result = text_processor.extract_and_split_section(permco, call_id, company_info, date, text)
+            if result and result['combined_text']:
+                all_relevant_sections.extend(result['combined_text'])
+                # Add the relevant data to 'value'
+                value['relevant_sections'] = result['combined_text']
+                value['participants'] = result['participants']
+                value['ceo_participates'] = result['ceo_participates']
+                value['ceo_names'] = result['ceo_names']
+                value['cfo_names'] = result['cfo_names']
                 # Add the call to calls_filtered
                 calls_filtered[call_id] = value
             else:
                 print(f"Earnings call {call_id} has neither 'Presentation' nor 'Questions and Answers' sections and will be excluded.")
-                not_considered_count +=1
+                not_considered_count += 1
         if calls_filtered:
             ecc_sample_filtered[permco] = calls_filtered
     extraction_end_time = time.time()

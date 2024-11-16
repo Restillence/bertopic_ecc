@@ -2,6 +2,7 @@
 # Allows splitting the text into sentences or paragraphs, depending on the method specified.
 
 import re
+import json
 from nltk.tokenize import sent_tokenize
 
 class TextProcessor:
@@ -18,6 +19,29 @@ class TextProcessor:
         """
         self.method = method
         self.section_to_analyze = section_to_analyze
+
+        # Define title variations for CEO and CFO
+        self.ceo_titles = [
+            r'\bCEO\b',
+            r'\bChief Executive Officer\b',
+            r'\bChief Exec Officer\b',
+            r'\bPresident and CEO\b',
+            r'\bChairman and CEO\b',
+            r'\bChief Executive Officer/Chief Financial Officer\b',
+            r'\bChief Executive Officer\s*/\s*Chief Financial Officer\b',
+            r'\bChief Operating Officer and CEO\b',
+            r'\bCEO and President\b'
+        ]
+
+        self.cfo_titles = [
+            r'\bCFO\b',
+            r'\bChief Financial Officer\b',
+            r'\bFinance Director\b',
+            r'\bVice President of Finance\b',
+            r'\bSenior Vice President and CFO\b',
+            r'\bChief Financial Officer\s*/\s*Chief Executive Officer\b',
+            r'\bChief Financial Officer and Chief Operating Officer\b'
+        ]
 
     def remove_unwanted_sections(self, text):
         """
@@ -172,6 +196,43 @@ class TextProcessor:
         """
         return [element for element in text_list if len(element.split()) >= 3]
 
+    # New method to extract participants
+    def extract_participants(self, text):
+        """
+        Extract the list of corporate participants and their positions from the transcript text.
+
+        Parameters
+        ----------
+        text : str
+            The transcript text.
+
+        Returns
+        -------
+        participants : list of dict
+            A list of dictionaries with keys 'name' and 'position'.
+        """
+        participants = []
+        # Search for the 'Corporate Participants' section
+        pattern = r'(?:\n|^)={1,}\nCorporate Participants\n={1,}\n(.*?)\n={1,}\n'
+        match = re.search(pattern, text, flags=re.DOTALL | re.IGNORECASE)
+        if match:
+            participants_text = match.group(1)
+            # Split participants by lines starting with '*'
+            participant_entries = re.findall(r'\*\s*(.*?)\n', participants_text)
+            for entry in participant_entries:
+                # Split the entry into name and position
+                parts = entry.strip().split('\n')
+                # Sometimes the entry might have multiple lines
+                entry_text = ' '.join(parts)
+                # Split name and position using ' - ' or '–' or ':' or similar delimiters
+                name_position = re.split(r'\s*[-–:]\s*', entry_text, maxsplit=1)
+                name = name_position[0].strip()
+                position = name_position[1].strip() if len(name_position) > 1 else ''
+                participants.append({'name': name, 'position': position})
+        else:
+            print("Warning: 'Corporate Participants' section not found in the transcript.")
+        return participants
+
     def extract_and_split_section(self, company, call_id, company_info, date, text):
         """
         Extract and split the relevant section from the text.
@@ -191,8 +252,8 @@ class TextProcessor:
 
         Returns
         -------
-        list of str or None
-            A list of sentences or paragraphs, depending on the method, or None if no relevant sections found.
+        dict
+            A dictionary containing 'combined_text', 'participants', 'ceo_participates', 'ceo_names', and 'cfo_names'.
         """
         # Proceed with the extraction based on the selected section
         if self.section_to_analyze.lower() == "questions and answers":
@@ -260,7 +321,25 @@ class TextProcessor:
         combined_text = self.remove_presentation_from_final_list(combined_text)
         combined_text = self.filter_short_elements(combined_text)
 
-        return combined_text
+        # Extract participants
+        participants = self.extract_participants(text)
+
+        # Determine if CEO participates
+        ceo_participates = any(self.is_ceo(p['position']) for p in participants)
+
+        # Store CEO and CFO names
+        ceo_names = [p['name'] for p in participants if self.is_ceo(p['position'])]
+        cfo_names = [p['name'] for p in participants if self.is_cfo(p['position'])]
+
+        result = {
+            'combined_text': combined_text,
+            'participants': participants,
+            'ceo_participates': ceo_participates,
+            'ceo_names': ceo_names,
+            'cfo_names': cfo_names
+        }
+
+        return result
 
     def split_text_by_visual_cues(self, text):
         """
@@ -274,7 +353,7 @@ class TextProcessor:
         Returns
         -------
         list of str
-            A list of paragraphs, with any unnecessary ones removed.
+            The list of paragraphs, with any unnecessary ones removed.
         """
         pattern = r'\n\s*\n|\n[=]+\n|\n[-]+\n|\n\s{2,}\n|(?:^|\n)(?=[A-Z][a-z]+, [a-zA-Z\s]*[-]*[0-9]*)|\.\s*\n'
         paragraphs = re.split(pattern, text)
@@ -371,6 +450,44 @@ class TextProcessor:
         pattern = r"^[-=]{3,}$"
         return re.match(pattern, paragraph.strip()) is not None
 
+    def is_ceo(self, position):
+        """
+        Determine if the position corresponds to a CEO.
+
+        Parameters
+        ----------
+        position : str
+            The position title.
+
+        Returns
+        -------
+        bool
+            True if the position is a CEO, False otherwise.
+        """
+        for title_pattern in self.ceo_titles:
+            if re.search(title_pattern, position, flags=re.IGNORECASE):
+                return True
+        return False
+
+    def is_cfo(self, position):
+        """
+        Determine if the position corresponds to a CFO.
+
+        Parameters
+        ----------
+        position : str
+            The position title.
+
+        Returns
+        -------
+        bool
+            True if the position is a CFO, False otherwise.
+        """
+        for title_pattern in self.cfo_titles:
+            if re.search(title_pattern, position, flags=re.IGNORECASE):
+                return True
+        return False
+
     def extract_all_relevant_sections(self, ecc_sample, max_documents):
         """
         Extract all relevant sections from the ECC sample.
@@ -397,9 +514,15 @@ class TextProcessor:
                 company_info = value['company_name']
                 date = value['date']
                 text = value['text_content']
-                relevant_sections = self.extract_and_split_section(permco, call_id, company_info, date, text)
-                if relevant_sections:
-                    all_relevant_sections.extend(relevant_sections)
+                result = self.extract_and_split_section(permco, call_id, company_info, date, text)
+                if result and result['combined_text']:
+                    all_relevant_sections.extend(result['combined_text'])
+                    # Add the relevant data to 'value'
+                    value['relevant_sections'] = result['combined_text']
+                    value['participants'] = result['participants']
+                    value['ceo_participates'] = result['ceo_participates']
+                    value['ceo_names'] = result['ceo_names']
+                    value['cfo_names'] = result['cfo_names']
                     document_count += 1
                 else:
                     print(f"No relevant sections found for call ID: {call_id}")

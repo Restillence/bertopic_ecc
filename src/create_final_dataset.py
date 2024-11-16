@@ -8,6 +8,9 @@ import warnings
 import ast
 from utils import process_topics, compute_similarity_to_average
 
+# Suppress SettingWithCopyWarning
+pd.options.mode.chained_assignment = None  # default='warn'
+
 # Load configuration variables from config.json
 try:
     with open('config.json', 'r') as config_file:
@@ -40,7 +43,59 @@ processed_df['permco'] = processed_df['permco'].astype(str)
 permcos = set(processed_df['permco'].unique())
 print(f"Number of unique permcos in processed_df: {len(permcos)}")
 
-# Process the CRSP daily data
+# -------------------------- #
+# **Include 'ceo_participates' and CEO/CFO Names**
+# -------------------------- #
+
+# Load topics_output.csv to get 'ceo_participates', 'ceo_names', 'cfo_names'
+print("Loading topics_output.csv to get 'ceo_participates', 'ceo_names', 'cfo_names'...")
+topics_output_df = pd.read_csv(topic_output_path)
+
+# Ensure 'call_id' is present in both DataFrames
+if 'call_id' in processed_df.columns and 'call_id' in topics_output_df.columns:
+    # Merge 'ceo_participates', 'ceo_names', 'cfo_names' into processed_df
+    processed_df = pd.merge(
+        processed_df,
+        topics_output_df[['call_id', 'ceo_participates', 'ceo_names', 'cfo_names', 'date']],
+        on='call_id',
+        how='left'
+    )
+else:
+    print("Error: 'call_id' column not found in processed_df or topics_output_df.")
+    sys.exit()
+
+# Convert 'ceo_participates' to integer (if not already)
+processed_df['ceo_participates'] = processed_df['ceo_participates'].fillna(0).astype(int)
+print("Merged 'ceo_participates', 'ceo_names', and 'cfo_names' into processed_df.")
+
+# Convert 'ceo_names' and 'cfo_names' from JSON strings to lists
+processed_df['ceo_names'] = processed_df['ceo_names'].apply(lambda x: json.loads(x) if pd.notnull(x) else [])
+processed_df['cfo_names'] = processed_df['cfo_names'].apply(lambda x: json.loads(x) if pd.notnull(x) else [])
+
+# Convert 'date' to 'call_date' in datetime
+processed_df['call_date'] = pd.to_datetime(processed_df['date'], utc=True, errors='coerce')
+processed_df = processed_df.drop(columns=['date'])
+print("Converted 'date' to 'call_date' in processed_df.")
+
+# Remove rows with missing 'call_date' or 'permco'
+initial_len = len(processed_df)
+processed_df = processed_df[processed_df['call_date'].notna() & processed_df['permco'].notna()]
+print(f"Removed {initial_len - len(processed_df)} rows with missing 'call_date' or 'permco'.")
+
+# Convert 'call_date' to New York time and remove timezone information
+processed_df['call_date'] = processed_df['call_date'].dt.tz_convert('America/New_York')
+processed_df['call_date_with_time'] = processed_df['call_date'].dt.tz_localize(None)
+print("Converted 'call_date' to New York time and stored in 'call_date_with_time'.")
+
+# Normalize 'call_date' to remove time component for merging
+processed_df['call_date'] = processed_df['call_date_with_time'].dt.normalize()
+print("Normalized 'call_date' to remove time component for merging.")
+
+# -------------------------- #
+# **1. Merge 'market_cap' into processed_df**
+# -------------------------- #
+
+# Load CRSP daily data in chunks
 print("Processing CRSP/Daily data...")
 chunksize = 10 ** 6
 daily_data = []
@@ -64,34 +119,11 @@ df_crsp_daily['date'] = pd.to_datetime(df_crsp_daily['date'], errors='coerce')
 df_crsp_daily = df_crsp_daily[df_crsp_daily['date'].notna()]
 print(f"CRSP Daily data after removing NaN dates: {len(df_crsp_daily)} rows.")
 
-# Convert 'date' in processed_df to 'call_date' in datetime
-processed_df['call_date'] = pd.to_datetime(processed_df['date'], utc=True, errors='coerce')
-processed_df = processed_df.drop(columns=['date'])
-print("Converted 'date' to 'call_date' in processed_df.")
-
-# Remove rows with missing 'call_date' or 'permco'
-initial_len = len(processed_df)
-processed_df = processed_df[processed_df['call_date'].notna() & processed_df['permco'].notna()]
-print(f"Removed {initial_len - len(processed_df)} rows with missing 'call_date' or 'permco'.")
-
-# Convert 'call_date' to New York time and remove timezone information
-processed_df['call_date'] = processed_df['call_date'].dt.tz_convert('America/New_York')
-processed_df['call_date_with_time'] = processed_df['call_date'].dt.tz_localize(None)
-print("Converted 'call_date' to New York time and stored in 'call_date_with_time'.")
-
-# Normalize 'call_date' to remove time component for merging
-processed_df['call_date'] = processed_df['call_date_with_time'].dt.normalize()
-print("Normalized 'call_date' to remove time component for merging.")
-
-# -------------------------- #
-# **1. Merge 'market_cap' into processed_df**
-# -------------------------- #
-
 # Merge processed_df with df_crsp_daily to get 'gvkey' and 'market_cap' into processed_df
 print("Merging processed_df on permco and call_date with df_crsp_daily to get 'gvkey' and 'market_cap'...")
 processed_df = pd.merge(
     processed_df,
-    df_crsp_daily[['permco', 'date', 'gvkey', 'market_cap']],  # **Added 'market_cap'**
+    df_crsp_daily[['permco', 'date', 'gvkey', 'market_cap']],
     left_on=['permco', 'call_date'],
     right_on=['permco', 'date'],
     how='left'
@@ -99,7 +131,7 @@ processed_df = pd.merge(
 processed_df = processed_df.drop(columns=['date'])
 print(f"Number of rows after initial merge: {len(processed_df)}")
 
-# Handle missing 'gvkey' values as before
+# Handle missing 'gvkey' values
 missing_gvkey = processed_df['gvkey'].isna().sum()
 print(f"Number of missing 'gvkey' values in processed_df after merging: {missing_gvkey}")
 
@@ -141,15 +173,13 @@ if missing_market_cap > 0:
         lambda row: market_cap_mapping.get(row['permco'], np.nan) if pd.isna(row['market_cap']) else row['market_cap'],
         axis=1
     )
-    # Recheck missing 'market_cap's
+    # Check how many 'market_cap's are still missing
     missing_market_cap = processed_df['market_cap'].isna().sum()
     print(f"Number of missing 'market_cap' values after filling: {missing_market_cap}")
 
 # Proceeding without dropping rows with missing 'market_cap'
 if missing_market_cap > 0:
     print(f"Proceeding with {missing_market_cap} rows with NaN 'market_cap'.")
-
-# Ensure 'gvkey' is numeric (already done above)
 
 # Remove any remaining rows with missing 'gvkey' in processed_df
 processed_df = processed_df.dropna(subset=['gvkey'])
@@ -159,7 +189,10 @@ processed_df['gvkey'] = processed_df['gvkey'].astype(int)
 gvkeys = set(processed_df['gvkey'].unique())
 print(f"Number of unique gvkeys in processed_df after adding 'gvkey': {len(gvkeys)}")
 
-# Process the CRSP Monthly data
+# -------------------------- #
+# **3. Process the CRSP Monthly Data**
+# -------------------------- #
+
 print("Processing CRSP/Monthly data...")
 chunksize = 10 ** 6
 monthly_data = []
@@ -257,7 +290,7 @@ df_crsp_monthly = df_crsp_monthly.groupby('gvkey', group_keys=False).apply(get_e
 print("Completed 'epsfxq_next' computation with missing quarters adjusted.")
 
 # **Select necessary columns from processed_df**
-processed_df_columns = ['call_id', 'gvkey', 'call_date', 'call_date_with_time', 'permco', 'filtered_topics', 'filtered_texts', 'market_cap']  # **Added 'market_cap'**
+processed_df_columns = ['call_id', 'gvkey', 'call_date', 'call_date_with_time', 'permco', 'filtered_topics', 'filtered_texts', 'market_cap', 'ceo_participates', 'ceo_names', 'cfo_names']  # **Added 'market_cap', 'ceo_participates', 'ceo_names', 'cfo_names'**
 processed_df = processed_df[processed_df_columns]
 
 # **Select necessary columns from df_crsp_monthly**
@@ -268,9 +301,10 @@ df_crsp_monthly = df_crsp_monthly[df_crsp_monthly_columns]
 print("Performing custom merge between processed_df and df_crsp_monthly...")
 # Step 1: Perform a full merge on 'gvkey' to create all possible combinations.
 temp_merged = pd.merge(
-    processed_df.drop(columns=['call_date_with_time']),  # Exclude 'call_date_with_time' to avoid duplication
+    processed_df.drop(columns=['call_date_with_time', 'ceo_names', 'cfo_names']),  # Exclude 'call_date_with_time' and names to avoid duplication
     df_crsp_monthly[['gvkey', 'datadate', 'epsfxq', 'epsfxq_next', 'siccd']],
-    on='gvkey'
+    on='gvkey',
+    how='left'
 )
 
 # Step 2: Filter out rows where 'datadate' is after 'call_date' (keeping only those before or exactly on).
@@ -366,13 +400,13 @@ def compute_future_returns(group):
     ret_values = group['ret'].values
     market_ret_values = group['market_ret'].values
 
-    ret_immediate = np.full(n, np.nan)  # Previously ret_short_term
-    ret_short_term = np.full(n, np.nan)  # Previously ret_one_week
-    ret_medium_term = np.full(n, np.nan)
-    ret_long_term = np.full(n, np.nan)
+    ret_immediate = np.full(n, np.nan)  # Immediate market reaction: t-1 to t+1
+    ret_short_term = np.full(n, np.nan)  # Short-term market reaction: t+2 to t+6
+    ret_medium_term = np.full(n, np.nan)  # Medium-term market reaction: t+2 to t+21
+    ret_long_term = np.full(n, np.nan)  # Long-term market reaction: t+2 to t+60
 
-    excess_ret_immediate = np.full(n, np.nan)  # Previously excess_ret_short_term
-    excess_ret_short_term = np.full(n, np.nan)  # Previously excess_ret_one_week
+    excess_ret_immediate = np.full(n, np.nan)
+    excess_ret_short_term = np.full(n, np.nan)
     excess_ret_medium_term = np.full(n, np.nan)
     excess_ret_long_term = np.full(n, np.nan)
 
@@ -405,7 +439,7 @@ def compute_future_returns(group):
                 excess_ret_medium_term[i] = ret_medium_term[i] - market_return
 
         # Long-term market reaction: t+2 to t+60
-        if i + 61 < n:
+        if i + 60 < n:
             returns = ret_values[i + 2 : i + 62]  # t+2 to t+61 inclusive
             market_returns = market_ret_values[i + 2 : i + 62]
             if not np.isnan(returns).any() and not np.isnan(market_returns).any():
@@ -475,7 +509,35 @@ merged_df = merged_df.drop(columns=['call_date_with_time'])
 print("Restored 'call_date' with time component in merged_df.")
 
 # -------------------------- #
-# **3. Final DataFrame Preparation and Saving**
+# **4. Create 'ceo_cfo_change' Dummy Variable**
+# -------------------------- #
+
+print("Creating 'ceo_cfo_change' dummy variable...")
+
+# Sort merged_df by 'permco' and 'call_date'
+merged_df = merged_df.sort_values(['permco', 'call_date']).reset_index(drop=True)
+
+# Group by 'permco' and compute 'ceo_cfo_change'
+def compute_ceo_cfo_change(group):
+    group = group.sort_values('call_date').reset_index(drop=True)
+    group['ceo_cfo_change'] = 0
+    prev_ceo_names = None
+    prev_cfo_names = None
+    for idx, row in group.iterrows():
+        ceo_names = set(row['ceo_names'])
+        cfo_names = set(row['cfo_names'])
+        if idx > 0:
+            if (prev_ceo_names != ceo_names) or (prev_cfo_names != cfo_names):
+                group.at[idx, 'ceo_cfo_change'] = 1
+        prev_ceo_names = ceo_names
+        prev_cfo_names = cfo_names
+    return group
+
+merged_df = merged_df.groupby('permco', group_keys=False).apply(compute_ceo_cfo_change)
+print("Added 'ceo_cfo_change' dummy variable to merged_df.")
+
+# -------------------------- #
+# **5. Final DataFrame Preparation and Saving**
 # -------------------------- #
 
 print("Finalizing the merged DataFrame...")
@@ -486,7 +548,7 @@ desired_columns = [
     'similarity_to_company_average', 'prc', 'shrout', 'ret', 'vol',
     'ret_immediate', 'ret_short_term', 'ret_medium_term', 'ret_long_term',
     'excess_ret_immediate', 'excess_ret_short_term', 'excess_ret_medium_term', 'excess_ret_long_term',
-    'market_cap'  # **Added 'market_cap'**
+    'market_cap', 'ceo_participates', 'ceo_cfo_change'  # **Added dummy variables**
 ]
 
 # Check if all desired columns are present
@@ -494,8 +556,9 @@ missing_cols = set(desired_columns) - set(merged_df.columns)
 if missing_cols:
     print(f"Warning: The following expected columns are missing in merged_df and will be excluded from the final DataFrame: {missing_cols}")
 
-# Take absolute values for the prc column
-merged_df['prc'] = merged_df['prc'].abs()
+# Take absolute values for the 'prc' column
+if 'prc' in merged_df.columns:
+    merged_df['prc'] = merged_df['prc'].abs()
 
 # Select only the columns that exist
 final_columns = [col for col in desired_columns if col in merged_df.columns]
