@@ -1,7 +1,6 @@
 # utils.py
 
 import json
-from bertopic import BERTopic
 import pandas as pd
 import numpy as np
 from scipy.spatial.distance import cosine
@@ -17,27 +16,49 @@ def print_configuration(config):
     print("Configuration:")
     for key, value in config.items():
         print(f"{key}: {value}")
-
-def load_bertopic_model(model_path):
+        
+        
+def count_word_length_text(texts):
     """
-    Load the trained BERTopic model from a file.
+    Count the total number of words in the 'text' list for a single row.
 
     Parameters:
-    - model_path (str): The path to the saved BERTopic model file.
+    - texts (list): A list of text strings.
 
     Returns:
-    - BERTopic: The loaded BERTopic model.
+    - int: Total word count.
     """
-    topic_model = BERTopic.load(model_path)
-    print(f"BERTopic model loaded from {model_path}")
-    return topic_model
+    if not isinstance(texts, list):
+        return 0
+    total_words = 0
+    for text in texts:
+        if isinstance(text, str):
+            # Split the text into words using whitespace and count
+            words = text.split()
+            total_words += len(words)
+    return total_words
 
 def process_topics(path, output_path, topics_to_keep, threshold_percentage=None):
     # Load the CSV file
     df = pd.read_csv(path)
+    """
+    # If 'ceo_participates', 'ceo_names', and 'cfo_names' are in df, proceed
+    if 'ceo_participates' in df.columns and 'ceo_names' in df.columns and 'cfo_names' in df.columns:
+        # Ensure 'ceo_participates' is integer (if not already)
+        df['ceo_participates'] = df['ceo_participates'].fillna(0).astype(int)
+
+        # Convert 'ceo_names' and 'cfo_names' from JSON strings to lists using a safe parser
+        df['ceo_names'] = df['ceo_names'].apply(parse_json_safe)
+        df['cfo_names'] = df['cfo_names'].apply(parse_json_safe)
+        print("Processed 'ceo_participates', 'ceo_names', and 'cfo_names' in df.")
+    else:
+        print("Warning: 'ceo_participates', 'ceo_names', or 'cfo_names' columns not found in input data.")
+    """
     if topics_to_keep == "all":
         df['filtered_topics'] = df["topics"]
         df['filtered_texts'] = df["text"]
+        # Save the processed topics to the output path
+        df.to_csv(output_path, index=False)
         return df
     # Convert string representations of lists into actual lists using ast.literal_eval
     df['topics'] = df['topics'].apply(lambda x: ast.literal_eval(x) if isinstance(x, str) else x)
@@ -67,12 +88,35 @@ def process_topics(path, output_path, topics_to_keep, threshold_percentage=None)
 
     df['consistent'] = df.apply(check_consistency, axis=1)
 
-    # Return relevant columns
-    return df[['topics', 'text', 'filtered_topics', 'filtered_texts', 'consistent', 'call_id', 'permco', 'date']]
+    # Save the processed topics to the output path
+    df.to_csv(output_path, index=False)
+
+    # Return relevant columns, including the new ones
+    return df[['topics', 'text', 'filtered_topics', 'filtered_texts', 'consistent', 'call_id', 'permco', 'date',
+               'ceo_participates', 'ceo_names', 'cfo_names']]
+
+def parse_json_safe(x):
+    """
+    Safely parse a JSON string into a Python list.
+    Returns an empty list if parsing fails.
+
+    Parameters:
+    - x (str): JSON string to parse.
+
+    Returns:
+    - list: Parsed list or empty list if parsing fails.
+    """
+    if pd.isna(x) or not isinstance(x, str) or x.strip() == '':
+        return []
+    try:
+        return json.loads(x)
+    except json.JSONDecodeError:
+        # Optionally, log the error or count the number of failed parses
+        return []
 
 def determine_topics_to_keep(df, threshold_percentage):
     """
-    Determine topics that appear in at least 1 call for the specified percentage of companies,
+    Determine topics that appear in at least a certain percentage of companies,
     excluding the outlier category (-1).
     """
     # Get the total number of companies
@@ -97,7 +141,7 @@ def determine_topics_to_keep(df, threshold_percentage):
     # Find topics that appear in at least the threshold percentage of companies
     topics_to_keep = {topic for topic, count in topic_counts.items() if count >= company_threshold}
     
-    # Find topics to remove
+    # Find topics to remove"
     topics_to_remove = set(topic_counts.keys()) - topics_to_keep
 
     # Print statements to show kept and removed topics

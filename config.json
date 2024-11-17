@@ -29,7 +29,7 @@
     "merged_file_path": "D:/daten_masterarbeit/final_dataset.csv",
     
     "topics_input_path": "D:/daten_masterarbeit/topics_output_controlls_test.csv",
-    "topics_output_path": "D:/daten_masterarbeit/topics_output_outlier_removed.csv",
+    "topics_output_path": "D:/daten_masterarbeit/topics_output_controlls_test.csv",
     "output_dir": "D:/daten_masterarbeit/",
 
     "topics_to_keep": "auto",
