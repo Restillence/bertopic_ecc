@@ -223,12 +223,14 @@ df_crsp_monthly = df_crsp_monthly.groupby('gvkey', group_keys=False).apply(get_e
 
 print("Completed 'epsfxq_next' computation with missing quarters adjusted.")
 
-# **Select necessary columns from processed_df**
+# **Select necessary columns from processed_df, including 'text' and additional columns**
 processed_df_columns = [
     'call_id', 'gvkey', 'call_date', 'call_date_with_time', 
-    'permco', 'filtered_topics', 'filtered_texts', 'text'  # Added 'text'
+    'permco', 'filtered_topics', 'filtered_texts', 'text', 
+    'ceo_participates', 'ceo_names', 'cfo_names'  # Added additional columns
 ]
 processed_df = processed_df[processed_df_columns]
+print(f"Selected columns from processed_df: {processed_df_columns}")
 
 
 # **Compute 'word_length_presentation' by counting words in 'text'**
@@ -411,13 +413,12 @@ def compute_future_returns(group):
 df_crsp_daily = df_crsp_daily.groupby('permco', group_keys=False).apply(compute_future_returns).reset_index(drop=True)
 print("Completed computation of future returns.")
 
-# Merge future returns into merged_df
+# **Merge future returns into merged_df**
 print("Merging future returns into the merged DataFrame...")
 merged_df = pd.merge(
     merged_df,
     df_crsp_daily[[
         'permco', 'date',  # Include key columns
-        'prc', 'ret', 'shrout', 'vol', 'market_cap',  # Add these columns
         'ret_immediate', 'ret_short_term', 'ret_medium_term', 'ret_long_term', 'market_ret',
         'excess_ret_immediate', 'excess_ret_short_term', 'excess_ret_medium_term', 'excess_ret_long_term'
     ]],
@@ -426,19 +427,7 @@ merged_df = pd.merge(
     how='left'
 )
 merged_df = merged_df.drop(columns=['date'], errors='ignore')
-
-
-"""
-# Convert 'ret' to numeric, handling non-numeric values
-def clean_ret(value):
-    try:
-        return float(value)
-    except (ValueError, TypeError):
-        return np.nan
-
-merged_df['ret'] = merged_df['ret'].apply(clean_ret)
-print(f"Number of NaNs in 'ret' after cleaning: {merged_df['ret'].isna().sum()}")
-"""
+print(f"Number of rows after merging future returns: {len(merged_df)}")
 
 # **Restore 'call_date' with time component**
 print("Restoring 'call_date' with time component from 'processed_df'...")
@@ -446,10 +435,10 @@ print("Restoring 'call_date' with time component from 'processed_df'...")
 # Drop 'call_date_with_time' from merged_df if exists
 merged_df = merged_df.drop(columns=['call_date_with_time'], errors='ignore')
 
-# Merge 'call_date_with_time' back into merged_df using 'call_id'
+# Merge 'call_date_with_time' back into merged_df using 'call_id' and include additional columns
 merged_df = pd.merge(
     merged_df,
-    processed_df[['call_id', 'call_date_with_time']],
+    processed_df[['call_id', 'call_date_with_time', 'ceo_participates', 'ceo_names', 'cfo_names']],  # Include additional columns
     on='call_id',
     how='left'
 )
@@ -458,14 +447,16 @@ merged_df = pd.merge(
 merged_df['call_date'] = merged_df['call_date_with_time']
 
 # Drop 'call_date_with_time' column
-merged_df = merged_df.drop(columns=['call_date_with_time'])
+merged_df = merged_df.drop(columns=['call_date_with_time'], errors='ignore')
 print("Restored 'call_date' with time component in merged_df.")
+
 
 # Final DataFrame Preparation and Saving
 print("Finalizing the merged DataFrame...")
 desired_columns = [
     'filtered_topics', 'filtered_texts',  # Removed 'text' as it's already dropped
     'call_id', 'permco', 'call_date', 'gvkey',
+    'ceo_participates', 'ceo_names', 'cfo_names',  # Added additional columns
     'fiscal_period_end', 'epsfxq', 'epsfxq_next', 'siccd',
     'similarity_to_overall_average', 'similarity_to_industry_average',
     'similarity_to_company_average', 'prc', 'shrout', 'ret', 'vol', 'market_cap',

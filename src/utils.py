@@ -38,36 +38,44 @@ def count_word_length_text(texts):
             total_words += len(words)
     return total_words
 
+
 def process_topics(path, output_path, topics_to_keep, threshold_percentage=None):
     # Load the CSV file
     df = pd.read_csv(path)
+     
+    # Existing commented-out code remains unchanged
     """
-    # If 'ceo_participates', 'ceo_names', and 'cfo_names' are in df, proceed
     if 'ceo_participates' in df.columns and 'ceo_names' in df.columns and 'cfo_names' in df.columns:
-        # Ensure 'ceo_participates' is integer (if not already)
         df['ceo_participates'] = df['ceo_participates'].fillna(0).astype(int)
-
-        # Convert 'ceo_names' and 'cfo_names' from JSON strings to lists using a safe parser
         df['ceo_names'] = df['ceo_names'].apply(parse_json_safe)
         df['cfo_names'] = df['cfo_names'].apply(parse_json_safe)
         print("Processed 'ceo_participates', 'ceo_names', and 'cfo_names' in df.")
     else:
         print("Warning: 'ceo_participates', 'ceo_names', or 'cfo_names' columns not found in input data.")
     """
+    
     if topics_to_keep == "all":
         df['filtered_topics'] = df["topics"]
         df['filtered_texts'] = df["text"]
-        # Save the processed topics to the output path
         df.to_csv(output_path, index=False)
         return df
+    
     # Convert string representations of lists into actual lists using ast.literal_eval
     df['topics'] = df['topics'].apply(lambda x: ast.literal_eval(x) if isinstance(x, str) else x)
     df['text'] = df['text'].apply(lambda x: ast.literal_eval(x) if isinstance(x, str) else x)
-
-    # Automatically determine topics to keep if set to "auto"
+    
+    # Parse 'ceo_names' and 'cfo_names' using ast.literal_eval
+    df['ceo_names'] = df['ceo_names'].apply(lambda x: ast.literal_eval(x) if isinstance(x, str) else [])
+    df['cfo_names'] = df['cfo_names'].apply(lambda x: ast.literal_eval(x) if isinstance(x, str) else [])
+    
+    # Validate parsing
+    print("Sample parsed 'ceo_names' and 'cfo_names':")
+    print(df[['ceo_names', 'cfo_names']].head())
+    
+    # Continue with existing processing...
     if topics_to_keep == "auto":
         topics_to_keep = determine_topics_to_keep(df, threshold_percentage)
-
+    
     # Function to keep only the specified topics and corresponding texts
     def keep_topics_and_texts(row, topics_to_keep):
         topics = row['topics']
@@ -78,41 +86,23 @@ def process_topics(path, output_path, topics_to_keep, threshold_percentage=None)
         else:
             filtered_topics, filtered_texts = [], []
         return list(filtered_topics), list(filtered_texts)
-
+    
     # Apply the function to each row
     df[['filtered_topics', 'filtered_texts']] = df.apply(lambda row: keep_topics_and_texts(row, topics_to_keep), axis=1, result_type='expand')
-
+    
     # Consistency check to validate if topics and texts are of the same length
     def check_consistency(row):
         return len(row['topics']) == len(row['text'])
-
+    
     df['consistent'] = df.apply(check_consistency, axis=1)
-
+    
     # Save the processed topics to the output path
     df.to_csv(output_path, index=False)
-
+    
     # Return relevant columns, including the new ones
     return df[['topics', 'text', 'filtered_topics', 'filtered_texts', 'consistent', 'call_id', 'permco', 'date',
                'ceo_participates', 'ceo_names', 'cfo_names']]
 
-def parse_json_safe(x):
-    """
-    Safely parse a JSON string into a Python list.
-    Returns an empty list if parsing fails.
-
-    Parameters:
-    - x (str): JSON string to parse.
-
-    Returns:
-    - list: Parsed list or empty list if parsing fails.
-    """
-    if pd.isna(x) or not isinstance(x, str) or x.strip() == '':
-        return []
-    try:
-        return json.loads(x)
-    except json.JSONDecodeError:
-        # Optionally, log the error or count the number of failed parses
-        return []
 
 def determine_topics_to_keep(df, threshold_percentage):
     """
