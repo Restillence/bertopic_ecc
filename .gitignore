@@ -1,0 +1,5 @@
+# Ignore the eval directory
+eval/
+
+# Ignore the model_outputs directory
+model_outputs/
