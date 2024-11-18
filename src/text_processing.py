@@ -85,7 +85,7 @@ class TextProcessor:
                     name = name_position[0].strip()
                     position = name_position[1].strip() if len(name_position) > 1 else ''
 
-                # **New code to clean and standardize the name**
+                # Clean and standardize the name
                 name = self.clean_and_standardize_name(name)
                 participants.append({'name': name, 'position': position})
         else:
@@ -324,7 +324,7 @@ class TextProcessor:
 
     def extract_and_split_section(self, company, call_id, company_info, date, text):
         """
-        Extract and split the relevant section from the text.
+        Extract and split both the 'Presentation' and 'Questions and Answers' sections from the text.
 
         Parameters
         ----------
@@ -342,7 +342,8 @@ class TextProcessor:
         Returns
         -------
         dict
-            A dictionary containing 'combined_text', 'participants', 'ceo_participates', 'ceo_names', and 'cfo_names'.
+            A dictionary containing 'presentation_text', 'analyst_questions', 'participants',
+            'ceo_participates', 'ceo_names', and 'cfo_names'.
         """
         # First, extract participants from the original text
         participants = self.extract_participants(text)
@@ -354,74 +355,38 @@ class TextProcessor:
         ceo_names = [p['name'] for p in participants if self.is_ceo(p['position'])]
         cfo_names = [p['name'] for p in participants if self.is_cfo(p['position'])]
 
-        # Proceed with the extraction based on the selected section
-        if self.section_to_analyze.lower() == "questions and answers":
-            # Adjusted pattern to match 'Questions and Answers' as a section heading
-            pattern = r'^\s*(Questions?\s+and\s+Answers?)\s*$'
-            match = re.search(pattern, text, flags=re.IGNORECASE | re.MULTILINE)
-            if match:
-                # Take everything after the 'Questions and Answers' heading
-                start_index = match.end()
-                text = text[start_index:]
-                #print(f"'Questions and Answers' section extracted for call ID: {call_id}")
+        # Extract 'Presentation' section
+        presentation_text = []
+        presentation_section = self.extract_presentation_section(text, call_id)
+        if presentation_section:
+            presentation_section = self.clean_text(presentation_section)
+            if self.method == 'sentences':
+                presentation_text = self.split_text(presentation_section)
             else:
-                print(f"'Questions and Answers' section not found for call ID: {call_id}")
-                text = ''
-        elif self.section_to_analyze.lower() == "presentation":
-            # Adjusted pattern to match 'Presentation' as a section heading
-            start_pattern = r'^\s*Presentation\s*$'
-            end_pattern = r'^\s*(Questions?\s+and\s+Answers?)\s*$'
+                presentation_text = self.split_text_by_visual_cues(presentation_section)
+            # Final cleanup
+            presentation_text = [self.remove_separator_line(para) for para in presentation_text]
+            presentation_text = [para for para in presentation_text if para.strip()]
+            presentation_text = self.remove_presentation_from_final_list(presentation_text)
+            presentation_text = self.filter_short_elements(presentation_text)
 
-            start_match = re.search(start_pattern, text, flags=re.IGNORECASE | re.MULTILINE)
-            end_match = re.search(end_pattern, text, flags=re.IGNORECASE | re.MULTILINE)
+        # Extract 'Questions and Answers' section
+        analyst_questions = []
+        qa_section = self.extract_qa_section(text, call_id)
+        if qa_section:
+            analyst_questions = self.extract_analyst_questions(qa_section, call_id)
+            # Final cleanup
+            analyst_questions = [self.remove_separator_line(para) for para in analyst_questions]
+            analyst_questions = [para for para in analyst_questions if para.strip()]
+            analyst_questions = self.filter_short_elements(analyst_questions)
 
-            if start_match:
-                start_index = start_match.end()
-                if end_match:
-                    end_index = end_match.start()
-                    text = text[start_index:end_index]
-                    #print(f"'Presentation' section extracted for call ID: {call_id}")
-                else:
-                    text = text[start_index:]
-                    print(f"'Presentation' section extracted up to end of text for call ID: {call_id}")
-            else:
-                print(f"'Presentation' section not found for call ID: {call_id}")
-                # Attempt to extract from start up to 'Questions and Answers' section
-                if end_match:
-                    end_index = end_match.start()
-                    text = text[:end_index]
-                    print(f"Extracted text up to 'Questions and Answers' for call ID: {call_id}")
-                else:
-                    print(f"'Questions and Answers' section not found for call ID: {call_id}")
-                    print(f"No 'Presentation' or 'Questions and Answers' section found for call ID: {call_id}")
-                    text = ''  # Set text to empty string
-
-        if not text.strip():
+        if not presentation_text and not analyst_questions:
             print(f"No relevant sections found for call ID: {call_id}")
             return None
 
-        # Proceed with cleaning the text after extracting the section
-        text = self.remove_unwanted_sections(text)
-        text = self.remove_concluding_statements(text)
-        text = self.remove_pattern(text)
-        text = self.remove_specific_string(text)  # Ensure "Presentation" is removed forcefully
-
-        # Split the cleaned text
-        if self.method == 'sentences':
-            combined_text = self.split_text(text)
-        else:
-            combined_text = self.split_text_by_visual_cues(text)
-
-        # Final cleanup: Remove any remaining separator lines
-        combined_text = [self.remove_separator_line(para) for para in combined_text]
-        # Remove any empty strings resulted from cleaning
-        combined_text = [para for para in combined_text if para.strip()]
-        # Final Steps: Remove "Presentation" and filter out elements with fewer than 3 words
-        combined_text = self.remove_presentation_from_final_list(combined_text)
-        combined_text = self.filter_short_elements(combined_text)
-
         result = {
-            'combined_text': combined_text,
+            'presentation_text': presentation_text,
+            'analyst_questions': analyst_questions,
             'participants': participants,
             'ceo_participates': int(ceo_participates),  # Ensure it's an integer (0 or 1)
             'ceo_names': ceo_names,
@@ -429,6 +394,153 @@ class TextProcessor:
         }
 
         return result
+
+    def extract_presentation_section(self, text, call_id):
+        """
+        Extract the 'Presentation' section from the transcript text.
+
+        Parameters
+        ----------
+        text : str
+            The transcript text.
+        call_id : str
+            The call ID.
+
+        Returns
+        -------
+        str
+            The text of the 'Presentation' section.
+        """
+        # Adjusted pattern to match 'Presentation' as a section heading
+        start_pattern = r'^\s*Presentation\s*$'
+        end_pattern = r'^\s*(Questions?\s+and\s+Answers?|Q&A)\s*$'
+
+        start_match = re.search(start_pattern, text, flags=re.IGNORECASE | re.MULTILINE)
+        end_match = re.search(end_pattern, text, flags=re.IGNORECASE | re.MULTILINE)
+
+        if start_match:
+            start_index = start_match.end()
+            if end_match:
+                end_index = end_match.start()
+                presentation_section = text[start_index:end_index]
+            else:
+                presentation_section = text[start_index:]
+        else:
+            presentation_section = ''
+            print(f"'Presentation' section not found for call ID: {call_id}")
+
+        return presentation_section.strip()
+
+    def extract_qa_section(self, text, call_id):
+        """
+        Extract the 'Questions and Answers' section from the transcript text.
+
+        Parameters
+        ----------
+        text : str
+            The transcript text.
+        call_id : str
+            The call ID.
+
+        Returns
+        -------
+        str
+            The text of the 'Questions and Answers' section.
+        """
+        # Adjusted pattern to match 'Questions and Answers' as a section heading
+        pattern = r'^\s*(Questions?\s+and\s+Answers?|Q&A)\s*$'
+        match = re.search(pattern, text, flags=re.IGNORECASE | re.MULTILINE)
+        if match:
+            start_index = match.end()
+            qa_section = text[start_index:]
+        else:
+            qa_section = ''
+            print(f"'Questions and Answers' section not found for call ID: {call_id}")
+
+        return qa_section.strip()
+
+    def clean_text(self, text):
+        """
+        Clean the text by removing unwanted sections and patterns.
+
+        Parameters
+        ----------
+        text : str
+            The text to be cleaned.
+
+        Returns
+        -------
+        str
+            The cleaned text.
+        """
+        text = self.remove_unwanted_sections(text)
+        text = self.remove_concluding_statements(text)
+        text = self.remove_pattern(text)
+        text = self.remove_specific_string(text)
+        return text
+
+    def extract_analyst_questions(self, qa_section, call_id):
+        """
+        Extract analyst questions from the 'Questions and Answers' section.
+
+        Returns
+        -------
+        list of str
+            A list of analyst questions.
+        """
+        analyst_questions = []
+        lines = qa_section.strip().split('\n')
+        current_speaker = None
+        current_content = []
+
+        for i, line in enumerate(lines):
+            line = line.strip()
+            if not line:
+                continue
+            # Skip separator lines
+            if re.match(r'^[-=]{2,}\s*$', line):
+                continue
+
+            # Identify operator lines
+            if re.match(r'^Operator\s*(\[\d+\])?$', line, re.IGNORECASE):
+                # Save previous content if analyst was speaking
+                if current_speaker == 'Analyst' and current_content:
+                    question_text = ' '.join(current_content).strip()
+                    if question_text:
+                        analyst_questions.append(question_text)
+                current_speaker = 'Operator'
+                current_content = []
+                continue  # Skip to the next line
+
+            # Identify analyst lines
+            speaker_line_match = re.match(r'^(.*?)\s*-\s*(.*?)$', line)
+            if speaker_line_match:
+                speaker_name = speaker_line_match.group(1)
+                speaker_role = speaker_line_match.group(2)
+                # Save previous content if analyst was speaking
+                if current_speaker == 'Analyst' and current_content:
+                    question_text = ' '.join(current_content).strip()
+                    if question_text:
+                        analyst_questions.append(question_text)
+                # Determine if the speaker is an Analyst
+                if 'Analyst' in speaker_role or 'Analysts' in speaker_role:
+                    current_speaker = 'Analyst'
+                else:
+                    current_speaker = 'Other'
+                current_content = []
+                continue  # Skip to the next line
+
+            # Collect content only if current speaker is Analyst
+            if current_speaker == 'Analyst':
+                current_content.append(line)
+
+        # Add the last question if applicable
+        if current_speaker == 'Analyst' and current_content:
+            question_text = ' '.join(current_content).strip()
+            if question_text:
+                analyst_questions.append(question_text)
+
+        return analyst_questions
 
     def split_text_by_visual_cues(self, text):
         """
@@ -604,10 +716,12 @@ class TextProcessor:
                 date = value['date']
                 text = value['text_content']
                 result = self.extract_and_split_section(permco, call_id, company_info, date, text)
-                if result and result['combined_text']:
-                    all_relevant_sections.extend(result['combined_text'])
+                if result and (result['presentation_text'] or result['analyst_questions']):
+                    # Collect presentation_text and analyst_questions
+                    all_relevant_sections.extend(result['presentation_text'])
+                    all_relevant_sections.extend(result['analyst_questions'])
                     # Add the relevant data to 'value'
-                    value['relevant_sections'] = result['combined_text']
+                    value['relevant_sections'] = result['presentation_text'] + result['analyst_questions']
                     value['participants'] = result['participants']
                     value['ceo_participates'] = result['ceo_participates']
                     value['ceo_names'] = result['ceo_names']
