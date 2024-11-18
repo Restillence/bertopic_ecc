@@ -57,7 +57,9 @@ class BertopicFitting:
         self.model_load_path = model_load_path
         self.index_file_ecc_folder = config["index_file_ecc_folder"]
         self.output_dir = "model_outputs"
+        self.eval_dir = "eval"  # Define evaluation directory
         os.makedirs(self.output_dir, exist_ok=True)
+        os.makedirs(self.eval_dir, exist_ok=True)  # Create eval directory
 
         # Load the embedding model and wrap it
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -81,6 +83,16 @@ class BertopicFitting:
         return topic_model
 
     def save_results(self, all_relevant_sections, topics_sections, all_relevant_questions, topics_questions, ecc_sample):
+        """
+        Save the results to a CSV file and store the DataFrame.
+
+        Args:
+            all_relevant_sections (list): List of presentation sections.
+            topics_sections (list): List of topics for presentation sections.
+            all_relevant_questions (list): List of analyst questions.
+            topics_questions (list): List of topics for analyst questions.
+            ecc_sample (dict): Filtered ECC sample data.
+        """
         result_dict = {}
         topic_idx_sections = 0
         topic_idx_questions = 0
@@ -110,7 +122,13 @@ class BertopicFitting:
                 timestamp = value['date']
 
                 # Get company_info
-                company_info = value['company_name']
+                # Ensure 'company_info' is present; if not, assign from 'company_name'
+                if 'company_info' in value:
+                    company_info = value['company_info']
+                elif 'company_name' in value:
+                    company_info = value['company_name']
+                else:
+                    company_info = 'Unknown'
 
                 # Get ceo_participates flag
                 ceo_participates = value.get('ceo_participates', False)
@@ -124,10 +142,10 @@ class BertopicFitting:
                     "permco": permco,
                     "company_info": company_info,
                     "date": timestamp,
-                    "sections": sections,
-                    "section_topics": section_topics,
+                    "presentation_text": sections,
+                    "presentation_topics": section_topics,
                     "analyst_questions": questions,
-                    "question_topics": question_topics,
+                    "analyst_question_topics": question_topics,
                     "ceo_participates": ceo_participates,
                     "ceo_names": ceo_names,
                     "cfo_names": cfo_names
@@ -143,10 +161,10 @@ class BertopicFitting:
                 'call_id': call_id,
                 'company_info': call_data['company_info'],
                 'date': call_data['date'],
-                'presentation_text': json.dumps(call_data['sections']),
-                'presentation_topics': json.dumps(call_data['section_topics']),
+                'presentation_text': json.dumps(call_data['presentation_text']),
+                'presentation_topics': json.dumps(call_data['presentation_topics']),
                 'analyst_questions': json.dumps(call_data['analyst_questions']),
-                'question_topics': json.dumps(call_data['question_topics']),
+                'analyst_question_topics': json.dumps(call_data['analyst_question_topics']),
                 'ceo_participates': int(call_data['ceo_participates']),  # Convert bool to int (1/0)
                 'ceo_names': json.dumps(call_data['ceo_names']),
                 'cfo_names': json.dumps(call_data['cfo_names'])
@@ -220,9 +238,6 @@ class BertopicFitting:
             self.save_results(all_relevant_sections, topics_sections, all_relevant_questions, topics_questions, ecc_sample)
             print("Results saved.")
 
-            # You can adjust the following methods to generate visualizations for both presentations and questions
-            # For brevity, they are left as in your original script
-
             # Save basic information
             print("Saving basic information...")
             self.save_basic_info()
@@ -237,6 +252,11 @@ class BertopicFitting:
             print("Generating additional visualizations...")
             self.generate_additional_visualizations()
             print("Additional visualizations generated.")
+
+            # Generate evaluation files for both sections
+            print("Generating evaluation files for Presentation and Q&A sections...")
+            self.generate_evaluation_files()
+            print("Evaluation files generated.")
 
             total_end_time = time.time()
             total_duration = total_end_time - total_start_time
@@ -385,7 +405,7 @@ class BertopicFitting:
 
                 # For analyst questions
                 questions = json.loads(row['analyst_questions'])
-                question_topics = json.loads(row['question_topics'])
+                question_topics = json.loads(row['analyst_question_topics'])
 
                 num_questions = len(questions)
                 timestamps.extend([date] * num_questions)
@@ -435,6 +455,36 @@ class BertopicFitting:
             import traceback
             traceback.print_exc()
 
+    def generate_evaluation_files(self):
+        """
+        Generate evaluation files for both Presentation and Q&A sections.
+        """
+        # Define the sections and their corresponding columns
+        sections = [
+            {
+                'section_type': 'Presentation',
+                'text_column': 'presentation_text',
+                'topics_column': 'presentation_topics'
+            },
+            {
+                'section_type': 'Q&A',
+                'text_column': 'analyst_questions',
+                'topics_column': 'analyst_question_topics'
+            }
+        ]
+
+        for section in sections:
+            print(f"Generating evaluation file for {section['section_type']} sections...")
+            generate_evaluation_file(
+                topic_model=self.topic_model,
+                results_df=self.results_df,
+                output_dir=self.eval_dir,  # Save in 'eval' folder
+                text_column=section['text_column'],
+                topics_column=section['topics_column'],
+                section_type=section['section_type']
+            )
+            print(f"Evaluation file for {section['section_type']} saved.\n")
+
 def main():
     """
     Main entry point of the script.
@@ -444,8 +494,28 @@ def main():
 
     # Load configuration from config.json
     print("Loading configuration...")
-    with open('config.json', 'r') as f:
-        config = json.load(f)
+    # Define the relative path to config.json
+    relative_path = 'config_hlr.json'
+    
+    # Define the fallback absolute path
+    fallback_path = r'C:\Users\nikla\OneDrive\Dokumente\winfoMaster\Masterarbeit\bertopic_ecc\config.json'
+    
+    try:
+        # Attempt to load config.json from the relative path
+        with open(relative_path, 'r') as f:
+            config = json.load(f)
+        print(f"Configuration loaded from relative path: {os.path.abspath(relative_path)}")
+    except FileNotFoundError:
+        print(f"Relative config.json not found at {os.path.abspath(relative_path)}. Trying fallback path...")
+        try:
+            # Attempt to load config.json from the absolute path
+            with open(fallback_path, 'r') as f:
+                config = json.load(f)
+            print(f"Configuration loaded from fallback path: {fallback_path}")
+        except FileNotFoundError:
+            # Handle the case where both paths fail
+            print("Failed to load configuration. config.json not found in both relative and fallback paths.")
+            config = {}
     print_configuration(config)
 
     # Extract variables from the config
@@ -457,7 +527,7 @@ def main():
     sample_size = config["sample_size"]
     document_split = config["document_split"]
     section_to_analyze = config["section_to_analyze"]
-    max_documents = config["max_documents"]
+    max_documents = config.get("max_documents", None)  # Use .get to provide a default value
     model_load_path = config["model_load_path"]
 
     # Initialize FileHandler and TextProcessor with the imported configuration
@@ -485,25 +555,27 @@ def main():
     for permco, calls in ecc_sample.items():
         calls_filtered = {}
         for call_id, value in calls.items():
-            company_info = value['company_name']
-            date = value['date']
-            text = value['text_content']
+            company_info = value.get('company_name', 'Unknown')  # Use .get with default
+            date = value.get('date', 'Unknown')
+            text = value.get('text_content', '')
             result = text_processor.extract_and_split_section(permco, call_id, company_info, date, text)
-            if result and (result['presentation_text'] or result['analyst_questions']):
+            if result and (result.get('presentation_text') or result.get('analyst_questions')):
                 # Process presentation_text
-                if result['presentation_text']:
+                if result.get('presentation_text'):
                     all_relevant_sections.extend(result['presentation_text'])
                 # Process analyst_questions
-                if result['analyst_questions']:
+                if result.get('analyst_questions'):
                     all_relevant_questions.extend(result['analyst_questions'])
 
                 # Add the relevant data to 'value'
-                value['relevant_sections'] = result['presentation_text'] if result['presentation_text'] else []
-                value['analyst_questions'] = result['analyst_questions'] if result['analyst_questions'] else []
-                value['participants'] = result['participants']
-                value['ceo_participates'] = result['ceo_participates']
-                value['ceo_names'] = result['ceo_names']
-                value['cfo_names'] = result['cfo_names']
+                value['relevant_sections'] = result['presentation_text'] if result.get('presentation_text') else []
+                value['analyst_questions'] = result['analyst_questions'] if result.get('analyst_questions') else []
+                value['participants'] = result.get('participants', [])
+                value['ceo_participates'] = result.get('ceo_participates', False)
+                value['ceo_names'] = result.get('ceo_names', [])
+                value['cfo_names'] = result.get('cfo_names', [])
+                # Add 'company_info' to 'value'
+                value['company_info'] = company_info
                 # Add the call to calls_filtered
                 calls_filtered[call_id] = value
             else:
@@ -523,19 +595,7 @@ def main():
     bertopic_fitting = BertopicFitting(config, model_load_path)
     bertopic_fitting.fit_and_save(all_relevant_sections, all_relevant_questions, ecc_sample_filtered)
 
-    # Generate evaluation file
-    eval_output_dir = os.path.join('eval')
-    try:
-        generate_evaluation_file(
-            topic_model=bertopic_fitting.topic_model,
-            results_df=bertopic_fitting.results_df,
-            output_dir=eval_output_dir
-        )
-    except Exception as e:
-        print(f"An error occurred while generating the evaluation file: {e}")
-        import traceback
-        traceback.print_exc()
-
+    # Total execution time
     total_end_time = time.time()
     print(f"Total script execution time: {total_end_time - total_start_time:.2f} seconds.")
 
