@@ -1,0 +1,326 @@
+Topic Information:
+ Topic                                                                       Name  Count
+    -1                                         -1_revenue_revenues_sales_business 191859
+     0                                     0_gross margin_margin_margins_earnings  45637
+     1                                         1_clinical_phase_medical_treatment  15580
+     2                                2_earnings share_earnings_net income_shares  15300
+     3                                     3_customers_customer_marketing_clients  12458
+     4                                  4_ceo_board directors_executive_directors   9857
+     5 5_financial results_financial performance_quarter results_earnings release   8481
+     6                                               6_questions_open_ask_request   7875
+     7             7_quarter earnings_earnings_earnings release_financial results   6469
+     8       8_strong quarter_results quarter_quarter results_performance quarter   3995
+     9                             9_cash flows_cash flow_balance sheet_financial   3449
+    10                                           10_production_producing_12_years   3208
+    11                                               11_stores_store_retail_sales   2987
+    12                        12_litigation_statements_forward looking_securities   2773
+    13                                     13_customers_customer_clients_bookings   2766
+    14                                      14_slide_slides_presentation_let turn   2458
+    15                              15_obligations_update_updates_forward looking   2416
+    16                        16_non gaap_gaap_financial results_earnings release   2208
+    17                                              17_oil_production_fuel_supply   2168
+    18                                           18_morning_welcome_thank_evening   2139
+    19                         19_webcast_press release_recorded_earnings release   1996
+    20                                              20_risks_risk_factors_filings   1660
+    21                               21_video_communications_technologies_channel   1596
+    22                                 22_acquisitions_acquisition_acquire_merger   1548
+    23                                          23_risks_risk_caution_uncertainty   1155
+    24                                        24_currency_exchange_dollars_dollar   1064
+    25                                      25_inventory_inventories_stock_supply   1025
+    26                                                 26_ahead_mr_allowed_thanks    844
+    27                                   27_broadcast_audience_participants_audio    742
+    28                                             28_days_90 days_sales_decrease    733
+    29                                                  29_game_play_played_award    706
+    30                                 30_settlement_litigation_claims_commission    610
+    31                          31_flat_year quarter_quarter year_quarter revenue    497
+    32                                                32_begin_beginning_start_mr    373
+    33                                         33_fleet_deliveries_delivery_lease    327
+    34                                           34_cash flow_debt_cash_liquidity    246
+    35                                            35_numbers_number_digit_amounts    227
+    36                                           36_safety_safe_employees_protect    217
+    37                        37_manufacturing_production_transportation_industry    207
+    38                                       38_growth rate_growth_production_bit    205
+
+Topic Representations:
+Topic 0 Representation: gross margin, margin, margins, earnings, adjusted ebitda, revenues, operating income, quarter year, cash flow, revenue
+Topic 1 Representation: clinical, phase, medical, treatment, hospital, healthcare, covid 19, demonstrated, results, ongoing
+Topic 2 Representation: earnings share, earnings, net income, shares, income, revenues, stock, revenue, non gaap, share
+Topic 3 Representation: customers, customer, marketing, clients, consumers, businesses, business, consumer, innovation, market
+Topic 4 Representation: ceo, board directors, executive, directors, management team, president, leadership, corporate, corporation, management
+Topic 5 Representation: financial results, financial performance, quarter results, earnings release, review, results quarter, financial, earnings, financials, results
+Topic 6 Representation: questions, open, ask, request, closing, prepared remarks, question, ready, begin, plan
+Topic 7 Representation: quarter earnings, earnings, earnings release, financial results, morning, quarter results, results quarter, conference, quarter 2018, second quarter
+Topic 8 Representation: strong quarter, results quarter, quarter results, performance quarter, fourth quarter, second quarter, pleased report, strong performance, quarter quarter, strong
+Topic 9 Representation: cash flows, cash flow, balance sheet, financial, cash, earnings, bank, working capital, debt, liquidity
+Topic 10 Representation: production, producing, 12, years, development, 15, early, 10, months, year
+Topic 11 Representation: stores, store, retail, sales, seven, restaurants, customers, 12, opened, markets
+Topic 12 Representation: litigation, statements, forward looking, securities, discussed, remarks, future, discussion, financial results, regarding
+Topic 13 Representation: customers, customer, clients, bookings, growth, increase, market, sales, markets, increased
+Topic 14 Representation: slide, slides, presentation, let turn, number, seven, 12, let start, flow, fourth
+Topic 15 Representation: obligations, update, updates, forward looking, forward, assumptions, statements, statement, future, point
+Topic 16 Representation: non gaap, gaap, financial results, earnings release, accounting, earnings, measures, disclosures, measure, financial
+Topic 17 Representation: oil, production, fuel, supply, gas, produced, capacity, estimated, pipeline, refining
+Topic 18 Representation: morning, welcome, thank, evening, happy, afternoon, thanks, good, excellent, great
+Topic 19 Representation: webcast, press release, recorded, earnings release, conference, website, link, site, broadcast, presentation
+Topic 20 Representation: risks, risk, factors, filings, statements, filing, financial, securities, earnings release, filed
+Topic 21 Representation: video, communications, technologies, channel, network, technology, infrastructure, provider, media, wireless
+Topic 22 Representation: acquisitions, acquisition, acquire, merger, acquired, shareholder, companies, company, sales, revenues
+Topic 23 Representation: risks, risk, caution, uncertainty, assumptions, anticipated, forward looking, future, uncertain, expectations
+Topic 24 Representation: currency, exchange, dollars, dollar, earnings, foreign, revenues, markets, quarter, expenses
+Topic 25 Representation: inventory, inventories, stock, supply, shipments, sales, balance sheet, increase, production, increased
+Topic 26 Representation: ahead, mr, allowed, thanks, , , , , , 
+Topic 27 Representation: broadcast, audience, participants, audio, recorded, talking, webcast, discussing, allow, conference
+Topic 28 Representation: days, 90 days, sales, decrease, day, prior quarter, june, 71, 31st, 70
+Topic 29 Representation: game, play, played, award, release, platforms, franchise, second, digital, city
+Topic 30 Representation: settlement, litigation, claims, commission, pending, cases, contract, outcome, approval, decided
+Topic 31 Representation: flat, year quarter, quarter year, quarter revenue, compared quarter, prior quarter, sales, net sales, quarter, quarter expect
+Topic 32 Representation: begin, beginning, start, mr, ll turn, okay, ahead, afternoon, ll, don
+Topic 33 Representation: fleet, deliveries, delivery, lease, delivered, financing, schedule, announced, operational, scheduled
+Topic 34 Representation: cash flow, debt, cash, liquidity, balance sheet, 200 million, loan, bank, 250, 20 million
+Topic 35 Representation: numbers, number, digit, amounts, figures, lot, 34, 26, significant, briefly
+Topic 36 Representation: safety, safe, employees, protect, company, industry, maintain, employee, practices, priority
+Topic 37 Representation: manufacturing, production, transportation, industry, demand, maintenance, customers, market, track, markets
+Topic 38 Representation: growth rate, growth, production, bit, increasing, supply, demand, capacity, performance, 2018
+
+Random Document-Topic Pairs:
+Document: With our current portfolio, we can address a multibillion dollar TAM leveraging an impressive and growing list of tier 1 networking and communications customers.
+Topic ID: 3
+Topic Name: 3_customers_customer_marketing_clients
+Topic Count: 12458
+Topic Representation: customers, customer, marketing, clients, consumers, businesses, business, consumer, innovation, market
+
+Document: We expect total operating expenses on a GAAP basis to be in the range of 13.3 million to 13.5 million, and on a non-GAAP basis to be in the range of 10.3 million to 10.5 million.
+Topic ID: 0
+Topic Name: 0_gross margin_margin_margins_earnings
+Topic Count: 45637
+Topic Representation: gross margin, margin, margins, earnings, adjusted ebitda, revenues, operating income, quarter year, cash flow, revenue
+
+Document: Please note that our fourth quarter results were disseminated by Business Wire, after market close today, and a copy of the release can be downloaded from our website at www.netlogicmicro.com.
+Topic ID: 5
+Topic Name: 5_financial results_financial performance_quarter results_earnings release
+Topic Count: 8481
+Topic Representation: financial results, financial performance, quarter results, earnings release, review, results quarter, financial, earnings, financials, results
+
+Document: Our multi-core processors posted a record revenue in Q2 and we expect to see continued strong results in the second half of the year.
+Topic ID: 8
+Topic Name: 8_strong quarter_results quarter_quarter results_performance quarter
+Topic Count: 3995
+Topic Representation: strong quarter, results quarter, quarter results, performance quarter, fourth quarter, second quarter, pleased report, strong performance, quarter quarter, strong
+
+Document: Additionally, the proliferation of mobile wireless devices connected to the internet is rapidly accelerating the depletion of IPv4 addresses.
+Topic ID: 21
+Topic Name: 21_video_communications_technologies_channel
+Topic Count: 1596
+Topic Representation: video, communications, technologies, channel, network, technology, infrastructure, provider, media, wireless
+
+Document: This allows us to effectively and efficiently support and engage with a much larger set of customers who would in turn be able to bring products to market in a much shorter timeframe.
+Topic ID: 3
+Topic Name: 3_customers_customer_marketing_clients
+Topic Count: 12458
+Topic Representation: customers, customer, marketing, clients, consumers, businesses, business, consumer, innovation, market
+
+Document: Non-GAAP SG&amp;A expenses, excluding stock-based compensation, were $3.4 million for Q2, as compared with $3 million for Q1.
+Topic ID: 0
+Topic Name: 0_gross margin_margin_margins_earnings
+Topic Count: 45637
+Topic Representation: gross margin, margin, margins, earnings, adjusted ebitda, revenues, operating income, quarter year, cash flow, revenue
+
+Document: As mentioned, we have already earned two design wins for the NL71024 one with a major new customer and one with our largest customer.
+Topic ID: 13
+Topic Name: 13_customers_customer_clients_bookings
+Topic Count: 2766
+Topic Representation: customers, customer, clients, bookings, growth, increase, market, sales, markets, increased
+
+Document: In Q2, we had a rich product mix with another strong quarter of revenues from our advanced products used in mobile wireless infrastructure.
+Topic ID: 21
+Topic Name: 21_video_communications_technologies_channel
+Topic Count: 1596
+Topic Representation: video, communications, technologies, channel, network, technology, infrastructure, provider, media, wireless
+
+Document: This new product provides the industry's first and highest performance 500 megahertz device for comprehensive network aware packet classification.
+Topic ID: 21
+Topic Name: 21_video_communications_technologies_channel
+Topic Count: 1596
+Topic Representation: video, communications, technologies, channel, network, technology, infrastructure, provider, media, wireless
+
+Document: Revenue from Huawei was $13.9 million, or 14% of our revenues.
+Topic ID: 0
+Topic Name: 0_gross margin_margin_margins_earnings
+Topic Count: 45637
+Topic Representation: gross margin, margin, margins, earnings, adjusted ebitda, revenues, operating income, quarter year, cash flow, revenue
+
+Document: We are now comfortable with our level of inventory and supply capacity and we will begin to work our inventory back down to our target of 110 days.
+Topic ID: 25
+Topic Name: 25_inventory_inventories_stock_supply
+Topic Count: 1025
+Topic Representation: inventory, inventories, stock, supply, shipments, sales, balance sheet, increase, production, increased
+
+Document: For example, during the third quarter, NetLogic received a prestigious award from Cisco Systems for outstanding service and support.
+Topic ID: 21
+Topic Name: 21_video_communications_technologies_channel
+Topic Count: 1596
+Topic Representation: video, communications, technologies, channel, network, technology, infrastructure, provider, media, wireless
+
+Document: Now before we get started, I'd like to point out that during the course of the conference call, we'll be making forward-looking statements that are based on certain assumptions and expectations of future events that are subject to a number of risks and uncertainties and actual results may differ materially.
+Topic ID: 12
+Topic Name: 12_litigation_statements_forward looking_securities
+Topic Count: 2773
+Topic Representation: litigation, statements, forward looking, securities, discussed, remarks, future, discussion, financial results, regarding
+
+Document: I will now turn the call over to Mike to discuss our first-quarter 2010 results.
+Topic ID: 5
+Topic Name: 5_financial results_financial performance_quarter results_earnings release
+Topic Count: 8481
+Topic Representation: financial results, financial performance, quarter results, earnings release, review, results quarter, financial, earnings, financials, results
+
+Document: Revenue from Cisco Systems, our largest customer, was $9.8 million or 32% of our total revenue, compared with $13.9 million or 36% of our total revenue for Q3 2008.
+Topic ID: 0
+Topic Name: 0_gross margin_margin_margins_earnings
+Topic Count: 45637
+Topic Representation: gross margin, margin, margins, earnings, adjusted ebitda, revenues, operating income, quarter year, cash flow, revenue
+
+Document: Pro forma operating expenses excluding again stock based compensation were 31.1 million for 2005 compared with 23.8 million in fiscal 2004.
+Topic ID: 0
+Topic Name: 0_gross margin_margin_margins_earnings
+Topic Count: 45637
+Topic Representation: gross margin, margin, margins, earnings, adjusted ebitda, revenues, operating income, quarter year, cash flow, revenue
+
+Document: The increase in cash is primarily the result of net income.
+Topic ID: 0
+Topic Name: 0_gross margin_margin_margins_earnings
+Topic Count: 45637
+Topic Representation: gross margin, margin, margins, earnings, adjusted ebitda, revenues, operating income, quarter year, cash flow, revenue
+
+Document: On a GAAP basis, our Q2 net income was 2.9 million, or $0.14 per share compared to a net loss of 7.3 million, or $0.39 per share, in Q1 2006, and net income of 2.4 million, or $0.13 per share, in Q2 2005.
+Topic ID: 2
+Topic Name: 2_earnings share_earnings_net income_shares
+Topic Count: 15300
+Topic Representation: earnings share, earnings, net income, shares, income, revenues, stock, revenue, non gaap, share
+
+Document: Good afternoon, everyone.
+Topic ID: 18
+Topic Name: 18_morning_welcome_thank_evening
+Topic Count: 2139
+Topic Representation: morning, welcome, thank, evening, happy, afternoon, thanks, good, excellent, great
+
+Document: The result is that our business with advanced CMTS equipment manufacturers, such as ARRIS, continues to be strong.
+Topic ID: 3
+Topic Name: 3_customers_customer_marketing_clients
+Topic Count: 12458
+Topic Representation: customers, customer, marketing, clients, consumers, businesses, business, consumer, innovation, market
+
+Document: Also, the customer response to our NLP10000, industry's first 100 Gigabit ethernet PHY solution has been very positive.
+Topic ID: 21
+Topic Name: 21_video_communications_technologies_channel
+Topic Count: 1596
+Topic Representation: video, communications, technologies, channel, network, technology, infrastructure, provider, media, wireless
+
+Document: With H3C in particular would have designs across their product line, including data centers switches, network switches, routers, wireless access products, and TippingPoint's high-performance intrusion prevention security appliances.
+Topic ID: 21
+Topic Name: 21_video_communications_technologies_channel
+Topic Count: 1596
+Topic Representation: video, communications, technologies, channel, network, technology, infrastructure, provider, media, wireless
+
+Document: The reconciling item between GAAP and non-GAAP is stock-based compensation, which is removed from the cost to revenue and operating expense line for non-GAAP reporting.
+Topic ID: 16
+Topic Name: 16_non gaap_gaap_financial results_earnings release
+Topic Count: 2208
+Topic Representation: non gaap, gaap, financial results, earnings release, accounting, earnings, measures, disclosures, measure, financial
+
+Document: Q4 interest expense was approximately $900,000 on a GAAP basis, our non-GAAP interest expense was approximately $500,000 and excluded $524,000 for a charge related to the write-off of our debt issuance costs and $125,000 related to interest income recognized on a $15 million bridge loan we provided RMI in June.
+Topic ID: 0
+Topic Name: 0_gross margin_margin_margins_earnings
+Topic Count: 45637
+Topic Representation: gross margin, margin, margins, earnings, adjusted ebitda, revenues, operating income, quarter year, cash flow, revenue
+
+Document: Our largest China based customer Huawei Technologies completed their work down of inventory in Q1 as expected.
+Topic ID: 25
+Topic Name: 25_inventory_inventories_stock_supply
+Topic Count: 1025
+Topic Representation: inventory, inventories, stock, supply, shipments, sales, balance sheet, increase, production, increased
+
+Document: Our newest XLP processor is designed to meet these requirements, with its best-in-class CPU, architecture supporting quad-issue, out-of-order execution, sophisticated branch handling and large on-chip caching.
+Topic ID: 38
+Topic Name: 38_growth rate_growth_production_bit
+Topic Count: 205
+Topic Representation: growth rate, growth, production, bit, increasing, supply, demand, capacity, performance, 2018
+
+Document: Q3 revenue from Cisco Systems, our largest customer, were $25.4 million or 25% of our total revenues.
+Topic ID: 0
+Topic Name: 0_gross margin_margin_margins_earnings
+Topic Count: 45637
+Topic Representation: gross margin, margin, margins, earnings, adjusted ebitda, revenues, operating income, quarter year, cash flow, revenue
+
+Document: This includes an estimated $11.5 million in stock-based compensation and related payroll taxes, and $11.6 million in the amortization of intangible assets.
+Topic ID: 0
+Topic Name: 0_gross margin_margin_margins_earnings
+Topic Count: 45637
+Topic Representation: gross margin, margin, margins, earnings, adjusted ebitda, revenues, operating income, quarter year, cash flow, revenue
+
+Document: Both companies share a strong commitment to excellence in customer service and support as of evidenced by our impressive combined list of top tier customers and expansive design win portfolio.
+Topic ID: 3
+Topic Name: 3_customers_customer_marketing_clients
+Topic Count: 12458
+Topic Representation: customers, customer, marketing, clients, consumers, businesses, business, consumer, innovation, market
+
+Random Outlier Document-Topic Pairs:
+Document: While the weakened demand environment caused a downturn in our revenues during the fourth quarter, there are several areas of our business that are demonstrating growth potential for 2009.
+Topic ID: -1 (Outlier)
+
+Document: We are tracking to our original revenue expectations for this product family.
+Topic ID: -1 (Outlier)
+
+Document: The increase in non-GAAP R&amp;D reflects increased NRE and product development costs, as we advance our product portfolios.
+Topic ID: -1 (Outlier)
+
+Document: This represented a sequential increase of 5.3% from the prior quarter and included another double-digit sequential growth quarter for our multicore processors.
+Topic ID: -1 (Outlier)
+
+Document: Revenues at Cisco in Q1 as expected to grow as a result of our revenue diversification and the continued volume ramp of our initial Gen-4 design wins.
+Topic ID: -1 (Outlier)
+
+Document: Additionally, demand was particularly strong in Q3 for our highest performance in most feature-rich products.
+Topic ID: -1 (Outlier)
+
+Document: All of our markets appear primed for strong growth over the next several years.
+Topic ID: -1 (Outlier)
+
+Document: And finally, we expect revenues from our largest customer to begin to grow in the first quarter of 2009.
+Topic ID: -1 (Outlier)
+
+Document: Outside of Cisco, we expect strong resumption of revenue growth following the seasonal adjustment with Alcatel-Lucent and the continued adoption of our technology as our customers continue to deploy next-generation equipment.
+Topic ID: -1 (Outlier)
+
+Document: in addition to exceeding our revenue projection for the quarter and increasing our cash position our new products performed exceptionally well in customer system environments.
+Topic ID: -1 (Outlier)
+
+Document: Alcatel-Lucent took a slight pause in the second quarter due to a component shortage, however demand from this customer has already bounced back with large shipments in July, so expect solid growth from them in the current quarter.
+Topic ID: -1 (Outlier)
+
+Document: Following what was a record design win quarter for NETLite last quarter, we added another seven new NETLite designs to the list in Q2.
+Topic ID: -1 (Outlier)
+
+Document: Revenue at our largest customer, Cisco, grew by 19% as design wins continued to ramp into volume production.
+Topic ID: -1 (Outlier)
+
+Document: IDC predicts the total market for application acceleration and security processing to exceed $15 billion in 2009.
+Topic ID: -1 (Outlier)
+
+Document: The [anolit] 205 which was announced only six months ago to address high volume applications, will begin to generate meaningful revenue in Q4 and is expected to continue to ramp over the coming quarters.
+Topic ID: -1 (Outlier)
+
+Document: In keeping with this commitment, we made a substantial investment in R&amp;D in the second quarter, and we will continue to invest in the second half of the year, as we bring to market the NL7000 and NL8000 knowledge-based processors.
+Topic ID: -1 (Outlier)
+
+Document: Q3 was another strong quarter of revenue growth with further customer and revenue diversification and a record level of design wins.
+Topic ID: -1 (Outlier)
+
+Document: Our Q3 revenue guidance reflects a very strong first month of shipments to all of our major customers, including Cisco and Alcatel-Lucent and full backlog coverage for the rest of the quarter.
+Topic ID: -1 (Outlier)
+
+Document: We have now fulfilled our earn out liability.
+Topic ID: -1 (Outlier)
+
+Document: In 2007, we enjoyed a tremendous year of growth for our non-Cisco revenues.
+Topic ID: -1 (Outlier)
+
