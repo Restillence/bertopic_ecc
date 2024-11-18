@@ -342,7 +342,7 @@ class TextProcessor:
         Returns
         -------
         dict
-            A dictionary containing 'presentation_text', 'analyst_questions', 'participants',
+            A dictionary containing 'presentation_text', 'participant_questions', 'participants',
             'ceo_participates', 'ceo_names', and 'cfo_names'.
         """
         # First, extract participants from the original text
@@ -371,22 +371,22 @@ class TextProcessor:
             presentation_text = self.filter_short_elements(presentation_text)
 
         # Extract 'Questions and Answers' section
-        analyst_questions = []
+        participant_questions = []
         qa_section = self.extract_qa_section(text, call_id)
         if qa_section:
-            analyst_questions = self.extract_analyst_questions(qa_section, call_id)
+            participant_questions = self.extract_participant_questions(qa_section, call_id)
             # Final cleanup
-            analyst_questions = [self.remove_separator_line(para) for para in analyst_questions]
-            analyst_questions = [para for para in analyst_questions if para.strip()]
-            analyst_questions = self.filter_short_elements(analyst_questions)
+            participant_questions = [self.remove_separator_line(para) for para in participant_questions]
+            participant_questions = [para for para in participant_questions if para.strip()]
+            participant_questions = self.filter_short_elements(participant_questions)
 
-        if not presentation_text and not analyst_questions:
+        if not presentation_text and not participant_questions:
             print(f"No relevant sections found for call ID: {call_id}")
             return None
 
         result = {
             'presentation_text': presentation_text,
-            'analyst_questions': analyst_questions,
+            'participant_questions': participant_questions,
             'participants': participants,
             'ceo_participates': int(ceo_participates),  # Ensure it's an integer (0 or 1)
             'ceo_names': ceo_names,
@@ -479,16 +479,16 @@ class TextProcessor:
         text = self.remove_specific_string(text)
         return text
 
-    def extract_analyst_questions(self, qa_section, call_id):
+    def extract_participant_questions(self, qa_section, call_id):
         """
-        Extract analyst questions from the 'Questions and Answers' section.
+        Extract questions/statements from all participants in the 'Questions and Answers' section.
 
         Returns
         -------
         list of str
-            A list of analyst questions.
+            A list of participant questions/statements.
         """
-        analyst_questions = []
+        participant_questions = []
         lines = qa_section.strip().split('\n')
         current_speaker = None
         current_content = []
@@ -502,45 +502,39 @@ class TextProcessor:
                 continue
 
             # Identify operator lines
-            if re.match(r'^Operator\s*(\[\d+\])?$', line, re.IGNORECASE):
-                # Save previous content if analyst was speaking
-                if current_speaker == 'Analyst' and current_content:
+            if re.match(r'^Operator(\s*\[\d+\])?$', line, re.IGNORECASE):
+                # Save previous content if participant was speaking
+                if current_speaker != 'Operator' and current_content:
                     question_text = ' '.join(current_content).strip()
                     if question_text:
-                        analyst_questions.append(question_text)
+                        participant_questions.append(question_text)
                 current_speaker = 'Operator'
                 current_content = []
                 continue  # Skip to the next line
 
-            # Identify analyst lines
-            speaker_line_match = re.match(r'^(.*?)\s*-\s*(.*?)$', line)
+            # Identify speaker lines
+            speaker_line_match = re.match(r'^(.*?)\s*(:|–|-)\s*(.*?)$', line)
             if speaker_line_match:
-                speaker_name = speaker_line_match.group(1)
-                speaker_role = speaker_line_match.group(2)
-                # Save previous content if analyst was speaking
-                if current_speaker == 'Analyst' and current_content:
+                # Save previous content if participant was speaking
+                if current_speaker != 'Operator' and current_content:
                     question_text = ' '.join(current_content).strip()
                     if question_text:
-                        analyst_questions.append(question_text)
-                # Determine if the speaker is an Analyst
-                if 'Analyst' in speaker_role or 'Analysts' in speaker_role:
-                    current_speaker = 'Analyst'
-                else:
-                    current_speaker = 'Other'
+                        participant_questions.append(question_text)
+                current_speaker = speaker_line_match.group(1).strip()
                 current_content = []
                 continue  # Skip to the next line
 
-            # Collect content only if current speaker is Analyst
-            if current_speaker == 'Analyst':
+            # Collect content only if current speaker is not Operator
+            if current_speaker != 'Operator':
                 current_content.append(line)
 
         # Add the last question if applicable
-        if current_speaker == 'Analyst' and current_content:
+        if current_speaker != 'Operator' and current_content:
             question_text = ' '.join(current_content).strip()
             if question_text:
-                analyst_questions.append(question_text)
+                participant_questions.append(question_text)
 
-        return analyst_questions
+        return participant_questions
 
     def split_text_by_visual_cues(self, text):
         """
