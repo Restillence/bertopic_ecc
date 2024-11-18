@@ -410,7 +410,13 @@ def compute_future_returns(group):
 
     return group
 
-df_crsp_daily = df_crsp_daily.groupby('permco', group_keys=False).apply(compute_future_returns).reset_index(drop=True)
+# Updated groupby to include include_groups=False if supported
+try:
+    df_crsp_daily = df_crsp_daily.groupby('permco', group_keys=False, include_groups=False).apply(compute_future_returns).reset_index(drop=True)
+except TypeError:
+    # If 'include_groups' is not supported, use 'as_index=False' as a fallback
+    df_crsp_daily = df_crsp_daily.groupby('permco', group_keys=False, as_index=False).apply(compute_future_returns).reset_index(drop=True)
+
 print("Completed computation of future returns.")
 
 # **Merge future returns into merged_df**
@@ -419,6 +425,7 @@ merged_df = pd.merge(
     merged_df,
     df_crsp_daily[[
         'permco', 'date',  # Include key columns
+        'shrout', 'prc', 'vol', 'market_cap', 'ret', 
         'ret_immediate', 'ret_short_term', 'ret_medium_term', 'ret_long_term', 'market_ret',
         'excess_ret_immediate', 'excess_ret_short_term', 'excess_ret_medium_term', 'excess_ret_long_term'
     ]],
@@ -450,6 +457,72 @@ merged_df['call_date'] = merged_df['call_date_with_time']
 merged_df = merged_df.drop(columns=['call_date_with_time'], errors='ignore')
 print("Restored 'call_date' with time component in merged_df.")
 
+# **Consolidate 'ceo_names_x' and 'ceo_names_y' into 'ceo_names'**
+merged_df['ceo_names'] = merged_df['ceo_names_y'].fillna(merged_df['ceo_names_x'])
+merged_df['cfo_names'] = merged_df['cfo_names_y'].fillna(merged_df['cfo_names_x'])
+
+# **Consolidate 'ceo_participates_x' and 'ceo_participates_y' into 'ceo_participates'**
+merged_df['ceo_participates'] = merged_df['ceo_participates_y'].fillna(merged_df['ceo_participates_x'])
+
+# **Drop the duplicated columns**
+merged_df = merged_df.drop(columns=['ceo_names_x', 'ceo_names_y', 'cfo_names_x', 'cfo_names_y',
+                                    'ceo_participates_x', 'ceo_participates_y'], errors='ignore')
+print("Consolidated 'ceo_names', 'cfo_names', and 'ceo_participates' into single columns and dropped duplicates.")
+
+
+# **Add CEO/CFO Change Dummy Variables**
+
+# Ensure merged_df is sorted by 'gvkey' and 'call_date'
+merged_df = merged_df.sort_values(by=['gvkey', 'call_date']).reset_index(drop=True)
+print("DataFrame sorted by 'gvkey' and 'call_date'.")
+
+# Create shifted columns for previous CEO and CFO names
+merged_df['prev_ceo_names'] = merged_df.groupby('gvkey', group_keys=False)['ceo_names'].shift(1)
+merged_df['prev_cfo_names'] = merged_df.groupby('gvkey', group_keys=False)['cfo_names'].shift(1)
+
+# Define function to compare lists
+def lists_are_different(list1, list2):
+    # Handle cases where one or both lists are empty or NaN
+    if not isinstance(list1, list):
+        list1 = []
+    if not isinstance(list2, list):
+        list2 = []
+    return list1 != list2
+
+# Compute 'ceo_change'
+merged_df['ceo_change'] = merged_df.apply(
+    lambda row: 1 if lists_are_different(row['ceo_names'], row['prev_ceo_names']) else 0, axis=1
+)
+
+# Compute 'cfo_change'
+merged_df['cfo_change'] = merged_df.apply(
+    lambda row: 1 if lists_are_different(row['cfo_names'], row['prev_cfo_names']) else 0, axis=1
+)
+
+# Fill NaN for the first call per 'gvkey' with 0
+merged_df['ceo_change'] = merged_df['ceo_change'].fillna(0).astype(int)
+merged_df['cfo_change'] = merged_df['cfo_change'].fillna(0).astype(int)
+
+# Optionally, create 'ceo_cfo_change' as 1 if either CEO or CFO changed
+merged_df['ceo_cfo_change'] = (merged_df['ceo_change'] | merged_df['cfo_change']).astype(int)
+
+# Drop the helper columns
+merged_df = merged_df.drop(columns=['prev_ceo_names', 'prev_cfo_names'], errors='ignore')
+print("Added 'ceo_change', 'cfo_change', and 'ceo_cfo_change' dummy variables.")
+
+# **Validate 'ceo_names' and 'cfo_names' after consolidation**
+print("Consolidated 'ceo_names' and 'cfo_names' columns:")
+print(merged_df[['ceo_names', 'cfo_names']].head())
+
+# **Check Dummy Variables**
+print("Sample of 'ceo_change', 'cfo_change', and 'ceo_cfo_change' columns:")
+print(merged_df[['ceo_change', 'cfo_change', 'ceo_cfo_change']].head())
+
+# **Inspect Inconsistencies**
+invalid_ceo_entries = merged_df[(merged_df['ceo_participates'] == 1) & (merged_df['ceo_names'].apply(len) == 0)]
+print(f"Number of rows with 'ceo_participates' == 1 but empty 'ceo_names': {len(invalid_ceo_entries)}")
+print("Sample of invalid 'ceo_names' entries:")
+print(invalid_ceo_entries[['ceo_participates', 'ceo_names']].head())
 
 # Final DataFrame Preparation and Saving
 print("Finalizing the merged DataFrame...")
@@ -462,9 +535,9 @@ desired_columns = [
     'similarity_to_company_average', 'prc', 'shrout', 'ret', 'vol', 'market_cap',
     'ret_immediate', 'ret_short_term', 'ret_medium_term', 'ret_long_term', 'market_ret',
     'excess_ret_immediate', 'excess_ret_short_term', 'excess_ret_medium_term', 'excess_ret_long_term',
-    'word_length_presentation'  # Added new column
+    'word_length_presentation',  # Added new column
+    'ceo_change', 'cfo_change', 'ceo_cfo_change'  # Added new dummy variables
 ]
-
 # Check if all desired columns are present
 missing_cols = set(desired_columns) - set(merged_df.columns)
 if missing_cols:
