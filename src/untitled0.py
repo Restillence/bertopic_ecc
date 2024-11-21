@@ -72,3 +72,19 @@ for i in range(len(df)):
         print(f"Row {i}: same length ({pt_length})")
     else:
         print(f"Row {i}: different length (presentation_text: {pt_length}, presentation_topics: {ppt_length})")
+
+"""
+#print 1 element of participant_questions and participant_question_topics
+print("\nFirst element of 'participant_questions' and 'participant_question_topics':")
+print(df['participant_questions'].iloc[0][0])
+print(df['participant_question_topics'].iloc[0][0])
+"""
+#print call_id
+df["call_id"][0]
+"""
+for i in range(20):
+    for j in range(20):
+        print(df['participant_questions'].iloc[i][j])
+        print(df['participant_question_topics'].iloc[i][j])
+    
+"""
