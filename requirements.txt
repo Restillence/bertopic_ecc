@@ -20,3 +20,4 @@ torch
 sentence_transformers
 GPUtil
 spacy 
+fuzzywuzzy

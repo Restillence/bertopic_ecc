@@ -82,23 +82,28 @@ class BertopicFitting:
         topic_model = BERTopic.load(self.model_load_path, embedding_model=self.embedding_model)
         return topic_model
 
-    def save_results(self, all_relevant_sections, topics_sections, all_relevant_questions, topics_questions, ecc_sample):
+    def save_results(self, all_relevant_sections, topics_sections, all_relevant_questions, topics_questions, all_management_answers, topics_answers, ecc_sample):
         """
         Save the results to a CSV file and store the DataFrame.
         """
         result_dict = {}
         topic_idx_sections = 0
         topic_idx_questions = 0
+        topic_idx_answers = 0
 
         for permco, calls in ecc_sample.items():
             for call_id, value in calls.items():
-                sections = value.get('relevant_sections', [])
+                sections = value.get('presentation_text', [])
                 num_sections = len(sections)
                 section_topics = topics_sections[topic_idx_sections:topic_idx_sections + num_sections]
 
                 questions = value.get('participant_questions', [])
                 num_questions = len(questions)
                 question_topics = topics_questions[topic_idx_questions:topic_idx_questions + num_questions]
+
+                answers = value.get('management_answers', [])
+                num_answers = len(answers)
+                answer_topics = topics_answers[topic_idx_answers:topic_idx_answers + num_answers]
 
                 # Ensure topics and text lists have the same length
                 if len(section_topics) != num_sections:
@@ -107,12 +112,18 @@ class BertopicFitting:
                 if len(question_topics) != num_questions:
                     raise ValueError(f"Mismatch between number of topics and questions for call ID: {call_id}")
 
-                # Convert the section topics and question topics from NumPy array to a list
+                if len(answer_topics) != num_answers:
+                    raise ValueError(f"Mismatch between number of topics and answers for call ID: {call_id}")
+
+                # Convert the topics from NumPy array to a list
                 if isinstance(section_topics, np.ndarray):
                     section_topics = section_topics.tolist()
 
                 if isinstance(question_topics, np.ndarray):
                     question_topics = question_topics.tolist()
+
+                if isinstance(answer_topics, np.ndarray):
+                    answer_topics = answer_topics.tolist()
 
                 # Get the timestamp for the call
                 timestamp = value['date']
@@ -136,12 +147,15 @@ class BertopicFitting:
                     "presentation_topics": section_topics,
                     "participant_questions": questions,
                     "participant_question_topics": question_topics,
+                    "management_answers": answers,
+                    "management_answer_topics": answer_topics,
                     "ceo_participates": ceo_participates,
                     "ceo_names": ceo_names,
                     "cfo_names": cfo_names
                 }
                 topic_idx_sections += num_sections
                 topic_idx_questions += num_questions
+                topic_idx_answers += num_answers
 
         # Convert results to DataFrame
         records = []
@@ -155,6 +169,8 @@ class BertopicFitting:
                 'presentation_topics': json.dumps(call_data['presentation_topics']),
                 'participant_questions': json.dumps(call_data['participant_questions']),
                 'participant_question_topics': json.dumps(call_data['participant_question_topics']),
+                'management_answers': json.dumps(call_data['management_answers']),
+                'management_answer_topics': json.dumps(call_data['management_answer_topics']),
                 'ceo_participates': int(call_data['ceo_participates']),  # Convert bool to int (1/0)
                 'ceo_names': json.dumps(call_data['ceo_names']),
                 'cfo_names': json.dumps(call_data['cfo_names'])
@@ -168,7 +184,7 @@ class BertopicFitting:
         # Save the DataFrame for later use (e.g., for topics over time)
         self.results_df = results_df
 
-    def fit_and_save(self, all_relevant_sections, all_relevant_questions, ecc_sample):
+    def fit_and_save(self, all_relevant_sections, all_relevant_questions, all_management_answers, ecc_sample):
         """
         Fit the BERTopic model, save results, and generate visualizations.
         """
@@ -223,9 +239,41 @@ class BertopicFitting:
                 probabilities_questions = []
                 print("No participant questions to process.")
 
+            # Process management answers
+            if all_management_answers:
+                print("Computing embeddings for management answers...")
+                embeddings_start_time = time.time()
+                embeddings_answers = self.embedding_model.embed_documents(
+                    all_management_answers,
+                    verbose=True
+                )
+                embeddings_end_time = time.time()
+                embeddings_duration = embeddings_end_time - embeddings_start_time
+                print(f"Computed embeddings for {len(all_management_answers)} management answers in {embeddings_duration:.2f} seconds.")
+
+                # Transform documents with the BERTopic model using precomputed embeddings
+                print("Transforming management answers with the BERTopic model...")
+                transform_start_time = time.time()
+                topics_answers, probabilities_answers = self.topic_model.transform(all_management_answers, embeddings_answers)
+                transform_end_time = time.time()
+                transform_duration = transform_end_time - transform_start_time
+                print(f"Transformed management answers in {transform_duration:.2f} seconds.")
+            else:
+                topics_answers = []
+                probabilities_answers = []
+                print("No management answers to process.")
+
             # Save the results to CSV and store results_df
             print("Saving results...")
-            self.save_results(all_relevant_sections, topics_sections, all_relevant_questions, topics_questions, ecc_sample)
+            self.save_results(
+                all_relevant_sections,
+                topics_sections,
+                all_relevant_questions,
+                topics_questions,
+                all_management_answers,
+                topics_answers,
+                ecc_sample
+            )
             print("Results saved.")
 
             # ... [Rest of the method remains unchanged] ...
@@ -362,6 +410,7 @@ class BertopicFitting:
 
             for index, row in self.results_df.iterrows():
                 date = row['date']  # The date of the conference call
+
                 # For presentation texts
                 sections = json.loads(row['presentation_text'])  # List of sections (paragraphs)
                 section_topics = json.loads(row['presentation_topics'])  # List of topics for the sections
@@ -371,14 +420,23 @@ class BertopicFitting:
                 documents.extend(sections)
                 topics_list.extend(section_topics)
 
-                # For analyst questions
-                questions = json.loads(row['analyst_questions'])
-                question_topics = json.loads(row['analyst_question_topics'])
+                # For participant questions
+                questions = json.loads(row['participant_questions'])
+                question_topics = json.loads(row['participant_question_topics'])
 
                 num_questions = len(questions)
                 timestamps.extend([date] * num_questions)
                 documents.extend(questions)
                 topics_list.extend(question_topics)
+
+                # For management answers
+                answers = json.loads(row['management_answers'])
+                answer_topics = json.loads(row['management_answer_topics'])
+
+                num_answers = len(answers)
+                timestamps.extend([date] * num_answers)
+                documents.extend(answers)
+                topics_list.extend(answer_topics)
 
             # Convert timestamps to datetime objects
             timestamps = pd.to_datetime(timestamps)
@@ -425,7 +483,7 @@ class BertopicFitting:
 
     def generate_evaluation_files(self):
         """
-        Generate evaluation files for both Presentation and Q&A sections.
+        Generate evaluation files for Presentation, Q&A, and Management Answer sections.
         """
         # Define the sections and their corresponding columns
         sections = [
@@ -435,9 +493,14 @@ class BertopicFitting:
                 'topics_column': 'presentation_topics'
             },
             {
-                'section_type': 'Q&A',
-                'text_column': 'analyst_questions',
-                'topics_column': 'analyst_question_topics'
+                'section_type': 'Participant Questions',
+                'text_column': 'participant_questions',
+                'topics_column': 'participant_question_topics'
+            },
+            {
+                'section_type': 'Management Answers',
+                'text_column': 'management_answers',
+                'topics_column': 'management_answer_topics'
             }
         ]
 
@@ -464,10 +527,10 @@ def main():
     print("Loading configuration...")
     # Define the relative path to config.json
     relative_path = 'config.json'
-    
+
     # Define the fallback absolute path
     fallback_path = r'C:\Users\nikla\OneDrive\Dokumente\winfoMaster\Masterarbeit\bertopic_ecc\config.json'
-    
+
     try:
         # Attempt to load config.json from the relative path
         with open(relative_path, 'r') as f:
@@ -494,7 +557,6 @@ def main():
     folderpath_ecc = config["folderpath_ecc"]
     sample_size = config["sample_size"]
     document_split = config["document_split"]
-    section_to_analyze = config["section_to_analyze"]
     max_documents = config.get("max_documents", None)  # Use .get to provide a default value
     model_load_path = config["model_load_path"]
 
@@ -502,7 +564,7 @@ def main():
     print("Initializing file handler and text processor...")
     # Pass the entire config dictionary to FileHandler
     file_handler = FileHandler(config=config)
-    text_processor = TextProcessor(method=document_split, section_to_analyze=section_to_analyze)
+    text_processor = TextProcessor(method=document_split)  # Removed 'section_to_analyze' parameter
 
     # Read the index file
     print("Reading index file...")
@@ -517,6 +579,7 @@ def main():
     extraction_start_time = time.time()  # Time tracking
     all_relevant_sections = []
     all_relevant_questions = []
+    all_management_answers = []
     not_considered_count = 0  # Initialize counter
     ecc_sample_filtered = {}  # Create a new dict to hold filtered earnings calls
 
@@ -527,17 +590,21 @@ def main():
             date = value.get('date', 'Unknown')
             text = value.get('text_content', '')
             result = text_processor.extract_and_split_section(permco, call_id, company_info, date, text)
-            if result and (result.get('presentation_text') or result.get('participant_questions')):
+            if result and (result.get('presentation_text') or result.get('participant_questions') or result.get('management_answers')):
                 # Process presentation_text
                 if result.get('presentation_text'):
                     all_relevant_sections.extend(result['presentation_text'])
                 # Process participant_questions
                 if result.get('participant_questions'):
                     all_relevant_questions.extend(result['participant_questions'])
+                # Process management_answers
+                if result.get('management_answers'):
+                    all_management_answers.extend(result['management_answers'])
 
                 # Add the relevant data to 'value'
-                value['relevant_sections'] = result['presentation_text'] if result.get('presentation_text') else []
+                value['presentation_text'] = result['presentation_text'] if result.get('presentation_text') else []
                 value['participant_questions'] = result['participant_questions'] if result.get('participant_questions') else []
+                value['management_answers'] = result['management_answers'] if result.get('management_answers') else []
                 value['participants'] = result.get('participants', [])
                 value['ceo_participates'] = result.get('ceo_participates', False)
                 value['ceo_names'] = result.get('ceo_names', [])
@@ -547,7 +614,7 @@ def main():
                 # Add the call to calls_filtered
                 calls_filtered[call_id] = value
             else:
-                print(f"Earnings call {call_id} has neither 'Presentation' nor 'Questions and Answers' sections and will be excluded.")
+                print(f"Earnings call {call_id} has no relevant sections and will be excluded.")
                 not_considered_count += 1
         if calls_filtered:
             ecc_sample_filtered[permco] = calls_filtered
@@ -555,13 +622,13 @@ def main():
     print(f"Extraction and processing completed in {extraction_end_time - extraction_start_time:.2f} seconds.")
     print(f"Total number of earnings calls not considered due to missing sections: {not_considered_count}")
 
-    if not all_relevant_sections and not all_relevant_questions:
-        print("No relevant sections or participant questions found to fit BERTopic.")
+    if not all_relevant_sections and not all_relevant_questions and not all_management_answers:
+        print("No relevant sections or participant questions or management answers found to fit BERTopic.")
         return
 
     # Instantiate BertopicFitting and process the data
     bertopic_fitting = BertopicFitting(config, model_load_path)
-    bertopic_fitting.fit_and_save(all_relevant_sections, all_relevant_questions, ecc_sample_filtered)
+    bertopic_fitting.fit_and_save(all_relevant_sections, all_relevant_questions, all_management_answers, ecc_sample_filtered)
 
     # Total execution time
     total_end_time = time.time()
