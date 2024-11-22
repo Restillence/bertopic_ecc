@@ -131,7 +131,8 @@ class TextProcessor:
         if not analysts:
             print(f"No analysts found in 'Conference Call Participants' for call ID: {call_id}")
         else:
-            print(f"Analysts found for call ID {call_id}: {[analyst['name'] for analyst in analysts]}")
+            #print(f"Analysts found for call ID {call_id}: {[analyst['name'] for analyst in analysts]}")
+            pass
 
         # Create sets of names for matching
         analyst_names = set([analyst['name'] for analyst in analysts])
@@ -172,7 +173,7 @@ class TextProcessor:
             # Remove the first and last elements assuming they are operator statements
             if len(participant_questions) >= 2:
                 participant_questions = participant_questions[1:-1]
-                print(f"Removed first and last operator statements from participant questions for call ID: {call_id}.")
+                #print(f"Removed first and last operator statements from participant questions for call ID: {call_id}.")
             else:
                 # If fewer than 2 questions, remove all to avoid including operator statements
                 participant_questions = []
@@ -360,16 +361,19 @@ class TextProcessor:
 
         # After processing, check whether number of questions and answers match
         if answer_counter != question_counter:
-            print(f"The number of questions and answers does not match: {call_id}")
+            #print(f"The number of questions and answers does not match: {call_id}")
+            pass
 
         # Debug: print collected questions and answers
         if analyst_questions:
-            print(f"Collected {len(analyst_questions)} analyst questions for call ID {call_id}.")
+            #print(f"Collected {len(analyst_questions)} analyst questions for call ID {call_id}.")
+            pass
         else:
             print(f"No analyst questions found for call ID {call_id}.")
 
         if management_answers:
-            print(f"Collected {len(management_answers)} management answers for call ID {call_id}.")
+            #print(f"Collected {len(management_answers)} management answers for call ID {call_id}.")
+            pass
         else:
             print(f"No management answers found for call ID {call_id}.")
 

@@ -78,9 +78,16 @@ class BertopicFitting:
         Load the pre-trained BERTopic model from the given filepath.
         """
         print(f"Loading BERTopic model from {self.model_load_path}...")
-        # Load the BERTopic model with the embedding model
-        topic_model = BERTopic.load(self.model_load_path, embedding_model=self.embedding_model)
+        
+        # Load the BERTopic model without specifying the embedding model
+        topic_model = BERTopic.load(self.model_load_path)
+        
+        # Assign the custom embedding model after loading
+        topic_model.embedding_model = self.embedding_model
+        
+        print("BERTopic model loaded successfully with custom embedding model.")
         return topic_model
+
 
     def save_results(self, all_relevant_sections, topics_sections, all_relevant_questions, topics_questions, all_management_answers, topics_answers, ecc_sample):
         """
