@@ -6,7 +6,10 @@ import numpy as np
 import sys
 import warnings
 import ast
-from utils import process_topics, compute_similarity_to_average, count_word_length_text, count_items  # Updated import
+from utils import (
+    process_topics, compute_similarity_to_average, count_word_length_text, 
+    count_items, map_topics_to_clusters, remove_neg_one_from_columns
+)
 
 # Load configuration variables from config.json
 try:
@@ -27,6 +30,16 @@ file_path_crsp_daily = config['file_path_crsp_daily']
 file_path_crsp_monthly = config['file_path_crsp_monthly']
 merged_file_path = config['merged_file_path']
 topic_threshold_percentage = config['topic_threshold_percentage']
+
+# **Adjust Here: Read 'modeling_type' Instead of 'model_type'**
+model_type = config.get('modeling_type', 'zeroshot').lower()  # Changed from 'model_type' to 'modeling_type'
+
+# Validate model_type
+if model_type not in ['zeroshot', 'regular']:
+    print(f"Invalid 'modeling_type' in config: {model_type}. Defaulting to 'zeroshot'.")
+    model_type = 'zeroshot'
+else:
+    print(f"Model type selected: {model_type}")
 
 # Process the topics
 print("Processing topics...")
@@ -338,6 +351,13 @@ merged_df.rename(columns={'datadate': 'fiscal_period_end'}, inplace=True)
 merged_df = merged_df.drop_duplicates(subset=['fiscal_period_end', 'gvkey', 'permco'])
 print(f"Number of rows in merged_df after removing duplicates: {len(merged_df)}")
 
+# **Apply Cluster Mapping Before Saving the Final DataFrame**
+print("Applying cluster mapping based on the model type...")
+
+# Apply the cluster mapping using the selected model type
+merged_df = map_topics_to_clusters(merged_df, model=model_type)
+print("Cluster mapping applied successfully.")
+
 # Now that 'siccd' is available, compute similarities including similarity to industry average
 print("Computing similarities to overall, industry and firm-specific averages...")
 # Determine the number of topics
@@ -414,7 +434,7 @@ def compute_future_returns(group):
                 excess_ret_immediate[i] = ret_immediate[i] - market_return
                 # Debugging: Print first 5 computations
                 if i < 5:
-                    print(f"[Immediate] i={i}: ret_immediate={ret_immediate[i]}, market_return={market_return}, excess_ret_immediate={excess_ret_immediate[i]}")
+                    print(f"[Immediate] gvkey={group['gvkey'].iloc[0]}, i={i}: ret_immediate={ret_immediate[i]}, market_return={market_return}, excess_ret_immediate={excess_ret_immediate[i]}")
         
         # Short-term market reaction: t+2 to t+6
         if i + 6 < n:
@@ -426,7 +446,7 @@ def compute_future_returns(group):
                 excess_ret_short_term[i] = ret_short_term[i] - market_return
                 # Debugging
                 if i < 5:
-                    print(f"[Short-term] i={i}: ret_short_term={ret_short_term[i]}, market_return={market_return}, excess_ret_short_term={excess_ret_short_term[i]}")
+                    print(f"[Short-term] gvkey={group['gvkey'].iloc[0]}, i={i}: ret_short_term={ret_short_term[i]}, market_return={market_return}, excess_ret_short_term={excess_ret_short_term[i]}")
         
         # Medium-term market reaction: t+2 to t+21
         if i + 21 < n:
@@ -438,7 +458,7 @@ def compute_future_returns(group):
                 excess_ret_medium_term[i] = ret_medium_term[i] - market_return
                 # Debugging
                 if i < 5:
-                    print(f"[Medium-term] i={i}: ret_medium_term={ret_medium_term[i]}, market_return={market_return}, excess_ret_medium_term={excess_ret_medium_term[i]}")
+                    print(f"[Medium-term] gvkey={group['gvkey'].iloc[0]}, i={i}: ret_medium_term={ret_medium_term[i]}, market_return={market_return}, excess_ret_medium_term={excess_ret_medium_term[i]}")
         
         # Long-term market reaction: t+2 to t+60
         if i + 61 < n:
@@ -450,7 +470,7 @@ def compute_future_returns(group):
                 excess_ret_long_term[i] = ret_long_term[i] - market_return
                 # Debugging
                 if i < 5:
-                    print(f"[Long-term] i={i}: ret_long_term={ret_long_term[i]}, market_return={market_return}, excess_ret_long_term={excess_ret_long_term[i]}")
+                    print(f"[Long-term] gvkey={group['gvkey'].iloc[0]}, i={i}: ret_long_term={ret_long_term[i]}, market_return={market_return}, excess_ret_long_term={excess_ret_long_term[i]}")
 
     group['ret_immediate'] = ret_immediate
     group['ret_short_term'] = ret_short_term
@@ -594,27 +614,35 @@ desired_columns = [
     'ceo_change', 'cfo_change', 'ceo_cfo_change',  # Added new dummy variables
     'participant_question_topics', 'management_answer_topics'  # Retained existing topic columns
 ]
-# Check if all desired columns are present
-missing_cols = set(desired_columns) - set(merged_df.columns)
-if missing_cols:
-    print(f"Warning: The following expected columns are missing in merged_df and will be excluded from the final DataFrame: {missing_cols}")
 
-# Take absolute values for the prc column
+# **Remove -1 from 'participant_question_topics' and 'management_answer_topics'**
+print("Removing -1 from 'participant_question_topics' and 'management_answer_topics'...")
+merged_df = remove_neg_one_from_columns(
+    merged_df, 
+    ['participant_question_topics', 'management_answer_topics']
+)
+print("Removed -1 from specified topic columns.")
+
+# **Take absolute values for the prc column**
 if 'prc' in merged_df.columns:
     merged_df['prc'] = merged_df['prc'].abs()
 
-# Select only the columns that exist
+# **Select only the columns that exist**
 final_columns = [col for col in desired_columns if col in merged_df.columns]
 merged_df = merged_df[final_columns]
 
-# Sort the final DataFrame by 'gvkey' and 'call_date' in ascending order
+# **Sort the final DataFrame by 'gvkey' and 'call_date' in ascending order**
 print("Sorting the final DataFrame by 'gvkey' and 'call_date'...")
 merged_df = merged_df.sort_values(by=['gvkey', 'call_date']).reset_index(drop=True)
 
-# Save the final merged DataFrame
+
+# **Save the final merged DataFrame**
 print("Saving the final merged DataFrame...")
 merged_df.to_csv(merged_file_path, index=False)
 print(f"Final merged DataFrame saved to {merged_file_path}")
+
+# **Compute and Save the Final DataFrame with Cluster Mappings**
+# (Assuming that saving was already done above, this step is redundant unless further actions are needed)
 
 # Calculate the means of the similarity measures
 print("Calculating means of similarity measures...")
