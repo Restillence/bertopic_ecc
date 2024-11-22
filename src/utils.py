@@ -18,28 +18,34 @@ def print_configuration(config):
         print(f"{key}: {value}")
         
         
-def count_word_length_text(texts):
+def count_items(items):
     """
-    Count the total number of words in the 'text' list for a single row.
+    Count the number of items in a list for a single row.
 
     Parameters:
-    - texts (list): A list of text strings.
+    - items (list): A list of items (questions or answers).
 
     Returns:
-    - int: Total word count.
+    - int: Number of items.
     """
-    if not isinstance(texts, list):
+    if not isinstance(items, list):
         return 0
-    total_words = 0
-    for text in texts:
-        if isinstance(text, str):
-            # Split the text into words using whitespace and count
-            words = text.split()
-            total_words += len(words)
-    return total_words
+    return len(items)
 
 
 def process_topics(path, output_path, topics_to_keep, threshold_percentage=None):
+    """
+    Process the topics by filtering based on the specified criteria.
+
+    Parameters:
+    - path (str): Path to the input CSV file containing topics and texts.
+    - output_path (str): Path to save the processed CSV file.
+    - topics_to_keep (set or str): Set of topics to retain or "all" to keep all topics.
+    - threshold_percentage (float, optional): Percentage threshold for auto topic selection.
+
+    Returns:
+    - pd.DataFrame: Processed DataFrame with filtered topics and texts.
+    """
     # Load the CSV file
     df = pd.read_csv(path)
      
@@ -101,13 +107,20 @@ def process_topics(path, output_path, topics_to_keep, threshold_percentage=None)
     
     # Return relevant columns, including the new ones
     return df[['topics', 'text', 'filtered_topics', 'filtered_texts', 'consistent', 'call_id', 'permco', 'date',
-               'ceo_participates', 'ceo_names', 'cfo_names','participant_question_topics', 'management_answer_topics']]
+               'ceo_participates', 'ceo_names', 'cfo_names', 'participant_question_topics', 'management_answer_topics']]
 
 
 def determine_topics_to_keep(df, threshold_percentage):
     """
     Determine topics that appear in at least a certain percentage of companies,
     excluding the outlier category (-1).
+
+    Parameters:
+    - df (pd.DataFrame): DataFrame containing 'permco' and 'topics' columns.
+    - threshold_percentage (float): Percentage threshold for keeping topics.
+
+    Returns:
+    - set: Set of topics to keep.
     """
     # Get the total number of companies
     total_companies = df['permco'].nunique()
@@ -131,7 +144,7 @@ def determine_topics_to_keep(df, threshold_percentage):
     # Find topics that appear in at least the threshold percentage of companies
     topics_to_keep = {topic for topic, count in topic_counts.items() if count >= company_threshold}
     
-    # Find topics to remove"
+    # Find topics to remove
     topics_to_remove = set(topic_counts.keys()) - topics_to_keep
 
     # Print statements to show kept and removed topics
@@ -141,7 +154,18 @@ def determine_topics_to_keep(df, threshold_percentage):
     
     return topics_to_keep
 
+
 def create_transition_matrix(topic_sequence, num_topics):
+    """
+    Create a transition matrix from a sequence of topics.
+
+    Parameters:
+    - topic_sequence (list): List of topic IDs representing the sequence.
+    - num_topics (int): Total number of topics.
+
+    Returns:
+    - np.ndarray: Transition matrix of shape (num_topics, num_topics).
+    """
     transition_matrix = np.zeros((num_topics, num_topics))
     for i in range(len(topic_sequence) - 1):
         from_topic = topic_sequence[i]
@@ -154,7 +178,18 @@ def create_transition_matrix(topic_sequence, num_topics):
     transition_matrix = transition_matrix / row_sums
     return transition_matrix
 
+
 def compute_similarity_to_average(df, num_topics):
+    """
+    Compute similarity measures to overall, industry, and company averages.
+
+    Parameters:
+    - df (pd.DataFrame): DataFrame containing transition matrices and related metadata.
+    - num_topics (int): Total number of topics.
+
+    Returns:
+    - pd.DataFrame: DataFrame containing similarity measures.
+    """
     import numpy as np
     from scipy.spatial.distance import cosine
     import pandas as pd

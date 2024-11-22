@@ -28,7 +28,7 @@
     "file_path_crsp_monthly": "D:/daten_masterarbeit/CRSP_monthly_Compustat_quarterly_merged.csv",
     "merged_file_path": "D:/daten_masterarbeit/final_dataset.csv",
     
-    "topics_input_path": "D:/daten_masterarbeit/topics_output_sample_30.csv",
+    "topics_input_path": "D:/daten_masterarbeit/topics_output_reg_full.csv",
     "topics_output_path": "D:/daten_masterarbeit/topics_output_controlls_test.csv",
     "output_dir": "D:/daten_masterarbeit/",
 

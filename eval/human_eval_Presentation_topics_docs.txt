@@ -1,326 +1,1262 @@
 Topic Information for Presentation:
- Topic                                                                       Name  Count
-    -1                                         -1_revenue_revenues_sales_business 191859
-     0                                     0_gross margin_margin_margins_earnings  45637
-     1                                         1_clinical_phase_medical_treatment  15580
-     2                                2_earnings share_earnings_net income_shares  15300
-     3                                     3_customers_customer_marketing_clients  12458
-     4                                  4_ceo_board directors_executive_directors   9857
-     5 5_financial results_financial performance_quarter results_earnings release   8481
-     6                                               6_questions_open_ask_request   7875
-     7             7_quarter earnings_earnings_earnings release_financial results   6469
-     8       8_strong quarter_results quarter_quarter results_performance quarter   3995
-     9                             9_cash flows_cash flow_balance sheet_financial   3449
-    10                                           10_production_producing_12_years   3208
-    11                                               11_stores_store_retail_sales   2987
-    12                        12_litigation_statements_forward looking_securities   2773
-    13                                     13_customers_customer_clients_bookings   2766
-    14                                      14_slide_slides_presentation_let turn   2458
-    15                              15_obligations_update_updates_forward looking   2416
-    16                        16_non gaap_gaap_financial results_earnings release   2208
-    17                                              17_oil_production_fuel_supply   2168
-    18                                           18_morning_welcome_thank_evening   2139
-    19                         19_webcast_press release_recorded_earnings release   1996
-    20                                              20_risks_risk_factors_filings   1660
-    21                               21_video_communications_technologies_channel   1596
-    22                                 22_acquisitions_acquisition_acquire_merger   1548
-    23                                          23_risks_risk_caution_uncertainty   1155
-    24                                        24_currency_exchange_dollars_dollar   1064
-    25                                      25_inventory_inventories_stock_supply   1025
-    26                                                 26_ahead_mr_allowed_thanks    844
-    27                                   27_broadcast_audience_participants_audio    742
-    28                                             28_days_90 days_sales_decrease    733
-    29                                                  29_game_play_played_award    706
-    30                                 30_settlement_litigation_claims_commission    610
-    31                          31_flat_year quarter_quarter year_quarter revenue    497
-    32                                                32_begin_beginning_start_mr    373
-    33                                         33_fleet_deliveries_delivery_lease    327
-    34                                           34_cash flow_debt_cash_liquidity    246
-    35                                            35_numbers_number_digit_amounts    227
-    36                                           36_safety_safe_employees_protect    217
-    37                        37_manufacturing_production_transportation_industry    207
-    38                                       38_growth rate_growth_production_bit    205
+ Topic                                                          Name  Count
+    -1                              -1_revenues_revenue_sales_profit 788984
+     0                              0_data_health_benefit_technology  66143
+     1                            1_margin_margins_revenues_decrease  24565
+     2                  2_earnings_conference_quarterly_quarter 2006  15075
+     3                           3_things_going forward_items_issues  14109
+     4                                4_tax_fiscal_fiscal year_rates  13048
+     5                           5_cash flow_cash_financial_earnings  11729
+     6              6_investments_investment_long term_going forward  11396
+     7                            7_review_financial_earnings_report  11186
+     8                 8_accounting_earnings_financial_press release   9359
+     9                                     9_calls_turn_turning_note   9079
+    10                 10_revenues_revenue_quarter 2008_quarter 2007   8970
+    11                                11_costs_cost_expenses_expense   7118
+    12                          12_earnings_income_adjusted_revenues   7102
+    13                13_acquisition_acquisitions_acquired_companies   6144
+    14                         14_earnings_adjusted_increase_average   5852
+    15                  15_production_development_planned_completion   5723
+    16                    16_investments_cash_investment_end quarter   5095
+    17                     17_future_anticipated_plans_press release   5077
+    18                            18_expenses_expense_costs_revenues   4855
+    19                            19_expenses_expense_costs_revenues   4848
+    20                              20_dollar_dollars_rates_exchange   4804
+    21                           21_margin_margins_decrease_leverage   4392
+    22                     22_corporate_management_company_companies   4258
+    23                                23_spending_spend_fiscal_costs   4181
+    24                                    24_million_billion_000_500   4057
+    25                      25_progress_update_going forward_changes   4020
+    26               26_increase_increased_year quarter_quarter year   3780
+    27                  27_sales_increased_quarter year_quarter 2008   3576
+    28      28_second quarter_fourth quarter_quarter quarter_results   3475
+    29                             29_revenues_sales_revenue_release   3448
+    30                        30_earnings_share_year quarter_quarter   3355
+    31                               31_store_retail_markets_closing   3322
+    32                         32_earnings_stock_cash flow_quarterly   3278
+    33                      33_customers_customer_marketing_consumer   3261
+    34                               34_stock_purchase_share_company   3244
+    35            35_quarter 2006_review_quarter 2008_quarter fiscal   3209
+    36                    36_earnings_accounting_cash flow_financial   3159
+    37                               37_earnings_income_profit_share   3056
+    38                     38_conference_meeting_partners_associated   3030
+    39                39_slide_fourth quarter_second quarter_results   2982
+    40                           40_income_earnings_revenues_revenue   2974
+    41                       41_expenses_expense_cost_quarter fiscal   2893
+    42                   42_inventory_stock_production_manufacturing   2852
+    43                         43_calls_press release_recorded_today   2825
+    44                      44_loss_profit_quarter 2008_year quarter   2763
+    45                                 45_fiscal_cash_billion_credit   2660
+    46                         46_revenue_revenues_estimated_million   2652
+    47                  47_guidance_quarter year_plan_fourth quarter   2580
+    48                               48_basis_points_90_year quarter   2575
+    49                              49_revenues_sales_strong_revenue   2534
+    50                                50_sales_sale_decline_decrease   2526
+    51                       51_margin_basis_investment_quarter year   2454
+    52                         52_regarding_pleased_provide_complete   2451
+    53                           53_margin_margins_adjusted_leverage   2448
+    54                   54_future_going forward_anticipated_changes   2444
+    55                          55_revenues_decrease_decline_revenue   2373
+    56                          56_management_team_company_strategic   2319
+    57                    57_europe_international_markets_businesses   2292
+    58                                58_morning_calls_pleased_today   2244
+    59                             59_cash flow_cash_earnings_income   2214
+    60                                      60_year_start_began_2006   2187
+    61                             61_spending_costs_spend_estimated   2142
+    62                               62_case_decision_ongoing_review   2140
+    63                      63_customers_customer_increase_increased   2126
+    64                                     64_morning_good_today_day   2105
+    65               65_earnings_quarter year_quarter_quarter fiscal   2082
+    66                              66_factors_report_risk_financial   2034
+    67                                  67_2020_health_ongoing_began   2002
+    68                   68_network_technologies_technology_services   1995
+    69                      69_corporate_company_management_customer   1959
+    70                            70_expenses_expense_revenues_costs   1883
+    71                      71_team_contribution_success_contributed   1857
+    72                              72_stock_average_share_estimated   1731
+    73                        73_industry_production_supply_contract   1725
+    74                                               74_ahead_good__   1670
+    75                                          75_ahead_good_quite_   1662
+    76                   76_percentage_percent_combined_year quarter   1658
+    77                              77_cash flow_cash_revenue_income   1658
+    78                                78_expenses_expense_costs_cost   1633
+    79                    79_economic_industry_environment_difficult   1543
+    80                                       80_loss_stock_share_net   1522
+    81                              81_profit_revenues_revenue_sales   1521
+    82                    82_income_earnings_quarter fiscal_revenues   1507
+    83                        83_fiscal year_fiscal_press release_10   1478
+    84                    84_corporate_businesses_business_customers   1474
+    85                           85_income_earnings_revenue_revenues   1459
+    86                   86_production_manufacturing_industry_demand   1459
+    87                                87_expenses_expense_costs_cost   1433
+    88                             88_conference_partners_mark_great   1429
+    89                                 89_pricing_prices_costs_price   1429
+    90                                             90_morning_good__   1428
+    91                91_production_estimated_capacity_approximately   1411
+    92                            92_estimated_billion_total_million   1405
+    93                         93_brand_marketing_customers_consumer   1387
+    94                             94_decline_decrease_sales_reduced   1381
+    95                               95_credit_capital_cash_facility   1362
+    96                         96_flat_quarter_quarters_year quarter   1359
+    97                       97_accounts_accounting_account_revenues   1356
+    98 98_second quarter_fourth quarter_year quarter_quarter quarter   1339
+    99                           99_customers_data_services_customer   1332
+   100                         100_loss_earnings_profit_year quarter   1327
+   101                                    101_factors_risk_report_10   1326
+   102                        102_calls_corporate_management_general   1321
+   103                  103_days_quarter year_quarter_fourth quarter   1302
+   104                            104_calls_open_discussed_completed   1289
+   105                               105_costs_cost_expenses_expense   1284
+   106                  106_network_consumer_technology_technologies   1281
+   107                107_press release_business_company_information   1279
+   108                       108_quarter year_trends_quarterly_trend   1276
+   109                                 109_prices_pricing_price_cost   1275
+   110                                 110_lines_rates_line_business   1272
+   111                              111_earnings_income_profit_stock   1247
+   112                         112_increase_growth_billion_increased   1246
+   113                             113_assets_expense_expenses_asset   1201
+   114                         114_leverage_cash flow_equity_balance   1199
+   115                           115_credit_favorable_noted_consumer   1181
+   116                          116_contract_partners_customer_years   1177
+   117                             117_cash flow_equity_slide_assets   1166
+   118                                       118_days_sales_sale_day   1157
+   119                   119_increase_growth_increasing_quarter year   1148
+   120                      120_revenue_revenues_accounting_contract   1146
+   121                         121_cash_income_quarter fiscal_fiscal   1142
+   122                             122_anticipated_risk_future_plans   1130
+   123                           123_expenses_revenues_expense_costs   1127
+   124                      124_press release_release_provided_press   1126
+   125                125_accounting_excluding_acquisitions_earnings   1124
+   126                                 126_bit_pricing_market_prices   1118
+   127                        127_pipeline_production_markets_demand   1112
+   128                           128_brand_products_retail_marketing   1075
+   129                                         129_slide_seven_10_12   1069
+   130                          130_normal_average_december_november   1057
+   131 131_fourth quarter_second quarter_second half_quarter quarter   1044
+   132                       132_progress_pleased_success_successful   1026
+   133                       133_marketing_customers_market_consumer   1023
+   134                     134_customers_customer_marketing_consumer    986
+   135                                135_sales_products_growth_grew    985
+   136                         136_corporate_outlook_company_address    985
+   137                              137_mark_board_company_corporate    968
+   138                             138_note_cash_transaction_dollars    958
+   139                               139_income_earnings_tax_revenue    955
+   140                                    140_note_just_ongoing_mind    955
+   141                              141_equity_earnings_assets_asset    954
+   142                      142_press release_release_news_announced    948
+   143                             143_cash flow_cash_leverage_asset    944
+   144                                  144_morning_today_great_good    942
+   145                                 145_line_lines_clear_recorded    936
+   146                               146_guidance_costs_dollar_price    932
+   147              147_end quarter_transaction_closing_transactions    927
+   148                         148_health_customers_customer_company    908
+   149                    149_end quarter_quarter quarter_quarter_65    908
+   150                                150_prices_pricing_sales_price    899
+   151                         151_maintain_percentage_percent_rates    887
+   152                     152_leverage_profit_investments_operation    880
+   153                          153_brand_customers_marketing_growth    867
+   154                    154_discussed_future_anticipated_regarding    865
+   155                   155_equipment_businesses_facilities_markets    865
+   156                                     156_ph_great_best_quality    856
+   157                157_question_mentioned earlier_regarding_ahead    855
+   158                           158_inventory_million_total_dollars    852
+   159                       159_customers_customer_percentage_sales    839
+   160                          160_demand_growth_growing_increasing    839
+   161                                  161_open_closed_closing_sure    823
+   162                            162_conference_meeting_meet_events    815
+   163                            163_revenue_revenues_profit_income    804
+   164                              164_cost_costs_prices_production    799
+   165                               165_growth_growing_grow_percent    798
+   166                                 166_sales_sale_market_markets    793
+   167                       167_pipeline_development_build_progress    790
+   168                             168_revenue_revenues_income_sales    788
+   169                    169_production_operational_operating_began    777
+   170                         170_credit_loss_decrease_quarter 2011    769
+   171                             171_positive_trend_trends_quarter    768
+   172                                  172_numbers_number_given_lot    753
+   173                        173_future_anticipated_plans_discussed    753
+   174                          174_growth_sales_customers_marketing    743
+   175                               175_sales_revenues_sale_closing    742
+   176                  176_manufacturing_technologies_300_equipment    740
+   177                        177_question_continue_reminder_limited    737
+   178                                 178_morning_pleased_went_time    737
+   179                  179_technologies_sales_production_technology    737
+   180                              180_demand_market_markets_supply    732
+   181                            181_growth_grow_percent_percentage    715
+   182                             182_revenue_revenues_sales_profit    709
+   183                                               183_q4_q2_q3_q1    703
+   184                                   184_begin_start_began_ahead    700
+   185                         185_project_projects_planned_building    697
+   186                       186_equipment_seven_operational_running    695
+   187                              187_impacted_impact_effect_areas    695
+   188                                   188_share_price_cost_dollar    695
+   189                    189_calls_regarding_operational_operations    693
+   190                              190_calls_open_closing_completed    691
+   191                              191_conference_begin_start_began    689
+   192                     192_positive_favorable_customer_customers    685
+   193                                193_trends_half year_2016_2015    684
+   194                             194_highlight_provided_let_little    679
+   195                    195_earnings_record_profitability_revenues    678
+   196                           196_expenses_expense_costs_revenues    667
+   197                               197_retail_sales_products_brand    665
+   198                                 198_value_equity_assets_stock    659
+   199                         199_marketing_markets_market_consumer    658
+   200                                  200_gain_gains_earnings_sale    658
+   201                       201_brand_customers_prior year_products    657
+   202                202_decrease_decline_year quarter_quarter year    654
+   203                        203_slide_press release_calls_provided    650
+   204                            204_production_market_pricing_risk    647
+   205                    205_greater_quarterly_order_quarter fiscal    645
+   206                           206_risk_certain_anticipated_future    642
+   207                       207_retail_customers_marketing_customer    639
+   208                               208_sales_retail_store_products    633
+   209                     209_technology_network_equipment_platform    623
+   210                           210_earnings_stock_cash flow_equity    623
+   211                                     211_calls_talked_talk_say    622
+   212                                                       212____    622
+   213                              213_risk_capital_equity_leverage    619
+   214                                      214_today_great_day_mark    618
+   215                 215_experience_marketing_customers_businesses    617
+   216                              216_calls_recorded_remind_number    615
+   217                           217_sales_retail_marketing_products    615
+   218              218_quarters_expense_quarter year_fourth quarter    614
+   219                                    219_rates_rate_case_course    611
+   220           220_technologies_acquisition_technology_investments    606
+   221                                       221_year_2018_2020_2017    605
+   222                              222_brand_retail_consumer_growth    603
+   223                           223_inaudible_line_lines_conference    602
+   224                               224_costs_cost_expenses_expense    602
+   225                 225_average_year quarter_quarter year_quarter    601
+   226                           226_growth_double_growing_increases    600
+   227                                      227_recorded_today_note_    597
+   228                              228_sales_sale_selling_marketing    590
+   229                                                  229_begin___    589
+   230                              230_time_date_information_events    586
+   231                     231_open_markets_quarter 2008_end quarter    576
+   232                           232_expenses_expense_costs_revenues    575
+   233                           233_assets_asset_investments_equity    573
+   234                         234_remind_recorded_reminder_provided    572
+   235                235_acquisitions_acquisition_acquired_revenues    571
+   236                         236_income_earnings_decrease_expenses    570
+   237                      237_corporate_company_business_financial    570
+   238                        238_momentum_business_strategic_market    567
+   239             239_income_quarter 2008_quarter year_quarter 2007    563
+   240                                 240_number_key_press_reminder    561
+   241                         241_rates_investments_investment_rate    559
+   242                  242_discussed_information_provided_regarding    559
+   243                          243_energy_power_economic_production    554
+   244                            244_production_capacity_supply_300    553
+   245                            245_equity_capital_leverage_credit    550
+   246                           246_board_corporate_company_meeting    549
+   247                247_capacity_percentage_percent_fourth quarter    547
+   248                        248_core_investment_growth_transaction    544
+   249                           249_expenses_expense_revenues_costs    543
+   250                         250_meeting_exchange_stock_investment    541
+   251            251_inventory_quarters_fourth quarter_year quarter    538
+   252             252_transactions_global_transaction_international    538
+   253                               253_expenses_expense_costs_cost    536
+   254                          254_stock_purchase_market_investment    534
+   255                  255_data_technology_technologies_information    529
+   256                           256_economic_markets_pricing_prices    529
+   257                          257_anticipate_plans_expect_planning    528
+   258                 258_improved_improvement_quarter year_percent    525
+   259                       259_management_today_conference_morning    524
+   260                  260_earnings_stock_quarter 2008_year quarter    509
+   261                            261_recorded_conference_point_time    508
+   262                           262_cash flow_cash_quarters_quarter    499
+   263                             263_recorded_conference_reminder_    494
+   264                               264_markets_europe_market_sales    492
+   265                      265_discuss_management_corporate_address    492
+   266                       266_europe_north america_growth_america    491
+   267                   267_transactions_businesses_retail_business    489
+   268                            268_risk_factors_markets_marketing    482
+   269                           269_risk_stock_earnings_investments    477
+   270                                270_conference_recorded_today_    473
+   271                           271_expenses_expense_costs_revenues    473
+   272                       272_potential_year end_end year_release    473
+   273              273_income_investments_investment_quarter fiscal    470
+   274                          274_recorded_conference_report_today    468
+   275                       275_accounting_earnings_adjusted_equity    467
+   276                   276_decrease_decline_reduction_year quarter    466
+   277                       277_recorded_record_conference_reminder    465
+   278                          278_facility_facilities_states_state    462
+   279                279_consolidated_businesses_operating_business    462
+   280                                                  280_begin___    459
+   281                               281_expenses_expense_costs_cost    450
+   282                                        282_areas_area_500_000    449
+   283                            283_earnings_equity_assets_percent    448
+   284                    284_environment_industry_change_government    446
+   285                       285_revenue_revenues_percentage_percent    442
+   286                           286_expenses_expense_revenues_costs    442
+   287                          287_market_markets_exchange_industry    440
+   288                             288_calls_closing_open_investment    440
+   289                           289_decline_decrease_pricing_prices    439
+   290                          290_credit_cash flow_leverage_fiscal    438
+   291                                              291_ahead_good__    437
+   292                                 292_prices_pricing_cost_price    434
+   293                              293_costs_cost_pricing_increases    433
+   294                              294_loss_share_earnings_revenues    432
+   295                                295_update_changes_change_does    431
+   296                                  296_highest_shows_month_2013    431
+   297                              297_sales_sale_selling_estimated    431
+   298                   298_companies_marketing_businesses_services    430
+   299                            299_revenue_growth_revenues_profit    430
+   300                             300_power_energy_project_projects    429
+   301                       301_contract_operation_target_strategic    428
+   302                        302_inventory_decrease_decline_reduced    426
+   303                        303_integration_progress_ongoing_fully    423
+   304                             304_segments_segment_summary_turn    422
+   305                  305_consolidated_closing_closed_quarter 2011    420
+   306                   306_europe_manufacturing_production_markets    419
+   307                                                       307____    419
+   308                               308_expense_expenses_costs_cost    416
+   309                                   309_sales_retail_sale_store    412
+   310                                  310_line_lines_open_question    411
+   311                  311_earnings_press release_corporate_company    407
+   312                 312_improvement_improving_increasing_progress    400
+   313                         313_sales_increase_increases_decrease    394
+   314                           314_power_capacity_project_projects    393
+   315                   315_product_products_production_development    393
+   316                             316_sales_profit_revenues_revenue    392
+   317                        317_income_earnings_accounting_revenue    389
+   318                     318_guidance_regarding_provided_providing    386
+   319                  319_press release_provide_provides_quarterly    385
+   320                               320_expenses_costs_expense_cost    384
+   321                              321_conference_press_issues_talk    382
+   322                          322_completion_end_complete_comments    381
+   323                    323_recorded_conference_press release_2008    379
+   324                             324_sale_portfolio_assets_decline    378
+   325                 325_marketing_manufacturing_business_consumer    377
+   326                 326_acquisitions_acquisition_expenses_expense    376
+   327                             327_growth_revenue_revenues_sales    376
+   328                       328_revenue_revenues_customers_customer    375
+   329                       329_earnings_profitability_stock_income    372
+   330                          330_conference_recorded_record_today    367
+   331                       331_basis_quarter year_quarters_quarter    366
+   332                      332_discussed_discuss_future_anticipated    363
+   333                          333_press release_release_news_press    358
+   334                     334_review_reporting_internal_operational    356
+   335                                  335_page_lastly_want_history    355
+   336                                    336_stock_share_cost_price    353
+   337                             337_customers_customer_rate_rates    349
+   338                       338_contribution_income_billion_expense    349
+   339                          339_cost_costs_estimated_acquisition    348
+   340                     340_platform_provides_customers_companies    347
+   341                           341_investment_sales_revenue_profit    346
+   342                          342_brand_products_marketing_product    346
+   343                            343_trends_trend_increasing_change    344
+   344                           344_billion_flow_quarterly_quarters    343
+   345                               345_cash_capacity_equity_assets    338
+   346                       346_conference_meeting_corporate_events    337
+   347                                              347_ahead_turn__    334
+   348                               348_expenses_expense_costs_cost    333
+   349            349_facility_facilities_consolidated_manufacturing    331
+   350                              350_equity_stock_earnings_assets    325
+   351             351_acquisitions_acquisition_earnings_anticipated    323
+   352                                 352_slide_turning_turn_number    323
+   353                                                       353____    322
+   354                          354_team_success_successful_progress    322
+   355                     355_decrease_decline_reduced_quarter 2011    319
+   356                      356_programs_program_progress_completion    318
+   357                      357_systems_facilities_pipeline_services    318
+   358                                               358_good_time__    316
+   359                        359_difficult_time_opportunities_times    315
+   360                                  360_open_closing_begin_start    314
+   361           361_sales_fourth quarter_profitability_quarter year    310
+   362                                                362_day_good__    310
+   363                 363_company_corporate_companies_press release    308
+   364                                            364_morning_good__    307
+   365                         365_expenses_expense_costs_accounting    307
+   366                         366_sales_revenue_marketing_customers    307
+   367                          367_revenues_revenue_earnings_income    307
+   368                          368_capital_investments_million_cash    305
+   369                          369_strong_continues_remains_success    305
+   370           370_momentum_fourth quarter_second quarter_progress    304
+   371                         371_recorded_press release_note_press    303
+   372                        372_risk_projected_certain_anticipated    302
+   373                        373_revenue_income_investment_increase    300
+   374                                  374_growth_growing_grow_grew    300
+   375                  375_credit_long term_transaction_incremental    299
+   376                                           376_comments_kind__    299
+   377                               377_access_number_calls_numbers    298
+   378                         378_cash flow_cash_financial_maintain    298
+   379                        379_corporate_company_partners_general    292
+   380                           380_slide_business_market_marketing    290
+   381          381_technologies_technology_manufacturing_production    288
+   382                             382_conference_recorded_reminder_    288
+   383                        383_margin_adjusted_margins_percentage    287
+   384                            384_income_revenue_revenues_profit    287
+   385                                                   385_good___    286
+   386                     386_customer_customers_services_companies    285
+   387                   387_performance_network_technology_capacity    282
+   388                       388_decrease_quarter 2007_decline_rates    280
+   389                      389_corporate_company_management_general    280
+   390                           390_markets_market_investments_risk    280
+   391                 391_guidance_fiscal year_quarter fiscal_plans    280
+   392                             392_gains_increased_increase_gain    279
+   393                393_announced_progress_completed_press release    279
+   394                   394_transactions_closing_transaction_closed    278
+   395                     395_calls_review_second quarter_quarterly    277
+   396                             396_brand_retail_marketing_market    276
+   397                               397_balance_credit_turn_turning    275
+   398                        398_businesses_sale_business_corporate    274
+   399                             399_sales_sale_increase_increased    274
+   400                                    400_lines_turn_additional_    273
+   401                                      401_rates_lower_low_rate    273
+   402                     402_europe_north america_america_american    272
+   403                403_company_management_development_experienced    271
+   404                             404_growth_quarter year_grow_grew    271
+   405                                 405_stock_equity_capital_sale    270
+   406                          406_brand_marketing_industry_product    270
+   407                          407_accounting_fiscal year_2018_2019    269
+   408              408_revenues_revenue_north america_international    268
+   409                                409_rates_rate_percent_average    268
+   410                                      410_today_great_good_day    268
+   411             411_quarter 2008_increasing_increase_quarter 2011    268
+   412                                  412_morning_good_great_start    267
+   413                                413_sale_sales_purchase_prices    267
+   414                     414_profit_profitability_revenues_revenue    265
+   415                              415_pipeline_revenues_costs_cost    265
+   416                   416_inaudible_efforts_agreement_significant    263
+   417                                   417_plus_sales_new_includes    263
+   418                              418_mark_great_material_comments    261
+   419                                        419_range_far_low_high    261
+   420                         420_government_fiscal_credit_revenues    260
+   421                  421_provided_discussed_regarding_anticipated    260
+   422                       422_factors_provided_fiscal year_fiscal    259
+   423                     423_completion_complete_progress_year end    257
+   424                         424_future_customer_forward_customers    257
+   425                      425_earnings_income_quarter fiscal_share    256
+   426                        426_production_delivered_began_started    254
+   427                             427_stock_exchange_markets_market    254
+   428                           428_data_technical_partners_service    253
+   429                         429_volume_increases_increase_volumes    250
+   430                           430_power_operational_revenue_costs    250
+   431                         431_business_marketing_markets_market    249
+   432                                 432_question_great_day_stated    248
+   433                                 433_launch_june_october_plans    246
+   434                           434_sale_sales_purchase_acquisition    245
+   435                               435_expenses_expense_costs_cost    243
+   436 436_fourth quarter_second quarter_quarter quarter_end quarter    242
+   437                               437_meeting_coming_q3_available    242
+   438         438_quarter fiscal_fiscal year_quarter year_quarterly    242
+   439                           439_500_production_million_pipeline    241
+   440                  440_supply_manufacturing_business_production    241
+   441                          441_demand_supply_production_markets    240
+   442                               442_markets_sales_market_growth    240
+   443                              443_sales_sale_increase_revenues    239
+   444                               444_revenue_revenues_sales_cost    239
+   445                         445_decrease_decline_revenues_revenue    239
+   446                    446_stock_acquisitions_quarter 2008_equity    239
+   447                             447_sales_sale_markets_production    238
+   448                                448_date_later_reminder_future    238
+   449                   449_customers_customer_experience_marketing    238
+   450                                     450_ahead_great_question_    235
+   451                                       451_begin_morning_good_    235
+   452                          452_question_reminder_today_recorded    234
+   453                            453_review_great_services_provided    234
+   454                            454_risk_forward_financial_certain    233
+   455                        455_growth_increase_increasing_markets    233
+   456                     456_support_continued_continue_continuing    233
+   457                                 457_recorded_record_note_line    232
+   458                    458_market_markets_marketing_opportunities    232
+   459                 459_performance_particularly_operating_trends    231
+   460                          460_press release_release_news_press    229
+   461                             461_production_make_making_market    229
+   462                       462_recorded_conference_reminder_remind    228
+   463                      463_meeting_discuss_conference_regarding    227
+   464                                   464_cost_prices_price_costs    227
+   465                          465_profit_earnings_revenues_revenue    224
+   466                           466_expenses_expense_earnings_costs    224
+   467                          467_results_question_today_following    223
+   468                        468_marketing_customers_customer_brand    222
+   469                              469_turn_pleased_great_operating    222
+   470                         470_strategic_markets_strategy_market    222
+   471                         471_order_provides_announced_included    221
+   472                    472_investments_investment_million_billion    220
+   473                        473_north america_america_north_europe    219
+   474                      474_marketing_market_companies_strategic    219
+   475                                 475_coming_going_bring_future    219
+   476                               476_risk_future_certain_forward    218
+   477                              477_reduced_reduce_reduction_200    217
+   478                              478_production_estimated_500_200    216
+   479                      479_stronger_company_strategic_long term    215
+   480                                                  480_today___    215
+   481                            481_late_little_little bit_earlier    215
+   482                    482_business_manufacturing_corporate_sales    214
+   483                  483_industry_corporate_companies_experienced    214
+   484                                 484_open_question_come_course    214
+   485                           485_days_inventory_day_year quarter    212
+   486                 486_acquisitions_expenses_acquisition_expense    212
+   487                              487_asset_assets_quality_markets    211
+   488                         488_store_businesses_sales_additional    209
+   489                     489_services_companies_customers_business    209
+   490                                       490_morning_good_great_    208
+   491                            491_highlight_summary_overall_note    207
+   492                                492_sales_sale_retail_increase    207
+   493                      493_recorded_conference_meeting_reminder    207
+   494                       494_growth_grow_development_initiatives    206
+   495                                            495_morning_good__    206
+   496                                      496_later_question_good_    206
+   497                           497_market_transition_focus_markets    205
+   498                            498_meeting_discuss_provided_plans    205
+   499     499_quarter 2006_quarter 2007_quarter 2010_quarter fiscal    204
+   500                                           500_good_day_today_    204
+   501                                501_units_unit_million_billion    204
+   502                                  502_calls_open_closing_point    203
+   503                         503_markets_marketing_retail_economic    202
+   504                      504_customers_customer_purchase_products    201
+   505                   505_network_technology_industry_performance    200
+   506                                 506_assets_basis_asset_points    200
 
 Topic Representations for Presentation:
-Topic 0 Representation: gross margin, margin, margins, earnings, adjusted ebitda, revenues, operating income, quarter year, cash flow, revenue
-Topic 1 Representation: clinical, phase, medical, treatment, hospital, healthcare, covid 19, demonstrated, results, ongoing
-Topic 2 Representation: earnings share, earnings, net income, shares, income, revenues, stock, revenue, non gaap, share
-Topic 3 Representation: customers, customer, marketing, clients, consumers, businesses, business, consumer, innovation, market
-Topic 4 Representation: ceo, board directors, executive, directors, management team, president, leadership, corporate, corporation, management
-Topic 5 Representation: financial results, financial performance, quarter results, earnings release, review, results quarter, financial, earnings, financials, results
-Topic 6 Representation: questions, open, ask, request, closing, prepared remarks, question, ready, begin, plan
-Topic 7 Representation: quarter earnings, earnings, earnings release, financial results, morning, quarter results, results quarter, conference, quarter 2018, second quarter
-Topic 8 Representation: strong quarter, results quarter, quarter results, performance quarter, fourth quarter, second quarter, pleased report, strong performance, quarter quarter, strong
-Topic 9 Representation: cash flows, cash flow, balance sheet, financial, cash, earnings, bank, working capital, debt, liquidity
-Topic 10 Representation: production, producing, 12, years, development, 15, early, 10, months, year
-Topic 11 Representation: stores, store, retail, sales, seven, restaurants, customers, 12, opened, markets
-Topic 12 Representation: litigation, statements, forward looking, securities, discussed, remarks, future, discussion, financial results, regarding
-Topic 13 Representation: customers, customer, clients, bookings, growth, increase, market, sales, markets, increased
-Topic 14 Representation: slide, slides, presentation, let turn, number, seven, 12, let start, flow, fourth
-Topic 15 Representation: obligations, update, updates, forward looking, forward, assumptions, statements, statement, future, point
-Topic 16 Representation: non gaap, gaap, financial results, earnings release, accounting, earnings, measures, disclosures, measure, financial
-Topic 17 Representation: oil, production, fuel, supply, gas, produced, capacity, estimated, pipeline, refining
-Topic 18 Representation: morning, welcome, thank, evening, happy, afternoon, thanks, good, excellent, great
-Topic 19 Representation: webcast, press release, recorded, earnings release, conference, website, link, site, broadcast, presentation
-Topic 20 Representation: risks, risk, factors, filings, statements, filing, financial, securities, earnings release, filed
-Topic 21 Representation: video, communications, technologies, channel, network, technology, infrastructure, provider, media, wireless
-Topic 22 Representation: acquisitions, acquisition, acquire, merger, acquired, shareholder, companies, company, sales, revenues
-Topic 23 Representation: risks, risk, caution, uncertainty, assumptions, anticipated, forward looking, future, uncertain, expectations
-Topic 24 Representation: currency, exchange, dollars, dollar, earnings, foreign, revenues, markets, quarter, expenses
-Topic 25 Representation: inventory, inventories, stock, supply, shipments, sales, balance sheet, increase, production, increased
-Topic 26 Representation: ahead, mr, allowed, thanks, , , , , , 
-Topic 27 Representation: broadcast, audience, participants, audio, recorded, talking, webcast, discussing, allow, conference
-Topic 28 Representation: days, 90 days, sales, decrease, day, prior quarter, june, 71, 31st, 70
-Topic 29 Representation: game, play, played, award, release, platforms, franchise, second, digital, city
-Topic 30 Representation: settlement, litigation, claims, commission, pending, cases, contract, outcome, approval, decided
-Topic 31 Representation: flat, year quarter, quarter year, quarter revenue, compared quarter, prior quarter, sales, net sales, quarter, quarter expect
-Topic 32 Representation: begin, beginning, start, mr, ll turn, okay, ahead, afternoon, ll, don
-Topic 33 Representation: fleet, deliveries, delivery, lease, delivered, financing, schedule, announced, operational, scheduled
-Topic 34 Representation: cash flow, debt, cash, liquidity, balance sheet, 200 million, loan, bank, 250, 20 million
-Topic 35 Representation: numbers, number, digit, amounts, figures, lot, 34, 26, significant, briefly
-Topic 36 Representation: safety, safe, employees, protect, company, industry, maintain, employee, practices, priority
-Topic 37 Representation: manufacturing, production, transportation, industry, demand, maintenance, customers, market, track, markets
-Topic 38 Representation: growth rate, growth, production, bit, increasing, supply, demand, capacity, performance, 2018
+Topic 0 Representation: data, health, benefit, technology, progress, development, based, ongoing, importantly, additional
+Topic 1 Representation: margin, margins, revenues, decrease, revenue, profit, expenses, decline, increase, sales
+Topic 2 Representation: earnings, conference, quarterly, quarter 2006, calls, corporate, pleased, quarter 2008, morning, fourth quarter
+Topic 3 Representation: things, going forward, items, issues, thing, details, think, comments, discuss, let
+Topic 4 Representation: tax, fiscal, fiscal year, rates, income, percent, expense, credit, rate, accounting
+Topic 5 Representation: cash flow, cash, financial, earnings, assets, capital, profitability, leverage, investments, business
+Topic 6 Representation: investments, investment, long term, going forward, future, strategic, profitability, strategy, maintain, growth
+Topic 7 Representation: review, financial, earnings, report, quarter fiscal, fiscal, results, quarterly, fourth quarter, second quarter
+Topic 8 Representation: accounting, earnings, financial, press release, expenses, consolidated, quarterly, stock, cash flow, provided
+Topic 9 Representation: calls, turn, turning, note, say, summary, talked, remind, discuss, come
+Topic 10 Representation: revenues, revenue, quarter 2008, quarter 2007, quarter fiscal, total, quarter year, year quarter, increase, increased
+Topic 11 Representation: costs, cost, expenses, expense, spending, pricing, spend, revenue, profitability, efforts
+Topic 12 Representation: earnings, income, adjusted, revenues, revenue, increased, expenses, fiscal, investments, increase
+Topic 13 Representation: acquisition, acquisitions, acquired, companies, investment, company, market, product, transaction, business
+Topic 14 Representation: earnings, adjusted, increase, average, estimate, costs, range, stock, expenses, 80
+Topic 15 Representation: production, development, planned, completion, projects, project, doing, plans, success, successful
+Topic 16 Representation: investments, cash, investment, end quarter, dollars, capital, quarter, billion, fiscal year, million
+Topic 17 Representation: future, anticipated, plans, press release, forward, discussed, regarding, discuss, company, guidance
+Topic 18 Representation: expenses, expense, costs, revenues, spending, cost, revenue, quarter fiscal, spend, total
+Topic 19 Representation: expenses, expense, costs, revenues, cost, revenue, quarter fiscal, decrease, total, sales
+Topic 20 Representation: dollar, dollars, rates, exchange, costs, revenues, cost, rate, earnings, expenses
+Topic 21 Representation: margin, margins, decrease, leverage, reduced, lower, profit, adjusted, sales, increased
+Topic 22 Representation: corporate, management, company, companies, general, accounting, financial, leading, business, strategic
+Topic 23 Representation: spending, spend, fiscal, costs, fiscal year, investments, capital, billion, million, investment
+Topic 24 Representation: million, billion, 000, 500, total, dollars, approximately, 300, estimate, increase
+Topic 25 Representation: progress, update, going forward, changes, development, plans, finally, results, future, plan
+Topic 26 Representation: increase, increased, year quarter, quarter year, percentage, percent, quarter 2007, higher, 2002, year
+Topic 27 Representation: sales, increased, quarter year, quarter 2008, quarter 2007, increase, year quarter, retail, total, quarter 2011
+Topic 28 Representation: second quarter, fourth quarter, quarter quarter, results, success, pleased, successful, quarter, quarterly, quarters
+Topic 29 Representation: revenues, sales, revenue, release, industry, marketing, success, october, markets, including
+Topic 30 Representation: earnings, share, year quarter, quarter, 75, 60, 50, estimate, 80, 70
+Topic 31 Representation: store, retail, markets, closing, closed, states, brand, company, open, north america
+Topic 32 Representation: earnings, stock, cash flow, quarterly, share, board, company, cash, capital, annual
+Topic 33 Representation: customers, customer, marketing, consumer, business, partners, services, service, strategic, providing
+Topic 34 Representation: stock, purchase, share, company, billion, million, 300, 000, 500, transactions
+Topic 35 Representation: quarter 2006, review, quarter 2008, quarter fiscal, second quarter, earnings, fourth quarter, quarterly, quarter, quarter 2010
+Topic 36 Representation: earnings, accounting, cash flow, financial, capital, acquisitions, income, assets, cash, investments
+Topic 37 Representation: earnings, income, profit, share, tax, billion, quarter fiscal, 000, million, net
+Topic 38 Representation: conference, meeting, partners, associated, leading, corporate, company, strategic, general, ahead
+Topic 39 Representation: slide, fourth quarter, second quarter, results, quarterly, quarter year, earnings, quarter, quarters, fourth
+Topic 40 Representation: income, earnings, revenues, revenue, quarter fiscal, quarter 2008, profit, expenses, quarter year, year quarter
+Topic 41 Representation: expenses, expense, cost, quarter fiscal, costs, fiscal, year quarter, quarter 2008, quarter year, income
+Topic 42 Representation: inventory, stock, production, manufacturing, supply, items, maintain, business, retail, selling
+Topic 43 Representation: calls, press release, recorded, today, remind, news, press, reminder, later, note
+Topic 44 Representation: loss, profit, quarter 2008, year quarter, quarter 2007, quarter year, expenses, million, income, costs
+Topic 45 Representation: fiscal, cash, billion, credit, total, equity, 300, approximately, end quarter, million
+Topic 46 Representation: revenue, revenues, estimated, million, 500, estimate, dollars, billion, expectations, 200
+Topic 47 Representation: guidance, quarter year, plan, fourth quarter, quarter fiscal, fiscal year, quarterly, second quarter, year, year end
+Topic 48 Representation: basis, points, 90, year quarter, quarter year, 300, compared year, 80, 200, percent
+Topic 49 Representation: revenues, sales, strong, revenue, markets, quarterly, quarter year, customers, increase, marketing
+Topic 50 Representation: sales, sale, decline, decrease, reduced, lower, retail, markets, revenues, quarter 2008
+Topic 51 Representation: margin, basis, investment, quarter year, accounting, quarter 2007, quarters, decrease, rates, quarter
+Topic 52 Representation: regarding, pleased, provide, complete, question, available, come, comments, sure, taking
+Topic 53 Representation: margin, margins, adjusted, leverage, year quarter, quarter year, revenues, quarter, percent, increased
+Topic 54 Representation: future, going forward, anticipated, changes, 2020, later, date, forward, press release, update
+Topic 55 Representation: revenues, decrease, decline, revenue, sales, lower, compared year, sale, quarter 2008, year quarter
+Topic 56 Representation: management, team, company, strategic, corporate, strategy, competitive, strong, success, development
+Topic 57 Representation: europe, international, markets, businesses, north america, market, marketing, sales, companies, business
+Topic 58 Representation: morning, calls, pleased, today, note, started, reminder, rest, great, day
+Topic 59 Representation: cash flow, cash, earnings, income, year quarter, fiscal, quarter, quarter year, billion, flow
+Topic 60 Representation: year, start, began, 2006, 2008, started, progress, 2007, 2018, 2019
+Topic 61 Representation: spending, costs, spend, estimated, investment, investments, estimate, million, 200, 300
+Topic 62 Representation: case, decision, ongoing, review, announced, favorable, lastly, regarding, held, states
+Topic 63 Representation: customers, customer, increase, increased, seven, 300, consumer, 000, companies, addition
+Topic 64 Representation: morning, good, today, day, great, , , , , 
+Topic 65 Representation: earnings, quarter year, quarter, quarter fiscal, year quarter, share, fully, quarter 2011, approximately, consolidated
+Topic 66 Representation: factors, report, risk, financial, results, earnings, changes, stated, specific, company
+Topic 67 Representation: 2020, health, ongoing, began, impacted, continue, continues, trends, 19, government
+Topic 68 Representation: network, technologies, technology, services, advantage, platform, service, customers, industry, provides
+Topic 69 Representation: corporate, company, management, customer, businesses, general, financial, business, accounting, announced
+Topic 70 Representation: expenses, expense, revenues, costs, revenue, spending, cost, accounting, investments, total
+Topic 71 Representation: team, contribution, success, contributed, successful, outstanding, efforts, say, progress, finally
+Topic 72 Representation: stock, average, share, estimated, estimate, million, approximately, total, 000, expect
+Topic 73 Representation: industry, production, supply, contract, equipment, build, development, cost, profitability, technology
+Topic 74 Representation: ahead, good, , , , , , , , 
+Topic 75 Representation: ahead, good, quite, , , , , , , 
+Topic 76 Representation: percentage, percent, combined, year quarter, quarter, 90, quarters, relatively, fourth quarter, increased
+Topic 77 Representation: cash flow, cash, revenue, income, spending, free, investments, million, billion, 500
+Topic 78 Representation: expenses, expense, costs, cost, revenue, total, fiscal year, quarter year, year quarter, assets
+Topic 79 Representation: economic, industry, environment, difficult, risk, markets, trends, business, growth, remain
+Topic 80 Representation: loss, stock, share, net, income, million, quarter 2008, 000, year quarter, quarter
+Topic 81 Representation: profit, revenues, revenue, sales, total, quarter year, quarter fiscal, year quarter, quarter 2007, increased
+Topic 82 Representation: income, earnings, quarter fiscal, revenues, year quarter, quarter year, quarter 2008, quarter 2007, quarter 2011, fiscal year
+Topic 83 Representation: fiscal year, fiscal, press release, 10, 2010, 2009, financial, 2008, quarterly, reporting
+Topic 84 Representation: corporate, businesses, business, customers, companies, retail, market, markets, customer, investment
+Topic 85 Representation: income, earnings, revenue, revenues, share, tax, profit, expenses, stock, total
+Topic 86 Representation: production, manufacturing, industry, demand, customers, market, revenues, business, markets, facilities
+Topic 87 Representation: expenses, expense, costs, cost, increased, spending, increase, revenues, increases, additional
+Topic 88 Representation: conference, partners, mark, great, today, events, results, operations, going, come
+Topic 89 Representation: pricing, prices, costs, price, markets, market, rates, cost, demand, sales
+Topic 90 Representation: morning, good, , , , , , , , 
+Topic 91 Representation: production, estimated, capacity, approximately, quarter, quarter 2007, quarter year, quarter quarter, total, estimate
+Topic 92 Representation: estimated, billion, total, million, revenue, fiscal year, 2011, 2010, 12, dollar
+Topic 93 Representation: brand, marketing, customers, consumer, strategic, retail, business, products, customer, product
+Topic 94 Representation: decline, decrease, sales, reduced, markets, sale, market, revenues, marketing, reduction
+Topic 95 Representation: credit, capital, cash, facility, billion, facilities, accounts, capacity, million, asset
+Topic 96 Representation: flat, quarter, quarters, year quarter, roughly, quarter year, relatively, sales, quarter quarter, largely
+Topic 97 Representation: accounts, accounting, account, revenues, expenses, revenue, billion, million, total, dollars
+Topic 98 Representation: second quarter, fourth quarter, year quarter, quarter quarter, end quarter, quarter year, quarter, quarters, solid, overall
+Topic 99 Representation: customers, data, services, customer, businesses, technologies, service, provides, companies, technology
+Topic 100 Representation: loss, earnings, profit, year quarter, stock, quarter 2008, fourth quarter, costs, quarter fiscal, quarter
+Topic 101 Representation: factors, risk, report, 10, quarterly, discussed, fiscal year, financial, regarding, annual
+Topic 102 Representation: calls, corporate, management, general, company, government, operation, turn, want, brand
+Topic 103 Representation: days, quarter year, quarter, fourth quarter, quarters, end quarter, second quarter, 75, 90, 48
+Topic 104 Representation: calls, open, discussed, completed, close, regarding, note, question, discuss, come
+Topic 105 Representation: costs, cost, expenses, expense, estimated, million, 000, investments, 500, approximately
+Topic 106 Representation: network, consumer, technology, technologies, demand, customers, marketing, customer, services, quality
+Topic 107 Representation: press release, business, company, information, details, discussed, remind, risk, begin, report
+Topic 108 Representation: quarter year, trends, quarterly, trend, month, july, august, january, march, fourth quarter
+Topic 109 Representation: prices, pricing, price, cost, costs, average, revenues, sales, estimated, revenue
+Topic 110 Representation: lines, rates, line, business, rate, percent, commercial, year quarter, increased, increases
+Topic 111 Representation: earnings, income, profit, stock, share, tax, quarter fiscal, quarter year, year quarter, net
+Topic 112 Representation: increase, growth, billion, increased, investment, million, equity, acquisition, grew, commercial
+Topic 113 Representation: assets, expense, expenses, asset, accounting, equity, costs, profit, cost, income
+Topic 114 Representation: leverage, cash flow, equity, balance, credit, cash, corporate, capital, consolidated, company
+Topic 115 Representation: credit, favorable, noted, consumer, significant, economic, customers, improvement, assets, customer
+Topic 116 Representation: contract, partners, customer, years, months, business, weeks, purchase, customers, supply
+Topic 117 Representation: cash flow, equity, slide, assets, capital, asset, cash, balance, leverage, income
+Topic 118 Representation: days, sales, sale, day, 48, quarter fiscal, quarter, quarter 2008, end quarter, second quarter
+Topic 119 Representation: increase, growth, increasing, quarter year, increased, quarter, quarter quarter, core, billion, average
+Topic 120 Representation: revenue, revenues, accounting, contract, decrease, total, remaining, product, customers, customer
+Topic 121 Representation: cash, income, quarter fiscal, fiscal, fiscal year, quarter 2008, capital, quarter year, year quarter, operations
+Topic 122 Representation: anticipated, risk, future, plans, discussed, regarding, forward, press release, discuss, provided
+Topic 123 Representation: expenses, revenues, expense, costs, revenue, cost, year quarter, quarter fiscal, sales, spending
+Topic 124 Representation: press release, release, provided, press, news, address, resources, need, remind, available
+Topic 125 Representation: accounting, excluding, acquisitions, earnings, expenses, expense, equity, non, financial, investments
+Topic 126 Representation: bit, pricing, market, prices, markets, technologies, demand, price, selling, technology
+Topic 127 Representation: pipeline, production, markets, demand, market, industry, growth, supply, opportunities, growing
+Topic 128 Representation: brand, products, retail, marketing, product, businesses, business, consumer, customers, trends
+Topic 129 Representation: slide, seven, 10, 12, 11, number, numbers, plan, 13, 18
+Topic 130 Representation: normal, average, december, november, north, january, year, july, september, north america
+Topic 131 Representation: fourth quarter, second quarter, second half, quarter quarter, quarter, results, result, quarters, fourth, quarter year
+Topic 132 Representation: progress, pleased, success, successful, improvement, complete, completed, ongoing, development, achieved
+Topic 133 Representation: marketing, customers, market, consumer, customer, markets, business, technology, businesses, industry
+Topic 134 Representation: customers, customer, marketing, consumer, success, service, quality, improving, experience, providing
+Topic 135 Representation: sales, products, growth, grew, markets, product, growing, market, production, revenues
+Topic 136 Representation: corporate, outlook, company, address, operation, general, business, office, strategic, accounting
+Topic 137 Representation: mark, board, company, corporate, contribution, success, strategic, successful, companies, brand
+Topic 138 Representation: note, cash, transaction, dollars, transactions, purchase, offering, sale, value, acquisition
+Topic 139 Representation: income, earnings, tax, revenue, fiscal, prior year, billion, million, pre, 000
+Topic 140 Representation: note, just, ongoing, mind, time, best, associated, , , 
+Topic 141 Representation: equity, earnings, assets, asset, return, income, portfolio, investment, capital, average
+Topic 142 Representation: press release, release, news, announced, results, earnings, press, reporting, quarter 2006, quarter 2008
+Topic 143 Representation: cash flow, cash, leverage, asset, capital, credit, investments, capacity, 500, 300
+Topic 144 Representation: morning, today, great, good, going, day, , , , 
+Topic 145 Representation: line, lines, clear, recorded, calls, question, discuss, 2004, ended, following
+Topic 146 Representation: guidance, costs, dollar, price, range, 20, higher, estimate, quarter year, 80
+Topic 147 Representation: end quarter, transaction, closing, transactions, anticipated, end year, year end, fourth quarter, closed, end
+Topic 148 Representation: health, customers, customer, company, industry, facilities, maintain, companies, important, healthy
+Topic 149 Representation: end quarter, quarter quarter, quarter, 65, total, 31, 300, 200, 80, end year
+Topic 150 Representation: prices, pricing, sales, price, cost, costs, markets, decrease, demand, market
+Topic 151 Representation: maintain, percentage, percent, rates, rate, 90, customers, approximately, customer, continues
+Topic 152 Representation: leverage, profit, investments, operation, benefit, substantial, gain, benefits, business, profitability
+Topic 153 Representation: brand, customers, marketing, growth, sales, success, profit, strong, consumer, successful
+Topic 154 Representation: discussed, future, anticipated, regarding, forward, press release, reporting, historical, calls, financial
+Topic 155 Representation: equipment, businesses, facilities, markets, business, market, facility, customers, products, customer
+Topic 156 Representation: ph, great, best, quality, comments, , , , , 
+Topic 157 Representation: question, mentioned earlier, regarding, ahead, mentioned, second, companies, excellent, ll, corporate
+Topic 158 Representation: inventory, million, total, dollars, production, billion, value, worth, 000, acquisition
+Topic 159 Representation: customers, customer, percentage, sales, percent, revenues, revenue, business, quarter, quarter year
+Topic 160 Representation: demand, growth, growing, increasing, markets, forecast, production, market, prices, supply
+Topic 161 Representation: open, closed, closing, sure, coming, start, great, update, question, ahead
+Topic 162 Representation: conference, meeting, meet, events, partners, group, announced, companies, customers, june
+Topic 163 Representation: revenue, revenues, profit, income, sales, business, accounting, costs, cost, sale
+Topic 164 Representation: cost, costs, prices, production, expense, rates, expenses, price, year quarter, quarter 2008
+Topic 165 Representation: growth, growing, grow, percent, grew, compared year, approximately, year quarter, quarter year, estimate
+Topic 166 Representation: sales, sale, market, markets, demand, selling, home, consumer, environment, trend
+Topic 167 Representation: pipeline, development, build, progress, project, process, building, projects, maintain, industry
+Topic 168 Representation: revenue, revenues, income, sales, quarter 2008, total, quarter year, quarter 2007, year quarter, million
+Topic 169 Representation: production, operational, operating, began, running, doing, industry, run, facility, operation
+Topic 170 Representation: credit, loss, decrease, quarter 2011, quarter 2008, risk, quarter year, quarter 2010, investment, quarters
+Topic 171 Representation: positive, trend, trends, quarter, quarters, fiscal year, negative, month, increases, increase
+Topic 172 Representation: numbers, number, given, lot, quickly, fact, bit, time, indicated, certainly
+Topic 173 Representation: future, anticipated, plans, discussed, press release, forward, provided, regarding, expectations, discuss
+Topic 174 Representation: growth, sales, customers, marketing, retail, profit, increases, success, demand, consumer
+Topic 175 Representation: sales, revenues, sale, closing, revenue, prices, increased, increase, home, selling
+Topic 176 Representation: manufacturing, technologies, 300, equipment, production, technology, 200, industry, capacity, product
+Topic 177 Representation: question, continue, reminder, limited, sure, noted, following, single, remind, come
+Topic 178 Representation: morning, pleased, went, time, coming, rest, today, going, got, great
+Topic 179 Representation: technologies, sales, production, technology, equipment, manufacturing, demand, power, marketing, increasing
+Topic 180 Representation: demand, market, markets, supply, pricing, economic, consumer, production, trends, sales
+Topic 181 Representation: growth, grow, percent, percentage, grew, increase, production, environment, revenues, 10
+Topic 182 Representation: revenue, revenues, sales, profit, expenses, business, expense, costs, sale, income
+Topic 183 Representation: q4, q2, q3, q1, performance, stronger, results, improvement, provided, sequentially
+Topic 184 Representation: begin, start, began, ahead, don, ll, going, program, meet, 
+Topic 185 Representation: project, projects, planned, building, build, quarter 2011, quarter 2008, complete, anticipated, completion
+Topic 186 Representation: equipment, seven, operational, running, run, production, platform, operating, fourth, plans
+Topic 187 Representation: impacted, impact, effect, areas, including, events, businesses, resulted, issues, particularly
+Topic 188 Representation: share, price, cost, dollar, costs, sale, half, 50, 60, 75
+Topic 189 Representation: calls, regarding, operational, operations, question, return, number, services, closing, pleased
+Topic 190 Representation: calls, open, closing, completed, provided, complete, provide, note, continued, guidance
+Topic 191 Representation: conference, begin, start, began, ahead, march, april, opportunity, sure, early
+Topic 192 Representation: positive, favorable, customer, customers, success, marketing, potential, pleased, consumer, negative
+Topic 193 Representation: trends, half year, 2016, 2015, 2018, 2020, quarters, 2012, second half, markets
+Topic 194 Representation: highlight, provided, let, little, given, provide, results, line, little bit, providing
+Topic 195 Representation: earnings, record, profitability, revenues, profit, revenue, income, sales, quarterly, quarter 2008
+Topic 196 Representation: expenses, expense, costs, revenues, sales, cost, revenue, marketing, spending, total
+Topic 197 Representation: retail, sales, products, brand, items, marketing, business, market, category, product
+Topic 198 Representation: value, equity, assets, stock, earnings, asset, acquisition, gains, worth, increased
+Topic 199 Representation: marketing, markets, market, consumer, customers, industry, products, companies, customer, manufacturing
+Topic 200 Representation: gain, gains, earnings, sale, sales, acquisition, equity, investments, income, investment
+Topic 201 Representation: brand, customers, prior year, products, industry, retail, product, customer, year, compared year
+Topic 202 Representation: decrease, decline, year quarter, quarter year, compared year, quarter 2008, prior year, quarter 2007, fiscal year, quarter 2006
+Topic 203 Representation: slide, press release, calls, provided, discuss, today, view, conference, release, mentioned
+Topic 204 Representation: production, market, pricing, risk, maintain, prices, release, portfolio, strategy, 2020
+Topic 205 Representation: greater, quarterly, order, quarter fiscal, quarter 2011, compared, overall, business, quarter, second quarter
+Topic 206 Representation: risk, certain, anticipated, future, conditions, regarding, results, changes, expectations, plans
+Topic 207 Representation: retail, customers, marketing, customer, sales, store, business, products, markets, brand
+Topic 208 Representation: sales, retail, store, products, trends, brand, marketing, consumer, markets, category
+Topic 209 Representation: technology, network, equipment, platform, control, customers, people, use, management, using
+Topic 210 Representation: earnings, stock, cash flow, equity, billion, return, quarterly, capital, million, share
+Topic 211 Representation: calls, talked, talk, say, regarding, discuss, discussed, later, come, let
+Topic 212 Representation: , , , , , , , , , 
+Topic 213 Representation: risk, capital, equity, leverage, earnings, consolidated, asset, assets, approximately, total
+Topic 214 Representation: today, great, day, mark, result, future, good, morning, press, say
+Topic 215 Representation: experience, marketing, customers, businesses, business, opportunities, customer, companies, management, revenue
+Topic 216 Representation: calls, recorded, remind, number, numbers, reminder, note, reached, international, return
+Topic 217 Representation: sales, retail, marketing, products, markets, product, trends, industry, brand, production
+Topic 218 Representation: quarters, expense, quarter year, fourth quarter, quarter 2008, quarter, dollars, quarter 2010, second quarter, quarter quarter
+Topic 219 Representation: rates, rate, case, course, states, costs, state, decision, order, cost
+Topic 220 Representation: technologies, acquisition, technology, investments, portfolio, investment, companies, industry, product, asset
+Topic 221 Representation: year, 2018, 2020, 2017, 2016, 2019, 2015, 2006, outlook, going forward
+Topic 222 Representation: brand, retail, consumer, growth, market, companies, grew, percentage, company, profit
+Topic 223 Representation: inaudible, line, lines, conference, recorded, meeting, note, press, press release, question
+Topic 224 Representation: costs, cost, expenses, expense, million, total, quarter fiscal, estimated, 000, quarter 2007
+Topic 225 Representation: average, year quarter, quarter year, quarter, order, quarter fiscal, value, 80, fourth quarter, increased
+Topic 226 Representation: growth, double, growing, increases, number, grew, grow, units, revenues, expansion
+Topic 227 Representation: recorded, today, note, , , , , , , 
+Topic 228 Representation: sales, sale, selling, marketing, customer, group, business, supply, acquisition, including
+Topic 229 Representation: begin, , , , , , , , , 
+Topic 230 Representation: time, date, information, events, conference, today, press release, recorded, day, discussed
+Topic 231 Representation: open, markets, quarter 2008, end quarter, closed, company, fourth quarter, quarter year, quarter, seven
+Topic 232 Representation: expenses, expense, costs, revenues, cost, spending, revenue, quarter fiscal, development, quarter 2008
+Topic 233 Representation: assets, asset, investments, equity, revenues, investment, billion, capital, total, million
+Topic 234 Representation: remind, recorded, reminder, provided, later, today, press release, week, available, release
+Topic 235 Representation: acquisitions, acquisition, acquired, revenues, earnings, investment, revenue, million, billion, companies
+Topic 236 Representation: income, earnings, decrease, expenses, revenue, profit, decline, reduced, lower, compared year
+Topic 237 Representation: corporate, company, business, financial, management, businesses, accounting, capital, general, investment
+Topic 238 Representation: momentum, business, strategic, market, businesses, markets, company, sales, success, marketing
+Topic 239 Representation: income, quarter 2008, quarter year, quarter 2007, investments, increase, increased, revenue, revenues, investment
+Topic 240 Representation: number, key, press, reminder, remind, directly, today, time, morning, question
+Topic 241 Representation: rates, investments, investment, rate, trend, markets, risk, economic, decline, increase
+Topic 242 Representation: discussed, information, provided, regarding, announced, companies, press release, company, acquisition, transactions
+Topic 243 Representation: energy, power, economic, production, technologies, generation, development, benefit, project, companies
+Topic 244 Representation: production, capacity, supply, 300, 000, year quarter, 500, quarter year, annual, demand
+Topic 245 Representation: equity, capital, leverage, credit, cash, percentage, percent, total, approximately, quarter
+Topic 246 Representation: board, corporate, company, meeting, companies, majority, team, brand, management, leading
+Topic 247 Representation: capacity, percentage, percent, fourth quarter, quarter, second quarter, quarter quarter, quarter 2010, quarter 2011, end quarter
+Topic 248 Representation: core, investment, growth, transaction, portfolio, asset, accounts, rates, retail, increasing
+Topic 249 Representation: expenses, expense, revenues, costs, sales, revenue, selling, total, quarter fiscal, year quarter
+Topic 250 Representation: meeting, exchange, stock, investment, plans, corporate, plan, announced, day, conference
+Topic 251 Representation: inventory, quarters, fourth quarter, year quarter, quarter year, second quarter, quarter, end quarter, supply, balance
+Topic 252 Representation: transactions, global, transaction, international, financial, partners, network, companies, benefits, businesses
+Topic 253 Representation: expenses, expense, costs, cost, stock, income, equity, total, million, accounting
+Topic 254 Representation: stock, purchase, market, investment, quarterly, company, business, maintain, program, programs
+Topic 255 Representation: data, technology, technologies, information, growth, systems, businesses, increasing, management, markets
+Topic 256 Representation: economic, markets, pricing, prices, demand, increases, costs, rates, decline, increase
+Topic 257 Representation: anticipate, plans, expect, planning, plan, future, expectations, planned, believe, projected
+Topic 258 Representation: improved, improvement, quarter year, percent, quarter 2011, revenues, revenue, average, expenses, increased
+Topic 259 Representation: management, today, conference, morning, , , , , , 
+Topic 260 Representation: earnings, stock, quarter 2008, year quarter, quarter fiscal, quarter, share, fiscal year, expense, estimated
+Topic 261 Representation: recorded, conference, point, time, , , , , , 
+Topic 262 Representation: cash flow, cash, quarters, quarter, quarterly, revenues, decrease, second quarter, fourth quarter, investments
+Topic 263 Representation: recorded, conference, reminder, , , , , , , 
+Topic 264 Representation: markets, europe, market, sales, demand, economic, marketing, retail, trends, customers
+Topic 265 Representation: discuss, management, corporate, address, conference, want, general, calls, today, marketing
+Topic 266 Representation: europe, north america, growth, america, markets, growing, trends, economic, grew, gains
+Topic 267 Representation: transactions, businesses, retail, business, companies, customers, customer, transaction, consumer, marketing
+Topic 268 Representation: risk, factors, markets, marketing, market, sales, customers, costs, products, demand
+Topic 269 Representation: risk, stock, earnings, investments, companies, company, corporate, provided, press release, investment
+Topic 270 Representation: conference, recorded, today, , , , , , , 
+Topic 271 Representation: expenses, expense, costs, revenues, revenue, cost, total, quarter fiscal, fiscal, quarterly
+Topic 272 Representation: potential, year end, end year, release, estimated, risk, year, growth, 2017, estimate
+Topic 273 Representation: income, investments, investment, quarter fiscal, decrease, increase, cash, increased, increasing, quarter year
+Topic 274 Representation: recorded, conference, report, today, progress, slide, development, , , 
+Topic 275 Representation: accounting, earnings, adjusted, equity, expenses, income, cash, expense, exchange, investment
+Topic 276 Representation: decrease, decline, reduction, year quarter, lower, quarter year, quarter 2008, compared year, quarter 2007, prior year
+Topic 277 Representation: recorded, record, conference, reminder, results, states, , , , 
+Topic 278 Representation: facility, facilities, states, state, plans, services, contract, government, service, management
+Topic 279 Representation: consolidated, businesses, operating, business, remaining, operation, accounting, sale, company, previously
+Topic 280 Representation: begin, , , , , , , , , 
+Topic 281 Representation: expenses, expense, costs, cost, included, benefits, includes, including, company, include
+Topic 282 Representation: areas, area, 500, 000, 300, 200, approximately, lot, acquisition, 75
+Topic 283 Representation: earnings, equity, assets, percent, return, investment, investments, capital, average, overall
+Topic 284 Representation: environment, industry, change, government, changes, business, allow, states, ongoing, development
+Topic 285 Representation: revenue, revenues, percentage, percent, 90, 80, total, year quarter, consumer, quarter year
+Topic 286 Representation: expenses, expense, revenues, costs, quarter fiscal, revenue, fiscal, quarter 2008, total, quarter 2007
+Topic 287 Representation: market, markets, exchange, industry, product, products, equity, gains, increased, expand
+Topic 288 Representation: calls, closing, open, investment, stock, regarding, business, press release, question, note
+Topic 289 Representation: decline, decrease, pricing, prices, increased, lower, percentage, increases, price, increase
+Topic 290 Representation: credit, cash flow, leverage, fiscal, cash, accounts, financial, fiscal year, capital, balance
+Topic 291 Representation: ahead, good, , , , , , , , 
+Topic 292 Representation: prices, pricing, cost, price, costs, increased, increase, higher, lower, selling
+Topic 293 Representation: costs, cost, pricing, increases, increase, increased, prices, increasing, price, material
+Topic 294 Representation: loss, share, earnings, revenues, net, quarter, quarter 2008, year quarter, quarter 2010, quarter year
+Topic 295 Representation: update, changes, change, does, future, date, events, question, don, conference
+Topic 296 Representation: highest, shows, month, 2013, january, network, october, 18, november, week
+Topic 297 Representation: sales, sale, selling, estimated, production, billion, million, estimate, income, 300
+Topic 298 Representation: companies, marketing, businesses, services, customers, business, partners, consumer, service, provide
+Topic 299 Representation: revenue, growth, revenues, profit, annual, estimated, forecast, increasing, growing, fiscal year
+Topic 300 Representation: power, energy, project, projects, technology, generation, highest, production, development, capacity
+Topic 301 Representation: contract, operation, target, strategic, additionally, systems, services, equipment, operational, technology
+Topic 302 Representation: inventory, decrease, decline, reduced, reduce, supply, revenues, lower, cost, million
+Topic 303 Representation: integration, progress, ongoing, fully, overall, quickly, completion, excellent, complete, solid
+Topic 304 Representation: segments, segment, summary, turn, turning, begin, beginning, start, let, discuss
+Topic 305 Representation: consolidated, closing, closed, quarter 2011, open, expanded, year end, seven, 24, end year
+Topic 306 Representation: europe, manufacturing, production, markets, america, technology, facility, store, sales, north america
+Topic 307 Representation: , , , , , , , , , 
+Topic 308 Representation: expense, expenses, costs, cost, revenues, total, accounting, income, decrease, operation
+Topic 309 Representation: sales, retail, sale, store, profit, percentage, increases, year quarter, quarter, quarter year
+Topic 310 Representation: line, lines, open, question, course, ahead, note, point, mind, come
+Topic 311 Representation: earnings, press release, corporate, company, release, financial, market, quarterly, provided, news
+Topic 312 Representation: improvement, improving, increasing, progress, improve, programs, completion, success, initiatives, improved
+Topic 313 Representation: sales, increase, increases, decrease, sale, increased, gains, volume, increasing, selling
+Topic 314 Representation: power, capacity, project, projects, energy, build, production, 200, units, 300
+Topic 315 Representation: product, products, production, development, customers, technologies, market, consumer, customer, success
+Topic 316 Representation: sales, profit, revenues, revenue, percentage, percent, stock, year quarter, decrease, quarter year
+Topic 317 Representation: income, earnings, accounting, revenue, revenues, quarter fiscal, fiscal year, expense, profit, reporting
+Topic 318 Representation: guidance, regarding, provided, providing, going forward, specifically, provide, coming, course, press release
+Topic 319 Representation: press release, provide, provides, quarterly, providing, release, provided, prior year, financial, regarding
+Topic 320 Representation: expenses, costs, expense, cost, increased, spending, increase, increases, increasing, development
+Topic 321 Representation: conference, press, issues, talk, discuss, guidance, press release, number, note, discussed
+Topic 322 Representation: completion, end, complete, comments, finally, final, note, agreement, planned, closing
+Topic 323 Representation: recorded, conference, press release, 2008, reminder, 2006, remind, today, april, 2009
+Topic 324 Representation: sale, portfolio, assets, decline, investment, equity, decrease, asset, reduced, million
+Topic 325 Representation: marketing, manufacturing, business, consumer, customers, products, production, industry, companies, product
+Topic 326 Representation: acquisitions, acquisition, expenses, expense, accounting, assets, investments, acquired, asset, profit
+Topic 327 Representation: growth, revenue, revenues, sales, earnings, trends, trend, forecast, profit, annual
+Topic 328 Representation: revenue, revenues, customers, customer, pricing, consumer, growth, rates, increase, markets
+Topic 329 Representation: earnings, profitability, stock, income, year quarter, expenses, expense, share, non, investment
+Topic 330 Representation: conference, recorded, record, today, meeting, june, 2008, 2006, 2009, 2007
+Topic 331 Representation: basis, quarter year, quarters, quarter, fourth quarter, quarter 2011, second quarter, points, year date, rate
+Topic 332 Representation: discussed, discuss, future, anticipated, regarding, press release, provided, forward, plans, providing
+Topic 333 Representation: press release, release, news, press, mentioned, details, note, provided, say, said
+Topic 334 Representation: review, reporting, internal, operational, accounting, control, issues, management, report, regarding
+Topic 335 Representation: page, lastly, want, history, summary, mentioned, specifically, ahead, comments, mind
+Topic 336 Representation: stock, share, cost, price, sold, acquisition, sale, market, acquired, purchase
+Topic 337 Representation: customers, customer, rate, rates, retail, increase, decline, improving, percentage, improvement
+Topic 338 Representation: contribution, income, billion, expense, benefits, plans, cash, million, total, year quarter
+Topic 339 Representation: cost, costs, estimated, acquisition, spending, million, revenue, expense, spend, planned
+Topic 340 Representation: platform, provides, customers, companies, technologies, development, support, markets, growth, based
+Topic 341 Representation: investment, sales, revenue, profit, market, revenues, income, benefits, trends, risk
+Topic 342 Representation: brand, products, marketing, product, retail, businesses, business, markets, sales, august
+Topic 343 Representation: trends, trend, increasing, change, recent, 2020, long term, going forward, historically, 2006
+Topic 344 Representation: billion, flow, quarterly, quarters, quarter, investment, million, fourth quarter, net, total
+Topic 345 Representation: cash, capacity, equity, assets, total, capital, credit, billion, approximately, transactions
+Topic 346 Representation: conference, meeting, corporate, events, technologies, markets, partners, technology, june, industry
+Topic 347 Representation: ahead, turn, , , , , , , , 
+Topic 348 Representation: expenses, expense, costs, cost, profitability, revenue, spending, total, investments, dollars
+Topic 349 Representation: facility, facilities, consolidated, manufacturing, production, corporate, building, operational, acquisition, area
+Topic 350 Representation: equity, stock, earnings, assets, investment, million, company, billion, capital, 000
+Topic 351 Representation: acquisitions, acquisition, earnings, anticipated, investment, accounting, cash flow, expect, purchase, profit
+Topic 352 Representation: slide, turning, turn, number, segments, question, , , , 
+Topic 353 Representation: , , , , , , , , , 
+Topic 354 Representation: team, success, successful, progress, successfully, outstanding, strong, achieved, going forward, finally
+Topic 355 Representation: decrease, decline, reduced, quarter 2011, quarter 2010, credit, 2011, december, percentage, approximately
+Topic 356 Representation: programs, program, progress, completion, development, start, finally, transition, started, state
+Topic 357 Representation: systems, facilities, pipeline, services, states, government, areas, companies, industry, production
+Topic 358 Representation: good, time, , , , , , , , 
+Topic 359 Representation: difficult, time, opportunities, times, issues, going forward, progress, successfully, opportunity, ongoing
+Topic 360 Representation: open, closing, begin, start, started, close, ahead, reported, , 
+Topic 361 Representation: sales, fourth quarter, profitability, quarter year, strong, quarterly, production, second quarter, continue, forecast
+Topic 362 Representation: day, good, , , , , , , , 
+Topic 363 Representation: company, corporate, companies, press release, purchase, earnings, financial, directly, exchange, reporting
+Topic 364 Representation: morning, good, , , , , , , , 
+Topic 365 Representation: expenses, expense, costs, accounting, year quarter, investments, total, quarter year, investment, increased
+Topic 366 Representation: sales, revenue, marketing, customers, business, market, growth, selling, sale, services
+Topic 367 Representation: revenues, revenue, earnings, income, cash flow, 500, sales, million, estimate, billion
+Topic 368 Representation: capital, investments, million, cash, assets, 000, fiscal, 55, fiscal year, approximately
+Topic 369 Representation: strong, continues, remains, success, consistent, year end, continue, record, healthy, positive
+Topic 370 Representation: momentum, fourth quarter, second quarter, progress, focused, quarter year, strong, achieve, continue, continues
+Topic 371 Representation: recorded, press release, note, press, release, want, national, today, early, seeing
+Topic 372 Representation: risk, projected, certain, anticipated, expectations, consistent, results, future, plans, expect
+Topic 373 Representation: revenue, income, investment, increase, revenues, increased, equity, gains, assets, percent
+Topic 374 Representation: growth, growing, grow, grew, larger, big, size, potential, small, healthy
+Topic 375 Representation: credit, long term, transaction, incremental, capital, completed, provide, provides, going forward, acquisition
+Topic 376 Representation: comments, kind, , , , , , , , 
+Topic 377 Representation: access, number, calls, numbers, reached, added, key, area, additional, want
+Topic 378 Representation: cash flow, cash, financial, maintain, equity, strong, assets, leverage, investments, balance
+Topic 379 Representation: corporate, company, partners, general, operating, accounting, financial, marketing, providing, direct
+Topic 380 Representation: slide, business, market, marketing, transition, exchange, 11, 12, strategy, revenues
+Topic 381 Representation: technologies, technology, manufacturing, production, industry, development, companies, products, product, future
+Topic 382 Representation: conference, recorded, reminder, , , , , , , 
+Topic 383 Representation: margin, adjusted, margins, percentage, increased, revenues, increase, decline, revenue, impact
+Topic 384 Representation: income, revenue, revenues, profit, expenses, quarter fiscal, expense, quarter 2008, quarter year, fiscal year
+Topic 385 Representation: good, , , , , , , , , 
+Topic 386 Representation: customer, customers, services, companies, service, corporate, business, partners, network, industry
+Topic 387 Representation: performance, network, technology, capacity, demand, growth, 2020, 80, market, provides
+Topic 388 Representation: decrease, quarter 2007, decline, rates, percentage, days, largely, june, years, increase
+Topic 389 Representation: corporate, company, management, general, companies, business, leading, begin, start, initiatives
+Topic 390 Representation: markets, market, investments, risk, trend, investment, long term, trends, stock, going forward
+Topic 391 Representation: guidance, fiscal year, quarter fiscal, plans, forecast, plan, conditions, quarterly, consistent, fiscal
+Topic 392 Representation: gains, increased, increase, gain, income, revenues, decrease, sales, investment, sale
+Topic 393 Representation: announced, progress, completed, press release, plans, complete, changes, initiatives, planned, plan
+Topic 394 Representation: transactions, closing, transaction, closed, close, customers, year quarter, quarter year, sale, quarters
+Topic 395 Representation: calls, review, second quarter, quarterly, fourth quarter, plan, quarter fiscal, plans, summary, discuss
+Topic 396 Representation: brand, retail, marketing, market, customers, product, customer, trends, consumer, opportunities
+Topic 397 Representation: balance, credit, turn, turning, gain, transition, page, terms, perspective, line
+Topic 398 Representation: businesses, sale, business, corporate, strategic, sold, acquisition, marketing, transactions, announced
+Topic 399 Representation: sales, sale, increase, increased, growth, international, percentage, markets, increasing, gains
+Topic 400 Representation: lines, turn, additional, , , , , , , 
+Topic 401 Representation: rates, lower, low, rate, average, states, work, nearly, somewhat, decline
+Topic 402 Representation: europe, north america, america, american, trends, markets, sales, states, particularly, global
+Topic 403 Representation: company, management, development, experienced, team, experience, leading, strategic, business, industry
+Topic 404 Representation: growth, quarter year, grow, grew, quarterly, increasing, compared year, trends, fourth quarter, year
+Topic 405 Representation: stock, equity, capital, sale, investments, sold, offering, investment, million, deal
+Topic 406 Representation: brand, marketing, industry, product, business, sales, quality, consumer, market, worth
+Topic 407 Representation: accounting, fiscal year, 2018, 2019, fiscal, quarter fiscal, earnings, quarterly, annual, standard
+Topic 408 Representation: revenues, revenue, north america, international, america, quarter year, percentage, quarter 2010, europe, percent
+Topic 409 Representation: rates, rate, percent, average, credit, cash, approximately, leverage, roughly, equity
+Topic 410 Representation: today, great, good, day, , , , , , 
+Topic 411 Representation: quarter 2008, increasing, increase, quarter 2011, quarter 2010, increased, year quarter, quarter year, percent, quarter
+Topic 412 Representation: morning, good, great, start, , , , , , 
+Topic 413 Representation: sale, sales, purchase, prices, sold, acquisition, revenues, retail, marketing, closed
+Topic 414 Representation: profit, profitability, revenues, revenue, sales, quarter year, year quarter, quarter 2007, quarter 2006, operations
+Topic 415 Representation: pipeline, revenues, costs, cost, gains, businesses, production, income, prices, sale
+Topic 416 Representation: inaudible, efforts, agreement, significant, example, said, making, industry, successfully, completed
+Topic 417 Representation: plus, sales, new, includes, items, included, mix, products, marketing, customers
+Topic 418 Representation: mark, great, material, comments, , , , , , 
+Topic 419 Representation: range, far, low, high, north, higher, lower, level, given, north america
+Topic 420 Representation: government, fiscal, credit, revenues, economic, capital, businesses, tax, business, consumer
+Topic 421 Representation: provided, discussed, regarding, anticipated, exchange, note, press release, acquisitions, forward, markets
+Topic 422 Representation: factors, provided, fiscal year, fiscal, economic, company, discussed, required, particular, regarding
+Topic 423 Representation: completion, complete, progress, year end, plan, end year, began, development, fully, project
+Topic 424 Representation: future, customer, forward, customers, business, following, progress, credit, provides, marketing
+Topic 425 Representation: earnings, income, quarter fiscal, share, consolidated, operations, tax, quarter year, year quarter, gain
+Topic 426 Representation: production, delivered, began, started, early, customers, beginning, september, april, starting
+Topic 427 Representation: stock, exchange, markets, market, equity, capital, companies, national, company, address
+Topic 428 Representation: data, technical, partners, service, customer, customers, platform, team, based, reporting
+Topic 429 Representation: volume, increases, increase, volumes, growth, increased, quarter 2007, decrease, quarter 2011, quarter
+Topic 430 Representation: power, operational, revenue, costs, investment, cost, expense, expenses, investments, earnings
+Topic 431 Representation: business, marketing, markets, market, opportunities, customers, industry, strategic, investments, customer
+Topic 432 Representation: question, great, day, stated, want, , , , , 
+Topic 433 Representation: launch, june, october, plans, deliver, operational, planned, july, events, april
+Topic 434 Representation: sale, sales, purchase, acquisition, sold, assets, million, price, investments, investment
+Topic 435 Representation: expenses, expense, costs, cost, decrease, benefits, spending, increased, additional, decline
+Topic 436 Representation: fourth quarter, second quarter, quarter quarter, end quarter, quarter, quarters, year quarter, quarter 2011, quarter 2010, second half
+Topic 437 Representation: meeting, coming, q3, available, excellent, couple, great, come, provided, planned
+Topic 438 Representation: quarter fiscal, fiscal year, quarter year, quarterly, fourth quarter, quarter quarter, week, weeks, quarter 2010, fiscal
+Topic 439 Representation: 500, production, million, pipeline, 200, 300, 000, low, 50, 10
+Topic 440 Representation: supply, manufacturing, business, production, companies, inventory, provides, products, product, make
+Topic 441 Representation: demand, supply, production, markets, growth, market, industry, economic, maintain, increased
+Topic 442 Representation: markets, sales, market, growth, gains, trends, retail, category, increased, consumer
+Topic 443 Representation: sales, sale, increase, revenues, profit, increased, growth, markets, revenue, capacity
+Topic 444 Representation: revenue, revenues, sales, cost, quarter fiscal, million, fiscal year, billion, fiscal, estimate
+Topic 445 Representation: decrease, decline, revenues, revenue, sales, year quarter, profitability, supply, unit, units
+Topic 446 Representation: stock, acquisitions, quarter 2008, equity, quarter year, fourth quarter, year quarter, second quarter, quarter fiscal, sale
+Topic 447 Representation: sales, sale, markets, production, retail, industry, low, percent, positive, equipment
+Topic 448 Representation: date, later, reminder, future, 2019, 2018, 2005, time, december, june
+Topic 449 Representation: customers, customer, experience, marketing, opportunities, providing, consumer, quality, meaningful, opportunity
+Topic 450 Representation: ahead, great, question, , , , , , , 
+Topic 451 Representation: begin, morning, good, , , , , , , 
+Topic 452 Representation: question, reminder, today, recorded, period, , , , , 
+Topic 453 Representation: review, great, services, provided, sure, , , , , 
+Topic 454 Representation: risk, forward, financial, certain, results, particularly, substantial, material, , 
+Topic 455 Representation: growth, increase, increasing, markets, growing, grew, compared year, trends, revenue, grow
+Topic 456 Representation: support, continued, continue, continuing, ongoing, note, successful, finally, lastly, important
+Topic 457 Representation: recorded, record, note, line, information, mentioned, providing, 2002, remind, company
+Topic 458 Representation: market, markets, marketing, opportunities, businesses, strategic, business, opportunity, industry, demand
+Topic 459 Representation: performance, particularly, operating, trends, economic, operational, comparable, report, key, consistent
+Topic 460 Representation: press release, release, news, press, consolidated, reporting, information, earnings, provided, providing
+Topic 461 Representation: production, make, making, market, supply, product, markets, products, future, build
+Topic 462 Representation: recorded, conference, reminder, remind, information, management, results, today, include, 
+Topic 463 Representation: meeting, discuss, conference, regarding, talk, future, question, initiative, led, place
+Topic 464 Representation: cost, prices, price, costs, economic, average, dollars, increased, increase, tax
+Topic 465 Representation: profit, earnings, revenues, revenue, sales, costs, expenses, year quarter, quarter year, selling
+Topic 466 Representation: expenses, expense, earnings, costs, cost, financial, stock, equity, total, income
+Topic 467 Representation: results, question, today, following, day, , , , , 
+Topic 468 Representation: marketing, customers, customer, brand, sales, markets, business, experience, achieve, strategy
+Topic 469 Representation: turn, pleased, great, operating, board, general, recorded, press, , 
+Topic 470 Representation: strategic, markets, strategy, market, marketing, opportunities, investments, investment, economic, businesses
+Topic 471 Representation: order, provides, announced, included, technology, systems, service, products, operational, contract
+Topic 472 Representation: investments, investment, million, billion, 500, spending, 10, spend, estimated, production
+Topic 473 Representation: north america, america, north, europe, american, states, international, begin, start, middle
+Topic 474 Representation: marketing, market, companies, strategic, investments, investment, business, industry, customers, progress
+Topic 475 Representation: coming, going, bring, future, seeing, come, meeting, ahead, seen, meet
+Topic 476 Representation: risk, future, certain, forward, believe, performance, non, said, available, results
+Topic 477 Representation: reduced, reduce, reduction, 200, 500, 000, 300, 100, 50, 75
+Topic 478 Representation: production, estimated, 500, 200, 300, total, average, day, 80, 000
+Topic 479 Representation: stronger, company, strategic, long term, strength, improve, success, strategy, management, industry
+Topic 480 Representation: today, , , , , , , , , 
+Topic 481 Representation: late, little, little bit, earlier, quickly, issues, sure, morning, time, moment
+Topic 482 Representation: business, manufacturing, corporate, sales, customers, shift, customer, marketing, product, products
+Topic 483 Representation: industry, corporate, companies, experienced, experience, company, businesses, business, 30, years
+Topic 484 Representation: open, question, come, course, close, building, areas, let, ahead, point
+Topic 485 Representation: days, inventory, day, year quarter, 75, june, 80, february, prior year, 65
+Topic 486 Representation: acquisitions, expenses, acquisition, expense, acquired, costs, cost, total, accounting, transactions
+Topic 487 Representation: asset, assets, quality, markets, favorable, portfolio, industry, maintain, economic, improving
+Topic 488 Representation: store, businesses, sales, additional, retail, second quarter, additionally, business, fiscal year, year end
+Topic 489 Representation: services, companies, customers, business, service, customer, company, industry, management, consumer
+Topic 490 Representation: morning, good, great, , , , , , , 
+Topic 491 Representation: highlight, summary, overall, note, review, recent, complete, details, specifically, points
+Topic 492 Representation: sales, sale, retail, increase, increases, store, increased, increasing, markets, growth
+Topic 493 Representation: recorded, conference, meeting, reminder, note, result, quarter 2006, quarter 2007, information, quarter 2008
+Topic 494 Representation: growth, grow, development, initiatives, businesses, going forward, strategic, business, progress, environment
+Topic 495 Representation: morning, good, , , , , , , , 
+Topic 496 Representation: later, question, good, , , , , , , 
+Topic 497 Representation: market, transition, focus, markets, focused, strategic, strategy, opportunities, control, momentum
+Topic 498 Representation: meeting, discuss, provided, plans, results, question, held, going forward, provide, development
+Topic 499 Representation: quarter 2006, quarter 2007, quarter 2010, quarter fiscal, fiscal year, fourth quarter, second quarter, quarter year, year end, year date
+Topic 500 Representation: good, day, today, , , , , , , 
+Topic 501 Representation: units, unit, million, billion, 000, 300, 500, 200, 100, delivered
+Topic 502 Representation: calls, open, closing, point, talk, details, good, like, let, think
+Topic 503 Representation: markets, marketing, retail, economic, businesses, market, demand, factors, internal, strategic
+Topic 504 Representation: customers, customer, purchase, products, marketing, business, industry, brand, product, consumer
+Topic 505 Representation: network, technology, industry, performance, provides, data, importantly, based, systems, market
+Topic 506 Representation: assets, basis, asset, points, investment, total, 000, credit, 36, 75
 
 Random Document-Topic Pairs for Presentation:
-Document: With our current portfolio, we can address a multibillion dollar TAM leveraging an impressive and growing list of tier 1 networking and communications customers.
-Topic ID: 3
-Topic Name: 3_customers_customer_marketing_clients
-Topic Count: 12458
-Topic Representation: customers, customer, marketing, clients, consumers, businesses, business, consumer, innovation, market
+Document: We are seeing solid growth in our business as a result of the ramp of significant new designs that were won over the last several years and are now beginning to contribute to our results.
+Topic ID: 6
+Topic Name: 6_investments_investment_long term_going forward
+Topic Count: 11396
+Topic Representation: investments, investment, long term, going forward, future, strategic, profitability, strategy, maintain, growth
 
-Document: We expect total operating expenses on a GAAP basis to be in the range of 13.3 million to 13.5 million, and on a non-GAAP basis to be in the range of 10.3 million to 10.5 million.
-Topic ID: 0
-Topic Name: 0_gross margin_margin_margins_earnings
-Topic Count: 45637
-Topic Representation: gross margin, margin, margins, earnings, adjusted ebitda, revenues, operating income, quarter year, cash flow, revenue
+Document: We refer to Fourth Generation processing as those solutions with performance requirements of at least 1 gigahertz and with support of at least 1 billion decisions per second.
+Topic ID: 387
+Topic Name: 387_performance_network_technology_capacity
+Topic Count: 282
+Topic Representation: performance, network, technology, capacity, demand, growth, 2020, 80, market, provides
 
-Document: Please note that our fourth quarter results were disseminated by Business Wire, after market close today, and a copy of the release can be downloaded from our website at www.netlogicmicro.com.
-Topic ID: 5
-Topic Name: 5_financial results_financial performance_quarter results_earnings release
-Topic Count: 8481
-Topic Representation: financial results, financial performance, quarter results, earnings release, review, results quarter, financial, earnings, financials, results
+Document: Leading the call today are Ron Jankov, President and Chief Executive Officer and Don Witmer, Chief Financial Officer.
+Topic ID: 69
+Topic Name: 69_corporate_company_management_customer
+Topic Count: 1959
+Topic Representation: corporate, company, management, customer, businesses, general, financial, business, accounting, announced
 
-Document: Our multi-core processors posted a record revenue in Q2 and we expect to see continued strong results in the second half of the year.
+Document: In Q1, our top 3 customers that were above or at 10% of our revenues were Cisco Systems at 22%, Huawei at 11%, and Alcatel at 10% of our Q1 revenues.
+Topic ID: 159
+Topic Name: 159_customers_customer_percentage_sales
+Topic Count: 839
+Topic Representation: customers, customer, percentage, sales, percent, revenues, revenue, business, quarter, quarter year
+
+Document: Non-GAAP SG&amp;A expenses excluding stock-based compensation were $3.6 million for Q3 as compared with $3.4 million for Q2.
+Topic ID: 271
+Topic Name: 271_expenses_expense_costs_revenues
+Topic Count: 473
+Topic Representation: expenses, expense, costs, revenues, revenue, cost, total, quarter fiscal, fiscal, quarterly
+
+Document: ARRIS is a key supplier to [Comtess] for supporting voice over IP and cable modem termination systems, and became a 5% customer for us in the second quarter for the first time.
+Topic ID: 328
+Topic Name: 328_revenue_revenues_customers_customer
+Topic Count: 375
+Topic Representation: revenue, revenues, customers, customer, pricing, consumer, growth, rates, increase, markets
+
+Document: Also in Q2 we expect interest income and other expenses to be consistent with our first quarter's $1.1 million.
+Topic ID: 41
+Topic Name: 41_expenses_expense_cost_quarter fiscal
+Topic Count: 2893
+Topic Representation: expenses, expense, cost, quarter fiscal, costs, fiscal, year quarter, quarter 2008, quarter year, income
+
+Document: It appears that this supply type has prompted customers to build extra inventory of our products in the first half of the year.
+Topic ID: 42
+Topic Name: 42_inventory_stock_production_manufacturing
+Topic Count: 2852
+Topic Representation: inventory, stock, production, manufacturing, supply, items, maintain, business, retail, selling
+
+Document: My name is Jeremy, and I'll be your coordinator for today.
+Topic ID: 259
+Topic Name: 259_management_today_conference_morning
+Topic Count: 524
+Topic Representation: management, today, conference, morning, , , , , , 
+
+Document: Today, we are pleased to report another strong quarter.
+Topic ID: 28
+Topic Name: 28_second quarter_fourth quarter_quarter quarter_results
+Topic Count: 3475
+Topic Representation: second quarter, fourth quarter, quarter quarter, results, success, pleased, successful, quarter, quarterly, quarters
+
+Document: This concludes the prepared remarks for the call and now we are happy to take questions.
+Topic ID: 190
+Topic Name: 190_calls_open_closing_completed
+Topic Count: 691
+Topic Representation: calls, open, closing, completed, provided, complete, provide, note, continued, guidance
+
+Document: Towards the end of the quarter, we saw continued inventory rebalancing with certain enterprise customers.
+Topic ID: 42
+Topic Name: 42_inventory_stock_production_manufacturing
+Topic Count: 2852
+Topic Representation: inventory, stock, production, manufacturing, supply, items, maintain, business, retail, selling
+
+Document: With the outstanding debt, we estimate interest expense of approximately $600,000 in Q3.
+Topic ID: 41
+Topic Name: 41_expenses_expense_cost_quarter fiscal
+Topic Count: 2893
+Topic Representation: expenses, expense, cost, quarter fiscal, costs, fiscal, year quarter, quarter 2008, quarter year, income
+
+Document: Further, the launch of the NETL7 family of processors and our collaboration with AMD significantly expands our addressable market and should provide revenue growth drivers for 2007 and beyond.
+Topic ID: 126
+Topic Name: 126_bit_pricing_market_prices
+Topic Count: 1118
+Topic Representation: bit, pricing, market, prices, markets, technologies, demand, price, selling, technology
+
+Document: On a GAAP basis our Q4 net loss was $37.2 million, or $1.43 per diluted share.
+Topic ID: 100
+Topic Name: 100_loss_earnings_profit_year quarter
+Topic Count: 1327
+Topic Representation: loss, earnings, profit, year quarter, stock, quarter 2008, fourth quarter, costs, quarter fiscal, quarter
+
+Document: Although we are not immune to an industry slowdown, our strong business model and industry leading technology positions us well to expand our leadership and competitive advantages during these challenging times, and emerge even stronger as the business markets normalize.
+Topic ID: 6
+Topic Name: 6_investments_investment_long term_going forward
+Topic Count: 11396
+Topic Representation: investments, investment, long term, going forward, future, strategic, profitability, strategy, maintain, growth
+
+Document: And Q4 day sales outstanding was 20, and was one day lower than the previous quarter's 21 days.
+Topic ID: 118
+Topic Name: 118_days_sales_sale_day
+Topic Count: 1157
+Topic Representation: days, sales, sale, day, 48, quarter fiscal, quarter, quarter 2008, end quarter, second quarter
+
+Document: Operating expenses in Q4 were 8.9 million, which were approximately equal to Q3, and reflect our continued investment in R&amp;D both in the U.S. and overseas.
+Topic ID: 19
+Topic Name: 19_expenses_expense_costs_revenues
+Topic Count: 4848
+Topic Representation: expenses, expense, costs, revenues, cost, revenue, quarter fiscal, decrease, total, sales
+
+Document: The reconciliation--the reconciling items between GAAP and non-GAAP are stock-based compensation, amortization of intangible assets, an in-process research and development charge, and the effect of a fair value adjustment to inventory acquired from Cypress.
 Topic ID: 8
-Topic Name: 8_strong quarter_results quarter_quarter results_performance quarter
-Topic Count: 3995
-Topic Representation: strong quarter, results quarter, quarter results, performance quarter, fourth quarter, second quarter, pleased report, strong performance, quarter quarter, strong
+Topic Name: 8_accounting_earnings_financial_press release
+Topic Count: 9359
+Topic Representation: accounting, earnings, financial, press release, expenses, consolidated, quarterly, stock, cash flow, provided
 
-Document: Additionally, the proliferation of mobile wireless devices connected to the internet is rapidly accelerating the depletion of IPv4 addresses.
-Topic ID: 21
-Topic Name: 21_video_communications_technologies_channel
-Topic Count: 1596
-Topic Representation: video, communications, technologies, channel, network, technology, infrastructure, provider, media, wireless
+Document: With these new design wins our products are now represented in a broad range of end products spanning multiple levels of performance and functionality.
+Topic ID: 93
+Topic Name: 93_brand_marketing_customers_consumer
+Topic Count: 1387
+Topic Representation: brand, marketing, customers, consumer, strategic, retail, business, products, customer, product
 
-Document: This allows us to effectively and efficiently support and engage with a much larger set of customers who would in turn be able to bring products to market in a much shorter timeframe.
+Document: Our Q2 gross margin reflects our continued strong manufacturing execution, as well as a small benefit from the sale of previously reserved products.
+Topic ID: 1
+Topic Name: 1_margin_margins_revenues_decrease
+Topic Count: 24565
+Topic Representation: margin, margins, revenues, decrease, revenue, profit, expenses, decline, increase, sales
+
+Document: In conclusion, this is a very interesting time for us.
 Topic ID: 3
-Topic Name: 3_customers_customer_marketing_clients
-Topic Count: 12458
-Topic Representation: customers, customer, marketing, clients, consumers, businesses, business, consumer, innovation, market
+Topic Name: 3_things_going forward_items_issues
+Topic Count: 14109
+Topic Representation: things, going forward, items, issues, thing, details, think, comments, discuss, let
 
-Document: Non-GAAP SG&amp;A expenses, excluding stock-based compensation, were $3.4 million for Q2, as compared with $3 million for Q1.
-Topic ID: 0
-Topic Name: 0_gross margin_margin_margins_earnings
-Topic Count: 45637
-Topic Representation: gross margin, margin, margins, earnings, adjusted ebitda, revenues, operating income, quarter year, cash flow, revenue
-
-Document: As mentioned, we have already earned two design wins for the NL71024 one with a major new customer and one with our largest customer.
-Topic ID: 13
-Topic Name: 13_customers_customer_clients_bookings
-Topic Count: 2766
-Topic Representation: customers, customer, clients, bookings, growth, increase, market, sales, markets, increased
-
-Document: In Q2, we had a rich product mix with another strong quarter of revenues from our advanced products used in mobile wireless infrastructure.
-Topic ID: 21
-Topic Name: 21_video_communications_technologies_channel
-Topic Count: 1596
-Topic Representation: video, communications, technologies, channel, network, technology, infrastructure, provider, media, wireless
-
-Document: This new product provides the industry's first and highest performance 500 megahertz device for comprehensive network aware packet classification.
-Topic ID: 21
-Topic Name: 21_video_communications_technologies_channel
-Topic Count: 1596
-Topic Representation: video, communications, technologies, channel, network, technology, infrastructure, provider, media, wireless
-
-Document: Revenue from Huawei was $13.9 million, or 14% of our revenues.
-Topic ID: 0
-Topic Name: 0_gross margin_margin_margins_earnings
-Topic Count: 45637
-Topic Representation: gross margin, margin, margins, earnings, adjusted ebitda, revenues, operating income, quarter year, cash flow, revenue
-
-Document: We are now comfortable with our level of inventory and supply capacity and we will begin to work our inventory back down to our target of 110 days.
-Topic ID: 25
-Topic Name: 25_inventory_inventories_stock_supply
-Topic Count: 1025
-Topic Representation: inventory, inventories, stock, supply, shipments, sales, balance sheet, increase, production, increased
-
-Document: For example, during the third quarter, NetLogic received a prestigious award from Cisco Systems for outstanding service and support.
-Topic ID: 21
-Topic Name: 21_video_communications_technologies_channel
-Topic Count: 1596
-Topic Representation: video, communications, technologies, channel, network, technology, infrastructure, provider, media, wireless
-
-Document: Now before we get started, I'd like to point out that during the course of the conference call, we'll be making forward-looking statements that are based on certain assumptions and expectations of future events that are subject to a number of risks and uncertainties and actual results may differ materially.
-Topic ID: 12
-Topic Name: 12_litigation_statements_forward looking_securities
-Topic Count: 2773
-Topic Representation: litigation, statements, forward looking, securities, discussed, remarks, future, discussion, financial results, regarding
-
-Document: I will now turn the call over to Mike to discuss our first-quarter 2010 results.
-Topic ID: 5
-Topic Name: 5_financial results_financial performance_quarter results_earnings release
-Topic Count: 8481
-Topic Representation: financial results, financial performance, quarter results, earnings release, review, results quarter, financial, earnings, financials, results
-
-Document: Revenue from Cisco Systems, our largest customer, was $9.8 million or 32% of our total revenue, compared with $13.9 million or 36% of our total revenue for Q3 2008.
-Topic ID: 0
-Topic Name: 0_gross margin_margin_margins_earnings
-Topic Count: 45637
-Topic Representation: gross margin, margin, margins, earnings, adjusted ebitda, revenues, operating income, quarter year, cash flow, revenue
-
-Document: Pro forma operating expenses excluding again stock based compensation were 31.1 million for 2005 compared with 23.8 million in fiscal 2004.
-Topic ID: 0
-Topic Name: 0_gross margin_margin_margins_earnings
-Topic Count: 45637
-Topic Representation: gross margin, margin, margins, earnings, adjusted ebitda, revenues, operating income, quarter year, cash flow, revenue
-
-Document: The increase in cash is primarily the result of net income.
-Topic ID: 0
-Topic Name: 0_gross margin_margin_margins_earnings
-Topic Count: 45637
-Topic Representation: gross margin, margin, margins, earnings, adjusted ebitda, revenues, operating income, quarter year, cash flow, revenue
-
-Document: On a GAAP basis, our Q2 net income was 2.9 million, or $0.14 per share compared to a net loss of 7.3 million, or $0.39 per share, in Q1 2006, and net income of 2.4 million, or $0.13 per share, in Q2 2005.
-Topic ID: 2
-Topic Name: 2_earnings share_earnings_net income_shares
-Topic Count: 15300
-Topic Representation: earnings share, earnings, net income, shares, income, revenues, stock, revenue, non gaap, share
-
-Document: Good afternoon, everyone.
-Topic ID: 18
-Topic Name: 18_morning_welcome_thank_evening
-Topic Count: 2139
-Topic Representation: morning, welcome, thank, evening, happy, afternoon, thanks, good, excellent, great
-
-Document: The result is that our business with advanced CMTS equipment manufacturers, such as ARRIS, continues to be strong.
-Topic ID: 3
-Topic Name: 3_customers_customer_marketing_clients
-Topic Count: 12458
-Topic Representation: customers, customer, marketing, clients, consumers, businesses, business, consumer, innovation, market
-
-Document: Also, the customer response to our NLP10000, industry's first 100 Gigabit ethernet PHY solution has been very positive.
-Topic ID: 21
-Topic Name: 21_video_communications_technologies_channel
-Topic Count: 1596
-Topic Representation: video, communications, technologies, channel, network, technology, infrastructure, provider, media, wireless
-
-Document: With H3C in particular would have designs across their product line, including data centers switches, network switches, routers, wireless access products, and TippingPoint's high-performance intrusion prevention security appliances.
-Topic ID: 21
-Topic Name: 21_video_communications_technologies_channel
-Topic Count: 1596
-Topic Representation: video, communications, technologies, channel, network, technology, infrastructure, provider, media, wireless
-
-Document: The reconciling item between GAAP and non-GAAP is stock-based compensation, which is removed from the cost to revenue and operating expense line for non-GAAP reporting.
-Topic ID: 16
-Topic Name: 16_non gaap_gaap_financial results_earnings release
-Topic Count: 2208
-Topic Representation: non gaap, gaap, financial results, earnings release, accounting, earnings, measures, disclosures, measure, financial
-
-Document: Q4 interest expense was approximately $900,000 on a GAAP basis, our non-GAAP interest expense was approximately $500,000 and excluded $524,000 for a charge related to the write-off of our debt issuance costs and $125,000 related to interest income recognized on a $15 million bridge loan we provided RMI in June.
-Topic ID: 0
-Topic Name: 0_gross margin_margin_margins_earnings
-Topic Count: 45637
-Topic Representation: gross margin, margin, margins, earnings, adjusted ebitda, revenues, operating income, quarter year, cash flow, revenue
-
-Document: Our largest China based customer Huawei Technologies completed their work down of inventory in Q1 as expected.
-Topic ID: 25
-Topic Name: 25_inventory_inventories_stock_supply
-Topic Count: 1025
-Topic Representation: inventory, inventories, stock, supply, shipments, sales, balance sheet, increase, production, increased
-
-Document: Our newest XLP processor is designed to meet these requirements, with its best-in-class CPU, architecture supporting quad-issue, out-of-order execution, sophisticated branch handling and large on-chip caching.
-Topic ID: 38
-Topic Name: 38_growth rate_growth_production_bit
+Document: Further new product launches and mainstream switching and an increase in enterprise demand continues to drive growth in our revenues from Cisco which increase by $7.3 million in Q4 over the prior quarter, exceeding our expectations.
+Topic ID: 497
+Topic Name: 497_market_transition_focus_markets
 Topic Count: 205
-Topic Representation: growth rate, growth, production, bit, increasing, supply, demand, capacity, performance, 2018
+Topic Representation: market, transition, focus, markets, focused, strategic, strategy, opportunities, control, momentum
 
-Document: Q3 revenue from Cisco Systems, our largest customer, were $25.4 million or 25% of our total revenues.
-Topic ID: 0
-Topic Name: 0_gross margin_margin_margins_earnings
-Topic Count: 45637
-Topic Representation: gross margin, margin, margins, earnings, adjusted ebitda, revenues, operating income, quarter year, cash flow, revenue
+Document: Before we get started I'd like to point out that during the course of this conference call, we will be making forward-looking statements that are based on certain assumptions and expectations of future events that are subject to a number of risks and uncertainties, and actual results may differ materially.
+Topic ID: 122
+Topic Name: 122_anticipated_risk_future_plans
+Topic Count: 1130
+Topic Representation: anticipated, risk, future, plans, discussed, regarding, forward, press release, discuss, provided
 
-Document: This includes an estimated $11.5 million in stock-based compensation and related payroll taxes, and $11.6 million in the amortization of intangible assets.
-Topic ID: 0
-Topic Name: 0_gross margin_margin_margins_earnings
-Topic Count: 45637
-Topic Representation: gross margin, margin, margins, earnings, adjusted ebitda, revenues, operating income, quarter year, cash flow, revenue
+Document: This concludes my review of the quarterly results, and now I'd like to turn call over to Ron.
+Topic ID: 7
+Topic Name: 7_review_financial_earnings_report
+Topic Count: 11186
+Topic Representation: review, financial, earnings, report, quarter fiscal, fiscal, results, quarterly, fourth quarter, second quarter
 
-Document: Both companies share a strong commitment to excellence in customer service and support as of evidenced by our impressive combined list of top tier customers and expansive design win portfolio.
-Topic ID: 3
-Topic Name: 3_customers_customer_marketing_clients
-Topic Count: 12458
-Topic Representation: customers, customer, marketing, clients, consumers, businesses, business, consumer, innovation, market
+Document: Starting with 10 gigabit Ethernet this market is rapidly becoming an important driver of our growth.
+Topic ID: 387
+Topic Name: 387_performance_network_technology_capacity
+Topic Count: 282
+Topic Representation: performance, network, technology, capacity, demand, growth, 2020, 80, market, provides
+
+Document: With extraordinary execution, we completed the transition of our entire product line to the advanced 40-nanometer process node.
+Topic ID: 176
+Topic Name: 176_manufacturing_technologies_300_equipment
+Topic Count: 740
+Topic Representation: manufacturing, technologies, 300, equipment, production, technology, 200, industry, capacity, product
+
+Document: A reconciliation of non-GAAP to GAAP financial information is in today's earnings release.
+Topic ID: 8
+Topic Name: 8_accounting_earnings_financial_press release
+Topic Count: 9359
+Topic Representation: accounting, earnings, financial, press release, expenses, consolidated, quarterly, stock, cash flow, provided
+
+Document: At this point, I will turn the call back over to Mike to discuss guidance for the fourth quarter, then we'll open up the call for questions.
+Topic ID: 190
+Topic Name: 190_calls_open_closing_completed
+Topic Count: 691
+Topic Representation: calls, open, closing, completed, provided, complete, provide, note, continued, guidance
+
+Document: On July 17th, we borrowed on our new $55 million debt facility to fund the purchase of IDT's network search engine business.
+Topic ID: 95
+Topic Name: 95_credit_capital_cash_facility
+Topic Count: 1362
+Topic Representation: credit, capital, cash, facility, billion, facilities, accounts, capacity, million, asset
 
 Random Outlier Document-Topic Pairs for Presentation:
-Document: While the weakened demand environment caused a downturn in our revenues during the fourth quarter, there are several areas of our business that are demonstrating growth potential for 2009.
+Document: As a result of solid contributions from the sale of our Knowledge-Based Processors, network search engines and initial revenue contributions from multi-core processors.
 Topic ID: -1 (Outlier)
 
-Document: We are tracking to our original revenue expectations for this product family.
+Document: Second, we are also very pleased to report that in the fourth quarter, we expect to see good revenue growth in our NETL7 family of deep packet inspection layer 7 processors.
 Topic ID: -1 (Outlier)
 
-Document: The increase in non-GAAP R&amp;D reflects increased NRE and product development costs, as we advance our product portfolios.
+Document: With the substantial design win portfolio, we should see solid growth 2010, as additional designs at several major customers ramp to volume production.
 Topic ID: -1 (Outlier)
 
-Document: This represented a sequential increase of 5.3% from the prior quarter and included another double-digit sequential growth quarter for our multicore processors.
+Document: 2009 revenues should also benefit from the launch of a large number of new NETLite designs that we have won over the past few quarters.
 Topic ID: -1 (Outlier)
 
-Document: Revenues at Cisco in Q1 as expected to grow as a result of our revenue diversification and the continued volume ramp of our initial Gen-4 design wins.
+Document: The result is that our business with advanced CMTS equipment manufacturers is seeing strong growth.
 Topic ID: -1 (Outlier)
 
-Document: Additionally, demand was particularly strong in Q3 for our highest performance in most feature-rich products.
+Document: This aggressive broadening of our product portfolio is a direct result of the stellar execution and hard work of the 10-gig PHY team, and I am extremely proud of these results, which include two very successful products delivered to our customers in the first half of this year, and we expect additional new product introductions in the second half of 2008.
 Topic ID: -1 (Outlier)
 
-Document: All of our markets appear primed for strong growth over the next several years.
-Topic ID: -1 (Outlier)
-
-Document: And finally, we expect revenues from our largest customer to begin to grow in the first quarter of 2009.
+Document: Also we are expecting to see growth in our enterprise revenues from Brocade in the third quarter, both of as a result of it's expanded distribution channel that leverages IBM sales force, as well as the result of its architecture that uses as a higher content of knowledge-based processors as differentiator to bring higher levels of layer 4 processing to the enterprise segment.
 Topic ID: -1 (Outlier)
 
 Document: Outside of Cisco, we expect strong resumption of revenue growth following the seasonal adjustment with Alcatel-Lucent and the continued adoption of our technology as our customers continue to deploy next-generation equipment.
 Topic ID: -1 (Outlier)
 
-Document: in addition to exceeding our revenue projection for the quarter and increasing our cash position our new products performed exceptionally well in customer system environments.
+Document: Every one of these customers has now boxes reaching volume production in 2010 that incorporate a much higher content of our product than the previous generation.
 Topic ID: -1 (Outlier)
 
-Document: Alcatel-Lucent took a slight pause in the second quarter due to a component shortage, however demand from this customer has already bounced back with large shipments in July, so expect solid growth from them in the current quarter.
+Document: Revenues at Cisco in Q1 as expected to grow as a result of our revenue diversification and the continued volume ramp of our initial Gen-4 design wins.
 Topic ID: -1 (Outlier)
 
-Document: Following what was a record design win quarter for NETLite last quarter, we added another seven new NETLite designs to the list in Q2.
+Document: This will take cable infrastructure as a whole to approximately 6% of our business in Q3, exceeding our earlier expectations.
 Topic ID: -1 (Outlier)
 
-Document: Revenue at our largest customer, Cisco, grew by 19% as design wins continued to ramp into volume production.
+Document: The result is that our business would advance CMTS equipment manufacturers continue to be promising and our cable infrastructure revenues continue to grow in Q3.
 Topic ID: -1 (Outlier)
 
-Document: IDC predicts the total market for application acceleration and security processing to exceed $15 billion in 2009.
+Document: Additionally, our revenue from Brocade increased significantly in the third quarter driven by our rapidly increasing content per box as Brocade moves to a higher mix of multi-10 gigabit line cards.
 Topic ID: -1 (Outlier)
 
-Document: The [anolit] 205 which was announced only six months ago to address high volume applications, will begin to generate meaningful revenue in Q4 and is expected to continue to ramp over the coming quarters.
+Document: We expect revenue from Cisco to be subdued again in the third quarter as a result of some seasonal softness as well as ongoing lead initiatives, including our entry into the BMI program for the first time, which should be completed in Q4.
 Topic ID: -1 (Outlier)
 
-Document: In keeping with this commitment, we made a substantial investment in R&amp;D in the second quarter, and we will continue to invest in the second half of the year, as we bring to market the NL7000 and NL8000 knowledge-based processors.
+Document: After more than two years of healthy design wins, our processor product family is entering a phase of very strong revenue ramp that will play out for many years to come.
 Topic ID: -1 (Outlier)
 
-Document: Q3 was another strong quarter of revenue growth with further customer and revenue diversification and a record level of design wins.
+Document: These positive revenue drivers will help partially offset some of the continued weakness we're seeing in some consistent run rate designs, especially in the enterprise, data center and market applications.
 Topic ID: -1 (Outlier)
 
-Document: Our Q3 revenue guidance reflects a very strong first month of shipments to all of our major customers, including Cisco and Alcatel-Lucent and full backlog coverage for the rest of the quarter.
+Document: Using a very conservative metric, we only declare a design win once we have received significant revenue orders for systems that are within six to twelve months of volume production.
 Topic ID: -1 (Outlier)
 
-Document: We have now fulfilled our earn out liability.
+Document: As we move into the back half of the year, we expect to see our enterprise revenues grow, driven by increased contribution from new design launches which use our N7000, NL8000, and the NL9000 products at a broad range of customers including Brocade, Cisco, Wauwei and Juniper.
 Topic ID: -1 (Outlier)
 
-Document: In 2007, we enjoyed a tremendous year of growth for our non-Cisco revenues.
+Document: As a result, we are seeing a strong increase in dollar content for our system as our customers utilize our KDPs to incrementally handle more of the forwarding tasks.
+Topic ID: -1 (Outlier)
+
+Document: This was driven by another strong quarter for multi-core processors, knowledge base processors and NETLite processors.
 Topic ID: -1 (Outlier)
 
