@@ -445,7 +445,7 @@ merged_df = merged_df.drop(columns=['call_date_with_time'], errors='ignore')
 # Merge 'call_date_with_time' back into merged_df using 'call_id' and include additional columns
 merged_df = pd.merge(
     merged_df,
-    processed_df[['call_id', 'call_date_with_time', 'ceo_participates', 'ceo_names', 'cfo_names']],  # Include additional columns
+    processed_df[['call_id', 'call_date_with_time', 'ceo_participates', 'ceo_names', 'cfo_names','participant_question_topics', 'management_answer_topics']],  # Include additional columns
     on='call_id',
     how='left'
 )
@@ -537,6 +537,7 @@ desired_columns = [
     'excess_ret_immediate', 'excess_ret_short_term', 'excess_ret_medium_term', 'excess_ret_long_term',
     'word_length_presentation',  # Added new column
     'ceo_change', 'cfo_change', 'ceo_cfo_change'  # Added new dummy variables
+    ,'participant_question_topics', 'management_answer_topics'
 ]
 # Check if all desired columns are present
 missing_cols = set(desired_columns) - set(merged_df.columns)

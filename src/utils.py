@@ -101,7 +101,7 @@ def process_topics(path, output_path, topics_to_keep, threshold_percentage=None)
     
     # Return relevant columns, including the new ones
     return df[['topics', 'text', 'filtered_topics', 'filtered_texts', 'consistent', 'call_id', 'permco', 'date',
-               'ceo_participates', 'ceo_names', 'cfo_names']]
+               'ceo_participates', 'ceo_names', 'cfo_names','participant_question_topics', 'management_answer_topics']]
 
 
 def determine_topics_to_keep(df, threshold_percentage):
