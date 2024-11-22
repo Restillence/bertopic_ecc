@@ -2,7 +2,7 @@
   "index_file_ecc_folder": "../data/",
   "folderpath_ecc": "../data/Transcripts_Masterarbeit/",
   "model_save_path": "../data/bertopic_model_dir",
-  "model_load_path": "../data/bertopic_model_dir_zeroshot_10000",
+  "model_load_path": "../data/bertopic_model_dir_zeroshot_10000_final",
   "index_file_path": "../data/list_earnings_call_transcripts.csv",
   "embedding_model_choice": "all-MiniLM-L12-v2",
   "ecc_plots_folder": "/plots/ecc_plots",
