@@ -16,8 +16,27 @@ def print_configuration(config):
     print("Configuration:")
     for key, value in config.items():
         print(f"{key}: {value}")
-        
-        
+
+def count_word_length_text(texts):
+    """
+    Count the total number of words in the 'presentation_text' list for a single row.
+
+    Parameters:
+    - texts (list): A list of text strings.
+
+    Returns:
+    - int: Total word count.
+    """
+    if not isinstance(texts, list):
+        return 0
+    total_words = 0
+    for text in texts:
+        if isinstance(text, str):
+            # Split the text into words using whitespace and count
+            words = text.split()
+            total_words += len(words)
+    return total_words
+
 def count_items(items):
     """
     Count the number of items in a list for a single row.
@@ -32,13 +51,12 @@ def count_items(items):
         return 0
     return len(items)
 
-
 def process_topics(path, output_path, topics_to_keep, threshold_percentage=None):
     """
     Process the topics by filtering based on the specified criteria.
 
     Parameters:
-    - path (str): Path to the input CSV file containing topics and texts.
+    - path (str): Path to the input CSV file containing presentation_topics and texts.
     - output_path (str): Path to save the processed CSV file.
     - topics_to_keep (set or str): Set of topics to retain or "all" to keep all topics.
     - threshold_percentage (float, optional): Percentage threshold for auto topic selection.
@@ -48,27 +66,20 @@ def process_topics(path, output_path, topics_to_keep, threshold_percentage=None)
     """
     # Load the CSV file
     df = pd.read_csv(path)
-     
-    # Existing commented-out code remains unchanged
-    """
-    if 'ceo_participates' in df.columns and 'ceo_names' in df.columns and 'cfo_names' in df.columns:
-        df['ceo_participates'] = df['ceo_participates'].fillna(0).astype(int)
-        df['ceo_names'] = df['ceo_names'].apply(parse_json_safe)
-        df['cfo_names'] = df['cfo_names'].apply(parse_json_safe)
-        print("Processed 'ceo_participates', 'ceo_names', and 'cfo_names' in df.")
-    else:
-        print("Warning: 'ceo_participates', 'ceo_names', or 'cfo_names' columns not found in input data.")
-    """
+    
+    # Check if 'presentation_topics' column exists
+    if 'presentation_topics' not in df.columns:
+        raise KeyError("'presentation_topics' column not found in the input data.")
     
     if topics_to_keep == "all":
-        df['filtered_topics'] = df["topics"]
+        df['filtered_presentation_topics'] = df["presentation_topics"]
         df['filtered_texts'] = df["text"]
         df.to_csv(output_path, index=False)
         return df
     
     # Convert string representations of lists into actual lists using ast.literal_eval
-    df['topics'] = df['topics'].apply(lambda x: ast.literal_eval(x) if isinstance(x, str) else x)
-    df['text'] = df['text'].apply(lambda x: ast.literal_eval(x) if isinstance(x, str) else x)
+    df['presentation_topics'] = df['presentation_topics'].apply(lambda x: ast.literal_eval(x) if isinstance(x, str) else x)
+    df['presentation_text'] = df['presentation_text'].apply(lambda x: ast.literal_eval(x) if isinstance(x, str) else x)
     
     # Parse 'ceo_names' and 'cfo_names' using ast.literal_eval
     df['ceo_names'] = df['ceo_names'].apply(lambda x: ast.literal_eval(x) if isinstance(x, str) else [])
@@ -83,22 +94,22 @@ def process_topics(path, output_path, topics_to_keep, threshold_percentage=None)
         topics_to_keep = determine_topics_to_keep(df, threshold_percentage)
     
     # Function to keep only the specified topics and corresponding texts
-    def keep_topics_and_texts(row, topics_to_keep):
-        topics = row['topics']
-        texts = row['text']
+    def keep_presentation_topics_and_texts(row, topics_to_keep):
+        topics = row['presentation_topics']
+        texts = row['presentation_text']
         filtered_data = [(topic, text) for topic, text in zip(topics, texts) if topic in topics_to_keep]
         if filtered_data:
-            filtered_topics, filtered_texts = zip(*filtered_data)
+            filtered_presentation_topics, filtered_texts = zip(*filtered_data)
         else:
-            filtered_topics, filtered_texts = [], []
-        return list(filtered_topics), list(filtered_texts)
+            filtered_presentation_topics, filtered_texts = [], []
+        return list(filtered_presentation_topics), list(filtered_texts)
     
     # Apply the function to each row
-    df[['filtered_topics', 'filtered_texts']] = df.apply(lambda row: keep_topics_and_texts(row, topics_to_keep), axis=1, result_type='expand')
+    df[['filtered_presentation_topics', 'filtered_texts']] = df.apply(lambda row: keep_presentation_topics_and_texts(row, topics_to_keep), axis=1, result_type='expand')
     
-    # Consistency check to validate if topics and texts are of the same length
+    # Consistency check to validate if presentation_topics and texts are of the same length
     def check_consistency(row):
-        return len(row['topics']) == len(row['text'])
+        return len(row['presentation_topics']) == len(row['presentation_text'])
     
     df['consistent'] = df.apply(check_consistency, axis=1)
     
@@ -106,9 +117,8 @@ def process_topics(path, output_path, topics_to_keep, threshold_percentage=None)
     df.to_csv(output_path, index=False)
     
     # Return relevant columns, including the new ones
-    return df[['topics', 'text', 'filtered_topics', 'filtered_texts', 'consistent', 'call_id', 'permco', 'date',
-               'ceo_participates', 'ceo_names', 'cfo_names', 'participant_question_topics', 'management_answer_topics']]
-
+    return df[['presentation_topics', 'presentation_text', 'filtered_presentation_topics', 'filtered_texts', 'consistent', 'call_id', 'permco', 'date',
+               'ceo_participates', 'ceo_names', 'cfo_names','participant_question_topics', 'management_answer_topics']]
 
 def determine_topics_to_keep(df, threshold_percentage):
     """
@@ -116,7 +126,7 @@ def determine_topics_to_keep(df, threshold_percentage):
     excluding the outlier category (-1).
 
     Parameters:
-    - df (pd.DataFrame): DataFrame containing 'permco' and 'topics' columns.
+    - df (pd.DataFrame): DataFrame containing 'permco' and 'presentation_topics' columns.
     - threshold_percentage (float): Percentage threshold for keeping topics.
 
     Returns:
@@ -126,12 +136,12 @@ def determine_topics_to_keep(df, threshold_percentage):
     total_companies = df['permco'].nunique()
 
     # Set to keep track of topics per company
-    topics_per_company = df.groupby('permco')['topics'].apply(lambda x: set().union(*x)).reset_index()
+    topics_per_company = df.groupby('permco')['presentation_topics'].apply(lambda x: set().union(*x)).reset_index()
 
     # Count the occurrences of each topic across companies
     topic_counts = {}
 
-    for topics in topics_per_company['topics']:
+    for topics in topics_per_company['presentation_topics']:
         for topic in topics:
             if topic != -1:  # Exclude outlier category
                 if topic not in topic_counts:
@@ -153,7 +163,6 @@ def determine_topics_to_keep(df, threshold_percentage):
     print(f"Percentage Threshold: {threshold_percentage}%")
     
     return topics_to_keep
-
 
 def create_transition_matrix(topic_sequence, num_topics):
     """
@@ -178,7 +187,6 @@ def create_transition_matrix(topic_sequence, num_topics):
     transition_matrix = transition_matrix / row_sums
     return transition_matrix
 
-
 def compute_similarity_to_average(df, num_topics):
     """
     Compute similarity measures to overall, industry, and company averages.
@@ -190,10 +198,6 @@ def compute_similarity_to_average(df, num_topics):
     Returns:
     - pd.DataFrame: DataFrame containing similarity measures.
     """
-    import numpy as np
-    from scipy.spatial.distance import cosine
-    import pandas as pd
-
     # Create transition matrices for each call and include call_date
     transition_matrices = []
     call_ids = []
@@ -206,7 +210,7 @@ def compute_similarity_to_average(df, num_topics):
 
     grouped = df.groupby('call_id')
     for call_id, group in grouped:
-        topics = group['filtered_topics'].values[0]  # Get the list of topics
+        topics = group['filtered_presentation_topics'].values[0]  # Get the list of topics
         if len(topics) < 2:
             # Cannot create a transition matrix with fewer than 2 topics
             continue

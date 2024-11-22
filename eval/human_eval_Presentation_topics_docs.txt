@@ -1209,6 +1209,9 @@ Topic ID: -1 (Outlier)
 Document: With the substantial design win portfolio, we should see solid growth 2010, as additional designs at several major customers ramp to volume production.
 Topic ID: -1 (Outlier)
 
+Document: We have now fulfilled our earn out liability.
+Topic ID: -1 (Outlier)
+
 Document: 2009 revenues should also benefit from the launch of a large number of new NETLite designs that we have won over the past few quarters.
 Topic ID: -1 (Outlier)
 
@@ -1218,16 +1221,13 @@ Topic ID: -1 (Outlier)
 Document: This aggressive broadening of our product portfolio is a direct result of the stellar execution and hard work of the 10-gig PHY team, and I am extremely proud of these results, which include two very successful products delivered to our customers in the first half of this year, and we expect additional new product introductions in the second half of 2008.
 Topic ID: -1 (Outlier)
 
-Document: Also we are expecting to see growth in our enterprise revenues from Brocade in the third quarter, both of as a result of it's expanded distribution channel that leverages IBM sales force, as well as the result of its architecture that uses as a higher content of knowledge-based processors as differentiator to bring higher levels of layer 4 processing to the enterprise segment.
+Document: We're focused on driving traffic and sales and anticipating a longer time frame to move to positive EBITDA.
 Topic ID: -1 (Outlier)
 
-Document: Outside of Cisco, we expect strong resumption of revenue growth following the seasonal adjustment with Alcatel-Lucent and the continued adoption of our technology as our customers continue to deploy next-generation equipment.
+Document: As we move into the back half of the year, we expect to see our enterprise revenues grow, driven by increased contribution from new design launches which use our N7000, NL8000, and the NL9000 products at a broad range of customers including Brocade, Cisco, Wauwei and Juniper.
 Topic ID: -1 (Outlier)
 
-Document: Every one of these customers has now boxes reaching volume production in 2010 that incorporate a much higher content of our product than the previous generation.
-Topic ID: -1 (Outlier)
-
-Document: Revenues at Cisco in Q1 as expected to grow as a result of our revenue diversification and the continued volume ramp of our initial Gen-4 design wins.
+Document: Using a very conservative metric, we only declare a design win once we have received significant revenue orders for systems that are within six to twelve months of volume production.
 Topic ID: -1 (Outlier)
 
 Document: This will take cable infrastructure as a whole to approximately 6% of our business in Q3, exceeding our earlier expectations.
@@ -1239,24 +1239,24 @@ Topic ID: -1 (Outlier)
 Document: Additionally, our revenue from Brocade increased significantly in the third quarter driven by our rapidly increasing content per box as Brocade moves to a higher mix of multi-10 gigabit line cards.
 Topic ID: -1 (Outlier)
 
+Document: In the second half, we believe our assortment and marketing reset will lead to improvement in comp sales and our cost-cutting efforts will help us deliver improvement in EBITDA versus a year ago.
+Topic ID: -1 (Outlier)
+
 Document: We expect revenue from Cisco to be subdued again in the third quarter as a result of some seasonal softness as well as ongoing lead initiatives, including our entry into the BMI program for the first time, which should be completed in Q4.
 Topic ID: -1 (Outlier)
 
 Document: After more than two years of healthy design wins, our processor product family is entering a phase of very strong revenue ramp that will play out for many years to come.
 Topic ID: -1 (Outlier)
 
+Document: Outside of Cisco, we expect strong resumption of revenue growth following the seasonal adjustment with Alcatel-Lucent and the continued adoption of our technology as our customers continue to deploy next-generation equipment.
+Topic ID: -1 (Outlier)
+
 Document: These positive revenue drivers will help partially offset some of the continued weakness we're seeing in some consistent run rate designs, especially in the enterprise, data center and market applications.
 Topic ID: -1 (Outlier)
 
-Document: Using a very conservative metric, we only declare a design win once we have received significant revenue orders for systems that are within six to twelve months of volume production.
+Document: Since our April earnings call, we're now assuming a more gradual recovery of comp sales and gross margin based on: 1) the more aggressive promotional stance we're taking in the first half; and 2) a more conservative assumption of AUR improvement in the second half.
 Topic ID: -1 (Outlier)
 
-Document: As we move into the back half of the year, we expect to see our enterprise revenues grow, driven by increased contribution from new design launches which use our N7000, NL8000, and the NL9000 products at a broad range of customers including Brocade, Cisco, Wauwei and Juniper.
-Topic ID: -1 (Outlier)
-
-Document: As a result, we are seeing a strong increase in dollar content for our system as our customers utilize our KDPs to incrementally handle more of the forwarding tasks.
-Topic ID: -1 (Outlier)
-
-Document: This was driven by another strong quarter for multi-core processors, knowledge base processors and NETLite processors.
+Document: Every one of these customers has now boxes reaching volume production in 2010 that incorporate a much higher content of our product than the previous generation.
 Topic ID: -1 (Outlier)
 

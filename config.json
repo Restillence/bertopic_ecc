@@ -5,7 +5,7 @@
     "model_load_path": "D:/daten_masterarbeit/bertopic_model_dir_regular_10000", 
     "index_file_path": "D:/daten_masterarbeit/list_earnings_call_transcripts.csv",
     "modeling_type": "regular",   
-    "sample_size": 1,
+    "sample_size": 2,
 
     "zeroshot_min_similarity": 0.25,
     "nr_topics": null,
