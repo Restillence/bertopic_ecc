@@ -177,7 +177,7 @@ class BertopicFitting:
             })
 
         results_df = pd.DataFrame(records)
-        results_output_path = os.path.join(self.index_file_ecc_folder, 'topics_output_reg_100.csv')
+        results_output_path = os.path.join(self.index_file_ecc_folder, 'topics_output_zero_100.csv')
         results_df.to_csv(results_output_path, index=False)
         print(f"Results saved to {results_output_path}.")
 
