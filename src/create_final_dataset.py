@@ -99,7 +99,7 @@ processed_df = pd.merge(
 processed_df = processed_df.drop(columns=['date'])
 print(f"Number of rows after initial merge: {len(processed_df)}")
 
-# After merging processed_df with df_crsp_daily
+# Check for missing 'gvkey's
 missing_gvkey = processed_df['gvkey'].isna().sum()
 print(f"Number of missing 'gvkey' values in processed_df after merging: {missing_gvkey}")
 
@@ -125,6 +125,15 @@ df_crsp_daily['gvkey'] = pd.to_numeric(df_crsp_daily['gvkey'], errors='coerce').
 # Remove any remaining rows with missing 'gvkey' in processed_df
 processed_df = processed_df.dropna(subset=['gvkey'])
 processed_df['gvkey'] = processed_df['gvkey'].astype(int)
+
+# Check uniqueness of 'call_id' in processed_df
+unique_call_ids_processed = processed_df['call_id'].nunique()
+total_call_ids_processed = len(processed_df)
+print(f"Processed_df: {unique_call_ids_processed} unique 'call_id's out of {total_call_ids_processed} total rows.")
+
+# Remove duplicates in processed_df based on 'call_id' to ensure uniqueness
+processed_df = processed_df.drop_duplicates(subset=['call_id'])
+print(f"Processed_df after dropping duplicates based on 'call_id': {len(processed_df)} rows.")
 
 # Extract updated set of gvkeys
 gvkeys = set(processed_df['gvkey'].unique())
@@ -237,7 +246,6 @@ processed_df_columns = [
 processed_df = processed_df[processed_df_columns]
 print(f"Selected columns from processed_df: {processed_df_columns}")
 
-
 # **Ensure 'participant_question_topics' and 'management_answer_topics' are lists**
 print("Ensuring 'participant_question_topics' and 'management_answer_topics' are lists...")
 processed_df['participant_question_topics'] = processed_df['participant_question_topics'].apply(
@@ -274,7 +282,6 @@ print("Dropping the 'presentation_text' column from processed_df...")
 processed_df = processed_df.drop(columns=['presentation_text'], errors='ignore')
 print("Dropped 'presentation_text' column.")
 
-
 # **Select necessary columns from df_crsp_monthly**
 df_crsp_monthly_columns = ['gvkey', 'datadate', 'epsfxq', 'epsfxq_next', 'siccd', 'permco']
 df_crsp_monthly = df_crsp_monthly[df_crsp_monthly_columns]
@@ -285,7 +292,8 @@ print("Performing custom merge between processed_df and df_crsp_monthly...")
 temp_merged = pd.merge(
     processed_df.drop(columns=['call_date_with_time']),  # Exclude 'call_date_with_time' to avoid duplication
     df_crsp_monthly[['gvkey', 'datadate', 'epsfxq', 'epsfxq_next', 'siccd']],
-    on='gvkey'
+    on='gvkey',
+    how='left'
 )
 
 # Step 2: Filter out rows where 'datadate' is after 'call_date' (keeping only those before or exactly on).
@@ -491,9 +499,10 @@ merged_df = merged_df.drop(columns=['call_date_with_time'], errors='ignore')
 # Merge 'call_date_with_time' back into merged_df using 'call_id' and include additional columns
 merged_df = pd.merge(
     merged_df,
-    processed_df[['call_id', 'call_date_with_time', 'ceo_participates', 'ceo_names', 'cfo_names','participant_question_topics', 'management_answer_topics']],  # Include additional columns
+    processed_df[['call_id', 'call_date_with_time', 'ceo_participates', 'ceo_names', 'cfo_names']],  # Include additional columns
     on='call_id',
-    how='left'
+    how='left',
+    validate='many_to_one'  # Ensure 'call_id's in merged_df are unique
 )
 
 # Replace 'call_date' in merged_df with 'call_date_with_time'
@@ -514,7 +523,6 @@ merged_df['ceo_participates'] = merged_df['ceo_participates_y'].fillna(merged_df
 merged_df = merged_df.drop(columns=['ceo_names_x', 'ceo_names_y', 'cfo_names_x', 'cfo_names_y',
                                     'ceo_participates_x', 'ceo_participates_y'], errors='ignore')
 print("Consolidated 'ceo_names', 'cfo_names', and 'ceo_participates' into single columns and dropped duplicates.")
-
 
 # **Add CEO/CFO Change Dummy Variables**
 
