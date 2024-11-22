@@ -177,7 +177,7 @@ class BertopicFitting:
             })
 
         results_df = pd.DataFrame(records)
-        results_output_path = os.path.join(self.index_file_ecc_folder, 'topics_output.csv')
+        results_output_path = os.path.join(self.index_file_ecc_folder, 'topics_output_regular.csv')
         results_df.to_csv(results_output_path, index=False)
         print(f"Results saved to {results_output_path}.")
 
@@ -526,7 +526,7 @@ def main():
     # Load configuration from config.json
     print("Loading configuration...")
     # Define the relative path to config.json
-    relative_path = 'config.json'
+    relative_path = 'config_hlr.json'
 
     # Define the fallback absolute path
     fallback_path = r'C:\Users\nikla\OneDrive\Dokumente\winfoMaster\Masterarbeit\bertopic_ecc\config.json'
