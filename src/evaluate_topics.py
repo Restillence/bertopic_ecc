@@ -98,5 +98,3 @@ def generate_evaluation_file(topic_model, results_df, output_dir, text_column, t
                 doc = item['doc']
                 f.write(f"Document: {doc}\n")
                 f.write(f"Topic ID: -1 (Outlier)\n\n")
-
-    # The main function is not needed as this script is intended to be imported

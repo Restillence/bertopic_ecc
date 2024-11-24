@@ -3,3 +3,7 @@ eval/
 
 # Ignore the model_outputs directory
 model_outputs/
+eval/human_eval_Presentation_topics_docs.txt
+model_outputs/*.html
+eval/human_eval_Presentation_topics_docs.txt
+model_outputs/*.html

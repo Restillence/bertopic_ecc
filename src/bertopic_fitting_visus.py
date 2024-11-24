@@ -13,7 +13,7 @@ from bertopic import BERTopic
 from bertopic.backend import BaseEmbedder  # Import BaseEmbedder for custom embedding
 from file_handling import FileHandler
 from text_processing import TextProcessor
-from utils import print_configuration
+from utils import print_configuration, count_items  # Import count_items instead of count_word_length_text
 from sentence_transformers import SentenceTransformer
 from scipy.cluster import hierarchy as sch  # For hierarchical topic modeling
 
@@ -276,7 +276,17 @@ class BertopicFitting:
             )
             print("Results saved.")
 
-            # ... [Rest of the method remains unchanged] ...
+            # Generate evaluation files
+            print("Generating evaluation files...")
+            self.generate_evaluation_files()
+            print("Evaluation files generated.")
+
+            # Generate additional visualizations
+            self.generate_additional_visualizations()
+
+            # Total execution time
+            total_end_time = time.time()
+            print(f"Total script execution time: {total_end_time - total_start_time:.2f} seconds.")
 
         except Exception as e:
             print(f"An error occurred in fit_and_save: {e}")
@@ -636,3 +646,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

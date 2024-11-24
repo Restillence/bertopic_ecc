@@ -6,9 +6,9 @@ import seaborn as sns
 import statsmodels.api as sm
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score, mean_squared_error
+from scipy.stats import chi2_contingency, ttest_ind
 
 # Path to the final dataset
-filepath = "D:/daten_masterarbeit/final_dataset.csv"
 filepath = "D:/daten_masterarbeit/final_dataset_2500_reg_20.csv"
 
 # Read the CSV file, assuming 'call_id' is the index column if applicable
@@ -28,7 +28,15 @@ variables = [
     'excess_ret_medium_term',
     'excess_ret_long_term',
     'epsfxq',
-    'epsfxq_next'
+    'epsfxq_next',
+    'length_participant_questions',  # Neue abhängige Variable
+    'length_management_answers',    # Neue abhängige Variable
+    'market_cap',                   # Kontrollvariable
+    'ceo_participates',             # Kontrollvariable
+    'ceo_cfo_change',               # Kontrollvariable
+    'word_length_presentation',     # Kontrollvariable
+    'participant_question_topics',  # Für Chi-Quadrat-Test
+    'management_answer_topics'      # Für Chi-Quadrat-Test
 ]
 
 # Create analysis DataFrame with the specified variables
@@ -59,27 +67,19 @@ similarity_vars = [
     'similarity_to_company_average'
 ]
 
-# Uncomment the following block to create scatter plots
-"""
-# Create scatter plots between similarity variables and return variables
-for sim_var in similarity_vars:
-    for ret_var in return_vars:
-        plt.figure(figsize=(8, 6))
-        sns.scatterplot(data=analysis_df, x=sim_var, y=ret_var, alpha=0.5)
-        plt.title(f'Scatter Plot of {ret_var} vs. {sim_var}')
-        plt.xlabel(f'{sim_var}')
-        plt.ylabel(f'{ret_var}')
-        plt.show()
+# Neue abhängige Variablen für zusätzliche Analysen
+additional_dependent_vars = [
+    'length_participant_questions',
+    'length_management_answers'
+]
 
-# Plot histograms and density plots for similarity variables
-for sim_var in similarity_vars:
-    plt.figure(figsize=(8, 6))
-    sns.histplot(analysis_df[sim_var], kde=True)
-    plt.title(f'Distribution of {sim_var}')
-    plt.xlabel(sim_var)
-    plt.ylabel('Frequency')
-    plt.show()
-"""
+# Kontrollvariablen
+control_vars = [
+    'market_cap',
+    'ceo_participates',
+    'ceo_cfo_change',
+    'word_length_presentation'
+]
 
 #%% Correlations
 
@@ -97,14 +97,14 @@ for sim_var in similarity_vars:
 
 #%% Linear Regression using Statsmodels
 
-# Function to perform regression with statsmodels and display p-values
+# Funktion zur Durchführung der Regression mit statsmodels und Anzeige der p-Werte
 def perform_regression_with_statsmodels(y_var, x_vars):
     X = analysis_df[x_vars]
     y = analysis_df[y_var]
-    X = sm.add_constant(X)  # Adds a constant term to the predictor
+    X = sm.add_constant(X)  # Fügt einen konstanten Term zum Prädiktor hinzu
     model = sm.OLS(y, X).fit()
     print(f"Regression results for {y_var} ~ {', '.join(x_vars)}:")
-    print(model.summary())  # This will include p-values, R-squared, and other stats
+    print(model.summary())  # Enthält p-Werte, R-squared und andere Statistiken
     print("\n")
     return model
 
@@ -114,7 +114,7 @@ for ret_var in return_vars:
 
 #%% Linear Regression using Scikit-learn
 
-# Function to perform regression and display results
+# Funktion zur Durchführung der Regression und Anzeige der Ergebnisse
 def perform_sklearn_regression(y_var, x_vars):
     X = analysis_df[x_vars].values
     y = analysis_df[y_var].values
@@ -135,25 +135,115 @@ def perform_sklearn_regression(y_var, x_vars):
 for ret_var in return_vars:
     perform_sklearn_regression(ret_var, similarity_vars)
 
-#%% Additional Plots
+#%% Zusätzliche Regressionen mit Kontrollvariablen
 
-"""
-# Plot histograms and density of 'epsfxq' and 'epsfxq_next'
-for eps_var in ['epsfxq', 'epsfxq_next']:
-    plt.figure(figsize=(8, 6))
-    sns.histplot(analysis_df[eps_var], kde=True)
-    plt.title(f'Distribution of {eps_var}')
-    plt.xlabel(eps_var)
-    plt.ylabel('Frequency')
+# Liste der zusätzlichen abhängigen Variablen
+additional_dependent_vars = [
+    'length_participant_questions',
+    'length_management_answers'
+]
+
+for dependent_var in additional_dependent_vars:
+    independent_vars = similarity_vars + control_vars
+    print(f"Regression results for {dependent_var} ~ {', '.join(independent_vars)}:")
+    perform_regression_with_statsmodels(dependent_var, independent_vars)
+    perform_sklearn_regression(dependent_var, independent_vars)
+
+#%% Chi-Quadrat-Tests für Themenverteilungen
+
+# Funktion zur Durchführung des Chi-Quadrat-Tests
+def perform_chi_squared_test(group, category_var1, category_var2):
+    contingency_table = pd.crosstab(group[category_var1], group[category_var2])
+    chi2, p, dof, ex = chi2_contingency(contingency_table)
+    print(f"Chi-Quadrat-Test zwischen '{category_var1}' und '{category_var2}':")
+    print(f"Chi2: {chi2}, p-Wert: {p}, Freiheitsgrade: {dof}")
+    print("Kontingenztabelle:")
+    print(contingency_table)
+    print("\n")
+    return chi2, p
+
+# Gruppierung basierend auf 'similarity_to_overall_average'
+# Definieren von Quantilen, z.B. oberste 20% vs unterste 20%
+analysis_df['similarity_group'] = pd.qcut(analysis_df['similarity_to_overall_average'], 
+                                         q=5, 
+                                         labels=['Very Low', 'Low', 'Medium', 'High', 'Very High'])
+
+# Separate Gruppen
+low_similarity = analysis_df[analysis_df['similarity_group'].isin(['Very Low', 'Low'])]
+high_similarity = analysis_df[analysis_df['similarity_group'].isin(['High', 'Very High'])]
+
+# Durchführung des Chi-Quadrat-Tests für beide Gruppen
+print("Chi-Quadrat-Test für niedrige Similarity Gruppe:")
+perform_chi_squared_test(low_similarity, 'participant_question_topics', 'management_answer_topics')
+
+print("Chi-Quadrat-Test für hohe Similarity Gruppe:")
+perform_chi_squared_test(high_similarity, 'participant_question_topics', 'management_answer_topics')
+
+#%% Vergleich der Anzahl der Managementantworten
+
+# Annahme: Es gibt eine Spalte 'length_management_answers' im DataFrame
+# Falls nicht vorhanden, hier ein Beispiel, wie es erstellt werden könnte
+# Beispiel: Anzahl der Managementantworten pro Call
+# analysis_df['length_management_answers'] = df.groupby('call_id')['management_answer'].transform('count')
+
+# Gruppierung der Daten
+# low_similarity_group = analysis_df[analysis_df['similarity_group'].isin(['Very Low', 'Low'])]
+# high_similarity_group = analysis_df[analysis_df['similarity_group'].isin(['High', 'Very High'])]
+
+# Vergleich der durchschnittlichen Anzahl der Managementantworten
+low_mean_participant = low_similarity['length_participant_questions'].mean()
+high_mean_participant = high_similarity['length_participant_questions'].mean()
+low_mean_management = low_similarity['length_management_answers'].mean()
+high_mean_management = high_similarity['length_management_answers'].mean()
+
+print(f"Durchschnittliche Länge der Teilnehmerfragen bei niedriger Similarity: {low_mean_participant}")
+print(f"Durchschnittliche Länge der Teilnehmerfragen bei hoher Similarity: {high_mean_participant}")
+print(f"Durchschnittliche Länge der Managementantworten bei niedriger Similarity: {low_mean_management}")
+print(f"Durchschnittliche Länge der Managementantworten bei hoher Similarity: {high_mean_management}")
+
+# Statistischer Test (z.B. t-Test) für 'length_participant_questions'
+t_stat_participant, p_val_participant = ttest_ind(
+    low_similarity['length_participant_questions'], 
+    high_similarity['length_participant_questions'], 
+    equal_var=False
+)
+print(f"T-Test für die Länge der Teilnehmerfragen zwischen niedriger und hoher Similarity:")
+print(f"T-Statistik: {t_stat_participant}, p-Wert: {p_val_participant}\n")
+
+# Statistischer Test (z.B. t-Test) für 'length_management_answers'
+t_stat_management, p_val_management = ttest_ind(
+    low_similarity['length_management_answers'], 
+    high_similarity['length_management_answers'], 
+    equal_var=False
+)
+print(f"T-Test für die Länge der Managementantworten zwischen niedriger und hoher Similarity:")
+print(f"T-Statistik: {t_stat_management}, p-Wert: {p_val_management}\n")
+
+#%% Zusätzliche Visualisierungen
+
+# Beispiel: Gestapelte Balkendiagramme für Themenverteilungen
+def plot_topic_distribution(group, title):
+    topic_counts = pd.crosstab(group['participant_question_topics'], group['management_answer_topics'])
+    topic_counts.plot(kind='bar', stacked=True, figsize=(10,7))
+    plt.title(title)
+    plt.xlabel('Participant Question Topics')
+    plt.ylabel('Anzahl der Managementantworten')
+    plt.legend(title='Management Answer Topics')
     plt.show()
 
-# Scatter plots between EPS variables and similarity variables
-for sim_var in similarity_vars:
-    for eps_var in ['epsfxq', 'epsfxq_next']:
-        plt.figure(figsize=(8, 6))
-        sns.scatterplot(data=analysis_df, x=sim_var, y=eps_var, alpha=0.5)
-        plt.title(f'Scatter Plot of {eps_var} vs. {sim_var}')
-        plt.xlabel(f'{sim_var}')
-        plt.ylabel(f'{eps_var}')
-        plt.show()
+plot_topic_distribution(low_similarity, 'Themenverteilung - Niedrige Similarity')
+plot_topic_distribution(high_similarity, 'Themenverteilung - Hohe Similarity')
+
+#%% Speichern der Ergebnisse (optional)
+
+# Beispiel: Speichern der Regressionsergebnisse oder Chi-Quadrat-Testergebnisse in Dateien
+# with open('regression_results.txt', 'w') as f:
+#     f.write(model.summary().as_text())
+
+#%% Hinweise zur Interpretation
+
+"""
+- Die Regressionsergebnisse zeigen den Einfluss der similarity Variablen auf die abhängigen Variablen, wobei Kontrollvariablen berücksichtigt werden.
+- Die Chi-Quadrat-Tests überprüfen, ob es einen signifikanten Zusammenhang zwischen den Themen der Analystenfragen und den Managementantworten gibt, getrennt nach Similarity-Gruppen.
+- Der Vergleich der Länge der Managementantworten und Teilnehmerfragen zwischen den Gruppen hilft zu verstehen, ob die Länge der Antworten von der Similarity beeinflusst wird.
 """
