@@ -20,7 +20,7 @@
     "similarity_threshold": 0.7,
     "hierarchical_clustering_threshold": 0.5,
     "min_topic_size": 200,
-
+    
     "ecc_plots_folder": "C:/Users/nikla/OneDrive/Dokumente/winfoMaster/Masterarbeit/bertopic_ecc/plots/ecc_plots",
     "embedding_model_choice": "all-MiniLM-L12-v2", 
 
