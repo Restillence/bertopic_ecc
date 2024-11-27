@@ -2,7 +2,7 @@
   "index_file_ecc_folder": "../data/",
   "folderpath_ecc": "../data/Transcripts_Masterarbeit/",
   "model_save_path": "../data/bertopic_model_dir",
-  "model_load_path": "../data/bertopic_model_dir_regular_10000",
+  "model_load_path": "../data/bertopic_model_dir_zeroshot_10000",
   "index_file_path": "../data/list_earnings_call_transcripts.csv",
   "embedding_model_choice": "all-MiniLM-L12-v2",
   "ecc_plots_folder": "/plots/ecc_plots",
@@ -29,7 +29,7 @@
   "modeling_type": "regular",
   "apply_topic_merging": false, 
   "similarity_threshold": 0.7,
-  "sample_size": 1729,
+  "sample_size": 300,
   "sampling_mode": "random_company",
   "document_split": "sentences",
   "random_seed": 43,
@@ -199,7 +199,6 @@
     "GEOGRAPHY": ["geography", "segments", "markets", "china", "europe", "global", "emerging", "america", "region", "asia", "india", "japan", "country", "west", "european", "central", "international", "foreign"],
     "GROWTH": ["growth", "organic", "strong", "digit", "acquisition", "business", "revenue-growth", "eps-growth", "strengthen", "margin", "solid"],
     "TAX": ["tax", "taxes", "carryforward", "carryback", "avoidance", "haven", "statutory", "break", "provision", "IRS", "NOL"],
-    "COSTS": ["costs","expenses","expenditures","cost","expense","expenditure"],
-    "MARKETING": ["marketing", "advertising"]
+    "COSTS": ["costs","expenses","expenditures","cost","expense","expenditure"]
 }
 }
