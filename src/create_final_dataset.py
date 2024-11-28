@@ -31,8 +31,8 @@ file_path_crsp_monthly = config['file_path_crsp_monthly']
 merged_file_path = config['merged_file_path']
 topic_threshold_percentage = config['topic_threshold_percentage']
 
-# **Adjust Here: Read 'modeling_type' Instead of 'model_type'**
-model_type = config.get('modeling_type', 'zeroshot').lower()  # Changed from 'model_type' to 'modeling_type'
+# Read 'modeling_type' from config
+model_type = config.get('modeling_type', 'zeroshot').lower()
 
 # Validate model_type
 if model_type not in ['zeroshot', 'regular']:
@@ -249,17 +249,17 @@ df_crsp_monthly = df_crsp_monthly.groupby('gvkey', group_keys=False).apply(get_e
 
 print("Completed 'epsfxq_next' computation with missing quarters adjusted.")
 
-# **Select necessary columns from processed_df, including 'presentation_text' and additional columns**
+# Select necessary columns from processed_df, including 'presentation_text' and additional columns
 processed_df_columns = [
     'call_id', 'gvkey', 'call_date', 'call_date_with_time', 
     'permco', 'filtered_presentation_topics', 'filtered_texts', 'presentation_text', 
-    'ceo_participates', 'ceo_names', 'cfo_names',  # Added additional columns
-    'participant_question_topics', 'management_answer_topics'  # Retained existing topic columns
+    'ceo_participates', 'ceo_names', 'cfo_names',
+    'participant_question_topics', 'management_answer_topics'
 ]
 processed_df = processed_df[processed_df_columns]
 print(f"Selected columns from processed_df: {processed_df_columns}")
 
-# **Ensure 'participant_question_topics' and 'management_answer_topics' are lists**
+# Ensure 'participant_question_topics' and 'management_answer_topics' are lists
 print("Ensuring 'participant_question_topics' and 'management_answer_topics' are lists...")
 processed_df['participant_question_topics'] = processed_df['participant_question_topics'].apply(
     lambda x: ast.literal_eval(x) if isinstance(x, str) else x
@@ -276,12 +276,12 @@ processed_df['management_answer_topics'] = processed_df['management_answer_topic
     lambda x: x if isinstance(x, list) else []
 )
 
-# **Compute 'word_length_presentation' by counting words in 'presentation_text'**
+# Compute 'word_length_presentation' by counting words in 'presentation_text'
 print("Computing 'word_length_presentation' by counting words in 'presentation_text'...")
 processed_df['word_length_presentation'] = processed_df['presentation_text'].apply(count_word_length_text)
 print("Added 'word_length_presentation' column to processed_df.")
 
-# **Compute counts for participant questions and management answers**
+# Compute counts for participant questions and management answers
 print("Computing 'length_participant_questions' by counting items in 'participant_question_topics'...")
 processed_df['length_participant_questions'] = processed_df['participant_question_topics'].apply(count_items)
 print("Added 'length_participant_questions' column to processed_df.")
@@ -290,12 +290,12 @@ print("Computing 'length_management_answers' by counting items in 'management_an
 processed_df['length_management_answers'] = processed_df['management_answer_topics'].apply(count_items)
 print("Added 'length_management_answers' column to processed_df.")
 
-# **Drop 'presentation_text' column as it's no longer needed**
+# Drop 'presentation_text' column as it's no longer needed
 print("Dropping the 'presentation_text' column from processed_df...")
 processed_df = processed_df.drop(columns=['presentation_text'], errors='ignore')
 print("Dropped 'presentation_text' column.")
 
-# **Select necessary columns from df_crsp_monthly**
+# Select necessary columns from df_crsp_monthly
 df_crsp_monthly_columns = ['gvkey', 'datadate', 'epsfxq', 'epsfxq_next', 'siccd', 'permco']
 df_crsp_monthly = df_crsp_monthly[df_crsp_monthly_columns]
 
@@ -363,9 +363,9 @@ merged_df['filtered_presentation_topics'] = merged_df['filtered_presentation_top
 
 # Determine the number of topics after mapping
 try:
-    num_topics = merged_df['filtered_presentation_topics'].apply(
-        lambda x: max(x) if x else 0
-    ).max() + 1
+    unique_topics = set()
+    merged_df['filtered_presentation_topics'].apply(lambda x: unique_topics.update(x))
+    num_topics = max(unique_topics) + 1
 except Exception as e:
     print(f"Error determining number of topics: {e}")
     num_topics = 0  # Fallback or handle accordingly
@@ -374,12 +374,10 @@ print(f"Number of topics determined after mapping: {num_topics}")
 # Convert 'siccd' to integer (if possible)
 merged_df['siccd'] = merged_df['siccd'].astype(float).astype('Int64')
 
-#%%
 # Compute similarities
-print("Computing similarities...")
+print("Computing similarities to overall, industry and firm-specific averages...")
 similarity_df = compute_similarity_to_average(merged_df, num_topics)
 print("Computed similarity measures.")
-
 
 # Merge similarities back into merged_df
 if 'call_id' in similarity_df.columns and 'call_id' in merged_df.columns:
@@ -430,7 +428,6 @@ def compute_rolling_beta(group):
 df_crsp_daily = df_crsp_daily.groupby('permco', group_keys=False).apply(compute_rolling_beta)
 print("Computed rolling beta for each stock.")
 
-
 # Compute future returns
 print("Computing future returns...")
 df_crsp_daily = df_crsp_daily.sort_values(['permco', 'date']).reset_index(drop=True)
@@ -460,9 +457,6 @@ def compute_future_returns(group):
                 ret_immediate[i] = np.prod(1 + returns) - 1
                 market_return = np.prod(1 + market_returns) - 1
                 excess_ret_immediate[i] = ret_immediate[i] - market_return
-                # Debugging: Print first 5 computations
-                if i < 5:
-                    print(f"[Immediate] gvkey={group['gvkey'].iloc[0]}, i={i}: ret_immediate={ret_immediate[i]}, market_return={market_return}, excess_ret_immediate={excess_ret_immediate[i]}")
         
         # Short-term market reaction: t+2 to t+6
         if i + 6 < n:
@@ -472,9 +466,6 @@ def compute_future_returns(group):
                 ret_short_term[i] = np.prod(1 + returns) - 1
                 market_return = np.prod(1 + market_returns) - 1
                 excess_ret_short_term[i] = ret_short_term[i] - market_return
-                # Debugging
-                if i < 5:
-                    print(f"[Short-term] gvkey={group['gvkey'].iloc[0]}, i={i}: ret_short_term={ret_short_term[i]}, market_return={market_return}, excess_ret_short_term={excess_ret_short_term[i]}")
         
         # Medium-term market reaction: t+2 to t+21
         if i + 21 < n:
@@ -484,9 +475,6 @@ def compute_future_returns(group):
                 ret_medium_term[i] = np.prod(1 + returns) - 1
                 market_return = np.prod(1 + market_returns) - 1
                 excess_ret_medium_term[i] = ret_medium_term[i] - market_return
-                # Debugging
-                if i < 5:
-                    print(f"[Medium-term] gvkey={group['gvkey'].iloc[0]}, i={i}: ret_medium_term={ret_medium_term[i]}, market_return={market_return}, excess_ret_medium_term={excess_ret_medium_term[i]}")
         
         # Long-term market reaction: t+2 to t+60
         if i + 61 < n:
@@ -496,9 +484,6 @@ def compute_future_returns(group):
                 ret_long_term[i] = np.prod(1 + returns) - 1
                 market_return = np.prod(1 + market_returns) - 1
                 excess_ret_long_term[i] = ret_long_term[i] - market_return
-                # Debugging
-                if i < 5:
-                    print(f"[Long-term] gvkey={group['gvkey'].iloc[0]}, i={i}: ret_long_term={ret_long_term[i]}, market_return={market_return}, excess_ret_long_term={excess_ret_long_term[i]}")
 
     group['ret_immediate'] = ret_immediate
     group['ret_short_term'] = ret_short_term
@@ -512,12 +497,7 @@ def compute_future_returns(group):
 
     return group
 
-# Updated groupby to exclude 'include_groups' if unsupported
-try:
-    df_crsp_daily = df_crsp_daily.groupby('permco', group_keys=False, include_groups=False).apply(compute_future_returns).reset_index(drop=True)
-except TypeError:
-    # If 'include_groups' is not supported, use 'as_index=False' as a fallback
-    df_crsp_daily = df_crsp_daily.groupby('permco', group_keys=False, as_index=False).apply(compute_future_returns).reset_index(drop=True)
+df_crsp_daily = df_crsp_daily.groupby('permco', group_keys=False).apply(compute_future_returns).reset_index(drop=True)
 
 print("Completed computation of future returns.")
 
@@ -538,8 +518,7 @@ merged_df = pd.merge(
 merged_df = merged_df.drop(columns=['date'], errors='ignore')
 print(f"Number of rows after merging future returns: {len(merged_df)}")
 
-
-# **Restore 'call_date' with time component**
+# Restore 'call_date' with time component
 print("Restoring 'call_date' with time component from 'processed_df'...")
 
 # Drop 'call_date_with_time' from merged_df if exists
@@ -561,20 +540,19 @@ merged_df['call_date'] = merged_df['call_date_with_time']
 merged_df = merged_df.drop(columns=['call_date_with_time'], errors='ignore')
 print("Restored 'call_date' with time component in merged_df.")
 
-# **Consolidate 'ceo_names_x' and 'ceo_names_y' into 'ceo_names'**
+# Consolidate 'ceo_names' and 'cfo_names'
 merged_df['ceo_names'] = merged_df['ceo_names_y'].fillna(merged_df['ceo_names_x'])
 merged_df['cfo_names'] = merged_df['cfo_names_y'].fillna(merged_df['cfo_names_x'])
 
-# **Consolidate 'ceo_participates_x' and 'ceo_participates_y' into 'ceo_participates'**
+# Consolidate 'ceo_participates'
 merged_df['ceo_participates'] = merged_df['ceo_participates_y'].fillna(merged_df['ceo_participates_x'])
 
-# **Drop the duplicated columns**
+# Drop the duplicated columns
 merged_df = merged_df.drop(columns=['ceo_names_x', 'ceo_names_y', 'cfo_names_x', 'cfo_names_y',
                                     'ceo_participates_x', 'ceo_participates_y'], errors='ignore')
 print("Consolidated 'ceo_names', 'cfo_names', and 'ceo_participates' into single columns and dropped duplicates.")
 
-# **Add CEO/CFO Change Dummy Variables**
-
+# Add CEO/CFO Change Dummy Variables
 # Ensure merged_df is sorted by 'gvkey' and 'call_date'
 merged_df = merged_df.sort_values(by=['gvkey', 'call_date']).reset_index(drop=True)
 print("DataFrame sorted by 'gvkey' and 'call_date'.")
@@ -606,26 +584,24 @@ merged_df['cfo_change'] = merged_df.apply(
 merged_df['ceo_change'] = merged_df['ceo_change'].fillna(0).astype(int)
 merged_df['cfo_change'] = merged_df['cfo_change'].fillna(0).astype(int)
 
-# Optionally, create 'ceo_cfo_change' as 1 if either CEO or CFO changed
+# Create 'ceo_cfo_change' as 1 if either CEO or CFO changed
 merged_df['ceo_cfo_change'] = (merged_df['ceo_change'] | merged_df['cfo_change']).astype(int)
 
 # Drop the helper columns
 merged_df = merged_df.drop(columns=['prev_ceo_names', 'prev_cfo_names'], errors='ignore')
 print("Added 'ceo_change', 'cfo_change', and 'ceo_cfo_change' dummy variables.")
 
-# **Validate 'ceo_names' and 'cfo_names' after consolidation**
-print("Consolidated 'ceo_names' and 'cfo_names' columns:")
-print(merged_df[['ceo_names', 'cfo_names']].head())
+# Remove -1 from 'participant_question_topics' and 'management_answer_topics'
+print("Removing -1 from 'participant_question_topics' and 'management_answer_topics'...")
+merged_df = remove_neg_one_from_columns(
+    merged_df, 
+    ['participant_question_topics', 'management_answer_topics']
+)
+print("Removed -1 from specified topic columns.")
 
-# **Check Dummy Variables**
-print("Sample of 'ceo_change', 'cfo_change', and 'ceo_cfo_change' columns:")
-print(merged_df[['ceo_change', 'cfo_change', 'ceo_cfo_change']].head())
-
-# **Inspect Inconsistencies**
-invalid_ceo_entries = merged_df[(merged_df['ceo_participates'] == 1) & (merged_df['ceo_names'].apply(len) == 0)]
-print(f"Number of rows with 'ceo_participates' == 1 but empty 'ceo_names': {len(invalid_ceo_entries)}")
-print("Sample of invalid 'ceo_names' entries:")
-print(invalid_ceo_entries[['ceo_participates', 'ceo_names']].head())
+# Take absolute values for the 'prc' column
+if 'prc' in merged_df.columns:
+    merged_df['prc'] = merged_df['prc'].abs()
 
 # Final DataFrame Preparation and Saving
 print("Finalizing the merged DataFrame...")
@@ -638,27 +614,14 @@ desired_columns = [
     'similarity_to_company_average', 'prc', 'shrout', 'ret', 'vol', 'market_cap',
     'ret_immediate', 'ret_short_term', 'ret_medium_term', 'ret_long_term', 'market_ret',
     'excess_ret_immediate', 'excess_ret_short_term', 'excess_ret_medium_term', 'excess_ret_long_term',
-    'rolling_beta',  # Added rolling_beta
+    'rolling_beta',
     'word_length_presentation',
     'length_participant_questions', 'length_management_answers',
     'ceo_change', 'cfo_change', 'ceo_cfo_change',
     'participant_question_topics', 'management_answer_topics'
 ]
 
-
-# **Remove -1 from 'participant_question_topics' and 'management_answer_topics'**
-print("Removing -1 from 'participant_question_topics' and 'management_answer_topics'...")
-merged_df = remove_neg_one_from_columns(
-    merged_df, 
-    ['participant_question_topics', 'management_answer_topics']
-)
-print("Removed -1 from specified topic columns.")
-
-# **Take absolute values for the prc column**
-if 'prc' in merged_df.columns:
-    merged_df['prc'] = merged_df['prc'].abs()
-
-# **Select only the columns that exist**
+# Select only the columns that exist
 final_columns = [col for col in desired_columns if col in merged_df.columns]
 merged_df = merged_df[final_columns]
 

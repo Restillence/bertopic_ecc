@@ -4,10 +4,12 @@ import os
 import random
 import json
 import pandas as pd
+import numpy as np  # Add numpy import
 
 def generate_evaluation_file(topic_model, results_df, output_dir, text_column, topics_column, section_type):
     """
-    Generate a human evaluation file with topic information and random document-topic pairs for a specific section.
+    Generate a human evaluation file with topic information and document-topic pairs for a specific section,
+    with increased portion of larger topics in the evaluation.
 
     Args:
         topic_model: The trained BERTopic model.
@@ -43,36 +45,51 @@ def generate_evaluation_file(topic_model, results_df, output_dir, text_column, t
         non_outlier_df = non_outlier_df.dropna(subset=[topics_column, text_column])
         non_outlier_df['topics_list'] = non_outlier_df[topics_column].apply(json.loads)
         non_outlier_docs = []
+        doc_weights = []
+
+        # Create a mapping from topic_id to count
+        topic_counts = dict(zip(topic_info['Topic'], topic_info['Count']))
+
         for idx, row in non_outlier_df.iterrows():
             sections = json.loads(row[text_column])
             section_topics = row['topics_list']
             for doc, topic in zip(sections, section_topics):
                 if topic != -1:
                     non_outlier_docs.append({'doc': doc, 'topic': topic})
+                    # Get the count for this topic
+                    topic_count = topic_counts.get(topic, 0)
+                    doc_weights.append(topic_count)
 
-        # Randomly sample 30 documents
-        random.seed(42)
-        num_samples = min(30, len(non_outlier_docs))
-        if num_samples == 0:
-            print(f"No non-outlier {section_type} documents available for sampling.")
+        # Normalize the weights to sum to 1
+        if doc_weights:
+            doc_weights = np.array(doc_weights, dtype=np.float64)
+            probabilities = doc_weights / doc_weights.sum()
+
+            np.random.seed(42)  # For reproducibility
+            num_samples = min(30, len(non_outlier_docs))
+            if num_samples == 0:
+                print(f"No non-outlier {section_type} documents available for sampling.")
+            else:
+                sampled_indices = np.random.choice(len(non_outlier_docs), size=num_samples, replace=False, p=probabilities)
+                sampled_docs = [non_outlier_docs[i] for i in sampled_indices]
+
+                f.write(f"Weighted Random Document-Topic Pairs for {section_type} (biased towards larger topics):\n")
+                for item in sampled_docs:
+                    doc = item['doc']
+                    topic_id = item['topic']
+                    # Get topic info
+                    representation = topic_model.get_topic(topic_id)
+                    words = ', '.join([word for word, _ in representation])
+                    topic_info_row = topic_info[topic_info['Topic'] == topic_id]
+                    count = topic_info_row['Count'].values[0] if not topic_info_row.empty else 'N/A'
+                    name = topic_info_row['Name'].values[0] if not topic_info_row.empty else 'N/A'
+                    f.write(f"Document: {doc}\n")
+                    f.write(f"Topic ID: {topic_id}\n")
+                    f.write(f"Topic Name: {name}\n")
+                    f.write(f"Topic Count: {count}\n")
+                    f.write(f"Topic Representation: {words}\n\n")
         else:
-            sampled_docs = random.sample(non_outlier_docs, num_samples)
-
-            f.write(f"Random Document-Topic Pairs for {section_type}:\n")
-            for item in sampled_docs:
-                doc = item['doc']
-                topic_id = item['topic']
-                # Get topic info
-                representation = topic_model.get_topic(topic_id)
-                words = ', '.join([word for word, _ in representation])
-                topic_info_row = topic_info[topic_info['Topic'] == topic_id]
-                count = topic_info_row['Count'].values[0] if not topic_info_row.empty else 'N/A'
-                name = topic_info_row['Name'].values[0] if not topic_info_row.empty else 'N/A'
-                f.write(f"Document: {doc}\n")
-                f.write(f"Topic ID: {topic_id}\n")
-                f.write(f"Topic Name: {name}\n")
-                f.write(f"Topic Count: {count}\n")
-                f.write(f"Topic Representation: {words}\n\n")
+            print(f"No non-outlier {section_type} documents available for sampling.")
 
         # Now sample outlier documents
         outlier_df = results_df.copy()
@@ -91,6 +108,7 @@ def generate_evaluation_file(topic_model, results_df, output_dir, text_column, t
         if num_outlier_samples == 0:
             print(f"No outlier {section_type} documents available for sampling.")
         else:
+            random.seed(42)
             sampled_outliers = random.sample(outlier_docs, num_outlier_samples)
 
             f.write(f"Random Outlier Document-Topic Pairs for {section_type}:\n")

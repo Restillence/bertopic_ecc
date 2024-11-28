@@ -6,13 +6,12 @@ import numpy as np
 from scipy.spatial.distance import cosine
 import ast
 from scipy.sparse import csr_matrix
+from sklearn.metrics.pairwise import cosine_similarity
+from tqdm import tqdm  # Import tqdm for progress bars
 
 def print_configuration(config):
     """
     Print the configuration dictionary.
-
-    Parameters:
-    - config (dict): The configuration dictionary to be printed.
     """
     print("Configuration:")
     for key, value in config.items():
@@ -21,19 +20,12 @@ def print_configuration(config):
 def count_word_length_text(texts):
     """
     Count the total number of words in the 'presentation_text' list for a single row.
-
-    Parameters:
-    - texts (list): A list of text strings.
-
-    Returns:
-    - int: Total word count.
     """
     if not isinstance(texts, list):
         return 0
     total_words = 0
     for text in texts:
         if isinstance(text, str):
-            # Split the text into words using whitespace and count
             words = text.split()
             total_words += len(words)
     return total_words
@@ -41,12 +33,6 @@ def count_word_length_text(texts):
 def count_items(items):
     """
     Count the number of items in a list for a single row.
-
-    Parameters:
-    - items (list): A list of items (questions or answers).
-
-    Returns:
-    - int: Number of items.
     """
     if not isinstance(items, list):
         return 0
@@ -55,15 +41,6 @@ def count_items(items):
 def process_topics(path, output_path, topics_to_keep, threshold_percentage=None):
     """
     Process the topics by filtering based on the specified criteria.
-
-    Parameters:
-    - path (str): Path to the input CSV file containing presentation_topics and texts.
-    - output_path (str): Path to save the processed CSV file.
-    - topics_to_keep (set or str): Set of topics to retain or "all" to keep all topics.
-    - threshold_percentage (float, optional): Percentage threshold for auto topic selection.
-
-    Returns:
-    - pd.DataFrame: Processed DataFrame with filtered topics and texts.
     """
     # Load the CSV file
     df = pd.read_csv(path)
@@ -119,19 +96,12 @@ def process_topics(path, output_path, topics_to_keep, threshold_percentage=None)
     
     # Return relevant columns, including the new ones
     return df[['presentation_topics', 'presentation_text', 'filtered_presentation_topics', 'filtered_texts', 'consistent', 'call_id', 'permco', 'date',
-               'ceo_participates', 'ceo_names', 'cfo_names','participant_question_topics', 'management_answer_topics']]
+               'ceo_participates', 'ceo_names', 'cfo_names', 'participant_question_topics', 'management_answer_topics']]
 
 def determine_topics_to_keep(df, threshold_percentage):
     """
     Determine topics that appear in at least a certain percentage of companies,
     excluding the outlier category (-1).
-
-    Parameters:
-    - df (pd.DataFrame): DataFrame containing 'permco' and 'presentation_topics' columns.
-    - threshold_percentage (float): Percentage threshold for keeping topics.
-
-    Returns:
-    - set: Set of topics to keep.
     """
     # Get the total number of companies
     total_companies = df['permco'].nunique()
@@ -185,14 +155,10 @@ def create_transition_matrix(topic_sequence, num_topics):
         transition_matrix[i] = transition_matrix[i] / row_sums[i, 0]
     return transition_matrix
 
-
 def compute_similarity_to_average(df, num_topics):
     """
     Compute similarity measures to overall, industry, and company averages.
     """
-    import numpy as np
-    from sklearn.metrics.pairwise import cosine_similarity
-
     # Create lists to hold the data
     call_ids = []
     siccds = []
@@ -203,8 +169,9 @@ def compute_similarity_to_average(df, num_topics):
     # Ensure 'call_date' is in datetime format
     df['call_date'] = pd.to_datetime(df['call_date'])
 
-    # Create transition vectors for each call
-    for _, row in df.iterrows():
+    # Create transition vectors for each call with progress bar
+    print("Creating transition vectors...")
+    for _, row in tqdm(df.iterrows(), total=df.shape[0], desc="Processing Calls"):
         call_id = row['call_id']
         topics = row['filtered_presentation_topics']
         if len(topics) < 2:
@@ -230,12 +197,13 @@ def compute_similarity_to_average(df, num_topics):
     # Sort calls_df by 'call_date'
     calls_df = calls_df.sort_values('call_date').reset_index(drop=True)
 
-    ### Compute similarities ###
+    # Compute similarities with progress bar
     similarities_overall = []
     similarities_industry = []
     similarities_company = []
 
-    for idx, row in calls_df.iterrows():
+    print("Computing similarities...")
+    for idx, row in tqdm(calls_df.iterrows(), total=calls_df.shape[0], desc="Computing Similarities"):
         current_date = row['call_date']
         tm_vector = row['transition_vector'].reshape(1, -1)  # Reshape for sklearn
 
@@ -442,15 +410,7 @@ regular_clusters = {
 def map_topics_to_clusters(df, model='zeroshot'):
     """
     Maps topic numbers in specified columns to their corresponding cluster numbers based on the model.
-
-    Parameters:
-    - df (pd.DataFrame): The DataFrame containing topic columns.
-    - model (str): The model to use for clustering ('zeroshot' or 'regular').
-
-    Returns:
-    - pd.DataFrame: The DataFrame with updated cluster numbers in the specified columns.
     """
-
     # Select the appropriate cluster dictionary based on the model
     if model.lower() == 'zeroshot':
         cluster_dict = zeroshot_clusters
@@ -472,12 +432,6 @@ def map_topics_to_clusters(df, model='zeroshot'):
         """
         Replaces a list of topic numbers with their cluster numbers.
         If a topic isn't found in any cluster, it remains unchanged.
-
-        Parameters:
-        - topics (list of int): List of topic numbers.
-
-        Returns:
-        - list of int: List of cluster numbers.
         """
         return [topic_to_cluster.get(int(topic), topic) for topic in topics]
 
@@ -498,23 +452,14 @@ def map_topics_to_clusters(df, model='zeroshot'):
 def remove_neg_one_from_columns(df, columns):
     """
     Removes all occurrences of -1 from the specified list-type columns in the DataFrame.
-
-    Parameters:
-    - df (pd.DataFrame): The DataFrame to process.
-    - columns (list of str): List of column names to clean.
-
-    Returns:
-    - pd.DataFrame: The DataFrame with -1 removed from specified columns.
     """
     for col in columns:
         if col in df.columns:
             # Attempt to convert string representations of lists to actual lists
-            if df[col].dtype == object:
-                df[col] = df[col].apply(lambda x: ast.literal_eval(x) if isinstance(x, str) else x)
+            df[col] = df[col].apply(lambda x: ast.literal_eval(x) if isinstance(x, str) else x)
             
-            # Check if all entries are lists
-            if not df[col].apply(lambda x: isinstance(x, list)).all():
-                raise ValueError(f"All entries in column '{col}' must be lists.")
+            # Ensure that the column contains lists
+            df[col] = df[col].apply(lambda x: x if isinstance(x, list) else [])
             
             # Remove -1 from each list
             df[col] = df[col].apply(lambda x: [item for item in x if item != -1])
