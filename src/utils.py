@@ -5,6 +5,7 @@ import pandas as pd
 import numpy as np
 from scipy.spatial.distance import cosine
 import ast
+from scipy.sparse import csr_matrix
 
 def print_configuration(config):
     """
@@ -167,67 +168,60 @@ def determine_topics_to_keep(df, threshold_percentage):
 def create_transition_matrix(topic_sequence, num_topics):
     """
     Create a transition matrix from a sequence of topics.
-
-    Parameters:
-    - topic_sequence (list): List of topic IDs representing the sequence.
-    - num_topics (int): Total number of topics.
-
-    Returns:
-    - np.ndarray: Transition matrix of shape (num_topics, num_topics).
     """
-    transition_matrix = np.zeros((num_topics, num_topics))
+    from scipy.sparse import dok_matrix
+    transition_matrix = dok_matrix((num_topics, num_topics), dtype=np.float64)
     for i in range(len(topic_sequence) - 1):
         from_topic = topic_sequence[i]
         to_topic = topic_sequence[i + 1]
-        transition_matrix[from_topic][to_topic] += 1
+        transition_matrix[from_topic, to_topic] += 1
+    # Convert to CSR format for efficient arithmetic and memory usage
+    transition_matrix = transition_matrix.tocsr()
     # Normalize to get probabilities
-    row_sums = transition_matrix.sum(axis=1, keepdims=True)
+    row_sums = transition_matrix.sum(axis=1)
     # Avoid division by zero
-    row_sums[row_sums == 0] = 1
-    transition_matrix = transition_matrix / row_sums
+    row_indices, _ = transition_matrix.nonzero()
+    for i in np.unique(row_indices):
+        transition_matrix[i] = transition_matrix[i] / row_sums[i, 0]
     return transition_matrix
+
 
 def compute_similarity_to_average(df, num_topics):
     """
     Compute similarity measures to overall, industry, and company averages.
-
-    Parameters:
-    - df (pd.DataFrame): DataFrame containing transition matrices and related metadata.
-    - num_topics (int): Total number of topics.
-
-    Returns:
-    - pd.DataFrame: DataFrame containing similarity measures.
     """
-    # Create transition matrices for each call and include call_date
-    transition_matrices = []
+    import numpy as np
+    from sklearn.metrics.pairwise import cosine_similarity
+
+    # Create lists to hold the data
     call_ids = []
     siccds = []
     permcos = []
     call_dates = []
+    transition_vectors = []
 
     # Ensure 'call_date' is in datetime format
     df['call_date'] = pd.to_datetime(df['call_date'])
 
-    grouped = df.groupby('call_id')
-    for call_id, group in grouped:
-        topics = group['filtered_presentation_topics'].values[0]  # Get the list of topics
+    # Create transition vectors for each call
+    for _, row in df.iterrows():
+        call_id = row['call_id']
+        topics = row['filtered_presentation_topics']
         if len(topics) < 2:
-            # Cannot create a transition matrix with fewer than 2 topics
-            continue
-        transition_matrix = create_transition_matrix(topics, num_topics)
-        transition_matrices.append(transition_matrix)
+            continue  # Cannot create a transition matrix with fewer than 2 topics
+        tm = create_transition_matrix(topics, num_topics)
+        # Flatten the matrix into a vector
+        tm_vector = tm.toarray().flatten()
+        transition_vectors.append(tm_vector)
         call_ids.append(call_id)
-        siccd = group['siccd'].iloc[0]  # Assuming 'siccd' is consistent within a call
-        permco = group['permco'].iloc[0]  # Assuming 'permco' is consistent within a call
-        call_date = group['call_date'].iloc[0]
-        siccds.append(siccd)
-        permcos.append(permco)
-        call_dates.append(call_date)
+        siccds.append(row['siccd'])
+        permcos.append(row['permco'])
+        call_dates.append(row['call_date'])
 
-    # Create a DataFrame to hold the data
+    # Create a DataFrame
     calls_df = pd.DataFrame({
         'call_id': call_ids,
-        'transition_matrix': transition_matrices,
+        'transition_vector': transition_vectors,
         'siccd': siccds,
         'permco': permcos,
         'call_date': call_dates
@@ -236,92 +230,53 @@ def compute_similarity_to_average(df, num_topics):
     # Sort calls_df by 'call_date'
     calls_df = calls_df.sort_values('call_date').reset_index(drop=True)
 
-    # Flatten the transition matrices and create a DataFrame
-    num_elements = num_topics * num_topics
-    tm_flat_list = [tm.flatten() for tm in calls_df['transition_matrix']]
-    tm_flat_df = pd.DataFrame(tm_flat_list, columns=[f'tm_{i}' for i in range(num_elements)], dtype=np.float64)
-
-    # Concatenate calls_df and tm_flat_df
-    calls_df = pd.concat([calls_df.reset_index(drop=True), tm_flat_df.reset_index(drop=True)], axis=1)
-
-    ### Compute similarities to overall average ###
+    ### Compute similarities ###
     similarities_overall = []
-
-    # Convert 'call_date' to datetime if not already
-    calls_df['call_date'] = pd.to_datetime(calls_df['call_date'])
-
-    for idx, row in calls_df.iterrows():
-        current_date = row['call_date']
-        tm_vector = row[tm_flat_df.columns].values.astype(np.float64)
-
-        # Define the time window: previous 1 year (365 days) + 20 additional days for buffer
-        time_window_start = current_date - pd.DateOffset(days=365+20)
-
-        # Filter for calls within the time window and before the current call date
-        window_df = calls_df[(calls_df['call_date'] >= time_window_start) &
-                             (calls_df['call_date'] < current_date)]
-
-        if len(window_df) < 4:
-            similarity = np.nan
-        else:
-            # Compute the average transition matrix
-            mean_vector = window_df[tm_flat_df.columns].mean().values.astype(np.float64)
-            # Compute similarity
-            similarity = 1 - cosine(tm_vector, mean_vector)
-        similarities_overall.append(similarity)
-
-    calls_df['similarity_to_overall_average'] = similarities_overall
-
-    ### Compute similarities to industry average ###
     similarities_industry = []
-
-    for idx, row in calls_df.iterrows():
-        current_date = row['call_date']
-        tm_vector = row[tm_flat_df.columns].values.astype(np.float64)
-        siccd = row['siccd']
-
-        # Define the time window: previous 1 year + 20 additional days for buffer
-        time_window_start = current_date - pd.DateOffset(days=365+20)
-
-        # Filter for calls within the time window, same industry, and before the current call date
-        window_df = calls_df[(calls_df['call_date'] >= time_window_start) &
-                             (calls_df['call_date'] < current_date) &
-                             (calls_df['siccd'] == siccd)]
-
-        if len(window_df) < 4:
-            similarity = np.nan
-        else:
-            # Compute the average transition matrix
-            mean_vector = window_df[tm_flat_df.columns].mean().values.astype(np.float64)
-            # Compute similarity
-            similarity = 1 - cosine(tm_vector, mean_vector)
-        similarities_industry.append(similarity)
-
-    calls_df['similarity_to_industry_average'] = similarities_industry
-
-    ### Compute similarities to company average ###
     similarities_company = []
 
     for idx, row in calls_df.iterrows():
         current_date = row['call_date']
-        tm_vector = row[tm_flat_df.columns].values.astype(np.float64)
-        permco = row['permco']
+        tm_vector = row['transition_vector'].reshape(1, -1)  # Reshape for sklearn
 
-        # Filter for previous 4 calls of the same company before the current call date
-        company_calls = calls_df[(calls_df['permco'] == permco) &
-                                 (calls_df['call_date'] < current_date)].sort_values('call_date', ascending=False)
+        # Define the time window: previous 1 year (365 days) + 20 days buffer
+        time_window_start = current_date - pd.DateOffset(days=385)
 
-        if len(company_calls) < 4:
-            similarity = np.nan
+        # Filter for calls within the time window and before the current call date
+        window_mask = (calls_df['call_date'] >= time_window_start) & (calls_df['call_date'] < current_date)
+
+        # Overall similarity
+        window_df = calls_df[window_mask]
+        if len(window_df) < 4:
+            similarities_overall.append(np.nan)
         else:
-            # Take the last 4 calls
-            window_df = company_calls.head(4)
-            # Compute the average transition matrix
-            mean_vector = window_df[tm_flat_df.columns].mean().values.astype(np.float64)
+            # Compute the average transition vector
+            mean_vector = np.mean(np.vstack(window_df['transition_vector'].values), axis=0).reshape(1, -1)
             # Compute similarity
-            similarity = 1 - cosine(tm_vector, mean_vector)
-        similarities_company.append(similarity)
+            similarity = cosine_similarity(tm_vector, mean_vector)[0][0]
+            similarities_overall.append(similarity)
 
+        # Industry similarity
+        industry_df = window_df[window_df['siccd'] == row['siccd']]
+        if len(industry_df) < 4:
+            similarities_industry.append(np.nan)
+        else:
+            mean_vector = np.mean(np.vstack(industry_df['transition_vector'].values), axis=0).reshape(1, -1)
+            similarity = cosine_similarity(tm_vector, mean_vector)[0][0]
+            similarities_industry.append(similarity)
+
+        # Company similarity
+        company_df = calls_df[(calls_df['permco'] == row['permco']) & (calls_df['call_date'] < current_date)].tail(4)
+        if len(company_df) < 4:
+            similarities_company.append(np.nan)
+        else:
+            mean_vector = np.mean(np.vstack(company_df['transition_vector'].values), axis=0).reshape(1, -1)
+            similarity = cosine_similarity(tm_vector, mean_vector)[0][0]
+            similarities_company.append(similarity)
+
+    # Add similarities to calls_df
+    calls_df['similarity_to_overall_average'] = similarities_overall
+    calls_df['similarity_to_industry_average'] = similarities_industry
     calls_df['similarity_to_company_average'] = similarities_company
 
     # Return the DataFrame with similarities
@@ -427,7 +382,7 @@ regular_clusters = {
     32: [438, 499, 407],
     33: [326, 113, 4, 338],
     34: [105, 339, 23, 61, 472],
-    35: [477, 149, 288],
+    35: [477, 149, 228],
     36: [231, 305, 31, 488],
     37: [147, 394],
     38: [175, 166],
@@ -524,30 +479,21 @@ def map_topics_to_clusters(df, model='zeroshot'):
         Returns:
         - list of int: List of cluster numbers.
         """
-        return [topic_to_cluster.get(topic, topic) for topic in topics]
+        return [topic_to_cluster.get(int(topic), topic) for topic in topics]
 
     # Apply the mapping to each specified column
     for col in topic_columns:
         if col in df.columns:
-            # Check if the column entries are lists. If they're strings, convert them.
-            if df[col].dtype == object:
-                # Attempt to convert string representations of lists to actual lists
-                try:
-                    df[col] = df[col].apply(lambda x: ast.literal_eval(x) if isinstance(x, str) else x)
-                except Exception as e:
-                    raise ValueError(f"Error parsing column '{col}': {e}")
-
+            # Convert string representations of lists to actual lists
+            df[col] = df[col].apply(lambda x: ast.literal_eval(x) if isinstance(x, str) else x)
             # Ensure that the column contains lists
-            if not df[col].apply(lambda x: isinstance(x, list)).all():
-                raise ValueError(f"All entries in column '{col}' must be lists.")
-
+            df[col] = df[col].apply(lambda x: x if isinstance(x, list) else [])
             # Apply the mapping
             df[col] = df[col].apply(replace_topics_with_clusters)
         else:
-            raise ValueError(f"Column '{col}' not found in the DataFrame.")
+            print(f"Warning: Column '{col}' not found in the DataFrame.")
 
     return df
-
 
 def remove_neg_one_from_columns(df, columns):
     """

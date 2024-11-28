@@ -351,32 +351,35 @@ merged_df.rename(columns={'datadate': 'fiscal_period_end'}, inplace=True)
 merged_df = merged_df.drop_duplicates(subset=['fiscal_period_end', 'gvkey', 'permco'])
 print(f"Number of rows in merged_df after removing duplicates: {len(merged_df)}")
 
-# **Apply Cluster Mapping Before Saving the Final DataFrame**
+# Apply cluster mapping
 print("Applying cluster mapping based on the model type...")
-
-# Apply the cluster mapping using the selected model type
 merged_df = map_topics_to_clusters(merged_df, model=model_type)
 print("Cluster mapping applied successfully.")
 
-# Now that 'siccd' is available, compute similarities including similarity to industry average
-print("Computing similarities to overall, industry and firm-specific averages...")
-# Determine the number of topics
+# Ensure 'filtered_presentation_topics' is evaluated as lists
+merged_df['filtered_presentation_topics'] = merged_df['filtered_presentation_topics'].apply(
+    lambda x: x if isinstance(x, list) else []
+)
+
+# Determine the number of topics after mapping
 try:
-    num_topics = merged_df['filtered_presentation_topics'].apply(lambda x: max(x) if isinstance(x, list) and x else 0).max() + 1
+    num_topics = merged_df['filtered_presentation_topics'].apply(
+        lambda x: max(x) if x else 0
+    ).max() + 1
 except Exception as e:
     print(f"Error determining number of topics: {e}")
     num_topics = 0  # Fallback or handle accordingly
-print(f"Number of topics determined: {num_topics}")
-
-# Ensure 'filtered_presentation_topics' is evaluated as lists
-merged_df['filtered_presentation_topics'] = merged_df['filtered_presentation_topics'].apply(lambda x: ast.literal_eval(x) if isinstance(x, str) else x)
+print(f"Number of topics determined after mapping: {num_topics}")
 
 # Convert 'siccd' to integer (if possible)
 merged_df['siccd'] = merged_df['siccd'].astype(float).astype('Int64')
 
+#%%
 # Compute similarities
+print("Computing similarities...")
 similarity_df = compute_similarity_to_average(merged_df, num_topics)
 print("Computed similarity measures.")
+
 
 # Merge similarities back into merged_df
 if 'call_id' in similarity_df.columns and 'call_id' in merged_df.columns:
@@ -389,6 +392,7 @@ else:
 print("Computing market returns...")
 # Assuming 'ret' is the return column in df_crsp_daily
 if 'ret' in df_crsp_daily.columns:
+    df_crsp_daily['ret'] = pd.to_numeric(df_crsp_daily['ret'], errors='coerce')
     market_returns = df_crsp_daily.groupby('date')['ret'].mean().reset_index()
     market_returns.rename(columns={'ret': 'market_ret'}, inplace=True)
     
@@ -402,6 +406,30 @@ if 'ret' in df_crsp_daily.columns:
     print("Merged market returns into df_crsp_daily.")
 else:
     print("Warning: 'ret' column not found in df_crsp_daily. Skipping market returns computation.")
+
+# Compute rolling beta
+print("Computing rolling beta for each stock...")
+
+# Ensure 'ret' and 'market_ret' are numeric
+df_crsp_daily['ret'] = pd.to_numeric(df_crsp_daily['ret'], errors='coerce')
+df_crsp_daily['market_ret'] = pd.to_numeric(df_crsp_daily['market_ret'], errors='coerce')
+
+# Sort the DataFrame by 'permco' and 'date'
+df_crsp_daily = df_crsp_daily.sort_values(['permco', 'date']).reset_index(drop=True)
+
+def compute_rolling_beta(group):
+    # group is the data for one 'permco'
+    # Set the window size, e.g., 252 days
+    window = 252
+    # Compute rolling covariance and variance
+    rolling_cov = group['ret'].rolling(window).cov(group['market_ret'])
+    rolling_var = group['market_ret'].rolling(window).var()
+    group['rolling_beta'] = rolling_cov / rolling_var
+    return group
+
+df_crsp_daily = df_crsp_daily.groupby('permco', group_keys=False).apply(compute_rolling_beta)
+print("Computed rolling beta for each stock.")
+
 
 # Compute future returns
 print("Computing future returns...")
@@ -493,15 +521,15 @@ except TypeError:
 
 print("Completed computation of future returns.")
 
-# **Merge future returns into merged_df**
+# Merge future returns and rolling beta into merged_df
 print("Merging future returns into the merged DataFrame...")
 merged_df = pd.merge(
     merged_df,
     df_crsp_daily[[
-        'permco', 'date',  # Include key columns
-        'shrout', 'prc', 'vol', 'market_cap', 'ret', 
+        'permco', 'date', 'shrout', 'prc', 'vol', 'market_cap', 'ret',
         'ret_immediate', 'ret_short_term', 'ret_medium_term', 'ret_long_term', 'market_ret',
-        'excess_ret_immediate', 'excess_ret_short_term', 'excess_ret_medium_term', 'excess_ret_long_term'
+        'excess_ret_immediate', 'excess_ret_short_term', 'excess_ret_medium_term', 'excess_ret_long_term',
+        'rolling_beta'  # Include rolling_beta
     ]],
     left_on=['permco', 'call_date'],
     right_on=['permco', 'date'],
@@ -509,6 +537,7 @@ merged_df = pd.merge(
 )
 merged_df = merged_df.drop(columns=['date'], errors='ignore')
 print(f"Number of rows after merging future returns: {len(merged_df)}")
+
 
 # **Restore 'call_date' with time component**
 print("Restoring 'call_date' with time component from 'processed_df'...")
@@ -601,19 +630,21 @@ print(invalid_ceo_entries[['ceo_participates', 'ceo_names']].head())
 # Final DataFrame Preparation and Saving
 print("Finalizing the merged DataFrame...")
 desired_columns = [
-    'filtered_presentation_topics', 'filtered_texts',  # Removed 'presentation_text' as it's already dropped
+    'filtered_presentation_topics', 'filtered_texts',
     'call_id', 'permco', 'call_date', 'gvkey',
-    'ceo_participates', 'ceo_names', 'cfo_names',  # Added additional columns
+    'ceo_participates', 'ceo_names', 'cfo_names',
     'fiscal_period_end', 'epsfxq', 'epsfxq_next', 'siccd',
     'similarity_to_overall_average', 'similarity_to_industry_average',
     'similarity_to_company_average', 'prc', 'shrout', 'ret', 'vol', 'market_cap',
     'ret_immediate', 'ret_short_term', 'ret_medium_term', 'ret_long_term', 'market_ret',
     'excess_ret_immediate', 'excess_ret_short_term', 'excess_ret_medium_term', 'excess_ret_long_term',
-    'word_length_presentation',  # Added new column
-    'length_participant_questions', 'length_management_answers',  # Added new count variables
-    'ceo_change', 'cfo_change', 'ceo_cfo_change',  # Added new dummy variables
-    'participant_question_topics', 'management_answer_topics'  # Retained existing topic columns
+    'rolling_beta',  # Added rolling_beta
+    'word_length_presentation',
+    'length_participant_questions', 'length_management_answers',
+    'ceo_change', 'cfo_change', 'ceo_cfo_change',
+    'participant_question_topics', 'management_answer_topics'
 ]
+
 
 # **Remove -1 from 'participant_question_topics' and 'management_answer_topics'**
 print("Removing -1 from 'participant_question_topics' and 'management_answer_topics'...")
@@ -631,18 +662,20 @@ if 'prc' in merged_df.columns:
 final_columns = [col for col in desired_columns if col in merged_df.columns]
 merged_df = merged_df[final_columns]
 
-# **Sort the final DataFrame by 'gvkey' and 'call_date' in ascending order**
+# Remove the first year (2022) of the sample before saving
+print("Removing data from 2022 from merged_df before saving...")
+merged_df['call_date'] = pd.to_datetime(merged_df['call_date'])
+merged_df = merged_df[merged_df['call_date'].dt.year != 2022]
+print(f"Number of rows after removing 2022 data: {len(merged_df)}")
+
+# Sort the final DataFrame by 'gvkey' and 'call_date' in ascending order
 print("Sorting the final DataFrame by 'gvkey' and 'call_date'...")
 merged_df = merged_df.sort_values(by=['gvkey', 'call_date']).reset_index(drop=True)
 
-
-# **Save the final merged DataFrame**
+# Save the final merged DataFrame
 print("Saving the final merged DataFrame...")
 merged_df.to_csv(merged_file_path, index=False)
 print(f"Final merged DataFrame saved to {merged_file_path}")
-
-# **Compute and Save the Final DataFrame with Cluster Mappings**
-# (Assuming that saving was already done above, this step is redundant unless further actions are needed)
 
 # Calculate the means of the similarity measures
 print("Calculating means of similarity measures...")
