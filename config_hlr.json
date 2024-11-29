@@ -13,7 +13,7 @@
 
   "topics_input_path": "D:/daten_masterarbeit/topics_output.csv",
   "topics_output_path": "D:/daten_masterarbeit/topics_output_outlier_removed.csv",
-  "topics_to_keep": "auto",
+  "topics_to_keep": [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14],
   "topic_threshold_percentage": 0,
 
   "fuzzy_topic_labels": {
@@ -26,7 +26,7 @@
     "6": "Risk"
   },
 
-  "modeling_type": "regular",
+  "modeling_type": "zeroshot",
   "apply_topic_merging": false, 
   "similarity_threshold": 0.7,
   "sample_size": 100,
