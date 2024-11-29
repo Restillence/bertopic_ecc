@@ -35,7 +35,7 @@
   "random_seed": 43,
   "section_to_analyze": "Presentation",
   "max_documents": 30000000,
-  "nr_topics": 40,
+  "nr_topics": null,
   "use_gpu": true,
   "pca_components": 50,
   "output_dir": "../data/",
