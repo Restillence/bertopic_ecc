@@ -6,7 +6,7 @@ from collections import Counter
 import ast
 
 # Define the file path
-file_path = r'D:\daten_masterarbeit\final_dataset.csv'  # Use raw string to handle backslashes
+file_path = r'D:\daten_masterarbeit\final_dataset_reg_full.csv'  # Use raw string to handle backslashes
 
 # Load the dataset
 df_final = pd.read_csv(file_path)
@@ -28,7 +28,7 @@ df_final['fiscal_period_end'] = pd.to_datetime(df_final['fiscal_period_end'])
 numerical_cols = [
     'epsfxq', 'epsfxq_next', 'prc', 'shrout', 'ret', 'vol', 'market_cap',
     'ret_immediate', 'ret_short_term', 'ret_medium_term', 'ret_long_term',
-    'market_ret', 'excess_ret_immediate', 'excess_ret_short_term',
+    'market_ret', 'excess_ret_immediate', 'excess_ret_short_term', 'rolling_beta',
     'excess_ret_medium_term', 'excess_ret_long_term', 'word_length_presentation',
     'length_participant_questions', 'length_management_answers',
     'similarity_to_overall_average', 'similarity_to_industry_average',

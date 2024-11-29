@@ -50,9 +50,6 @@ except KeyError as e:
     print(f"Error during processing topics: {e}")
     sys.exit(1)
 
-#TODO wieder ändern!!
-processed_df = processed_df[:3000]
-
 # Ensure 'permco' is a string in all DataFrames
 processed_df['permco'] = processed_df['permco'].astype(str)
 
