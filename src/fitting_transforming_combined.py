@@ -663,7 +663,7 @@ def main():
     # Load configuration from config.json
     print("Loading configuration...")
     # Define the relative path to config.json
-    relative_path = 'config.json'
+    relative_path = 'config_hlr.json'
 
     # Define the fallback absolute path
     fallback_path = r'C:\Users\nikla\OneDrive\Dokumente\winfoMaster\Masterarbeit\bertopic_ecc\config.json'
