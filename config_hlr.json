@@ -36,7 +36,7 @@
   "section_to_analyze": "Presentation",
   "max_documents": 30000000,
   "nr_topics": 40,
-  "use_gpu": false,
+  "use_gpu": true,
   "pca_components": 50,
   "output_dir": "../data/",
 
