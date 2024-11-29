@@ -20,4 +20,5 @@ torch
 sentence_transformers
 GPUtil
 spacy 
-fuzzywuzzy
+tensorflow
+tqdm

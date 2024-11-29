@@ -53,6 +53,9 @@ except KeyError as e:
 # Ensure 'permco' is a string in all DataFrames
 processed_df['permco'] = processed_df['permco'].astype(str)
 
+#TODO  remove later
+#processed_df = processed_df[:3000]
+
 # Extract unique permcos from processed_df
 permcos = set(processed_df['permco'].unique())
 print(f"Number of unique permcos in processed_df: {len(permcos)}")
@@ -363,16 +366,135 @@ merged_df = map_topics_to_clusters(merged_df, model=model_type, apply_mapping=ap
 merged_df['filtered_presentation_topics'] = merged_df['filtered_presentation_topics'].apply(
     lambda x: x if isinstance(x, list) else []
 )
+#%% Second Analysis: Keep Only Specified Clusters
 
-# Determine the number of topics after mapping
-try:
-    unique_topics = set()
-    merged_df['filtered_presentation_topics'].apply(lambda x: unique_topics.update(x))
-    num_topics = max(unique_topics) + 1
-except Exception as e:
-    print(f"Error determining number of topics: {e}")
-    num_topics = 0  # Fallback or handle accordingly
+# List of clusters to keep
+clusters_to_keep = [
+    0, 14, 15, 16, 22, 23, 31, 33, 34, 36, 40, 41, 42,
+    44, 45, 46, 47, 48, 50, 72, 74, 75, 77, 78, 80,
+    81, 86, 87
+]
+
+# Define the delimiter used in 'filtered_presentation_topics' if it's a string
+delimiter = ','  # Change this if a different delimiter is used
+
+# Define a function to filter topics when the column contains lists
+def filter_topics_list(topics, allowed_clusters):
+    return [topic for topic in topics if topic in allowed_clusters]
+
+# Define a function to filter topics when the column contains strings
+def filter_topics_str(topics_str, allowed_clusters, delimiter):
+    try:
+        # Split the string into topic indices
+        topics = [int(topic.strip()) for topic in topics_str.split(delimiter) if topic.strip().isdigit()]
+        # Filter the topics
+        filtered = [str(topic) for topic in topics if topic in allowed_clusters]
+        # Rejoin the filtered topics into a string
+        return delimiter.join(filtered)
+    except Exception as e:
+        # In case of any parsing error, return an empty string
+        return ''
+
+# Apply the appropriate filtering based on the data type of the first entry
+first_entry = merged_df['filtered_presentation_topics'].iloc[0]
+
+if isinstance(first_entry, list):
+    # The column contains lists of integers
+    merged_df['filtered_presentation_topics'] = merged_df['filtered_presentation_topics'].apply(
+        lambda x: filter_topics_list(x, clusters_to_keep) if isinstance(x, list) else []
+    )
+    # Remove rows with empty 'filtered_presentation_topics'
+    initial_count = len(merged_df)
+    merged_df = merged_df[merged_df['filtered_presentation_topics'].map(len) > 0]
+    filtered_count = len(merged_df)
+    
+elif isinstance(first_entry, str):
+    # The column contains comma-separated strings
+    merged_df['filtered_presentation_topics'] = merged_df['filtered_presentation_topics'].apply(
+        lambda x: filter_topics_str(x, clusters_to_keep, delimiter) if isinstance(x, str) else ''
+    )
+    # Remove rows with empty 'filtered_presentation_topics'
+    initial_count = len(merged_df)
+    merged_df = merged_df[merged_df['filtered_presentation_topics'].str.strip() != '']
+    filtered_count = len(merged_df)
+    
+else:
+    # The column has an unexpected format
+    print("The 'filtered_presentation_topics' column has an unexpected format. Please verify the data.")
+    filtered_count = len(merged_df)
+
+print("Filtering complete. Updated 'filtered_presentation_topics' column.")
+print(f"Number of observations before filtering: {initial_count}")
+print(f"Number of observations after filtering: {filtered_count}")
+
+#%% Remap Cluster Numbers to Contiguous Range
+
+# Create a mapping from original cluster numbers to new indices
+cluster_to_index = {cluster: idx for idx, cluster in enumerate(clusters_to_keep)}
+print(f"Cluster to Index Mapping: {cluster_to_index}")
+
+# Define a function to apply the mapping to lists
+def map_clusters_to_indices(topics, mapping):
+    return [mapping[topic] for topic in topics if topic in mapping]
+
+# Define a function to apply the mapping to comma-separated strings
+def map_clusters_to_indices_str(topics_str, mapping, delimiter):
+    try:
+        topics = [int(topic.strip()) for topic in topics_str.split(delimiter) if topic.strip().isdigit()]
+        mapped = [str(mapping[topic]) for topic in topics if topic in mapping]
+        return delimiter.join(mapped)
+    except:
+        return ''
+
+# Apply the mapping based on the data type
+if isinstance(first_entry, list):
+    # The column contains lists of integers
+    merged_df['filtered_presentation_topics'] = merged_df['filtered_presentation_topics'].apply(
+        lambda x: map_clusters_to_indices(x, cluster_to_index) if isinstance(x, list) else []
+    )
+    
+elif isinstance(first_entry, str):
+    # The column contains comma-separated strings
+    merged_df['filtered_presentation_topics'] = merged_df['filtered_presentation_topics'].apply(
+        lambda x: map_clusters_to_indices_str(x, cluster_to_index, delimiter) if isinstance(x, str) else ''
+    )
+    
+else:
+    print("The 'filtered_presentation_topics' column has an unexpected format after filtering.")
+
+# Remove rows with empty 'filtered_presentation_topics' after mapping
+if isinstance(first_entry, list):
+    initial_count = filtered_count
+    merged_df = merged_df[merged_df['filtered_presentation_topics'].map(len) > 0]
+    filtered_count = len(merged_df)
+    
+elif isinstance(first_entry, str):
+    initial_count = filtered_count
+    merged_df = merged_df[merged_df['filtered_presentation_topics'].str.strip() != '']
+    filtered_count = len(merged_df)
+
+print("Remapping complete. Updated 'filtered_presentation_topics' column with contiguous indices.")
+print(f"Number of observations before remapping: {initial_count}")
+print(f"Number of observations after remapping: {filtered_count}")
+
+#%%
+# Determine the number of topics correctly
+try: 
+    if clusters_to_keep:
+        num_topics = len(clusters_to_keep)  # Set num_topics to 28
+        print(f"Number of topics (num_topics) set to: {num_topics}")
+except:
+    # Determine the number of topics after mapping
+    try:
+        unique_topics = set()
+        merged_df['filtered_presentation_topics'].apply(lambda x: unique_topics.update(x))
+        num_topics = max(unique_topics) + 1
+    except Exception as e:
+        print(f"Error determining number of topics: {e}")
+        num_topics = 0  # Fallback or handle accordingly
+
 print(f"Number of topics determined after mapping: {num_topics}")
+
 
 # Convert 'siccd' to integer (if possible)
 merged_df['siccd'] = merged_df['siccd'].astype(float).astype('Int64')

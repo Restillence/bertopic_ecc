@@ -12,9 +12,10 @@ from scipy.stats import chi2_contingency, ttest_ind
 filepath = "D:/daten_masterarbeit/final_dataset_reg_full.csv"
 
 # Read the CSV file, assuming 'call_id' is the index column if applicable
-df = pd.read_csv(filepath, index_col=0)
+df = pd.read_csv(filepath)
 
 print(f"Number of observations in the final_dataset: {len(df)}")
+
 
 #%% Data Preparation
 

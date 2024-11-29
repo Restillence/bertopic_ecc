@@ -4,7 +4,7 @@
     "model_save_path": "D:/daten_masterarbeit/bertopic_model_dir_regular_5000", 
     "model_load_path": "D:/daten_masterarbeit/bertopic_model_dir_zeroshot_10000", 
     "index_file_path": "D:/daten_masterarbeit/list_earnings_call_transcripts.csv",
-    "modeling_type": "zeroshot",   
+    "modeling_type": "regular",   
     "sample_size": 1,
 
     "zeroshot_min_similarity": 0.25,
@@ -28,11 +28,11 @@
     "file_path_crsp_monthly": "D:/daten_masterarbeit/CRSP_monthly_Compustat_quarterly_merged.csv",
     "merged_file_path": "D:/daten_masterarbeit/final_dataset.csv",
     
-    "topics_input_path": "D:/daten_masterarbeit/topics_output_zero_full.csv",
+    "topics_input_path": "D:/daten_masterarbeit/topics_output_reg_full.csv",
     "topics_output_path": "D:/daten_masterarbeit/topics_output_controlls_test.csv",
     "output_dir": "D:/daten_masterarbeit/",
 
-    "topics_to_keep": [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14],
+    "topics_to_keep": "auto",
     "topic_threshold_percentage": 0,
   
     "fuzzy_topic_labels": {
