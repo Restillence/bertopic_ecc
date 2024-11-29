@@ -587,8 +587,9 @@ def generate_additional_visualizations(topic_model, results_df, output_dir):
     save_visualization(fig, os.path.join(output_dir, "term_rank.html"), file_format="html")
 
     # Visualize Topics over Time
-    print("Visualizing topics over time...")
-    visualize_topics_over_time(topic_model, results_df, output_dir)
+    #print("Visualizing topics over time...")
+    #visualize_topics_over_time(topic_model, results_df, output_dir)
+    print("skipping topics over time visualization...")
 
     end_time = time.time()
     print(f"All visualizations generated and saved in {end_time - start_time:.2f} seconds.")
