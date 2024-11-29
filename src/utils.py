@@ -51,7 +51,7 @@ def process_topics(path, output_path, topics_to_keep, threshold_percentage=None)
     
     if topics_to_keep == "all":
         df['filtered_presentation_topics'] = df["presentation_topics"]
-        df['filtered_texts'] = df["text"]
+        df['filtered_texts'] = df["presentation_text"]
         df.to_csv(output_path, index=False)
         return df
     
@@ -63,13 +63,36 @@ def process_topics(path, output_path, topics_to_keep, threshold_percentage=None)
     df['ceo_names'] = df['ceo_names'].apply(lambda x: ast.literal_eval(x) if isinstance(x, str) else [])
     df['cfo_names'] = df['cfo_names'].apply(lambda x: ast.literal_eval(x) if isinstance(x, str) else [])
     
-    # Validate parsing
+    # Debug: Print sample parsed 'ceo_names' and 'cfo_names'
     print("Sample parsed 'ceo_names' and 'cfo_names':")
     print(df[['ceo_names', 'cfo_names']].head())
     
-    # Continue with existing processing...
+    # **Ensure topics are integers**
+    try:
+        df['presentation_topics'] = df['presentation_topics'].apply(lambda topics: [int(t) for t in topics])
+    except ValueError as e:
+        print(f"Error converting presentation_topics to integers: {e}")
+        df['presentation_topics'] = [[] for _ in range(len(df))]
+    
+    # Debug: Print unique topics in 'presentation_topics'
+    unique_presentation_topics = set().union(*df['presentation_topics'])
+    print(f"Unique topics in 'presentation_topics': {sorted(unique_presentation_topics)}")
+    
+    # If topics_to_keep is "auto", determine topics to keep
     if topics_to_keep == "auto":
         topics_to_keep = determine_topics_to_keep(df, threshold_percentage)
+    else:
+        # **Convert topics_to_keep from strings to integers if necessary**
+        if isinstance(topics_to_keep, list):
+            try:
+                topics_to_keep = set(int(t) for t in topics_to_keep)
+                print(f"Topics to keep (converted to integers): {sorted(topics_to_keep)}")
+            except ValueError as e:
+                print(f"Error converting topics_to_keep to integers: {e}")
+                topics_to_keep = set()
+        else:
+            print(f"Invalid type for topics_to_keep: {type(topics_to_keep)}. Expected list or 'auto'.")
+            topics_to_keep = set()
     
     # Function to keep only the specified topics and corresponding texts
     def keep_presentation_topics_and_texts(row, topics_to_keep):
@@ -83,7 +106,24 @@ def process_topics(path, output_path, topics_to_keep, threshold_percentage=None)
         return list(filtered_presentation_topics), list(filtered_texts)
     
     # Apply the function to each row
-    df[['filtered_presentation_topics', 'filtered_texts']] = df.apply(lambda row: keep_presentation_topics_and_texts(row, topics_to_keep), axis=1, result_type='expand')
+    df[['filtered_presentation_topics', 'filtered_texts']] = df.apply(
+        lambda row: keep_presentation_topics_and_texts(row, topics_to_keep),
+        axis=1, result_type='expand')
+    
+    # Debug: Check how many rows have non-empty 'filtered_presentation_topics'
+    non_empty_filtered = df['filtered_presentation_topics'].apply(len).gt(0).sum()
+    print(f"Number of rows with non-empty 'filtered_presentation_topics': {non_empty_filtered} out of {len(df)}")
+    
+    # Debug: Print unique topics after filtering
+    if non_empty_filtered > 0:
+        unique_filtered_topics = set().union(*df['filtered_presentation_topics'])
+        print(f"Unique topics after filtering: {sorted(unique_filtered_topics)}")
+    else:
+        print("All 'filtered_presentation_topics' are empty.")
+    
+    # Debug: Inspect first few rows of filtered topics
+    print("Sample 'filtered_presentation_topics' after filtering:")
+    print(df['filtered_presentation_topics'].head())
     
     # Consistency check to validate if presentation_topics and texts are of the same length
     def check_consistency(row):
@@ -105,32 +145,34 @@ def determine_topics_to_keep(df, threshold_percentage):
     """
     # Get the total number of companies
     total_companies = df['permco'].nunique()
-
+    print(f"Total number of unique companies (permco): {total_companies}")
+    
     # Set to keep track of topics per company
     topics_per_company = df.groupby('permco')['presentation_topics'].apply(lambda x: set().union(*x)).reset_index()
-
+    
     # Count the occurrences of each topic across companies
     topic_counts = {}
-
+    
     for topics in topics_per_company['presentation_topics']:
         for topic in topics:
             if topic != -1:  # Exclude outlier category
                 if topic not in topic_counts:
                     topic_counts[topic] = 0
                 topic_counts[topic] += 1
-
+    
     # Determine the threshold number of companies
     company_threshold = total_companies * (threshold_percentage / 100)
-
+    print(f"Company threshold (number of companies): {company_threshold}")
+    
     # Find topics that appear in at least the threshold percentage of companies
     topics_to_keep = {topic for topic, count in topic_counts.items() if count >= company_threshold}
     
     # Find topics to remove
     topics_to_remove = set(topic_counts.keys()) - topics_to_keep
-
+    
     # Print statements to show kept and removed topics
-    print(f"Topics to Keep (Appearing in {threshold_percentage}% or more of companies): {topics_to_keep}")
-    print(f"Topics to Remove: {topics_to_remove}")
+    print(f"Topics to Keep (Appearing in {threshold_percentage}% or more of companies): {sorted(topics_to_keep)}")
+    print(f"Topics to Remove: {sorted(topics_to_remove)}")
     print(f"Percentage Threshold: {threshold_percentage}%")
     
     return topics_to_keep
@@ -152,7 +194,8 @@ def create_transition_matrix(topic_sequence, num_topics):
     # Avoid division by zero
     row_indices, _ = transition_matrix.nonzero()
     for i in np.unique(row_indices):
-        transition_matrix[i] = transition_matrix[i] / row_sums[i, 0]
+        if row_sums[i, 0] > 0:
+            transition_matrix[i] = transition_matrix[i] / row_sums[i, 0]
     return transition_matrix
 
 def compute_similarity_to_average(df, num_topics):
@@ -250,7 +293,6 @@ def compute_similarity_to_average(df, num_topics):
     # Return the DataFrame with similarities
     similarity_df = calls_df[['call_id', 'similarity_to_overall_average', 'similarity_to_industry_average', 'similarity_to_company_average']]
     return similarity_df
-
 
 # Define Zeroshot Clusters
 zeroshot_clusters = {
@@ -407,10 +449,15 @@ regular_clusters = {
     89: [158, 302, 42, 251]
 }
 
-def map_topics_to_clusters(df, model='zeroshot'):
+def map_topics_to_clusters(df, model='zeroshot', apply_mapping=True):
     """
     Maps topic numbers in specified columns to their corresponding cluster numbers based on the model.
+    Applies mapping only if apply_mapping is True.
     """
+    if not apply_mapping:
+        print("Skipping topic mapping as 'apply_mapping' is set to False.")
+        return df
+    
     # Select the appropriate cluster dictionary based on the model
     if model.lower() == 'zeroshot':
         cluster_dict = zeroshot_clusters
@@ -418,35 +465,34 @@ def map_topics_to_clusters(df, model='zeroshot'):
         cluster_dict = regular_clusters
     else:
         raise ValueError("Invalid model type. Choose 'zeroshot' or 'regular'.")
-
+    
     # Invert the cluster dictionary to map topic to cluster
     topic_to_cluster = {}
     for cluster_num, topics in cluster_dict.items():
         for topic in topics:
             topic_to_cluster[topic] = cluster_num
-
+    
     # Define the columns to process
     topic_columns = ['filtered_presentation_topics', 'participant_question_topics', 'management_answer_topics']
-
+    
     def replace_topics_with_clusters(topics):
         """
         Replaces a list of topic numbers with their cluster numbers.
         If a topic isn't found in any cluster, it remains unchanged.
         """
-        return [topic_to_cluster.get(int(topic), topic) for topic in topics]
-
+        return [topic_to_cluster.get(topic, topic) for topic in topics]
+    
     # Apply the mapping to each specified column
     for col in topic_columns:
         if col in df.columns:
-            # Convert string representations of lists to actual lists
-            df[col] = df[col].apply(lambda x: ast.literal_eval(x) if isinstance(x, str) else x)
             # Ensure that the column contains lists
             df[col] = df[col].apply(lambda x: x if isinstance(x, list) else [])
             # Apply the mapping
             df[col] = df[col].apply(replace_topics_with_clusters)
+            print(f"Mapped topics in column '{col}' to clusters.")
         else:
             print(f"Warning: Column '{col}' not found in the DataFrame.")
-
+    
     return df
 
 def remove_neg_one_from_columns(df, columns):

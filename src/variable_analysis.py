@@ -32,7 +32,7 @@ variables = [
     'length_participant_questions',  # Neue abhängige Variable
     'length_management_answers',    # Neue abhängige Variable
     'market_cap',                   # Kontrollvariable
-    'rolling_beta'                  # Kontrollvariable
+    'rolling_beta',                  # Kontrollvariable
     'ceo_participates',             # Kontrollvariable
     'ceo_cfo_change',               # Kontrollvariable
     'word_length_presentation',     # Kontrollvariable

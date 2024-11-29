@@ -71,7 +71,7 @@ class BertopicFitting:
 
         # Load the BERTopic model with the custom embedding model
         self.topic_model = self._load_bertopic_model()
-        self.topic_model.embedding_model = self.embedding_model  # Set the custom embedding model
+        # Removed: self.topic_model.embedding_model = self.embedding_model
 
     def _load_bertopic_model(self):
         """
@@ -193,20 +193,9 @@ class BertopicFitting:
 
             # Process presentation sections
             if all_relevant_sections:
-                print("Computing embeddings for presentation sections...")
-                embeddings_start_time = time.time()
-                embeddings_sections = self.embedding_model.embed_documents(
-                    all_relevant_sections,
-                    verbose=True
-                )
-                embeddings_end_time = time.time()
-                embeddings_duration = embeddings_end_time - embeddings_start_time
-                print(f"Computed embeddings for {len(all_relevant_sections)} presentation sections in {embeddings_duration:.2f} seconds.")
-
-                # Transform documents with the BERTopic model using precomputed embeddings
                 print("Transforming presentation sections with the BERTopic model...")
                 transform_start_time = time.time()
-                topics_sections, probabilities_sections = self.topic_model.transform(all_relevant_sections, embeddings_sections)
+                topics_sections, probabilities_sections = self.topic_model.transform(all_relevant_sections, verbose=True)
                 transform_end_time = time.time()
                 transform_duration = transform_end_time - transform_start_time
                 print(f"Transformed presentation sections in {transform_duration:.2f} seconds.")
@@ -217,20 +206,9 @@ class BertopicFitting:
 
             # Process participant questions
             if all_relevant_questions:
-                print("Computing embeddings for participant questions...")
-                embeddings_start_time = time.time()
-                embeddings_questions = self.embedding_model.embed_documents(
-                    all_relevant_questions,
-                    verbose=True
-                )
-                embeddings_end_time = time.time()
-                embeddings_duration = embeddings_end_time - embeddings_start_time
-                print(f"Computed embeddings for {len(all_relevant_questions)} participant questions in {embeddings_duration:.2f} seconds.")
-
-                # Transform documents with the BERTopic model using precomputed embeddings
                 print("Transforming participant questions with the BERTopic model...")
                 transform_start_time = time.time()
-                topics_questions, probabilities_questions = self.topic_model.transform(all_relevant_questions, embeddings_questions)
+                topics_questions, probabilities_questions = self.topic_model.transform(all_relevant_questions, verbose=True)
                 transform_end_time = time.time()
                 transform_duration = transform_end_time - transform_start_time
                 print(f"Transformed participant questions in {transform_duration:.2f} seconds.")
@@ -241,20 +219,9 @@ class BertopicFitting:
 
             # Process management answers
             if all_management_answers:
-                print("Computing embeddings for management answers...")
-                embeddings_start_time = time.time()
-                embeddings_answers = self.embedding_model.embed_documents(
-                    all_management_answers,
-                    verbose=True
-                )
-                embeddings_end_time = time.time()
-                embeddings_duration = embeddings_end_time - embeddings_start_time
-                print(f"Computed embeddings for {len(all_management_answers)} management answers in {embeddings_duration:.2f} seconds.")
-
-                # Transform documents with the BERTopic model using precomputed embeddings
                 print("Transforming management answers with the BERTopic model...")
                 transform_start_time = time.time()
-                topics_answers, probabilities_answers = self.topic_model.transform(all_management_answers, embeddings_answers)
+                topics_answers, probabilities_answers = self.topic_model.transform(all_management_answers, verbose=True)
                 transform_end_time = time.time()
                 transform_duration = transform_end_time - transform_start_time
                 print(f"Transformed management answers in {transform_duration:.2f} seconds.")
@@ -293,62 +260,62 @@ class BertopicFitting:
             import traceback
             traceback.print_exc()
 
-    def save_basic_info(self):
-        """
-        Save basic information about the model.
-        """
-        start_time = time.time()
-        print("Saving basic information...")
-        output_file = os.path.join(self.output_dir, "basic_info.txt")
-        with open(output_file, 'w', encoding='utf-8') as f:
-            # Get the number of topics
+        def save_basic_info(self):
+            """
+            Save basic information about the model.
+            """
+            start_time = time.time()
+            print("Saving basic information...")
+            output_file = os.path.join(self.output_dir, "basic_info.txt")
+            with open(output_file, 'w', encoding='utf-8') as f:
+                # Get the number of topics
+                topic_info = self.topic_model.get_topic_info()
+                num_topics = len(topic_info)
+                f.write(f"Number of Topics: {num_topics}\n\n")
+
+                # Get topic frequency (number of documents per topic)
+                f.write("Topics by Frequency:\n")
+                f.write(topic_info.to_string())
+                f.write("\n\n")
+
+                # Get top words for each topic
+                f.write("Top words for each topic:\n")
+                for topic_id in topic_info['Topic']:
+                    if topic_id == -1:
+                        f.write("\nTopic -1 (Outliers):\n")
+                        f.write("  No words available for outlier topic.\n")
+                        continue  # Skip the outlier topic
+                    top_words = self.topic_model.get_topic(topic_id)
+                    f.write(f"\nTopic {topic_id}:\n")
+                    for word, score in top_words:
+                        f.write(f"  - {word}: {score}\n")
+
+            end_time = time.time()
+            print(f"Basic information saved to {output_file} in {end_time - start_time:.2f} seconds.")
+
+        def save_topics_distribution(self):
+            """
+            Save a plot of the topic distribution, excluding the outlier topic -1.
+            """
+            start_time = time.time()
+            print("Saving topic distribution...")
+            output_file = os.path.join(self.output_dir, "topic_distribution.png")
             topic_info = self.topic_model.get_topic_info()
-            num_topics = len(topic_info)
-            f.write(f"Number of Topics: {num_topics}\n\n")
 
-            # Get topic frequency (number of documents per topic)
-            f.write("Topics by Frequency:\n")
-            f.write(topic_info.to_string())
-            f.write("\n\n")
+            # Exclude topic -1
+            topic_info = topic_info[topic_info['Topic'] != -1]
 
-            # Get top words for each topic
-            f.write("Top words for each topic:\n")
-            for topic_id in topic_info['Topic']:
-                if topic_id == -1:
-                    f.write("\nTopic -1 (Outliers):\n")
-                    f.write("  No words available for outlier topic.\n")
-                    continue  # Skip the outlier topic
-                top_words = self.topic_model.get_topic(topic_id)
-                f.write(f"\nTopic {topic_id}:\n")
-                for word, score in top_words:
-                    f.write(f"  - {word}: {score}\n")
-
-        end_time = time.time()
-        print(f"Basic information saved to {output_file} in {end_time - start_time:.2f} seconds.")
-
-    def save_topics_distribution(self):
-        """
-        Save a plot of the topic distribution, excluding the outlier topic -1.
-        """
-        start_time = time.time()
-        print("Saving topic distribution...")
-        output_file = os.path.join(self.output_dir, "topic_distribution.png")
-        topic_info = self.topic_model.get_topic_info()
-
-        # Exclude topic -1
-        topic_info = topic_info[topic_info['Topic'] != -1]
-
-        plt.figure(figsize=(10, 6))
-        plt.bar(topic_info['Topic'].astype(str), topic_info['Count'])
-        plt.xlabel('Topic')
-        plt.ylabel('Number of Documents')
-        plt.title('Topic Distribution (excluding outlier topic)')
-        plt.xticks(rotation=90)
-        plt.tight_layout()
-        plt.savefig(output_file)
-        plt.close()
-        end_time = time.time()
-        print(f"Topic distribution saved to {output_file} in {end_time - start_time:.2f} seconds.")
+            plt.figure(figsize=(10, 6))
+            plt.bar(topic_info['Topic'].astype(str), topic_info['Count'])
+            plt.xlabel('Topic')
+            plt.ylabel('Number of Documents')
+            plt.title('Topic Distribution (excluding outlier topic)')
+            plt.xticks(rotation=90)
+            plt.tight_layout()
+            plt.savefig(output_file)
+            plt.close()
+            end_time = time.time()
+            print(f"Topic distribution saved to {output_file} in {end_time - start_time:.2f} seconds.")
 
     def save_visualization(self, fig, output_file, file_format="png"):
         """

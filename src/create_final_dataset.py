@@ -354,11 +354,13 @@ merged_df.rename(columns={'datadate': 'fiscal_period_end'}, inplace=True)
 merged_df = merged_df.drop_duplicates(subset=['fiscal_period_end', 'gvkey', 'permco'])
 print(f"Number of rows in merged_df after removing duplicates: {len(merged_df)}")
 
-# Apply cluster mapping if topics to keep in config file is "auto"
+apply_mapping = False
 if topics_to_keep == "auto":
-    print("Applying cluster mapping based on the model type...")
-    merged_df = map_topics_to_clusters(merged_df, model=model_type)
-    print("Cluster mapping applied successfully.")
+    apply_mapping = True
+
+# Apply topic mapping conditionally
+print("Applying topic mapping if required...")
+merged_df = map_topics_to_clusters(merged_df, model=model_type, apply_mapping=apply_mapping)
 
 # Ensure 'filtered_presentation_topics' is evaluated as lists
 merged_df['filtered_presentation_topics'] = merged_df['filtered_presentation_topics'].apply(
