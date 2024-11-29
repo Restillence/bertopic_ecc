@@ -118,6 +118,7 @@ class BertopicModel:
             print(f"Using n_neighbors {n_neighbors} for dataset size of {num_docs} documents.")
 
         # Initialize CountVectorizer
+        from sklearn.feature_extraction.text import CountVectorizer
         vectorizer_model = CountVectorizer(
             ngram_range=tuple(self.config["vectorizer_model_params"]["ngram_range"]),
             stop_words=self.config["vectorizer_model_params"]["stop_words"],
@@ -340,6 +341,27 @@ class BertopicModel:
 
         # Update the topic model
         self.topic_model = current_model
+
+    def save_topic_info(self):
+        """Save topic information to a CSV file."""
+        topic_info = self.topic_model.get_topic_info()
+        output_file = os.path.join(self.config.get("output_dir", "."), "topic_info.csv")
+        topic_info.to_csv(output_file, index=False)
+        print(f"Topic information saved to {output_file}.")
+
+class CustomEmbeddingModel(BaseEmbedder):
+    """
+    A wrapper class for the SentenceTransformer model to add the 'embed_documents' method
+    expected by BERTopic.
+    """
+    def __init__(self, embedding_model):
+        self.embedding_model = embedding_model
+
+    def embed_documents(self, documents, verbose=False):
+        return self.embedding_model.encode(documents, show_progress_bar=verbose)
+
+    def embed_queries(self, queries, verbose=False):
+        return self.embedding_model.encode(queries, show_progress_bar=verbose)
 
 def save_results(topics_sections, topics_questions, topics_answers, ecc_sample, all_relevant_sections, all_relevant_questions, all_management_answers, config):
     """
@@ -641,7 +663,7 @@ def main():
     # Load configuration from config.json
     print("Loading configuration...")
     # Define the relative path to config.json
-    relative_path = 'config_hlr.json'
+    relative_path = 'config.json'
 
     # Define the fallback absolute path
     fallback_path = r'C:\Users\nikla\OneDrive\Dokumente\winfoMaster\Masterarbeit\bertopic_ecc\config.json'
@@ -671,8 +693,8 @@ def main():
     # Initialize FileHandler and TextProcessor with the imported configuration
     print("Initializing file handler and text processor...")
     file_handler = FileHandler(config=config)
-    text_processor = TextProcessor(method=config.get("document_split", "default_method"),
-                                   section_to_analyze=config.get("section_to_analyze", "default_section"))
+    text_processor = TextProcessor(method=config.get("document_split", "default_method"))
+    # Removed 'section_to_analyze' parameter
 
     # Read index file and create ECC sample
     print("Reading index file and creating ECC sample...")
