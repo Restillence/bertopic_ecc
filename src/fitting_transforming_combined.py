@@ -446,7 +446,7 @@ def save_results(topics_sections, topics_questions, topics_answers, ecc_sample, 
         })
 
     results_df = pd.DataFrame(records)
-    results_output_path = os.path.join(config.get("index_file_ecc_folder", "."), 'topics_output_combined.csv')
+    results_output_path = os.path.join(config.get("index_file_ecc_folder", "."), 'topics_output_combined_300.csv')
     results_df.to_csv(results_output_path, index=False)
     print(f"Results saved to {results_output_path}.")
 
