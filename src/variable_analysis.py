@@ -9,7 +9,7 @@ from sklearn.metrics import r2_score, mean_squared_error
 from scipy.stats import chi2_contingency, ttest_ind
 
 # Path to the final dataset
-filepath = "D:/daten_masterarbeit/final_dataset_2500_reg_20.csv"
+filepath = "D:/daten_masterarbeit/final_dataset_reg_full.csv"
 
 # Read the CSV file, assuming 'call_id' is the index column if applicable
 df = pd.read_csv(filepath, index_col=0)
@@ -32,6 +32,7 @@ variables = [
     'length_participant_questions',  # Neue abhängige Variable
     'length_management_answers',    # Neue abhängige Variable
     'market_cap',                   # Kontrollvariable
+    'rolling_beta'                  # Kontrollvariable
     'ceo_participates',             # Kontrollvariable
     'ceo_cfo_change',               # Kontrollvariable
     'word_length_presentation',     # Kontrollvariable
