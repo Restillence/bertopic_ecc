@@ -354,6 +354,7 @@ merged_df.rename(columns={'datadate': 'fiscal_period_end'}, inplace=True)
 merged_df = merged_df.drop_duplicates(subset=['fiscal_period_end', 'gvkey', 'permco'])
 print(f"Number of rows in merged_df after removing duplicates: {len(merged_df)}")
 
+"""
 apply_mapping = False
 if topics_to_keep == "auto":
     apply_mapping = True
@@ -366,8 +367,9 @@ merged_df = map_topics_to_clusters(merged_df, model=model_type, apply_mapping=ap
 merged_df['filtered_presentation_topics'] = merged_df['filtered_presentation_topics'].apply(
     lambda x: x if isinstance(x, list) else []
 )
+"""
 #%% Second Analysis: Keep Only Specified Clusters
-
+"""
 # List of clusters to keep
 clusters_to_keep = [
     0, 14, 15, 16, 22, 23, 31, 33, 34, 36, 40, 41, 42,
@@ -477,8 +479,13 @@ print("Remapping complete. Updated 'filtered_presentation_topics' column with co
 print(f"Number of observations before remapping: {initial_count}")
 print(f"Number of observations after remapping: {filtered_count}")
 
+"""
+
 #%%
 # Determine the number of topics correctly
+
+#TODO diese Zeile wieder entfernen!:
+clusters_to_keep = False
 try: 
     if clusters_to_keep:
         num_topics = len(clusters_to_keep)  # Set num_topics to 28
