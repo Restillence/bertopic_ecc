@@ -196,7 +196,7 @@ plt.savefig(os.path.join(output_folder, 'difference_questions_answers_distributi
 plt.close()
 print("Saved distribution plot for 'difference_questions_answers'.\n")
 
-#%% Standardize Control Variables
+#%% Standardize Specific Control Variables
 
 # Define control variables
 control_vars = [
@@ -207,13 +207,17 @@ control_vars = [
     'word_length_presentation'
 ]
 
+# Define the variables to be standardized
+variables_to_scale = ['market_cap', 'word_length_presentation']
+
 # Initialize the scaler
 scaler = StandardScaler()
 
-# Fit and transform the control variables
-analysis_df[control_vars] = scaler.fit_transform(analysis_df[control_vars])
+# Fit and transform only the specified variables
+analysis_df[variables_to_scale] = scaler.fit_transform(analysis_df[variables_to_scale])
 
-print("Control variables have been standardized.")
+print("Standardized 'market_cap' and 'word_length_presentation'.")
+
 
 #%% Define Similarity Groups Based on Percentiles
 
