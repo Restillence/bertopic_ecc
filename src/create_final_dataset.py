@@ -483,7 +483,7 @@ print(f"Number of observations after remapping: {filtered_count}")
 
 #%%
 # Determine the number of topics correctly
-
+"""
 #TODO diese Zeile wieder entfernen!:
 clusters_to_keep = False
 try: 
@@ -501,8 +501,15 @@ except:
         num_topics = 0  # Fallback or handle accordingly
 
 print(f"Number of topics determined after mapping: {num_topics}")
-
-
+"""
+try:
+    unique_topics = set()
+    merged_df['filtered_presentation_topics'].apply(lambda x: unique_topics.update(x))
+    num_topics = max(unique_topics) + 1
+except Exception as e:
+    print(f"Error determining number of topics: {e}")
+    num_topics = 0  # Fallback or handle accordingly
+        
 # Convert 'siccd' to integer (if possible)
 merged_df['siccd'] = merged_df['siccd'].astype(float).astype('Int64')
 

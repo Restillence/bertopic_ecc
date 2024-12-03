@@ -11,4 +11,5 @@ __pycache__/
 *.pyd
 
 # Ignore the regression_results directory
-regression_results/
+regression_results_top50_mapped/
+regression_results_all_mapped/

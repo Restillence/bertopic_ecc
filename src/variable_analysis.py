@@ -11,7 +11,7 @@ from statsmodels.stats.stattools import durbin_watson
 from statsmodels.stats.outliers_influence import variance_inflation_factor
 from statsmodels.iolib.summary2 import summary_col
 from statsmodels.tools.tools import add_constant
-from sklearn.preprocessing import StandardScaler  # Added import for StandardScaler
+from sklearn.preprocessing import StandardScaler  # Ensure this is imported
 import os  # For folder creation
 import ast  # For safely evaluating string representations of lists
 
@@ -42,7 +42,7 @@ else:
 #%% Path to the final dataset
 
 # Define the file path to your dataset
-filepath = "D:/daten_masterarbeit/final_dataset_reg_full_mapped.csv"
+filepath = "D:/daten_masterarbeit/final_dataset_reg_full.csv"
 
 # Read the CSV file
 df = pd.read_csv(filepath)
@@ -380,43 +380,74 @@ def ols_diagnostics(model, y_var, x_vars, output_folder):
         f.write(f"Durbin-Watson Statistic: {dw_stat:.4f}\n")
     print(f"Saved diagnostic statistics for {y_var} to {diag_path}\n")
 
-# Function to perform OLS regression and save combined HTML tables
+# Function to perform OLS regression and save separate HTML and LaTeX tables
 def perform_combined_regressions(regression_groups, analysis_df, output_folder, captions):
     """
-    Performs multiple OLS regressions, combines their summaries into a single HTML table, and saves it.
+    Performs multiple OLS regressions, separates them into main and other groups, 
+    renames main group models, and saves separate HTML and LaTeX tables.
 
     Parameters:
     - regression_groups (dict): Dictionary where keys are group names and values are lists of dependent variables.
     - analysis_df (DataFrame): The DataFrame containing the data.
-    - output_folder (str): Path to the folder where the HTML file will be saved.
+    - output_folder (str): Path to the folder where the HTML and LaTeX files will be saved.
     - captions (dict): Dictionary where keys are group names and values are caption texts.
 
     Returns:
-    - None
+    - main_results_latex (dict): Dictionary of main regression models for LaTeX tables.
+    - other_results (dict): Dictionary of other regression models.
     """
-    results = {}
+    # Dictionaries to hold models
+    main_results_html = {}
+    main_results_latex = {}
+    other_results = {}
+
+    # Updated mapping for renaming main models with underscores for HTML
+    rename_mapping_main_html = {
+        'excess_ret_immediate': 'r_immediate',
+        'excess_ret_short_term': 'r_short',
+        'excess_ret_medium_term': 'r_medium',
+        'excess_ret_long_term': 'r_long',
+        'epsfxq': 'epsfxq',
+        'epsfxq_next': 'epsfxqnext'
+    }
+
+    # Mapping for renaming main models for LaTeX (lowercase, no underscores)
+    rename_mapping_main_latex = {
+        'excess_ret_immediate': 'rimmediate',
+        'excess_ret_short_term': 'rshort',
+        'excess_ret_medium_term': 'rmedium',
+        'excess_ret_long_term': 'rlong',
+        'epsfxq': 'epsfxq',
+        'epsfxq_next': 'epsfxqnext'
+    }
+
+    # Mapping for renaming other models remains unchanged
+    rename_mapping_other = {
+        'additional_dependent_vars_length_participant_questions': 'length_participant_questions',
+        'additional_dependent_vars_length_management_answers': 'length_management_answers',
+        'research_questions_difference_questions_answers': 'difference_questions_answers'
+    }
+
     for group_name, dep_vars in regression_groups.items():
         for dep_var in dep_vars:
             # Define independent variables based on the regression group
             if group_name == 'return_vars':
-                independent_vars = similarity_vars + ['topic_diversity']
+                independent_vars = similarity_vars + control_vars + ['topic_diversity']  # Added control_vars
                 caption = captions['return_vars']
             elif group_name == 'additional_dependent_vars':
                 independent_vars = similarity_vars + control_vars + ['topic_diversity']
                 caption = captions['additional_dependent_vars']
             elif group_name == 'research_questions':
-                independent_vars = similarity_vars + ['topic_diversity']
-                if dep_var == 'length_participant_questions':
-                    caption = captions['analyst_questions']
-                elif dep_var == 'difference_questions_answers':
+                independent_vars = similarity_vars + control_vars + ['topic_diversity']  # Include control_vars
+                if dep_var == 'difference_questions_answers':
                     caption = captions['difference_questions_answers']
                 else:
                     caption = "Regression Analysis"
             else:
-                independent_vars = similarity_vars + ['topic_diversity']
+                independent_vars = similarity_vars + control_vars + ['topic_diversity']  # Include control_vars
                 caption = "Regression Analysis"
-            
-            # Prepare the regression formula
+
+            # Prepare the regression variables
             X = analysis_df[independent_vars]
             y = analysis_df[dep_var]
             X = sm.add_constant(X)  # Add a constant term
@@ -424,47 +455,158 @@ def perform_combined_regressions(regression_groups, analysis_df, output_folder, 
             # Fit the OLS model
             model = sm.OLS(y, X).fit()
 
-            # Store the results with appropriate labels
-            results[f"{dep_var}"] = model
-
             # Perform diagnostics
             ols_diagnostics(model, dep_var, independent_vars, output_folder)
-    
-    # Combine the summaries into a single HTML table using summary_col
-    combined_summary = summary_col(list(results.values()),  # Converted to list to fix the AttributeError
-                                   stars=True,
-                                   model_names=results.keys(),
-                                   info_dict={
-                                       'R²': lambda x: f"{x.rsquared:.3f}",
-                                       'Adjusted R²': lambda x: f"{x.rsquared_adj:.3f}",
-                                       'No. Observations': lambda x: f"{int(x.nobs)}"
-                                   },
-                                   float_format='%0.3f')
-    
-    # Add captions and save the combined summary as HTML
-    combined_summary_html = f"""
-    <html>
-    <head>
-        <title>Combined Regression Results</title>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    </head>
-    <body>
-    <div class="container">
-        <p><strong>{captions['combined_regressions']}</strong></p>
-        {combined_summary.as_html()}
-    </div>
-    </body>
-    </html>
-    """
-    
-    # Define the filename
-    filename = "combined_regression_results.html"
-    output_path = os.path.join(output_folder, filename)
-    
-    # Save the HTML file
-    with open(output_path, 'w', encoding='utf-8') as f:
-        f.write(combined_summary_html)
-    print(f"Saved combined regression results to {output_path}\n")
+
+            # Assign models to the appropriate dictionaries
+            if group_name == 'return_vars' and dep_var in rename_mapping_main_html:
+                # Rename the model using the updated mapping for HTML
+                short_name_html = rename_mapping_main_html[dep_var]
+                main_results_html[short_name_html] = model
+
+                # Also, map for LaTeX
+                short_name_latex = rename_mapping_main_latex[dep_var]
+                main_results_latex[short_name_latex] = model
+            else:
+                # Use the original name for other models and rename accordingly
+                original_key = f"{group_name}_{dep_var}"
+                short_name = rename_mapping_other.get(original_key, dep_var)  # Use mapping or original name
+                other_results[short_name] = model
+
+    # Generate summary tables
+
+    # 1. Main Regression Table (HTML)
+    if main_results_html:
+        combined_main_summary_html = summary_col(
+            list(main_results_html.values()),
+            stars=True,
+            model_names=list(main_results_html.keys()),
+            # Removed R² and Adjusted R² from info_dict to prevent duplication
+            info_dict={
+                'No. Observations': lambda x: f"{int(x.nobs)}"
+            },
+            float_format='%0.3f'
+        )
+
+        # Add captions and save the combined main summary as HTML
+        main_summary_html = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Main Regression Results</title>
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+            <style>
+                body {{
+                    font-family: Arial, sans-serif;
+                    margin: 20px;
+                }}
+                table {{
+                    border-collapse: collapse;
+                    width: 100%;
+                }}
+                th, td {{
+                    border: 1px solid #dddddd;
+                    text-align: center;
+                    padding: 8px;
+                }}
+                th {{
+                    background-color: #f2f2f2;
+                }}
+                caption {{
+                    caption-side: top;
+                    font-size: 20px;
+                    margin-bottom: 10px;
+                    font-weight: bold;
+                }}
+            </style>
+        </head>
+        <body>
+            <table>
+                <caption>Combined OLS Regression Results for Return Variables</caption>
+                {combined_main_summary_html.as_html()}
+            </table>
+        </body>
+        </html>
+        """
+
+        # Define the filename
+        main_html_filename = "combined_regression_results_main.html"
+        main_html_output_path = os.path.join(output_folder, main_html_filename)
+
+        # Save the HTML file
+        with open(main_html_output_path, 'w', encoding='utf-8') as f:
+            f.write(main_summary_html)
+        print(f"Saved main regression results to {main_html_output_path}\n")
+    else:
+        print("No main regression models to display.\n")
+
+    # 2. Other Regression Table (HTML)
+    if other_results:
+        combined_other_summary_html = summary_col(
+            list(other_results.values()),
+            stars=True,
+            model_names=list(other_results.keys()),
+            # Removed R² and Adjusted R² from info_dict to prevent duplication
+            info_dict={
+                'No. Observations': lambda x: f"{int(x.nobs)}"
+            },
+            float_format='%0.3f'
+        )
+
+        # Add captions and save the combined other summary as HTML
+        other_summary_html = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Other Regression Results</title>
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+            <style>
+                body {{
+                    font-family: Arial, sans-serif;
+                    margin: 20px;
+                }}
+                table {{
+                    border-collapse: collapse;
+                    width: 100%;
+                }}
+                th, td {{
+                    border: 1px solid #dddddd;
+                    text-align: center;
+                    padding: 8px;
+                }}
+                th {{
+                    background-color: #f2f2f2;
+                }}
+                caption {{
+                    caption-side: top;
+                    font-size: 20px;
+                    margin-bottom: 10px;
+                    font-weight: bold;
+                }}
+            </style>
+        </head>
+        <body>
+            <table>
+                <caption>Combined OLS Regression Results for Other Variables</caption>
+                {combined_other_summary_html.as_html()}
+            </table>
+        </body>
+        </html>
+        """
+
+        # Define the filename
+        other_html_filename = "combined_regression_results_other.html"
+        other_html_output_path = os.path.join(output_folder, other_html_filename)
+
+        # Save the HTML file
+        with open(other_html_output_path, 'w', encoding='utf-8') as f:
+            f.write(other_summary_html)
+        print(f"Saved other regression results to {other_html_output_path}\n")
+    else:
+        print("No other regression models to display.\n")
+
+    # Return the models for LaTeX table generation
+    return main_results_latex, other_results
 
 # Function to perform Chi-Squared Test of Independence and save results as HTML
 def perform_chi_squared_test(group, category_var1, category_var2, output_folder, caption, group_name):
@@ -508,13 +650,40 @@ def perform_chi_squared_test(group, category_var1, category_var2, output_folder,
 
     # Create the full HTML with caption
     full_html = f"""
+    <!DOCTYPE html>
     <html>
     <head>
         <title>Chi-Squared Test Results - {group_name} Similarity Group</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+        <style>
+            body {{
+                font-family: Arial, sans-serif;
+                margin: 20px;
+            }}
+            table {{
+                border-collapse: collapse;
+                width: 100%;
+                margin-bottom: 20px;
+            }}
+            th, td {{
+                border: 1px solid #dddddd;
+                text-align: center;
+                padding: 8px;
+            }}
+            th {{
+                background-color: #f2f2f2;
+            }}
+            caption {{
+                caption-side: top;
+                font-size: 20px;
+                margin-bottom: 10px;
+                font-weight: bold;
+            }}
+        </style>
     </head>
     <body>
     <div class="container">
+        <h2>Chi-Squared Test of Independence</h2>
         <p><strong>{caption}</strong></p>
         <h3>Contingency Table</h3>
         {contingency_html}
@@ -590,35 +759,38 @@ def plot_topic_distribution(group, title, output_folder):
 
 captions = {
     'return_vars': """
-    This table shows OLS regressions of excess returns and earnings per share forecasts on similarity measures and topic diversity.
+    This table shows OLS regressions of excess returns and earnings per share forecasts on similarity measures, control variables, and topic diversity.
     Variables of interest include similarity to overall average, industry average, and company average structures of Earnings Conference Calls (ECCs), as well as topic diversity.
     Control variables are standardized as per the variable appendix.
     The sample consists of all earnings conference calls from January 2010 to December 2020.
     Standard errors are robust and clustered by firm. *, **, and *** indicate significance at the 10%, 5%, and 1% level, respectively.
     """,
     'additional_dependent_vars': """
-    This table shows OLS regressions of the length of participant questions and management answers on similarity measures, topic diversity, and control variables.
+    This table shows OLS regressions of the length of participant questions and management answers on similarity measures, control variables, and topic diversity.
     Variables of interest include similarity to overall average, industry average, and company average structures of Earnings Conference Calls (ECCs), as well as topic diversity.
     Control variables are standardized as per the variable appendix.
     The sample consists of all earnings conference calls from January 2010 to December 2020.
     Standard errors are robust and clustered by firm. *, **, and *** indicate significance at the 10%, 5%, and 1% level, respectively.
     """,
     'analyst_questions': """
-    This table shows OLS regressions of the length of participant questions on similarity measures and topic diversity.
+    This table shows OLS regressions of the length of participant questions on similarity measures, control variables, and topic diversity.
     Variables of interest include similarity to overall average, industry average, and company average structures of Earnings Conference Calls (ECCs), as well as topic diversity.
     Control variables are standardized as per the variable appendix.
     The sample consists of all earnings conference calls from January 2010 to December 2020.
     Standard errors are robust and clustered by firm. *, **, and *** indicate significance at the 10%, 5%, and 1% level, respectively.
     """,
     'difference_questions_answers': """
-    This table shows OLS regressions of the difference between participant questions and management answers on similarity measures and topic diversity.
+    This table shows OLS regressions of the difference between participant questions and management answers on similarity measures, control variables, and topic diversity.
     Variables of interest include similarity to overall average, industry average, and company average structures of Earnings Conference Calls (ECCs), as well as topic diversity.
     Control variables are standardized as per the variable appendix.
     The sample consists of all earnings conference calls from January 2010 to December 2020.
     Standard errors are robust and clustered by firm. *, **, and *** indicate significance at the 10%, 5%, and 1% level, respectively.
     """,
-    'combined_regressions': """
-    Combined OLS Regression Results for Multiple Dependent Variables
+    'combined_regressions_main': """
+    Combined OLS Regression Results for Return Variables
+    """,
+    'combined_regressions_other': """
+    Combined OLS Regression Results for Other Variables
     """
 }
 
@@ -639,15 +811,15 @@ regression_groups = {
         'length_management_answers'
     ],
     'research_questions': [
-        'length_participant_questions',
         'difference_questions_answers'
     ]
 }
 
 #%% Perform Combined Regressions
 
-# Perform combined regressions and save the results
-perform_combined_regressions(regression_groups, analysis_df, output_folder, captions)
+# **IMPORTANT CHANGE HERE**
+# Capture the returned variables from the function to avoid NameError
+main_results_latex, other_results = perform_combined_regressions(regression_groups, analysis_df, output_folder, captions)
 
 #%% Perform Chi-Squared Tests for Topic Distributions
 
@@ -714,110 +886,268 @@ print(f"T-Statistic: {t_stat_management:.3f}, P-Value: {p_val_management:.3f}\n"
 
 #%% Additional Visualizations
 
-# Function to plot stacked bar charts for topic distributions
-def plot_topic_distribution(group, title, output_folder):
-    """
-    Plots a stacked bar chart of management answer topics based on participant question topics within a group.
-
-    Parameters:
-    - group (DataFrame): The subset of data to plot.
-    - title (str): Title of the plot.
-    - output_folder (str): Directory to save the plot.
-
-    Returns:
-    - None
-    """
-    contingency_table = pd.crosstab(group['primary_participant_topic'], group['primary_management_topic'])
-
-    if contingency_table.empty:
-        print(f"No data available to plot for {title}.")
-        return
-
-    # Check if the table is too large to plot
-    if contingency_table.shape[0] > 50 or contingency_table.shape[1] > 50:
-        print(f"Contingency table too large to plot for {title}. Skipping visualization.")
-        return
-
-    # Normalize the contingency table for better visualization
-    contingency_norm = contingency_table.div(contingency_table.sum(axis=1), axis=0)
-
-    plt.figure(figsize=(18, 12))
-    contingency_norm.plot(kind='bar', stacked=True, colormap='tab20')
-    plt.title(title, fontsize=20)
-    plt.xlabel('Participant Question Topics', fontsize=16)
-    plt.ylabel('Proportion of Management Answer Topics', fontsize=16)
-    plt.legend(title='Management Answer Topics', bbox_to_anchor=(1.05, 1), loc='upper left', fontsize=12)
-    plt.tight_layout()
-
-    # Replace spaces with underscores for filename
-    filename = f"{title.replace(' ', '_')}.png"
-    plt.savefig(os.path.join(output_folder, filename), dpi=300)
-    plt.close()
-    print(f"Saved plot: {title}")
-
 # Plot for Low Similarity Group
 plot_topic_distribution(low_similarity, 'Themenverteilung - Niedrige Similarity', output_folder)
 
 # Plot for High Similarity Group
 plot_topic_distribution(high_similarity, 'Themenverteilung - Hohe Similarity', output_folder)
 
-#%% Final Remarks
+#%% Generate and Save T-Test HTML and LaTeX Tables
 
+# Collect t-test results into a list of dictionaries
+t_test_results = [
+    {
+        'Variable': 'Participant Questions',
+        'Low Similarity Mean': round(low_mean_participant, 2),
+        'High Similarity Mean': round(high_mean_participant, 2),
+        'T-Statistic': round(t_stat_participant, 3),
+        'P-Value': f"{p_val_participant:.3f}",
+        'Interpretation': (
+            'Highly significant difference; participant questions are longer in Low Similarity group.' 
+            if p_val_participant < 0.001 else
+            'Significant difference; participant questions are longer in Low Similarity group.' 
+            if p_val_participant < 0.01 else
+            'Moderately significant difference; participant questions are longer in Low Similarity group.' 
+            if p_val_participant < 0.05 else
+            'No significant difference in participant questions between groups.'
+        )
+    },
+    {
+        'Variable': 'Management Answers',
+        'Low Similarity Mean': round(low_mean_management, 2),
+        'High Similarity Mean': round(high_mean_management, 2),
+        'T-Statistic': round(t_stat_management, 3),
+        'P-Value': f"{p_val_management:.3f}",
+        'Interpretation': (
+            'Highly significant difference; management answers are longer in Low Similarity group.' 
+            if p_val_management < 0.001 else
+            'Significant difference; management answers are longer in Low Similarity group.' 
+            if p_val_management < 0.01 else
+            'Moderately significant difference; management answers are longer in Low Similarity group.' 
+            if p_val_management < 0.05 else
+            'No significant difference in management answers between groups.'
+        )
+    }
+]
+
+# Create a DataFrame from the t-test results
+t_test_df = pd.DataFrame(t_test_results)
+
+# Function to highlight significance based on p-value (for HTML table)
+def highlight_significance(row):
+    """
+    Highlights the row based on the p-value.
+    - Red: p < 0.001
+    - Orange: p < 0.01
+    - Yellow: p < 0.05
+    - Light Blue: p >= 0.05
+    """
+    p_val = float(row['P-Value'])
+    if p_val < 0.001:
+        color = '#d7191c'  # Red
+    elif p_val < 0.01:
+        color = '#fdae61'  # Orange
+    elif p_val < 0.05:
+        color = '#ffffbf'  # Yellow
+    else:
+        color = '#abd9e9'  # Light Blue
+    return [f'background-color: {color}']*len(row)
+
+# Apply the styling to the DataFrame for HTML
+styled_t_test_df = t_test_df.style.apply(highlight_significance, axis=1)
+
+# Define CSS styles for the table
+table_styles = [
+    {'selector': 'th', 'props': [('background-color', '#f2f2f2'), ('text-align', 'center'), ('padding', '12px')]},
+    {'selector': 'td', 'props': [('text-align', 'center'), ('padding', '12px')]}
+]
+
+# Convert the styled DataFrame to HTML
+html_table = styled_t_test_df.set_table_styles(table_styles).to_html()
+
+# Create the full HTML content
+t_test_html_content = f"""
+<!DOCTYPE html>
+<html>
+<head>
+    <title>T-Test Results: Low vs. High Similarity Groups</title>
+    <style>
+        body {{
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }}
+        table {{
+            border-collapse: collapse;
+            width: 80%;
+            margin: 0 auto;
+        }}
+        th, td {{
+            border: 1px solid #dddddd;
+            text-align: center;
+            padding: 12px;
+        }}
+        th {{
+            background-color: #f2f2f2;
+        }}
+        caption {{
+            caption-side: top;
+            font-size: 20px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }}
+    </style>
+</head>
+<body>
+
+    <table>
+        <caption>T-Test Results: Low vs. High Similarity Groups</caption>
+        {html_table}
+    </table>
+
+    <div style="width: 80%; margin: 20px auto;">
+        <p><strong>Implications:</strong> There's a statistically significant reduction in both participant question lengths and management answer lengths in the High Similarity group compared to the Low Similarity group.</p>
+    </div>
+
+</body>
+</html>
 """
-**Key Adjustments and Enhancements:**
 
-1. **Resolved Pandas `inplace=True` Warning:**
-   - Replaced `analysis_df['topic_diversity'].fillna(mean_diversity, inplace=True)` with `analysis_df['topic_diversity'] = analysis_df['topic_diversity'].fillna(mean_diversity)` to ensure compatibility with future pandas versions.
+# Define the output HTML file path
+t_test_html_filename = "t_test_results.html"
+t_test_html_path = os.path.join(output_folder, t_test_html_filename)
 
-2. **Imported `StandardScaler`:**
-   - Added `from sklearn.preprocessing import StandardScaler` to resolve the `NameError`.
+# Save the HTML content to the file
+with open(t_test_html_path, 'w', encoding='utf-8') as file:
+    file.write(t_test_html_content)
 
-3. **Defined Similarity Groups Based on All Similarity Variables:**
-   - Calculated the 20th and 80th percentiles for each similarity variable.
-   - Defined `low_similarity` as calls that fall within the lowest 20% **across all three** similarity variables.
-   - Defined `high_similarity` as calls that fall within the highest 20% **across all three** similarity variables.
+print(f"Saved T-Test Results table to {t_test_html_path}")
 
-4. **Exclusive Use of Statsmodels for Regressions:**
-   - Removed all instances of `scikit-learn` regressions.
-   - Utilized `statsmodels` exclusively for all OLS regression analyses.
+#%% Generate LaTeX Tables for Regression Results
 
-5. **Combined Similar Regressions into Single HTML Tables:**
-   - Used `statsmodels`' `summary_col` to compile multiple regression summaries into a single, comprehensive HTML report (`combined_regression_results.html`).
-   - Fixed the `AttributeError` by converting `dict_values` to a list before passing it to `summary_col`.
-
-6. **Enhanced Visualizations:**
-   - Improved plot aesthetics with larger figure sizes, clearer labels, and higher resolution (`dpi=300`).
-   - Normalized contingency tables for stacked bar charts to display proportions instead of raw counts.
-   - Applied a consistent color palette (`tab20`) for better visual differentiation.
-   - Integrated Bootstrap CSS classes into HTML outputs for better-styled tables.
-
-7. **Comprehensive Documentation:**
-   - Added detailed docstrings and comments for all functions to enhance code readability and maintainability.
-
-**Next Steps and Recommendations:**
-
-1. **Verify Regression Outputs:**
-   - Navigate to the `../regression_results` folder to review the `combined_regression_results.html` and individual diagnostic reports.
-   - Ensure that all tables and plots are generated correctly and are as per your expectations.
-
-2. **Interpret Regression and Statistical Test Results:**
-   - Analyze the combined regression table to identify significant predictors.
-   - Review diagnostic tests (Breusch-Pagan, Shapiro-Wilk, Durbin-Watson) to validate regression assumptions.
-   - Assess Chi-Squared Test results to understand dependencies between categorical variables within similarity groups.
-   - Interpret T-Test results to compare mean lengths between low and high similarity groups.
-
-3. **Review and Refine Visualizations:**
-   - Examine the saved plots to ensure clarity and accuracy.
-   - Adjust `TOP_N` if necessary to balance between detail and readability in topic distributions.
-
-4. **Maintain Robust Documentation:**
-   - Keep detailed notes on your analyses, including interpretations of statistical tests and visualizations.
-   - This will aid in writing your thesis and ensuring reproducibility.
-
-5. **Seek Further Assistance if Needed:**
-   - If you encounter additional issues or require more advanced analyses (e.g., interaction effects, non-linear models), feel free to reach out for further assistance.
-
-**Final Note:**
-
-This adjusted script is tailored to provide a streamlined and efficient analysis workflow using `statsmodels`, enhancing both the statistical rigor and the quality of visual presentations in your thesis. Should you encounter further issues or require additional customizations, please don't hesitate to ask!
+def generate_latex_table(summary, caption, label, output_path):
+    """
+    Generates a LaTeX table from a summary_col object with adjustments to fit the page width.
+    
+    Parameters:
+    - summary: The summary_col object.
+    - caption (str): Caption for the table.
+    - label (str): Label for the table.
+    - output_path (str): Path to save the LaTeX table.
+    
+    Returns:
+    - None
+    """
+    # Get the LaTeX code from summary_col
+    latex_table = summary.as_latex()
+    
+    # Find the tabular environment
+    begin_tabular = latex_table.find('\\begin{tabular}')
+    end_tabular = latex_table.find('\\end{tabular}') + len('\\end{tabular}')
+    
+    # Extract the tabular content
+    tabular_content = latex_table[begin_tabular:end_tabular]
+    
+    # Wrap the tabular environment with \small and braces
+    wrapped_tabular = '{\\small ' + tabular_content + '}'
+    
+    # Construct the full table with \resizebox and proper structure
+    full_table = f"""
+\\begin{{table}}[ht]
+\\centering
+\\caption{{{caption}}}
+\\label{{{label}}}
+\\resizebox{{\\textwidth}}{{!}}{{%
+    {wrapped_tabular}
+}}
+\\bigskip
+\\textit{{Standard errors in parentheses.}} \\\\ 
+* p<.1, ** p<.05, ***p<.01
+\\end{{table}}
 """
+    
+    # Save to file
+    with open(output_path, 'w', encoding='utf-8') as f:
+        f.write(full_table)
+    
+    print(f"Saved LaTeX table to {output_path}")
+
+
+#%% Generate LaTeX Tables for Main and Other Regression Results
+
+# Generate LaTeX table for main regression results (Return Variables)
+if main_results_latex:
+    combined_main_summary_latex = summary_col(
+        list(main_results_latex.values()),
+        stars=True,
+        model_names=list(main_results_latex.keys()),
+        info_dict={
+            'No. Observations': lambda x: f"{int(x.nobs)}"
+        },
+        float_format='%0.3f'
+    )
+
+    # Define the caption and label
+    main_latex_caption = "Combined OLS Regression Results for Return Variables"
+    main_latex_label = "tab:combined_regression_results_main"
+
+    # Define the filename and path
+    main_latex_filename = "combined_regression_results_main.tex"
+    main_latex_output_path = os.path.join(output_folder, main_latex_filename)
+
+    # Generate the LaTeX table with adjustments
+    generate_latex_table(combined_main_summary_latex, main_latex_caption, main_latex_label, main_latex_output_path)
+else:
+    print("No main regression models to generate LaTeX table.\n")
+
+# Generate LaTeX table for other regression results (Other Variables)
+if other_results:
+    combined_other_summary_latex = summary_col(
+        list(other_results.values()),
+        stars=True,
+        model_names=list(other_results.keys()),
+        info_dict={
+            'No. Observations': lambda x: f"{int(x.nobs)}"
+        },
+        float_format='%0.3f'
+    )
+
+    # Define the caption and label
+    other_latex_caption = "Combined OLS Regression Results for Other Variables"
+    other_latex_label = "tab:combined_regression_results_other"
+
+    # Define the filename and path
+    other_latex_filename = "combined_regression_results_other.tex"
+    other_latex_output_path = os.path.join(output_folder, other_latex_filename)
+
+    # Generate the LaTeX table with adjustments
+    generate_latex_table(combined_other_summary_latex, other_latex_caption, other_latex_label, other_latex_output_path)
+else:
+    print("No other regression models to generate LaTeX table.\n")
+
+#%% Generate LaTeX Table for T-Test Results
+
+# Define LaTeX table filename
+t_test_latex_filename = "t_test_results.tex"
+t_test_latex_path = os.path.join(output_folder, t_test_latex_filename)
+
+# Create a LaTeX table using pandas
+latex_table = t_test_df.to_latex(index=False, 
+                                 caption='T-Test Results: Low vs. High Similarity Groups',
+                                 label='tab:t_test_results',
+                                 column_format='lccccp{8cm}',  # Adjust column alignment as needed
+                                 escape=False)  # To allow LaTeX formatting in 'Interpretation'
+
+# Add a note for significance
+latex_table_with_note = f"""{latex_table}
+\\begin{{flushleft}}
+\\textit{{Note:}} *, **, and *** indicate significance at the 10\\%, 5\\%, and 1\\% levels, respectively.
+\\end{{flushleft}}
+"""
+
+# Save the LaTeX table to a .tex file
+with open(t_test_latex_path, 'w', encoding='utf-8') as f:
+    f.write(latex_table_with_note)
+
+print(f"Saved LaTeX T-Test Results table to {t_test_latex_path}")
+
+#%% End of Script
