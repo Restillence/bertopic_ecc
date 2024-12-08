@@ -29,7 +29,7 @@
   "modeling_type": "zeroshot",
   "apply_topic_merging": false, 
   "similarity_threshold": 0.7,
-  "sample_size": 700,
+  "sample_size": 500,
   "sampling_mode": "random_company",
   "document_split": "sentences",
   "random_seed": 43,
