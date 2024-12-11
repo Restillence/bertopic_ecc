@@ -1,21 +1,28 @@
+# variable_analysis.py
+
 # Import necessary libraries
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import statsmodels.api as sm
-from scipy.stats import chi2_contingency, ttest_ind, shapiro
+from scipy.stats import ttest_ind, shapiro
 from statsmodels.stats.diagnostic import het_breuschpagan
 from statsmodels.graphics.gofplots import qqplot
 from statsmodels.stats.stattools import durbin_watson
 from statsmodels.stats.outliers_influence import variance_inflation_factor
-from statsmodels.iolib.summary2 import summary_col
-from statsmodels.tools.tools import add_constant
 from sklearn.preprocessing import StandardScaler
 import os
 import ast
+import re
+from utils import (
+    create_average_transition_matrix_figures,
+    create_transition_matrix,
+    remove_neg_one_from_columns  # Ensure this function is correctly defined in utils.py
+)
+from tqdm import tqdm  # For progress bars in loops
 
-#%% Configure Plotting Aesthetics
+# Configure Plotting Aesthetics
 sns.set_theme(style="whitegrid")
 plt.rcParams.update({
     'figure.figsize': (12, 8),
@@ -27,31 +34,32 @@ plt.rcParams.update({
     'font.size': 14
 })
 
-#%% Create '../regression_results' folder
-
-# Define the output folder path relative to the current script's directory
+# Create '../regression_results' Folder
 output_folder = os.path.join("..", "regression_results")
 
-# Create 'regression_results' folder in the parent directory if it doesn't exist
 if not os.path.exists(output_folder):
     os.makedirs(output_folder)
     print(f"Created folder: {output_folder}")
 else:
     print(f"Folder already exists: {output_folder}")
 
-#%% Path to the final dataset
-
-# Define the file path to your dataset
+# Path to the Final Dataset
 filepath = "D:/daten_masterarbeit/final_dataset_reg_full.csv"
 
-# Read the CSV file
-df = pd.read_csv(filepath)
+try:
+    df = pd.read_csv(filepath)
+    print(f"Number of observations in the final_dataset: {len(df)}")
+except FileNotFoundError:
+    print(f"File not found: {filepath}")
+    raise
 
-print(f"Number of observations in the final_dataset: {len(df)}")
+# Remove the first year (2002) if not done already
+print("Removing data from 2002 from df, if not done already...")
+df['call_date'] = pd.to_datetime(df['call_date'], errors='coerce')
+df = df[df['call_date'].dt.year != 2002]
+print(f"Number of rows after removing 2002 data: {len(df)}")
 
-#%% Data Preparation
-
-# List of variables to include in the analysis
+# Data Preparation
 variables = [
     'similarity_to_overall_average',
     'similarity_to_industry_average',
@@ -62,127 +70,112 @@ variables = [
     'excess_ret_long_term',
     'epsfxq',
     'epsfxq_next',
-    'length_participant_questions',  # Dependent Variable
-    'length_management_answers',    # Dependent Variable
-    'market_cap',                   # Control Variable
-    'rolling_beta',                 # Control Variable
-    'ceo_participates',             # Control Variable
-    'ceo_cfo_change',               # Control Variable
-    'word_length_presentation',     # Control Variable
-    'participant_question_topics',  # For Chi-Squared Test
-    'management_answer_topics',     # For Chi-Squared Test
-    'filtered_presentation_topics'  # For topic diversity
+    'length_participant_questions',
+    'length_management_answers',
+    'market_cap',
+    'rolling_beta',
+    'ceo_participates',
+    'ceo_cfo_change',
+    'word_length_presentation',
+    'filtered_presentation_topics',
+    'participant_question_topics',
+    'management_answer_topics',
+    'permco',
+    'siccd'
 ]
 
-# Ensure all variables exist in the DataFrame
 missing_vars = [var for var in variables if var not in df.columns]
 if missing_vars:
     raise KeyError(f"The following required columns are missing from the DataFrame: {missing_vars}")
 
-# Create analysis DataFrame with the specified variables
 analysis_df = df[variables].dropna()
-
-# Display the number of observations after dropping NaNs
 print(f"Number of observations after dropping NaNs: {len(analysis_df)}")
 
-#%% Parse Topic Columns Properly
-
-# Function to safely parse string representations of lists
+# Parse Topic Columns
 def parse_topics(topics):
-    """
-    Converts string representations of lists into actual Python lists.
-    If parsing fails, returns an empty list.
-    """
-    try:
-        # Use ast.literal_eval for safe parsing
-        return ast.literal_eval(topics) if isinstance(topics, str) else []
-    except (ValueError, SyntaxError):
+    if isinstance(topics, str):
+        try:
+            parsed = ast.literal_eval(topics)
+            if isinstance(parsed, list):
+                return parsed
+            else:
+                return []
+        except (ValueError, SyntaxError):
+            return []
+    elif isinstance(topics, list):
+        return topics
+    else:
         return []
 
-# Apply the parsing function to topic columns
-analysis_df['participant_question_topics'] = analysis_df['participant_question_topics'].apply(parse_topics)
-analysis_df['management_answer_topics'] = analysis_df['management_answer_topics'].apply(parse_topics)
-analysis_df['filtered_presentation_topics'] = analysis_df['filtered_presentation_topics'].apply(parse_topics)
+def flatten_topics(topics):
+    if not isinstance(topics, list):
+        return []
+    flattened = []
+    for item in topics:
+        if isinstance(item, list):
+            flattened.extend(item)
+        else:
+            flattened.append(item)
+    return flattened
 
-#%% Extract Primary Topics
+def convert_topics_to_int(topics):
+    if not isinstance(topics, list):
+        return []
+    flattened = flatten_topics(topics)
+    int_topics = []
+    for topic in flattened:
+        try:
+            int_topic = int(topic)
+            int_topics.append(int_topic)
+        except (ValueError, TypeError):
+            continue
+    return int_topics
 
-# Function to extract the most frequent topic from a list
-def extract_primary_topic(topics):
-    """
-    Extracts the most frequent topic from a list of topics.
-    If the list is empty, returns 'Other'.
-    """
-    if not topics:
-        return 'Other'
-    # Count the frequency of each topic
-    topic_counts = pd.Series(topics).value_counts()
-    # Return the most frequent topic
-    return topic_counts.idxmax()
+topic_columns = ['filtered_presentation_topics', 'participant_question_topics', 'management_answer_topics']
+for col in topic_columns:
+    analysis_df[col] = analysis_df[col].apply(parse_topics)
+    analysis_df[col] = analysis_df[col].apply(convert_topics_to_int)
 
-# Apply the function to extract primary topics
-analysis_df['primary_participant_topic'] = analysis_df['participant_question_topics'].apply(extract_primary_topic)
-analysis_df['primary_management_topic'] = analysis_df['management_answer_topics'].apply(extract_primary_topic)
+def verify_topics_are_int(topics):
+    return all(isinstance(topic, int) for topic in topics)
 
-#%% Aggregate Rare Topics
+verification = analysis_df[topic_columns].applymap(verify_topics_are_int).all(axis=1)
+if not verification.all():
+    problematic_rows = verification[verification == False].index.tolist()
+    print(f"Warning: The following rows have non-integer topics and will be excluded: {problematic_rows}")
+    analysis_df = analysis_df[verification]
+else:
+    print("All topic columns are correctly formatted as lists of integers.")
 
-# Define the number of top topics to retain
-TOP_N = 50  # Adjust based on your data and memory constraints
+print("\nSample 'filtered_presentation_topics' after parsing:")
+print(analysis_df['filtered_presentation_topics'].head())
 
-# Function to aggregate rare topics
-def aggregate_rare_topics(series, top_n):
-    """
-    Aggregates rare topics into 'Other'.
-    
-    Parameters:
-    - series (pd.Series): Series containing categorical data.
-    - top_n (int): Number of top categories to retain.
-    
-    Returns:
-    - pd.Series: Series with rare categories replaced by 'Other'.
-    """
-    top_categories = series.value_counts().nlargest(top_n).index
-    return series.apply(lambda x: x if x in top_categories else 'Other')
+print("\nNumber of topics per row:")
+print(analysis_df['filtered_presentation_topics'].apply(len).describe())
 
-# Apply the aggregation to primary topics
-analysis_df['primary_participant_topic'] = aggregate_rare_topics(analysis_df['primary_participant_topic'], TOP_N)
-analysis_df['primary_management_topic'] = aggregate_rare_topics(analysis_df['primary_management_topic'], TOP_N)
+unique_topics = analysis_df['filtered_presentation_topics'].explode().unique()
+print(f"\nNumber of unique topics after parsing: {len(unique_topics)}")
+print(f"Unique topics: {unique_topics}")
 
-print(f"Aggregated rare topics, retaining top {TOP_N} categories.")
-
-#%% Create 'topic_diversity' Variable
-
-# Function to calculate topic diversity
+# Create 'topic_diversity' Variable
 def calculate_topic_diversity(topics):
-    """
-    Calculates the diversity of topics in a given list.
-    Diversity is defined as the ratio of unique topics to the total number of topics.
-    """
     if not isinstance(topics, list) or len(topics) == 0:
-        return np.nan  # Return NaN for invalid or empty topic lists
+        return np.nan
     unique_topics = set(topics)
     diversity = len(unique_topics) / len(topics)
     return diversity
 
-# Create the 'topic_diversity' column
 analysis_df['topic_diversity'] = analysis_df['filtered_presentation_topics'].apply(calculate_topic_diversity)
-
-# Handle potential NaN values in 'topic_diversity'
-# Option 1: Fill NaNs with the mean diversity
 mean_diversity = analysis_df['topic_diversity'].mean()
 analysis_df['topic_diversity'] = analysis_df['topic_diversity'].fillna(mean_diversity)
-
 print("Created 'topic_diversity' variable.")
 
-#%% Create 'difference_questions_answers' Variable
-
-# Create 'difference_questions_answers' variable
+# Create 'difference_questions_answers' Variable
 analysis_df['difference_questions_answers'] = analysis_df['length_participant_questions'] - analysis_df['length_management_answers']
 
-# Display summary statistics
 print("Summary statistics for 'difference_questions_answers':")
 print(analysis_df['difference_questions_answers'].describe())
 
-# Visualize the distribution
 plt.figure(figsize=(12, 8))
 sns.histplot(analysis_df['difference_questions_answers'], kde=True, bins=30, color='skyblue')
 plt.title('Distribution of Difference Between Participant Questions and Management Answers', fontsize=16)
@@ -191,119 +184,77 @@ plt.ylabel('Frequency', fontsize=14)
 plt.tight_layout()
 plt.savefig(os.path.join(output_folder, 'difference_questions_answers_distribution.png'), dpi=300)
 plt.close()
-print("Saved distribution plot for 'difference_questions_answers'.\n")
+print("Saved distribution plot for 'difference_questions_answers'.")
 
-#%% Descriptive Statistics
-
-# Define the output folder for descriptive statistics
+# Descriptive Statistics
 descriptive_stats_folder = os.path.join(output_folder, "descriptive_statistics")
-
-# Create the folder if it doesn't exist
 if not os.path.exists(descriptive_stats_folder):
     os.makedirs(descriptive_stats_folder)
     print(f"Created folder for descriptive statistics: {descriptive_stats_folder}")
 else:
     print(f"Folder for descriptive statistics already exists: {descriptive_stats_folder}")
 
-#%% Generate Summary Statistics for Numerical Variables
-
-# Select numerical columns
 numerical_cols = analysis_df.select_dtypes(include=[np.number]).columns.tolist()
-
-# Generate descriptive statistics using pandas
 numerical_summary = analysis_df[numerical_cols].describe().transpose()
-
-# Calculate additional statistics: skewness and kurtosis
 numerical_summary['skew'] = analysis_df[numerical_cols].skew()
 numerical_summary['kurtosis'] = analysis_df[numerical_cols].kurtosis()
-
-# Reorder columns for better presentation
 numerical_summary = numerical_summary[['count', 'mean', 'std', 'min', '25%', '50%', '75%', 'max', 'skew', 'kurtosis']]
-
-# Round the numbers for better readability
 numerical_summary = numerical_summary.round(3)
 
-# Export to LaTeX
 numerical_summary_latex = numerical_summary.to_latex(
     caption='Descriptive Statistics for Numerical Variables',
     label='tab:descriptive_numerical',
     float_format='%.3f',
-    column_format='lcccccccccc',  # Adjust column alignment as needed
+    column_format='lcccccccccc',
     bold_rows=True
 )
 
-# Define the output file path
 numerical_latex_path = os.path.join(descriptive_stats_folder, "descriptive_statistics_numerical.tex")
 
-# Write the LaTeX table to file
 with open(numerical_latex_path, 'w') as f:
     f.write(numerical_summary_latex)
 
 print(f"Saved numerical descriptive statistics LaTeX table to {numerical_latex_path}")
 
-#%% Generate Frequency Counts for Categorical Variables
-
-# Define categorical columns
-# Assuming 'primary_participant_topic' and 'primary_management_topic' are categorical
-categorical_cols = ['primary_participant_topic', 'primary_management_topic']
-
-for col in categorical_cols:
-    # Calculate frequency counts
-    freq_counts = analysis_df[col].value_counts().to_frame()
-    freq_counts.columns = ['Frequency']
-    freq_counts['Percentage'] = (freq_counts['Frequency'] / freq_counts['Frequency'].sum() * 100).round(2)
-    
-    # Reorder columns
-    freq_counts = freq_counts[['Frequency', 'Percentage']]
-    
-    # Export to LaTeX
-    freq_counts_latex = freq_counts.to_latex(
-        caption=f'Frequency Counts for {col.replace("_", " ").title()}',
-        label=f'tab:descriptive_{col}',
-        float_format='%.2f',
-        column_format='lcc',  # Adjust column alignment as needed
-        bold_rows=True,
-        index=True
-    )
-    
-    # Define the output file path
-    categorical_latex_path = os.path.join(descriptive_stats_folder, f"descriptive_statistics_{col}.tex")
-    
-    # Write the LaTeX table to file
-    with open(categorical_latex_path, 'w') as f:
-        f.write(freq_counts_latex)
-    
-    print(f"Saved categorical descriptive statistics LaTeX table to {categorical_latex_path}")
-
-#%% Standardize Specific Control Variables
-
-# Define control variables
-control_vars = [
-    'market_cap',
-    'ceo_participates',
-    'ceo_cfo_change',
-    'rolling_beta',
-    'word_length_presentation'
+# Standardize Independent and Control Variables (Excluding Dummy Variables)
+independent_vars = [
+    'similarity_to_overall_average',
+    'similarity_to_industry_average',
+    'similarity_to_company_average',
+    'topic_diversity'
 ]
 
-# Define the variables to be standardized
-variables_to_scale = ['market_cap', 'word_length_presentation']
+# Add the dummy variables ceo_participates and ceo_cfo_change to the control variables to ensure they appear in the regressions
+control_vars = [
+    'market_cap',
+    'rolling_beta',
+    'word_length_presentation',
+    'ceo_participates',
+    'ceo_cfo_change'
+]
 
-# Initialize the scaler
+variables_to_scale = independent_vars + ['market_cap', 'rolling_beta', 'word_length_presentation']
+# ceo_participates and ceo_cfo_change are dummies, do not standardize them
+
 scaler = StandardScaler()
-
-# Fit and transform only the specified variables
 analysis_df[variables_to_scale] = scaler.fit_transform(analysis_df[variables_to_scale])
+print(f"Standardized variables: {', '.join(variables_to_scale)}")
 
-print("Standardized 'market_cap' and 'word_length_presentation'.")
+def calculate_vif(vars_list, df):
+    X = df[vars_list]
+    X = sm.add_constant(X)
+    vif_data = pd.DataFrame()
+    vif_data["Variable"] = X.columns
+    vif_data["VIF"] = [variance_inflation_factor(X.values, i) for i in range(X.shape[1])]
+    return vif_data
 
-#%% Define Similarity Groups Based on Percentiles
+print("Calculating VIF for independent and control variables...")
+vif_df = calculate_vif(independent_vars + ['market_cap', 'rolling_beta', 'word_length_presentation'], analysis_df)
+print("VIF Results:")
+print(vif_df)
 
-# Define similarity groups based on all similarity variables
 low_percentile = 20
 high_percentile = 80
-
-# Calculate the 20th and 80th percentiles for each similarity variable
 low_thresholds = analysis_df[[
     'similarity_to_overall_average',
     'similarity_to_industry_average',
@@ -316,37 +267,27 @@ high_thresholds = analysis_df[[
     'similarity_to_company_average'
 ]].quantile(high_percentile / 100)
 
-# Define low_similarity: calls in the lowest 20% across all similarity variables
 low_similarity = analysis_df[
     (analysis_df['similarity_to_overall_average'] <= low_thresholds['similarity_to_overall_average']) &
     (analysis_df['similarity_to_industry_average'] <= low_thresholds['similarity_to_industry_average']) &
     (analysis_df['similarity_to_company_average'] <= low_thresholds['similarity_to_company_average'])
 ]
 
-# Define high_similarity: calls in the highest 20% across all similarity variables
 high_similarity = analysis_df[
     (analysis_df['similarity_to_overall_average'] > high_thresholds['similarity_to_overall_average']) &
     (analysis_df['similarity_to_industry_average'] > high_thresholds['similarity_to_industry_average']) &
     (analysis_df['similarity_to_company_average'] > high_thresholds['similarity_to_company_average'])
 ]
 
-print(f"Defined similarity groups based on {low_percentile}th and {high_percentile}th percentiles across all similarity variables.")
-print(f"Low Similarity Group (<= {low_percentile}% on all similarity variables): {len(low_similarity)} observations")
-print(f"High Similarity Group (>{high_percentile}% on all similarity variables): {len(high_similarity)} observations\n")
+print(f"Defined similarity groups based on {low_percentile}th and {high_percentile}th percentiles.")
+print(f"Low Similarity Group: {len(low_similarity)} observations")
+print(f"High Similarity Group: {len(high_similarity)} observations\n")
 
-#%% Exploratory Data Analysis
-
-# Select only numeric columns for correlation
 numeric_cols = analysis_df.select_dtypes(include=[np.number]).columns.tolist()
-
-# Calculate correlation coefficients
 correlations = analysis_df[numeric_cols].corr(method='pearson')
-
-# Display the correlation matrix
 print("Correlation matrix:")
 print(correlations)
 
-# Extract correlations of similarity variables with return variables
 return_vars = [
     'excess_ret_immediate',
     'excess_ret_short_term',
@@ -365,43 +306,10 @@ similarity_vars = [
 print("\nCorrelation coefficients between similarity variables and return variables:")
 print(correlations.loc[similarity_vars, return_vars])
 
-#%% Define Regression and Diagnostic Functions
-
-# Function to calculate VIF
-def calculate_vif(independent_vars, analysis_df):
-    """
-    Calculates Variance Inflation Factor (VIF) for a list of independent variables.
-
-    Parameters:
-    - independent_vars (list): List of independent variable names.
-    - analysis_df (DataFrame): The DataFrame containing the data.
-
-    Returns:
-    - vif_df (DataFrame): DataFrame containing VIF values.
-    """
-    X = analysis_df[independent_vars]
-    X = add_constant(X)
-    vif_data = pd.DataFrame()
-    vif_data["Variable"] = X.columns
-    vif_data["VIF"] = [variance_inflation_factor(X.values, i) for i in range(X.shape[1])]
-    return vif_data
-
-# Function to perform OLS diagnostic checks
 def ols_diagnostics(model, y_var, x_vars, output_folder):
-    """
-    Generates diagnostic plots and tests for an OLS regression model.
-
-    Parameters:
-    - model: The fitted OLS model.
-    - y_var (str): Dependent variable name.
-    - x_vars (list): List of independent variables.
-    - output_folder (str): Directory to save diagnostic plots and statistics.
-    """
-    # Create residuals and fitted values
     residuals = model.resid
     fitted = model.fittedvalues
 
-    # 1. Residuals vs. Fitted Values Plot
     plt.figure(figsize=(12, 8))
     sns.scatterplot(x=fitted, y=residuals, alpha=0.5, edgecolor=None)
     plt.axhline(0, color='red', linestyle='--')
@@ -413,7 +321,6 @@ def ols_diagnostics(model, y_var, x_vars, output_folder):
     plt.close()
     print(f"Saved Residuals vs Fitted plot for {y_var}.")
 
-    # 2. Q-Q Plot for Normality
     plt.figure(figsize=(12, 8))
     qqplot(residuals, line='s', ax=plt.gca())
     plt.title(f'Q-Q Plot of Residuals for {y_var}', fontsize=16)
@@ -422,7 +329,6 @@ def ols_diagnostics(model, y_var, x_vars, output_folder):
     plt.close()
     print(f"Saved Q-Q plot for {y_var}.")
 
-    # 3. Histogram of Residuals
     plt.figure(figsize=(12, 8))
     sns.histplot(residuals, kde=True, bins=30, color='salmon')
     plt.title(f'Histogram of Residuals for {y_var}', fontsize=16)
@@ -433,23 +339,19 @@ def ols_diagnostics(model, y_var, x_vars, output_folder):
     plt.close()
     print(f"Saved Residuals Histogram for {y_var}.")
 
-    # 4. Breusch-Pagan Test for Heteroscedasticity
     bp_test = het_breuschpagan(residuals, model.model.exog)
     bp_pvalue = bp_test[1]
     print(f"Breusch-Pagan test p-value for {y_var}: {bp_pvalue:.4f}")
 
-    # 5. Shapiro-Wilk Test for Normality
     if len(residuals) <= 5000:
         shapiro_stat, shapiro_p = shapiro(residuals)
         print(f"Shapiro-Wilk test p-value for {y_var}: {shapiro_p:.4f}")
     else:
         print(f"Shapiro-Wilk test not performed for {y_var} due to large sample size (N={len(residuals)}).")
 
-    # 6. Durbin-Watson Test for Autocorrelation
     dw_stat = durbin_watson(residuals)
     print(f"Durbin-Watson statistic for {y_var}: {dw_stat:.4f}")
 
-    # Save diagnostic statistics to a text file
     diag_filename = f"{y_var}_diagnostics.txt"
     diag_path = os.path.join(output_folder, diag_filename)
     with open(diag_path, 'w') as f:
@@ -461,249 +363,419 @@ def ols_diagnostics(model, y_var, x_vars, output_folder):
         f.write(f"Durbin-Watson Statistic: {dw_stat:.4f}\n")
     print(f"Saved diagnostic statistics for {y_var} to {diag_path}\n")
 
-# Function to perform OLS regression and save separate HTML and LaTeX tables
+def clean_variable(var):
+    if isinstance(var, str):
+        var = var.split('\n')[0]
+        var = re.sub(r'Name:\s*\d+,\s*dtype:\s*object', '', var)
+        var = var.strip()
+        return var
+    else:
+        return str(var).strip()
+
+def create_regression_latex_table(regression_stats, r_squared_stats, adj_r_squared_stats, n_observations_stats, caption, label, output_path):
+    """
+    Creates a LaTeX table from regression statistics including coefficients with stars and t-values in parentheses.
+    Also includes R-squared, Adjusted R-squared, and Number of Observations for each regression.
+
+    Parameters:
+    - regression_stats (dict): Dictionary where keys are model names and values are DataFrames with 'Coefficient' and 'stat_value'.
+    - r_squared_stats (dict): Dictionary where keys are model names and values are R-squared values.
+    - adj_r_squared_stats (dict): Dictionary where keys are model names and values are Adjusted R-squared values.
+    - n_observations_stats (dict): Dictionary where keys are model names and values are number of observations.
+    - caption (str): Caption for the LaTeX table.
+    - label (str): Label for referencing the table in LaTeX.
+    - output_path (str): File path to save the LaTeX table.
+    """
+    combined_df = pd.DataFrame()
+
+    for model_name, stats in regression_stats.items():
+        stats = stats.copy()
+        stats.columns = pd.MultiIndex.from_product([[model_name], stats.columns])
+        combined_df = pd.concat([combined_df, stats], axis=1)
+
+    combined_df.reset_index(inplace=True)
+    combined_df.rename(columns={'index': 'Variable'}, inplace=True)
+    combined_df['Variable'] = combined_df['Variable'].apply(clean_variable)
+
+    # Initialize rows list
+    rows = []
+    for index, row in combined_df.iterrows():
+        variable = row['Variable']
+        coeffs = []
+        stat_values = []
+        for model in regression_stats.keys():
+            coeff = row[(model, 'Coefficient')]
+            stat_val = row[(model, 'stat_value')]
+            coeffs.append(coeff)
+            stat_values.append(stat_val)
+
+        coeff_row = [variable] + coeffs
+        stat_row = [''] + stat_values
+        rows.append(coeff_row)
+        rows.append(stat_row)
+
+    # Define headers
+    headers = ['Variable'] + list(regression_stats.keys())
+    formatted_df = pd.DataFrame(rows, columns=headers)
+    formatted_df['Variable'] = formatted_df['Variable'].astype(str)
+
+    # Start LaTeX table
+    column_alignment = 'l' + 'c' * len(regression_stats.keys())
+
+    latex_content = f"""
+\\begin{{table}}[ht]
+    \\centering
+    \\caption{{{caption}}}
+    \\label{{{label}}}
+    \\resizebox{{\\textwidth}}{{!}}{{%
+        {{\\small
+        \\begin{{tabular}}{{{column_alignment}}}
+        \\hline
+                                & {' & '.join([f'\\textit{{{model}}}' for model in regression_stats.keys()])} \\\\
+        \\hline
+    """
+
+    # Add coefficient and t-value rows
+    for i, row in formatted_df.iterrows():
+        variable = row['Variable']
+        if variable == '':
+            latex_content += "                            & " + " & ".join(row[1:]) + " \\\\\n"
+        else:
+            variable_escaped = re.sub(r'([&_#%{}~^\\])', r'\\\1', variable)
+            latex_content += f"    {variable_escaped} & " + " & ".join(row[1:]) + " \\\\\n"
+
+    # Add R-squared, Adjusted R-squared, and No. Observations
+    latex_content += "\\hline\n"
+
+    # R-squared row
+    r_squared_values = [f"{r_squared_stats[model]:.3f}" for model in regression_stats.keys()]
+    latex_content += f"R-squared & " + " & ".join(r_squared_values) + " \\\\\n"
+
+    # Adjusted R-squared row
+    adj_r_squared_values = [f"{adj_r_squared_stats[model]:.3f}" for model in regression_stats.keys()]
+    latex_content += f"R-squared Adj. & " + " & ".join(adj_r_squared_values) + " \\\\\n"
+
+    # No. Observations row
+    n_observations_values = [f"{n_observations_stats[model]}" for model in regression_stats.keys()]
+    latex_content += f"No. Observations & " + " & ".join(n_observations_values) + " \\\\\n"
+
+    # End LaTeX table
+    latex_content += f"""
+    \\hline
+    \\end{{tabular}}}}
+    }}
+    \\bigskip
+    \\textit{{t-values in parentheses.}} \\ 
+    * p<.1, ** p<.05, ***p<.01
+\\end{{table}}
+"""
+
+    # Write the LaTeX content to file
+    with open(output_path, 'w', encoding='utf-8') as f:
+        f.write(latex_content)
+
+    print(f"Saved LaTeX regression table to {output_path}")
+
+def create_regression_html_table(regression_stats, r_squared_stats, adj_r_squared_stats, n_observations_stats, caption, label, output_path):
+    """
+    Creates an HTML table from regression statistics including coefficients with stars and t-values in parentheses.
+    Also includes R-squared, Adjusted R-squared, and Number of Observations.
+
+    Parameters:
+    - regression_stats (dict): Dictionary where keys are model names and values are DataFrames with 'Coefficient' and 'stat_value'.
+    - r_squared_stats (dict): Dictionary where keys are model names and values are R-squared values.
+    - adj_r_squared_stats (dict): Dictionary where keys are model names and values are Adjusted R-squared values.
+    - n_observations_stats (dict): Dictionary where keys are model names and values are number of observations.
+    - caption (str): Caption for the HTML table.
+    - label (str): Label for the table (used for CSS or referencing purposes).
+    - output_path (str): File path to save the HTML table.
+    """
+    combined_df = pd.DataFrame()
+
+    for model_name, stats in regression_stats.items():
+        stats = stats.copy()
+        stats.columns = pd.MultiIndex.from_product([[model_name], stats.columns])
+        combined_df = pd.concat([combined_df, stats], axis=1)
+
+    combined_df.reset_index(inplace=True)
+    combined_df.rename(columns={'index': 'Variable'}, inplace=True)
+    combined_df['Variable'] = combined_df['Variable'].apply(clean_variable)
+
+    # Initialize rows list
+    rows = []
+    for index, row in combined_df.iterrows():
+        variable = row['Variable']
+        coeffs = []
+        stat_values = []
+        for model in regression_stats.keys():
+            coeff = row[(model, 'Coefficient')]
+            stat_val = row[(model, 'stat_value')]
+            coeffs.append(coeff)
+            stat_values.append(stat_val)
+
+        coeff_row = [variable] + coeffs
+        stat_row = [''] + stat_values
+        rows.append(coeff_row)
+        rows.append(stat_row)
+
+    # Define headers
+    headers = ['Variable'] + list(regression_stats.keys())
+    formatted_df = pd.DataFrame(rows, columns=headers)
+    formatted_df['Variable'] = formatted_df['Variable'].astype(str)
+
+    # Start HTML table
+    html_content = f"""
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{caption}</title>
+    <style>
+        table {{
+            border-collapse: collapse;
+            width: 80%;
+            margin: 0 auto;
+        }}
+        th, td {{
+            border: 1px solid #dddddd;
+            text-align: center;
+            padding: 12px;
+        }}
+        th {{
+            background-color: #f2f2f2;
+        }}
+        caption {{
+            caption-side: top;
+            font-size: 20px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }}
+    </style>
+</head>
+<body>
+
+    <table>
+        <caption><strong>{caption}</strong></caption>
+        <tr>
+            <th></th>
+            {''.join([f'<th><em>{col}</em></th>' for col in headers[1:]])}
+        </tr>
+"""
+
+    # Add coefficient and t-value rows
+    for i, row in formatted_df.iterrows():
+        variable = row['Variable']
+        if variable == '':
+            html_content += "<tr>\n"
+            html_content += "    <td></td>" + "".join([f"<td>{cell}</td>" for cell in row[1:]]) + "\n</tr>\n"
+        else:
+            variable_escaped = variable.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+            html_content += f"<tr>\n    <td>{variable_escaped}</td>" + "".join([f"<td>{cell}</td>" for cell in row[1:]]) + "\n</tr>\n"
+
+    # Add R-squared, Adjusted R-squared, and No. Observations rows with proper HTML syntax
+    # R-squared row
+    r_squared_values = [f"{r_squared_stats[model]:.3f}" for model in regression_stats.keys()]
+    html_content += f"""
+        <tr>
+            <td><strong>R-squared</strong></td>
+            {''.join([f"<td>{val}</td>" for val in r_squared_values])}
+        </tr>
+    """
+
+    # Adjusted R-squared row
+    adj_r_squared_values = [f"{adj_r_squared_stats[model]:.3f}" for model in regression_stats.keys()]
+    html_content += f"""
+        <tr>
+            <td><strong>R-squared Adj.</strong></td>
+            {''.join([f"<td>{val}</td>" for val in adj_r_squared_values])}
+        </tr>
+    """
+
+    # No. Observations row
+    n_observations_values = [f"{n_observations_stats[model]}" for model in regression_stats.keys()]
+    html_content += f"""
+        <tr>
+            <td><strong>No. Observations</strong></td>
+            {''.join([f"<td>{val}</td>" for val in n_observations_values])}
+        </tr>
+    </table>
+
+    <p><em>t-values in parentheses.</em></p>
+    <p>* p&lt;.1, ** p&lt;.05, ***p&lt;.01</p>
+
+</body>
+</html>
+"""
+
+    # Write the HTML content to file
+    with open(output_path, 'w', encoding='utf-8') as f:
+        f.write(html_content)
+
+    print(f"Saved HTML regression table to {output_path}")
+
+#%% Perform Combined Regressions
+
 def perform_combined_regressions(regression_groups, analysis_df, output_folder, captions):
     """
-    Performs multiple OLS regressions, separates them into main and other groups, 
-    renames main group models, and saves separate HTML and LaTeX tables.
+    Performs multiple OLS regressions without clustered standard errors, separates them into main and other groups, 
+    renames main group models, and collects regression statistics with significance stars and t-values.
+    Also collects R-squared, Adjusted R-squared, and Number of Observations for each regression.
 
     Parameters:
     - regression_groups (dict): Dictionary where keys are group names and values are lists of dependent variables.
     - analysis_df (DataFrame): The DataFrame containing the data.
-    - output_folder (str): Path to the folder where the HTML and LaTeX files will be saved.
+    - output_folder (str): Path to the folder where the LaTeX and HTML files will be saved.
     - captions (dict): Dictionary where keys are group names and values are caption texts.
 
     Returns:
-    - main_results_latex (dict): Dictionary of main regression models for LaTeX tables.
-    - other_results (dict): Dictionary of other regression models.
+    - main_results_stats (dict): Dictionary of main regression statistics for LaTeX and HTML tables.
+    - other_results_stats (dict): Dictionary of other regression statistics.
+    - main_r_squared_stats (dict): Dictionary of R-squared values for main regressions.
+    - main_adj_r_squared_stats (dict): Dictionary of Adjusted R-squared values for main regressions.
+    - main_n_observations_stats (dict): Dictionary of number of observations for main regressions.
+    - other_r_squared_stats (dict): Dictionary of R-squared values for other regressions.
+    - other_adj_r_squared_stats (dict): Dictionary of Adjusted R-squared values for other regressions.
+    - other_n_observations_stats (dict): Dictionary of number of observations for other regressions.
     """
-    # Dictionaries to hold models
-    main_results_latex = {}
-    other_results = {}
-
-    # Mapping for renaming main models for LaTeX (lowercase, no underscores)
+    # Dictionaries to hold regression statistics
+    main_results_stats = {}
+    other_results_stats = {}
+    
+    # Dictionaries to hold additional regression statistics
+    main_r_squared_stats = {}
+    main_adj_r_squared_stats = {}
+    main_n_observations_stats = {}
+    
+    other_r_squared_stats = {}
+    other_adj_r_squared_stats = {}
+    other_n_observations_stats = {}
+    
+    # Mapping for renaming main models for LaTeX and HTML
     rename_mapping_main_latex = {
-        'excess_ret_immediate': 'rimmediate',
-        'excess_ret_short_term': 'rshort',
-        'excess_ret_medium_term': 'rmedium',
-        'excess_ret_long_term': 'rlong',
-        'epsfxq': 'epsfxq',
-        'epsfxq_next': 'epsfxqnext'
+        'excess_ret_immediate': 'r_immediate',
+        'excess_ret_short_term': 'r_short',
+        'excess_ret_medium_term': 'r_medium',
+        'excess_ret_long_term': 'r_long',
+        'epsfxq': 'eps',
+        'epsfxq_next': 'eps_next'
     }
-
+    
+    # Define which models are return variables for formatting
+    return_models = ['r_immediate', 'r_short', 'r_medium', 'r_long']
+    
     # Mapping for renaming other models
     rename_mapping_other = {
         'length_participant_questions': 'length_participant_questions',
         'length_management_answers': 'length_management_answers',
         'difference_questions_answers': 'difference_questions_answers'
     }
-
+    
     for group_name, dep_vars in regression_groups.items():
         for dep_var in dep_vars:
             # Define independent variables
-            independent_vars = similarity_vars + ['topic_diversity'] + control_vars
+            independent_vars_combined = independent_vars + control_vars
 
             # Prepare the regression variables
-            X = analysis_df[independent_vars]
+            X = analysis_df[independent_vars_combined]
             y = analysis_df[dep_var]
             X = sm.add_constant(X)  # Add a constant term
 
-            # Fit the OLS model
-            model = sm.OLS(y, X).fit()
+            try:
+                # Fit the OLS model without clustered standard errors
+                model = sm.OLS(y, X).fit()
 
-            # Perform diagnostics
-            ols_diagnostics(model, dep_var, independent_vars, output_folder)
+                # Perform diagnostics
+                ols_diagnostics(model, dep_var, independent_vars_combined, output_folder)
 
-            # Assign models to the appropriate dictionaries
-            if group_name == 'return_vars' and dep_var in rename_mapping_main_latex:
-                # Rename the model using the mapping for LaTeX
-                short_name_latex = rename_mapping_main_latex[dep_var]
-                main_results_latex[short_name_latex] = model
-            else:
-                # Use the original name for other models and rename accordingly
-                short_name = rename_mapping_other.get(dep_var, dep_var)
-                other_results[short_name] = model
+                # Extract regression statistics
+                summary_df = model.summary2().tables[1]  # Extract the coefficients table
 
-    return main_results_latex, other_results
+                # Debug: Print the columns of summary_df
+                print(f"Summary table columns for {dep_var}: {summary_df.columns.tolist()}")
 
-# Function to perform Chi-Squared Test of Independence and save results as HTML
-def perform_chi_squared_test(group, category_var1, category_var2, output_folder, caption, group_name):
-    """
-    Performs a Chi-Squared test of independence between two categorical variables within a group and saves the result as an HTML table with caption.
+                # Attempt to select the expected columns
+                if {'Coef.', 't', 'P>|t|'}.issubset(summary_df.columns):
+                    summary_df = summary_df[['Coef.', 't', 'P>|t|']]
+                elif {'Coef.', 't-value', 'P>|t|'}.issubset(summary_df.columns):
+                    summary_df = summary_df[['Coef.', 't-value', 'P>|t|']]
+                else:
+                    # If expected columns are not found, raise an informative error
+                    raise KeyError(f"Expected columns ['Coef.', 't', 'P>|t|'] or ['Coef.', 't-value', 'P>|t|'] not found in summary table for {dep_var}. Found columns: {summary_df.columns.tolist()}")
 
-    Parameters:
-    - group (DataFrame): The subset of data to perform the test on.
-    - category_var1 (str): First categorical variable.
-    - category_var2 (str): Second categorical variable.
-    - output_folder (str): Path to the folder where the HTML file will be saved.
-    - caption (str): Caption text to include with the test results.
-    - group_name (str): Name of the similarity group (e.g., Low, High) for labeling.
+                # Rename columns for consistency
+                summary_df = summary_df.rename(columns={
+                    'Coef.': 'Coefficient',
+                    't': 'stat_value',
+                    't-value': 'stat_value',
+                    'P>|t|': 'p_value'
+                })
 
-    Returns:
-    - chi2, p: Chi-squared statistic and p-value.
-    """
-    contingency_table = pd.crosstab(group[category_var1], group[category_var2])
+                # Add significance stars based on p-values
+                def add_significance_stars(p):
+                    if p < 0.001:
+                        return '***'
+                    elif p < 0.01:
+                        return '**'
+                    elif p < 0.05:
+                        return '*'
+                    else:
+                        return ''
 
-    # Check if the contingency table is too large
-    if contingency_table.shape[0] > 1000 or contingency_table.shape[1] > 1000:
-        print(f"Contingency table too large for Chi-Squared Test (shape: {contingency_table.shape}). Skipping this test.")
-        return None, None
+                # Determine formatting based on model type
+                if dep_var in rename_mapping_main_latex:
+                    short_name_latex = rename_mapping_main_latex[dep_var]
+                    format_decimal = 4 if short_name_latex in return_models else 3
+                else:
+                    short_name_latex = rename_mapping_other.get(dep_var, dep_var)
+                    format_decimal = 3  # Default formatting for other models
 
-    # Perform Chi-Squared Test
-    chi2, p, dof, ex = chi2_contingency(contingency_table)
+                # Apply formatting
+                if short_name_latex in return_models:
+                    summary_df['Coefficient'] = summary_df.apply(
+                        lambda row: f"{row['Coefficient']:.4f}{add_significance_stars(row['p_value'])}", axis=1
+                    )
+                else:
+                    summary_df['Coefficient'] = summary_df.apply(
+                        lambda row: f"{row['Coefficient']:.3f}{add_significance_stars(row['p_value'])}", axis=1
+                    )
 
-    # Create a DataFrame for the contingency table
-    contingency_df = contingency_table.copy()
+                # Format t-values with parentheses
+                summary_df['stat_value'] = summary_df['stat_value'].apply(lambda x: f"({x:.3f})")
 
-    # Create a summary DataFrame
-    summary_df = pd.DataFrame({
-        'Chi2 Statistic': [chi2],
-        'P-Value': [p],
-        'Degrees of Freedom': [dof]
-    })
+                # Remove p-values as they are now represented by stars
+                summary_df = summary_df[['Coefficient', 'stat_value']]
 
-    # Convert DataFrames to HTML
-    contingency_html = contingency_df.to_html(classes='table table-striped', border=0)
-    summary_html = summary_df.to_html(index=False, classes='table table-bordered', border=0)
+                # Assign statistics to the appropriate dictionaries
+                if group_name == 'return_vars' and dep_var in rename_mapping_main_latex:
+                    # Rename the model using the mapping for LaTeX and HTML
+                    main_results_stats[short_name_latex] = summary_df
 
-    # Create the full HTML with caption
-    full_html = f"""
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <title>Chi-Squared Test Results - {group_name} Similarity Group</title>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-        <style>
-            body {{
-                font-family: Arial, sans-serif;
-                margin: 20px;
-            }}
-            table {{
-                border-collapse: collapse;
-                width: 100%;
-                margin-bottom: 20px;
-            }}
-            th, td {{
-                border: 1px solid #dddddd;
-                text-align: center;
-                padding: 8px;
-            }}
-            th {{
-                background-color: #f2f2f2;
-            }}
-            caption {{
-                caption-side: top;
-                font-size: 20px;
-                margin-bottom: 10px;
-                font-weight: bold;
-            }}
-        </style>
-    </head>
-    <body>
-    <div class="container">
-        <h2>Chi-Squared Test of Independence</h2>
-        <p><strong>{caption}</strong></p>
-        <h3>Contingency Table</h3>
-        {contingency_html}
-        <h3>Test Summary</h3>
-        {summary_html}
-    </div>
-    </body>
-    </html>
-    """
+                    # Collect additional statistics
+                    main_r_squared_stats[short_name_latex] = model.rsquared
+                    main_adj_r_squared_stats[short_name_latex] = model.rsquared_adj
+                    main_n_observations_stats[short_name_latex] = int(model.nobs)
+                else:
+                    # Use the original name for other models and rename accordingly
+                    short_name = rename_mapping_other.get(dep_var, dep_var)
+                    other_results_stats[short_name] = summary_df
 
-    # Define the filename based on category variables and group
-    filename = f"chi_squared_{category_var1}_{category_var2}_{group_name}.html"
-    output_path = os.path.join(output_folder, filename)
+                    # Collect additional statistics
+                    other_r_squared_stats[short_name] = model.rsquared
+                    other_adj_r_squared_stats[short_name] = model.rsquared_adj
+                    other_n_observations_stats[short_name] = int(model.nobs)
 
-    # Save the HTML file
-    with open(output_path, 'w', encoding='utf-8') as f:
-        f.write(full_html)
-    print(f"Saved Chi-Squared Test results to {output_path}")
+                print(f"Processed regression for {dep_var}.")
 
-    # Print the results
-    print(f"Chi-Squared Test between '{category_var1}' and '{category_var2}' for {group_name} Similarity Group:")
-    print(f"Chi2 Statistic: {chi2:.4f}, P-Value: {p:.4f}, Degrees of Freedom: {dof}")
-    print("Contingency Table:")
-    print(contingency_table)
-    print("\n")
+            except KeyError as e:
+                print(f"KeyError encountered while processing {dep_var}: {e}")
+                continue
+            except Exception as e:
+                print(f"An error occurred while processing {dep_var}: {e}")
+                continue
 
-    return chi2, p
-
-# Function to plot stacked bar charts for topic distributions
-def plot_topic_distribution(group, title, output_folder):
-    """
-    Plots a stacked bar chart of management answer topics based on participant question topics within a group.
-
-    Parameters:
-    - group (DataFrame): The subset of data to plot.
-    - title (str): Title of the plot.
-    - output_folder (str): Directory to save the plot.
-
-    Returns:
-    - None
-    """
-    contingency_table = pd.crosstab(group['primary_participant_topic'], group['primary_management_topic'])
-
-    if contingency_table.empty:
-        print(f"No data available to plot for {title}.")
-        return
-
-    # Check if the table is too large to plot
-    if contingency_table.shape[0] > 50 or contingency_table.shape[1] > 50:
-        print(f"Contingency table too large to plot for {title}. Skipping visualization.")
-        return
-
-    # Normalize the contingency table for better visualization
-    contingency_norm = contingency_table.div(contingency_table.sum(axis=1), axis=0)
-
-    plt.figure(figsize=(18, 12))
-    contingency_norm.plot(kind='bar', stacked=True, colormap='tab20')
-    plt.title(title, fontsize=20)
-    plt.xlabel('Participant Question Topics', fontsize=16)
-    plt.ylabel('Proportion of Management Answer Topics', fontsize=16)
-    plt.legend(title='Management Answer Topics', bbox_to_anchor=(1.05, 1), loc='upper left', fontsize=12)
-    plt.tight_layout()
-
-    # Replace spaces with underscores for filename
-    filename = f"{title.replace(' ', '_')}.png"
-    plt.savefig(os.path.join(output_folder, filename), dpi=300)
-    plt.close()
-    print(f"Saved plot: {title}")
-
-#%% Define Captions
-
-# Define captions for different regression analyses
-
-captions = {
-    'return_vars': """
-    This table shows OLS regressions of excess returns and earnings per share forecasts on similarity measures, control variables, and topic diversity.
-    Variables of interest include similarity to overall average, industry average, and company average structures of Earnings Conference Calls (ECCs), as well as topic diversity.
-    Control variables are standardized as per the variable appendix.
-    The sample consists of all earnings conference calls from January 2010 to December 2020.
-    Standard errors are robust and clustered by firm. *, **, and *** indicate significance at the 10%, 5%, and 1% level, respectively.
-    """,
-    'additional_dependent_vars': """
-    This table shows OLS regressions of the length of participant questions and management answers on similarity measures, control variables, and topic diversity.
-    Variables of interest include similarity to overall average, industry average, and company average structures of Earnings Conference Calls (ECCs), as well as topic diversity.
-    Control variables are standardized as per the variable appendix.
-    The sample consists of all earnings conference calls from January 2010 to December 2020.
-    Standard errors are robust and clustered by firm. *, **, and *** indicate significance at the 10%, 5%, and 1% level, respectively.
-    """,
-    'difference_questions_answers': """
-    This table shows OLS regressions of the difference between participant questions and management answers on similarity measures, control variables, and topic diversity.
-    Variables of interest include similarity to overall average, industry average, and company average structures of Earnings Conference Calls (ECCs), as well as topic diversity.
-    Control variables are standardized as per the variable appendix.
-    The sample consists of all earnings conference calls from January 2010 to December 2020.
-    Standard errors are robust and clustered by firm. *, **, and *** indicate significance at the 10%, 5%, and 1% level, respectively.
-    """,
-    'combined_regressions_main': """
-    Combined OLS Regression Results for Return Variables
-    """,
-    'combined_regressions_other': """
-    Combined OLS Regression Results for Other Variables
-    """
-}
+    # IMPORTANT: Add the return statement here to return the collected results
+    return (main_results_stats, other_results_stats,
+            main_r_squared_stats, main_adj_r_squared_stats, main_n_observations_stats,
+            other_r_squared_stats, other_adj_r_squared_stats, other_n_observations_stats)
 
 #%% Define Regression Groups
 
@@ -726,53 +798,174 @@ regression_groups = {
     ]
 }
 
-#%% Similarity Variables
-similarity_vars = [
-    'similarity_to_overall_average',
-    'similarity_to_industry_average',
-    'similarity_to_company_average'
-]
+print("Defined regression groups.")
 
-#%% Perform Combined Regressions
+#%% Define Captions
 
-# Capture the returned variables from the function to avoid TypeError
-main_results_latex, other_results = perform_combined_regressions(regression_groups, analysis_df, output_folder, captions)
-
-#%% Perform Chi-Squared Tests for Topic Distributions
-
-# Define Chi-Squared Test captions
-chi2_captions = {
-    'Low': """
-    This table presents the Chi-Squared Test of Independence between participant question topics and management answer topics for the Low Similarity Group.
-    """,
-    'High': """
-    This table presents the Chi-Squared Test of Independence between participant question topics and management answer topics for the High Similarity Group.
-    """
+# Define captions for different regression analyses
+captions = {
+    'combined_regressions_main': "Combined OLS Regression Results for Return Variables",
+    'combined_regressions_other': "Combined OLS Regression Results for Other Variables"
 }
 
-# Perform Chi-Squared Test for Low Similarity Group
-perform_chi_squared_test(
-    group=low_similarity,
-    category_var1='primary_participant_topic',
-    category_var2='primary_management_topic',
-    output_folder=output_folder,
-    caption=chi2_captions['Low'],
-    group_name='Low'
+print("Defined captions for regression tables.")
+
+#%% Perform Combined Regressions and Capture Return Values
+
+# Perform combined regressions and capture the returned statistics
+(main_results_stats, other_results_stats,
+ main_r_squared_stats, main_adj_r_squared_stats, main_n_observations_stats,
+ other_r_squared_stats, other_adj_r_squared_stats, other_n_observations_stats) = perform_combined_regressions(
+    regression_groups, analysis_df, output_folder, captions
 )
 
-# Perform Chi-Squared Test for High Similarity Group
-perform_chi_squared_test(
-    group=high_similarity,
-    category_var1='primary_participant_topic',
-    category_var2='primary_management_topic',
-    output_folder=output_folder,
-    caption=chi2_captions['High'],
-    group_name='High'
+print("Performed combined regressions and captured results.")
+
+#%% Define Function to Generate Tables
+
+def generate_tables(main_stats, other_stats, 
+                    main_r2, main_adj_r2, main_nobs, 
+                    other_r2, other_adj_r2, other_nobs,
+                    output_folder, captions):
+    """
+    Generates LaTeX and HTML tables for main and other regression results, including R-squared, Adjusted R-squared, and No. Observations.
+
+    Parameters:
+    - main_stats (dict): Dictionary of main regression statistics.
+    - other_stats (dict): Dictionary of other regression statistics.
+    - main_r2 (dict): R-squared values for main regressions.
+    - main_adj_r2 (dict): Adjusted R-squared values for main regressions.
+    - main_nobs (dict): Number of observations for main regressions.
+    - other_r2 (dict): R-squared values for other regressions.
+    - other_adj_r2 (dict): Adjusted R-squared values for other regressions.
+    - other_nobs (dict): Number of observations for other regressions.
+    - output_folder (str): Directory to save the tables.
+    - captions (dict): Dictionary containing captions for tables.
+
+    Returns:
+    - None
+    """
+    # LaTeX Tables
+    # Generate LaTeX table for main regression results (Return Variables)
+    if main_stats:
+        try:
+            # Define the caption and label
+            main_latex_caption = captions['combined_regressions_main']
+            main_latex_label = "tab:combined_regression_results_main"
+
+            # Define the filename and path
+            main_latex_filename = "combined_regression_results_main.tex"
+            main_latex_output_path = os.path.join(output_folder, main_latex_filename)
+
+            # Generate the LaTeX table with coefficients, t-values, and regression statistics
+            create_regression_latex_table(
+                regression_stats=main_stats,
+                r_squared_stats=main_r2,
+                adj_r_squared_stats=main_adj_r2,
+                n_observations_stats=main_nobs,
+                caption=main_latex_caption,
+                label=main_latex_label,
+                output_path=main_latex_output_path
+            )
+        except Exception as e:
+            print(f"Error generating LaTeX table for main regression results: {e}")
+    else:
+        print("No main regression models to generate LaTeX table.\n")
+
+    # Generate LaTeX table for other regression results (Other Variables)
+    if other_stats:
+        try:
+            # Define the caption and label
+            other_latex_caption = captions['combined_regressions_other']
+            other_latex_label = "tab:combined_regression_results_other"
+
+            # Define the filename and path
+            other_latex_filename = "combined_regression_results_other.tex"
+            other_latex_output_path = os.path.join(output_folder, other_latex_filename)
+
+            # Generate the LaTeX table with coefficients, t-values, and regression statistics
+            create_regression_latex_table(
+                regression_stats=other_stats,
+                r_squared_stats=other_r2,
+                adj_r_squared_stats=other_adj_r2,
+                n_observations_stats=other_nobs,
+                caption=other_latex_caption,
+                label=other_latex_label,
+                output_path=other_latex_output_path
+            )
+        except Exception as e:
+            print(f"Error generating LaTeX table for other regression results: {e}")
+    else:
+        print("No other regression models to generate LaTeX table.\n")
+
+    # HTML Tables
+    # Generate HTML table for main regression results (Return Variables)
+    if main_stats:
+        try:
+            # Define the caption and label
+            main_html_caption = captions['combined_regressions_main']
+            main_html_label = "combined_regression_results_main"
+
+            # Define the filename and path
+            main_html_filename = "combined_regression_results_main.html"
+            main_html_output_path = os.path.join(output_folder, main_html_filename)
+
+            # Generate the HTML table with coefficients, t-values, and regression statistics
+            create_regression_html_table(
+                regression_stats=main_stats,
+                r_squared_stats=main_r2,
+                adj_r_squared_stats=main_adj_r2,
+                n_observations_stats=main_nobs,
+                caption=main_html_caption,
+                label=main_html_label,
+                output_path=main_html_output_path
+            )
+        except Exception as e:
+            print(f"Error generating HTML table for main regression results: {e}")
+    else:
+        print("No main regression models to generate HTML table.\n")
+
+    # Generate HTML table for other regression results (Other Variables)
+    if other_stats:
+        try:
+            # Define the caption and label
+            other_html_caption = captions['combined_regressions_other']
+            other_html_label = "combined_regression_results_other"
+
+            # Define the filename and path
+            other_html_filename = "combined_regression_results_other.html"
+            other_html_output_path = os.path.join(output_folder, other_html_filename)
+
+            # Generate the HTML table with coefficients, t-values, and regression statistics
+            create_regression_html_table(
+                regression_stats=other_stats,
+                r_squared_stats=other_r2,
+                adj_r_squared_stats=other_adj_r2,
+                n_observations_stats=other_nobs,
+                caption=other_html_caption,
+                label=other_html_label,
+                output_path=other_html_output_path
+            )
+        except Exception as e:
+            print(f"Error generating HTML table for other regression results: {e}")
+    else:
+        print("No other regression models to generate HTML table.\n")
+
+    # End of function
+
+#%% Generate LaTeX and HTML Tables for Main and Other Regression Results
+
+generate_tables(
+    main_results_stats, other_results_stats, 
+    main_r_squared_stats, main_adj_r_squared_stats, main_n_observations_stats,
+    other_r_squared_stats, other_adj_r_squared_stats, other_n_observations_stats,
+    output_folder, captions
 )
+
+print("Generated LaTeX and HTML regression tables.")
 
 #%% Comparing Lengths of Management Answers and Participant Questions
 
-# Calculate mean lengths for low and high similarity groups
 low_mean_participant = low_similarity['length_participant_questions'].mean()
 high_mean_participant = high_similarity['length_participant_questions'].mean()
 low_mean_management = low_similarity['length_management_answers'].mean()
@@ -781,52 +974,40 @@ high_mean_management = high_similarity['length_management_answers'].mean()
 print(f"Average length of participant questions in Low Similarity: {low_mean_participant:.2f}")
 print(f"Average length of participant questions in High Similarity: {high_mean_participant:.2f}")
 print(f"Average length of management answers in Low Similarity: {low_mean_management:.2f}")
-print(f"Average length of management answers in High Similarity: {high_mean_management:.2f}\n")
+print(f"Average length of management answers in High Similarity: {high_mean_management:.2f}")
 
-# Perform t-test for 'length_participant_questions'
 t_stat_participant, p_val_participant = ttest_ind(
     low_similarity['length_participant_questions'], 
     high_similarity['length_participant_questions'], 
-    equal_var=False  # Use Welch's t-test which does not assume equal population variance
+    equal_var=False
 )
-print(f"T-Test for 'length_participant_questions' between Low and High Similarity:")
-print(f"T-Statistic: {t_stat_participant:.3f}, P-Value: {p_val_participant:.3f}\n")
+print(f"\nT-Test for 'length_participant_questions' between Low and High Similarity:")
+print(f"T-Statistic: {t_stat_participant:.3f}, P-Value: {p_val_participant:.3f}")
 
-# Perform t-test for 'length_management_answers'
 t_stat_management, p_val_management = ttest_ind(
     low_similarity['length_management_answers'], 
     high_similarity['length_management_answers'], 
-    equal_var=False  # Use Welch's t-test
+    equal_var=False
 )
-print(f"T-Test for 'length_management_answers' between Low and High Similarity:")
-print(f"T-Statistic: {t_stat_management:.3f}, P-Value: {p_val_management:.3f}\n")
+print(f"\nT-Test for 'length_management_answers' between Low and High Similarity:")
+print(f"T-Statistic: {t_stat_management:.3f}, P-Value: {p_val_management:.3f}")
 
 #%% Perform t-test for 'difference_questions_answers'
 
-# Calculate mean difference_questions_answers for low and high similarity groups
 low_mean_difference = low_similarity['difference_questions_answers'].mean()
 high_mean_difference = high_similarity['difference_questions_answers'].mean()
 
-print(f"Average difference between participant questions and management answers in Low Similarity: {low_mean_difference:.2f}")
-print(f"Average difference between participant questions and management answers in High Similarity: {high_mean_difference:.2f}\n")
+print(f"\nAverage difference between participant questions and management answers in Low Similarity: {low_mean_difference:.2f}")
+print(f"Average difference between participant questions and management answers in High Similarity: {high_mean_difference:.2f}")
 
-# Perform t-test for 'difference_questions_answers'
 t_stat_difference, p_val_difference = ttest_ind(
     low_similarity['difference_questions_answers'],
     high_similarity['difference_questions_answers'],
-    equal_var=False  # Use Welch's t-test
+    equal_var=False
 )
 
-print(f"T-Test for 'difference_questions_answers' between Low and High Similarity:")
-print(f"T-Statistic: {t_stat_difference:.3f}, P-Value: {p_val_difference:.3f}\n")
-
-#%% Additional Visualizations
-
-# Plot for Low Similarity Group
-plot_topic_distribution(low_similarity, 'Topic Distribution - Low Similarity', output_folder)
-
-# Plot for High Similarity Group
-plot_topic_distribution(high_similarity, 'Topic Distribution - High Similarity', output_folder)
+print(f"\nT-Test for 'difference_questions_answers' between Low and High Similarity:")
+print(f"T-Statistic: {t_stat_difference:.3f}, P-Value: {p_val_difference:.3f}")
 
 #%% Generate and Save T-Test HTML and LaTeX Tables
 
@@ -914,8 +1095,10 @@ table_styles = [
     {'selector': 'td', 'props': [('text-align', 'center'), ('padding', '12px')]}
 ]
 
-# Convert the styled DataFrame to HTML
-html_table = styled_t_test_df.set_table_styles(table_styles).to_html()
+#%% Fix for HTML Table: Ensure Proper HTML Syntax
+
+# Replace `.render()` with `.to_html(index=False)` to avoid AttributeError
+html_table = styled_t_test_df.set_table_styles(table_styles).to_html(index=False, escape=False)
 
 # Create the full HTML content
 t_test_html_content = f"""
@@ -952,7 +1135,7 @@ t_test_html_content = f"""
 <body>
 
     <table>
-        <caption>T-Test Results: Low vs. High Similarity Groups</caption>
+        <caption><strong>T-Test Results: Low vs. High Similarity Groups</strong></caption>
         {html_table}
     </table>
 
@@ -974,131 +1157,153 @@ with open(t_test_html_path, 'w', encoding='utf-8') as file:
 
 print(f"Saved T-Test Results table to {t_test_html_path}")
 
-#%% Generate LaTeX Tables for Regression Results
+#%% Create Transition Matrix Figures
 
-def generate_latex_table(summary, caption, label, output_path):
+#%% Prepare Transition Matrices
+
+# Since the DataFrame already contains mapped topics, we do not apply additional topic mapping.
+# Ensure that 'filtered_presentation_topics' are correctly formatted and valid.
+
+# Remove -1 from relevant columns (if necessary)
+# Commented out based on user input that no topics should be removed
+# analysis_df = remove_neg_one_from_columns(analysis_df, ['filtered_presentation_topics'])
+
+# Define the number of topics based on the maximum topic index
+max_topic = analysis_df['filtered_presentation_topics'].explode().max()
+num_topics = int(max_topic) + 1 if pd.notnull(max_topic) else 0
+print(f"Number of unique topics: {num_topics}")
+
+# Ensure that all topics are integers and within range
+def is_valid_topic(topic, max_topic):
+    return isinstance(topic, int) and 0 <= topic < max_topic
+
+# Calculate the number of topics before removal for diagnostic purposes
+total_topics_before = analysis_df['filtered_presentation_topics'].apply(len).sum()
+
+# Apply the validity check
+analysis_df['filtered_presentation_topics'] = analysis_df['filtered_presentation_topics'].apply(
+    lambda topics: [topic for topic in topics if is_valid_topic(topic, num_topics)]
+)
+
+# Calculate the number of topics after removal
+total_topics_after = analysis_df['filtered_presentation_topics'].apply(len).sum()
+topics_removed = total_topics_before - total_topics_after
+print(f"Removed {topics_removed} invalid topics from 'filtered_presentation_topics'.")
+
+# Exclude topic lists with fewer than two topics
+valid_topic_lists = analysis_df['filtered_presentation_topics'].apply(lambda x: len(x) >= 2)
+excluded_topic_lists = (~valid_topic_lists).sum()
+if excluded_topic_lists > 0:
+    print(f"Excluded {excluded_topic_lists} topic lists with fewer than two topics.")
+analysis_df = analysis_df[valid_topic_lists]
+
+# Create overall transition matrix
+overall_topics = analysis_df['filtered_presentation_topics'].tolist()
+print(f"Number of topic sequences: {len(overall_topics)}")
+print(f"Sample topic sequences: {overall_topics[:5]}")  # Print first 5 sequences for inspection
+
+overall_transition_matrix = create_transition_matrix(overall_topics, num_topics)
+print("Created overall transition matrix.")
+
+#%% Generate and Save Transition Matrices as CSV/Excel
+
+def export_transition_matrix(matrix, filename, output_folder):
     """
-    Generates a LaTeX table from a summary_col object with adjustments to fit the page width.
-    
+    Exports the transition matrix to a CSV, Excel, and saves the heatmap.
+
     Parameters:
-    - summary: The summary_col object.
-    - caption (str): Caption for the table.
-    - label (str): Label for the table.
-    - output_path (str): Path to save the LaTeX table.
-    
+    - matrix (numpy.ndarray): The transition matrix.
+    - filename (str): The base filename for saving.
+    - output_folder (str): The directory to save the files.
+
     Returns:
     - None
     """
-    # Get the LaTeX code from summary_col
-    latex_table = summary.as_latex()
+    # Convert to numpy array if not already
+    matrix = np.array(matrix)
 
-    # Find the tabular environment
-    begin_tabular = latex_table.find('\\begin{tabular}')
-    end_tabular = latex_table.find('\\end{tabular}') + len('\\end{tabular}')
+    # Debugging: Print type and shape
+    print(f"Transition Matrix Type: {type(matrix)}")
+    print(f"Transition Matrix Shape: {matrix.shape}")
 
-    # Extract the tabular content
-    tabular_content = latex_table[begin_tabular:end_tabular]
+    # Ensure it's a 2D array
+    if matrix.ndim != 2:
+        raise ValueError(f"Transition matrix must be 2D. Got {matrix.ndim}D.")
 
-    # Wrap the tabular environment with \small and braces
-    wrapped_tabular = '{\\small ' + tabular_content + '}'
+    # Convert to DataFrame with proper columns and index
+    matrix_df = pd.DataFrame(matrix, 
+                             columns=[f"To_{i}" for i in range(matrix.shape[1])], 
+                             index=[f"From_{i}" for i in range(matrix.shape[0])])
 
-    # Construct the full table with \resizebox and proper structure
-    full_table = f"""
-\\begin{{table}}[ht]
-\\centering
-\\caption{{{caption}}}
-\\label{{{label}}}
-\\resizebox{{\\textwidth}}{{!}}{{%
-    {wrapped_tabular}
-}}
-\\bigskip
-\\textit{{Standard errors in parentheses.}} \\\\ 
-* p<.1, ** p<.05, ***p<.01
-\\end{{table}}
-"""
-    
-    # Save to file
-    with open(output_path, 'w', encoding='utf-8') as f:
-        f.write(full_table)
-    
-    print(f"Saved LaTeX table to {output_path}")
+    # Define the CSV and Excel paths
+    csv_path = os.path.join(output_folder, f"{filename}.csv")
+    excel_path = os.path.join(output_folder, f"{filename}.xlsx")
 
-#%% Generate LaTeX Tables for Main and Other Regression Results
+    # Save as CSV
+    matrix_df.to_csv(csv_path)
+    print(f"Exported {filename} to {csv_path}")
 
-# Generate LaTeX table for main regression results (Return Variables)
-if main_results_latex:
-    combined_main_summary_latex = summary_col(
-        list(main_results_latex.values()),
-        stars=True,
-        model_names=list(main_results_latex.keys()),
-        info_dict={
-            'No. Observations': lambda x: f"{int(x.nobs)}"
-        },
-        float_format='%0.3f'
-    )
+    # Save as Excel
+    matrix_df.to_excel(excel_path)
+    print(f"Exported {filename} to {excel_path}")
 
-    # Define the caption and label
-    main_latex_caption = captions['combined_regressions_main']
-    main_latex_label = "tab:combined_regression_results_main"
+    # Create and save the heatmap
+    plt.figure(figsize=(20, 16))
+    sns.heatmap(matrix_df, cmap='viridis', linewidths=.5, annot=False)
+    plt.title(f'{filename} Heatmap', fontsize=20)
+    plt.xlabel('To Topic', fontsize=16)
+    plt.ylabel('From Topic', fontsize=16)
+    plt.tight_layout()
 
-    # Define the filename and path
-    main_latex_filename = "combined_regression_results_main.tex"
-    main_latex_output_path = os.path.join(output_folder, main_latex_filename)
+    # Define the heatmap image path
+    heatmap_path = os.path.join(output_folder, f"{filename}_heatmap.png")
 
-    # Generate the LaTeX table with adjustments
-    generate_latex_table(combined_main_summary_latex, main_latex_caption, main_latex_label, main_latex_output_path)
-else:
-    print("No main regression models to generate LaTeX table.\n")
+    # Save the heatmap
+    plt.savefig(heatmap_path, dpi=300)
+    plt.close()
+    print(f"Saved {filename} heatmap to {heatmap_path}")
 
-# Generate LaTeX table for other regression results (Other Variables)
-if other_results:
-    combined_other_summary_latex = summary_col(
-        list(other_results.values()),
-        stars=True,
-        model_names=list(other_results.keys()),
-        info_dict={
-            'No. Observations': lambda x: f"{int(x.nobs)}"
-        },
-        float_format='%0.3f'
-    )
+# Export Overall Transition Matrix
+export_transition_matrix(overall_transition_matrix, 'overall_transition_matrix', output_folder)
 
-    # Define the caption and label
-    other_latex_caption = captions['combined_regressions_other']
-    other_latex_label = "tab:combined_regression_results_other"
+#%% Create Transition Matrices for Top SICCD and PERMCO
 
-    # Define the filename and path
-    other_latex_filename = "combined_regression_results_other.tex"
-    other_latex_output_path = os.path.join(output_folder, other_latex_filename)
+# Identify Top SICCD (Industry) with the most earnings calls
+top_siccd = analysis_df['siccd'].value_counts().idxmax()
+top_siccd_count = analysis_df['siccd'].value_counts().max()
+print(f"Top SICCD with the most earnings calls: {top_siccd} (Count: {top_siccd_count})")
 
-    # Generate the LaTeX table with adjustments
-    generate_latex_table(combined_other_summary_latex, other_latex_caption, other_latex_label, other_latex_output_path)
-else:
-    print("No other regression models to generate LaTeX table.\n")
+# Filter data for Top SICCD
+top_siccd_df = analysis_df[analysis_df['siccd'] == top_siccd]
 
-#%% Generate LaTeX Table for T-Test Results
+# Create transition matrix for Top SICCD
+top_siccd_topics = top_siccd_df['filtered_presentation_topics'].tolist()
+print(f"Number of topic sequences for Top SICCD ({top_siccd}): {len(top_siccd_topics)}")
+print(f"Sample topic sequences for Top SICCD: {top_siccd_topics[:5]}")  # Print first 5 sequences for inspection
 
-# Define LaTeX table filename
-t_test_latex_filename = "t_test_results.tex"
-t_test_latex_path = os.path.join(output_folder, t_test_latex_filename)
+top_siccd_transition_matrix = create_transition_matrix(top_siccd_topics, num_topics)
+print(f"Created transition matrix for Top SICCD: {top_siccd}")
 
-# Create a LaTeX table using pandas
-latex_table = t_test_df.to_latex(index=False, 
-                                 caption='T-Test Results: Low vs. High Similarity Groups',
-                                 label='tab:t_test_results',
-                                 column_format='lccccp{8cm}',  # Adjust column alignment as needed
-                                 escape=False)  # To allow LaTeX formatting in 'Interpretation'
+# Export Top SICCD Transition Matrix
+export_transition_matrix(top_siccd_transition_matrix, f'siccd_{top_siccd}_transition_matrix', output_folder)
 
-# Add a note for significance
-latex_table_with_note = f"""{latex_table}
-\\begin{{flushleft}}
-\\textit{{Note:}} *, **, and *** indicate significance at the 10\\%, 5\\%, and 1\\% levels, respectively.
-\\end{{flushleft}}
-"""
+# Identify Top PERMCO (Company) with the most earnings calls
+top_permco = analysis_df['permco'].value_counts().idxmax()
+top_permco_count = analysis_df['permco'].value_counts().max()
+print(f"Top PERMCO with the most earnings calls: {top_permco} (Count: {top_permco_count})")
 
-# Save the LaTeX table to a .tex file
-with open(t_test_latex_path, 'w', encoding='utf-8') as f:
-    f.write(latex_table_with_note)
+# Filter data for Top PERMCO
+top_permco_df = analysis_df[analysis_df['permco'] == top_permco]
 
-print(f"Saved LaTeX T-Test Results table to {t_test_latex_path}")
+# Create transition matrix for Top PERMCO
+top_permco_topics = top_permco_df['filtered_presentation_topics'].tolist()
+print(f"Number of topic sequences for Top PERMCO ({top_permco}): {len(top_permco_topics)}")
+print(f"Sample topic sequences for Top PERMCO: {top_permco_topics[:5]}")  # Print first 5 sequences for inspection
 
-#%% End of Script
+top_permco_transition_matrix = create_transition_matrix(top_permco_topics, num_topics)
+print(f"Created transition matrix for Top PERMCO: {top_permco}")
+
+# Export Top PERMCO Transition Matrix
+export_transition_matrix(top_permco_transition_matrix, f'permco_{top_permco}_transition_matrix', output_folder)
+
+print("All transition matrix figures have been created and saved.")

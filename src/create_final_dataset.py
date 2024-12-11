@@ -764,11 +764,11 @@ desired_columns = [
 final_columns = [col for col in desired_columns if col in merged_df.columns]
 merged_df = merged_df[final_columns]
 
-# Remove the first year (2022) of the sample before saving
-print("Removing data from 2022 from merged_df before saving...")
+# Remove the first year (2002) of the sample before saving
+print("Removing data from 2002 from merged_df before saving...")
 merged_df['call_date'] = pd.to_datetime(merged_df['call_date'])
-merged_df = merged_df[merged_df['call_date'].dt.year != 2022]
-print(f"Number of rows after removing 2022 data: {len(merged_df)}")
+merged_df = merged_df[merged_df['call_date'].dt.year != 2002]
+print(f"Number of rows after removing 2002 data: {len(merged_df)}")
 
 # Sort the final DataFrame by 'gvkey' and 'call_date' in ascending order
 print("Sorting the final DataFrame by 'gvkey' and 'call_date'...")

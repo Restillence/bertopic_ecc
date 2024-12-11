@@ -8,6 +8,11 @@ import ast
 from scipy.sparse import csr_matrix
 from sklearn.metrics.pairwise import cosine_similarity
 from tqdm import tqdm  # Import tqdm for progress bars
+import matplotlib.pyplot as plt
+import seaborn as sns
+import os
+from scipy.sparse import dok_matrix
+import numpy as np
 
 def print_configuration(config):
     """
@@ -177,26 +182,6 @@ def determine_topics_to_keep(df, threshold_percentage):
     
     return topics_to_keep
 
-def create_transition_matrix(topic_sequence, num_topics):
-    """
-    Create a transition matrix from a sequence of topics.
-    """
-    from scipy.sparse import dok_matrix
-    transition_matrix = dok_matrix((num_topics, num_topics), dtype=np.float64)
-    for i in range(len(topic_sequence) - 1):
-        from_topic = topic_sequence[i]
-        to_topic = topic_sequence[i + 1]
-        transition_matrix[from_topic, to_topic] += 1
-    # Convert to CSR format for efficient arithmetic and memory usage
-    transition_matrix = transition_matrix.tocsr()
-    # Normalize to get probabilities
-    row_sums = transition_matrix.sum(axis=1)
-    # Avoid division by zero
-    row_indices, _ = transition_matrix.nonzero()
-    for i in np.unique(row_indices):
-        if row_sums[i, 0] > 0:
-            transition_matrix[i] = transition_matrix[i] / row_sums[i, 0]
-    return transition_matrix
 
 def compute_similarity_to_average(df, num_topics):
     """
@@ -513,3 +498,72 @@ def remove_neg_one_from_columns(df, columns):
         else:
             print(f"Warning: Column '{col}' not found in the DataFrame.")
     return df
+
+def create_average_transition_matrix_figures(transition_matrix, title, output_path):
+    """
+    Creates and saves a heatmap figure for the average transition matrix.
+
+    Parameters:
+    - transition_matrix (numpy.ndarray): The transition matrix to visualize.
+    - title (str): The title of the heatmap.
+    - output_path (str): The file path to save the heatmap image.
+
+    Returns:
+    - None
+    """
+    # Convert the transition_matrix to a dense format if it's sparse
+    if hasattr(transition_matrix, 'toarray'):
+        transition_matrix = transition_matrix.toarray()
+    else:
+        transition_matrix = np.array(transition_matrix)
+
+    # Calculate the average transitions (normalize rows to sum to 1)
+    row_sums = transition_matrix.sum(axis=1, keepdims=True)
+    # To avoid division by zero, set row sums that are zero to one
+    row_sums[row_sums == 0] = 1
+    average_transition_matrix = transition_matrix / row_sums
+
+    # Create a heatmap using seaborn
+    plt.figure(figsize=(20, 16))
+    sns.heatmap(average_transition_matrix, cmap='viridis', linewidths=.5, annot=False)
+    plt.title(title, fontsize=20)
+    plt.xlabel('To Topic', fontsize=16)
+    plt.ylabel('From Topic', fontsize=16)
+
+    # Save the figure
+    plt.tight_layout()
+    plt.savefig(output_path, dpi=300)
+    plt.close()
+    print(f"Saved transition matrix heatmap to {output_path}")
+
+
+
+def create_transition_matrix(topics_list, num_topics):
+    """
+    Creates a transition matrix from a list of topic sequences.
+
+    Parameters:
+    - topics_list (list of lists): Each sublist represents a sequence of topics in a presentation.
+    - num_topics (int): Total number of unique topics.
+
+    Returns:
+    - transition_matrix (numpy.ndarray): A matrix of shape (num_topics, num_topics) where each cell [i][j]
+      represents the count of transitions from topic i to topic j.
+    """
+    transition_matrix = np.zeros((num_topics, num_topics), dtype=int)
+
+    for topics in tqdm(topics_list, desc="Creating Transition Matrix"):
+        # Ensure that topics is a list with at least two elements
+        if isinstance(topics, list) and len(topics) >= 2:
+            for i in range(len(topics) - 1):
+                from_topic = topics[i]
+                to_topic = topics[i + 1]
+                if isinstance(from_topic, int) and isinstance(to_topic, int):
+                    if 0 <= from_topic < num_topics and 0 <= to_topic < num_topics:
+                        transition_matrix[from_topic][to_topic] += 1
+
+    # Debug: Print transition matrix summary
+    print(f"Transition Matrix Summary:\n{transition_matrix}")
+    print(f"Transition Matrix Shape: {transition_matrix.shape}")
+
+    return transition_matrix
