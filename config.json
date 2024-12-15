@@ -5,7 +5,7 @@
     "model_load_path": "D:/daten_masterarbeit/bertopic_model_dir_zeroshot_10000", 
     "index_file_path": "D:/daten_masterarbeit/list_earnings_call_transcripts.csv",
     "modeling_type": "regular",   
-    "sample_size": 1,
+    "sample_size": 1729,
 
     "zeroshot_min_similarity": 0.25,
     "nr_topics": null,
@@ -16,7 +16,7 @@
     "max_documents": 300000000,
     "use_gpu": false,
     "pca_components": 50,
-    "apply_topic_merging": true, 
+    "apply_topic_merging": false, 
     "similarity_threshold": 0.7,
     "hierarchical_clustering_threshold": 0.5,
     "min_topic_size": 200,

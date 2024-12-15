@@ -86,3 +86,11 @@ Install for cuML:
     "topic_threshold_percentage": 90,
 
 "auto" : removes all topics that dont appear in [90%, or other threshold (configurable in config file)] of the companies in atleast 1 call. 
+
+
+
+evtl müssen fallback pfade in der main Funktion der dateien bertopic_training.py und bertopic_fitting_visus.py angepasst werden
+
+
+recommended: running bertopic_training.py with full_random sampling method -> obtain bertopic model (10,000 transcripts sample size)
+then run bertopic_fitting_visus.py random_company sampling method (neccessary!) (1729 sample size -> all companies)

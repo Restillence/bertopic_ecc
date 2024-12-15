@@ -101,7 +101,7 @@ class BertopicModel:
             n_neighbors_topics = min(n_neighbors_config, num_topics - 1)
             n_neighbors_topics = max(n_neighbors_topics, 2)
             n_neighbors = min(n_neighbors, n_neighbors_topics)
-            print(f"Adjusted n_neighbors to {n_neighbors} based on {num_docs} documents and {num_topics}.")
+            print(f"Adjusted n_neighbors to {n_neighbors} based on {num_docs} documents and {num_topics} topics.")
         else:
             print(f"Using n_neighbors {n_neighbors} for dataset size of {num_docs} documents.")
 
@@ -174,7 +174,7 @@ class BertopicModel:
             import GPUtil
             gpus = GPUtil.getGPUs()
             for gpu in gpus:
-                print(f"GPU {gpu.id} - Memory Usage: {gpu.memoryUsed}/{gpu.memoryTotal} MB - Utilization: {gpu.load*100}%")
+                print(f"GPU {gpu.id} - Memory Usage: {gpu.memoryUsed}/{gpu.memoryTotal} MB - Utilization: {gpu.load*100:.2f}%")
 
     def train(self, docs):
         """Train the BERTopic model using the specified modeling type.
@@ -188,6 +188,16 @@ class BertopicModel:
         -------
         None
         """
+        # Validate that 'docs' is a list of strings
+        if not isinstance(docs, list):
+            print(f"Error: 'docs' should be a list, but got {type(docs)}.")
+            return
+        if not all(isinstance(doc, str) for doc in docs):
+            non_string_count = len([doc for doc in docs if not isinstance(doc, str)])
+            print(f"Error: Not all elements in 'docs' are strings. Found {non_string_count} non-string documents.")
+            docs = [doc for doc in docs if isinstance(doc, str)]
+            print(f"Excluded {non_string_count} non-string documents from training.")
+
         self.docs = docs  # Store documents for use in other methods
 
         # Start embeddings and training time tracking
@@ -226,7 +236,7 @@ class BertopicModel:
         # Compute embeddings on GPU or CPU based on device
         print("Computing embeddings...")
         self._print_gpu_usage()
-        embeddings = self.model.encode(docs, show_progress_bar=True, batch_size=self.config["batch_size"])
+        embeddings = self.model.encode(docs, show_progress_bar=True, batch_size=self.config.get("batch_size", 32))
         self._print_gpu_usage()
 
         # Store embeddings in the class
@@ -295,7 +305,11 @@ class BertopicModel:
 
         # After merging and customizing labels, get the topic information
         print("\nGetting updated topic information...")
-        topic_info = self.topic_model.get_topic_info()
+        try:
+            topic_info = self.topic_model.get_topic_info()
+        except Exception as e:
+            print(f"An error occurred while retrieving topic information: {e}")
+            return
 
         # Prepare the topic information dataframe with required columns
         # Add an index column (the default index)
@@ -378,7 +392,12 @@ class BertopicModel:
         for topic_name in topic_list:
             print(f"\nProcessing topic: '{topic_name}'")
             # Find topics similar to topic_name
-            similar_topics, similarities = current_model.find_topics(search_term=topic_name, top_n=10)
+            try:
+                similar_topics, similarities = current_model.find_topics(search_term=topic_name, top_n=10)
+            except Exception as e:
+                print(f"An error occurred while finding topics similar to '{topic_name}': {e}")
+                continue
+
             topics_to_merge = []
             for topic_id, sim in zip(similar_topics, similarities):
                 if topic_id != -1 and sim >= self.similarity_threshold:
@@ -394,24 +413,36 @@ class BertopicModel:
                     print(f"\nMerging Topic {base_topic_id} and Topic {next_topic_id}")
 
                     # Merge the topics
-                    current_model.merge_topics(
-                        self.docs,
-                        topics_to_merge=[base_topic_id, next_topic_id],
-                        embeddings=self.embeddings
-                    )
+                    try:
+                        current_model.merge_topics(
+                            self.docs,
+                            topics_to_merge=[base_topic_id, next_topic_id],
+                            embeddings=self.embeddings
+                        )
+                        print("Topics merged successfully.")
+                    except Exception as e:
+                        print(f"An error occurred while merging topics {base_topic_id} and {next_topic_id}: {e}")
+                        continue
 
                     # Update topic representations
-                    current_model.update_topics(self.docs, embeddings=self.embeddings)
-                    print("Topics merged successfully.")
+                    try:
+                        current_model.update_topics(self.docs, embeddings=self.embeddings)
+                    except Exception as e:
+                        print(f"An error occurred while updating topics after merging: {e}")
+                        continue
 
                     # Re-fetch similar topics for the current topic_name
-                    similar_topics, similarities = current_model.find_topics(search_term=topic_name, top_n=10)
-                    topics_to_merge = []
-                    for topic_id, sim in zip(similar_topics, similarities):
-                        if topic_id != -1 and sim >= self.similarity_threshold:
-                            topics_to_merge.append((topic_id, sim))
-                    # Sort topics again
-                    topics_to_merge.sort(key=lambda x: x[1], reverse=True)
+                    try:
+                        similar_topics, similarities = current_model.find_topics(search_term=topic_name, top_n=10)
+                        topics_to_merge = []
+                        for topic_id, sim in zip(similar_topics, similarities):
+                            if topic_id != -1 and sim >= self.similarity_threshold:
+                                topics_to_merge.append((topic_id, sim))
+                        # Sort topics again
+                        topics_to_merge.sort(key=lambda x: x[1], reverse=True)
+                    except Exception as e:
+                        print(f"An error occurred while re-fetching similar topics: {e}")
+                        break
             elif len(topics_to_merge) == 1:
                 print(f"Only one topic found similar to '{topic_name}' with similarity above threshold. No merging performed.")
             else:
@@ -422,10 +453,13 @@ class BertopicModel:
 
     def save_topic_info(self):
         """Save topic information to a CSV file."""
-        topic_info = self.topic_model.get_topic_info()
-        output_file = os.path.join(self.config.get("output_dir", "."), "topic_info.csv")
-        topic_info.to_csv(output_file, index=False)
-        print(f"Topic information saved to {output_file}.")
+        try:
+            topic_info = self.topic_model.get_topic_info()
+            output_file = os.path.join(self.config.get("output_dir", "."), "topic_info.csv")
+            topic_info.to_csv(output_file, index=False)
+            print(f"Topic information saved to {output_file}.")
+        except Exception as e:
+            print(f"An error occurred while saving topic information: {e}")
 
 def heartbeat():
     while True:
@@ -470,38 +504,47 @@ def main():
     # Extract variables from the config
     sample_size = config.get("sample_size", 1000)
     document_split = config.get("document_split", "default_method")
-    section_to_analyze = config.get("section_to_analyze", "default_section")
+    # Removed 'section_to_analyze' since it's no longer used
     max_documents = config.get("max_documents", 1000)
     # Removed similarity_threshold from here since it's now handled in the class
 
     # Initialize FileHandler and TextProcessor with the imported configuration
     print("Initializing file handler and text processor...")
     file_handler = FileHandler(config=config)
-    text_processor = TextProcessor(method=document_split, section_to_analyze=section_to_analyze)
+    text_processor = TextProcessor(method=document_split)
 
     # Start splitting process time tracking
     splitting_start_time = time.time()
 
     # Create the sample and extract relevant sections
     print("Reading index file and creating ECC sample...")
-    index_file = file_handler.read_index_file()
     ecc_sample = file_handler.create_ecc_sample(sample_size)
-    all_relevant_sections = text_processor.extract_all_relevant_sections(ecc_sample, max_documents)
+    print("Extracting relevant sections...")
+    all_relevant_sections, all_relevant_questions, all_management_answers = text_processor.extract_all_relevant_sections(ecc_sample, max_documents)
+
+    # Combine all relevant sections into a single list of documents
+    combined_docs = all_relevant_sections + all_relevant_questions + all_management_answers
+
+    # Validation: Ensure all elements are strings
+    non_string_docs = [doc for doc in combined_docs if not isinstance(doc, str)]
+    if non_string_docs:
+        print(f"Found {len(non_string_docs)} non-string documents. These will be excluded from training.")
+        combined_docs = [doc for doc in combined_docs if isinstance(doc, str)]
 
     # End splitting process time tracking
     splitting_end_time = time.time()
     splitting_duration = splitting_end_time - splitting_start_time
     print(f"Splitting process took {splitting_duration:.2f} seconds.")
 
-    if not all_relevant_sections:
+    if not combined_docs:
         print("No relevant sections found to fit BERTopic.")
         return
 
     # Instantiate and train the BERTopic model
     bertopic_model = BertopicModel(config)
 
-    # Train the model
-    bertopic_model.train(all_relevant_sections)
+    # Train the model with the combined list of documents
+    bertopic_model.train(combined_docs)
 
     print("BERTopic model training and saving completed.")
 

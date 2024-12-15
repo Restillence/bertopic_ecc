@@ -182,6 +182,35 @@ def determine_topics_to_keep(df, threshold_percentage):
     
     return topics_to_keep
 
+def create_transition_matrix(topics_list, num_topics):
+    """
+    Creates a transition matrix from a list of topic sequences.
+
+    Parameters:
+    - topics_list (list of lists): Each sublist represents a sequence of topics in a presentation.
+    - num_topics (int): Total number of unique topics.
+
+    Returns:
+    - transition_matrix (numpy.ndarray): A matrix of shape (num_topics, num_topics) where each cell [i][j]
+      represents the count of transitions from topic i to topic j.
+    """
+    transition_matrix = np.zeros((num_topics, num_topics), dtype=int)
+
+    for topics in tqdm(topics_list, desc="Creating Transition Matrix"):
+        # Ensure that topics is a list with at least two elements
+        if isinstance(topics, list) and len(topics) >= 2:
+            for i in range(len(topics) - 1):
+                from_topic = topics[i]
+                to_topic = topics[i + 1]
+                if isinstance(from_topic, int) and isinstance(to_topic, int):
+                    if 0 <= from_topic < num_topics and 0 <= to_topic < num_topics:
+                        transition_matrix[from_topic][to_topic] += 1
+
+    # Debug: Print transition matrix summary
+    print(f"Transition Matrix Summary:\n{transition_matrix}")
+    print(f"Transition Matrix Shape: {transition_matrix.shape}")
+
+    return transition_matrix
 
 def compute_similarity_to_average(df, num_topics):
     """
@@ -536,34 +565,3 @@ def create_average_transition_matrix_figures(transition_matrix, title, output_pa
     plt.close()
     print(f"Saved transition matrix heatmap to {output_path}")
 
-
-
-def create_transition_matrix(topics_list, num_topics):
-    """
-    Creates a transition matrix from a list of topic sequences.
-
-    Parameters:
-    - topics_list (list of lists): Each sublist represents a sequence of topics in a presentation.
-    - num_topics (int): Total number of unique topics.
-
-    Returns:
-    - transition_matrix (numpy.ndarray): A matrix of shape (num_topics, num_topics) where each cell [i][j]
-      represents the count of transitions from topic i to topic j.
-    """
-    transition_matrix = np.zeros((num_topics, num_topics), dtype=int)
-
-    for topics in tqdm(topics_list, desc="Creating Transition Matrix"):
-        # Ensure that topics is a list with at least two elements
-        if isinstance(topics, list) and len(topics) >= 2:
-            for i in range(len(topics) - 1):
-                from_topic = topics[i]
-                to_topic = topics[i + 1]
-                if isinstance(from_topic, int) and isinstance(to_topic, int):
-                    if 0 <= from_topic < num_topics and 0 <= to_topic < num_topics:
-                        transition_matrix[from_topic][to_topic] += 1
-
-    # Debug: Print transition matrix summary
-    print(f"Transition Matrix Summary:\n{transition_matrix}")
-    print(f"Transition Matrix Shape: {transition_matrix.shape}")
-
-    return transition_matrix
