@@ -182,13 +182,14 @@ def determine_topics_to_keep(df, threshold_percentage):
     
     return topics_to_keep
 
-def create_transition_matrix(topics_list, num_topics):
+def create_transition_matrix(topics_list, num_topics, use_tqdm=False):
     """
     Creates a transition matrix from a list of topic sequences.
 
     Parameters:
     - topics_list (list of lists): Each sublist represents a sequence of topics in a presentation.
     - num_topics (int): Total number of unique topics.
+    - use_tqdm (bool): Whether to display a progress bar.
 
     Returns:
     - transition_matrix (numpy.ndarray): A matrix of shape (num_topics, num_topics) where each cell [i][j]
@@ -196,7 +197,9 @@ def create_transition_matrix(topics_list, num_topics):
     """
     transition_matrix = np.zeros((num_topics, num_topics), dtype=int)
 
-    for topics in tqdm(topics_list, desc="Creating Transition Matrix"):
+    iterator = tqdm(topics_list, desc="Creating Transition Matrix") if use_tqdm else topics_list
+
+    for topics in iterator:
         # Ensure that topics is a list with at least two elements
         if isinstance(topics, list) and len(topics) >= 2:
             for i in range(len(topics) - 1):
@@ -212,9 +215,17 @@ def create_transition_matrix(topics_list, num_topics):
 
     return transition_matrix
 
-def compute_similarity_to_average(df, num_topics):
+def compute_similarity_to_average(df, num_topics, use_tqdm=True):
     """
     Compute similarity measures to overall, industry, and company averages.
+
+    Parameters:
+    - df (pd.DataFrame): The DataFrame containing call data.
+    - num_topics (int): The total number of unique topics.
+    - use_tqdm (bool): Whether to display progress bars.
+
+    Returns:
+    - similarity_df (pd.DataFrame): DataFrame with similarity measures.
     """
     # Create lists to hold the data
     call_ids = []
@@ -228,14 +239,16 @@ def compute_similarity_to_average(df, num_topics):
 
     # Create transition vectors for each call with progress bar
     print("Creating transition vectors...")
-    for _, row in tqdm(df.iterrows(), total=df.shape[0], desc="Processing Calls"):
+    iterator = tqdm(df.iterrows(), total=df.shape[0], desc="Processing Calls") if use_tqdm else df.iterrows()
+
+    for _, row in iterator:
         call_id = row['call_id']
         topics = row['filtered_presentation_topics']
         if len(topics) < 2:
             continue  # Cannot create a transition matrix with fewer than 2 topics
-        tm = create_transition_matrix([topics], num_topics)  # Wrap topics in a list
+        tm = create_transition_matrix([topics], num_topics, use_tqdm=False)  # Disable tqdm here
         # Flatten the matrix into a vector
-        tm_vector = tm.flatten()  # Remove .toarray() as tm is already a numpy array
+        tm_vector = tm.flatten()  # .toarray() is unnecessary as tm is already a NumPy array
         transition_vectors.append(tm_vector)
         call_ids.append(call_id)
         siccds.append(row['siccd'])
@@ -265,7 +278,9 @@ def compute_similarity_to_average(df, num_topics):
     similarities_company = []
 
     print("Computing similarities...")
-    for idx, row in tqdm(calls_df.iterrows(), total=calls_df.shape[0], desc="Computing Similarities"):
+    iterator = tqdm(calls_df.iterrows(), total=calls_df.shape[0], desc="Computing Similarities") if use_tqdm else calls_df.iterrows()
+
+    for idx, row in iterator:
         current_date = row['call_date']
         tm_vector = row['transition_vector'].reshape(1, -1)  # Reshape for sklearn
 

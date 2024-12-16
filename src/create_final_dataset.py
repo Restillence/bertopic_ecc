@@ -54,7 +54,7 @@ except KeyError as e:
 processed_df['permco'] = processed_df['permco'].astype(str)
 
 #TODO  remove later
-#processed_df = processed_df[:1000]
+#processed_df = processed_df[:2000]
 
 # Extract unique permcos from processed_df
 permcos = set(processed_df['permco'].unique())
