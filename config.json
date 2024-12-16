@@ -1,8 +1,8 @@
 {
     "index_file_ecc_folder": "D:/daten_masterarbeit/",
     "folderpath_ecc": "D:/daten_masterarbeit/Transcripts_Masterarbeit_full/",
-    "model_save_path": "D:/daten_masterarbeit/bertopic_model_dir_regular_5000", 
-    "model_load_path": "D:/daten_masterarbeit/bertopic_model_dir_zeroshot_10000", 
+    "model_save_path": "D:/daten_masterarbeit/bertopic_model_dir", 
+    "model_load_path": "D:/daten_masterarbeit/bertopic_model_dir_regular_10000", 
     "index_file_path": "D:/daten_masterarbeit/list_earnings_call_transcripts.csv",
    
     "sample_size": 1729,

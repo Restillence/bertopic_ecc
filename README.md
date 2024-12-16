@@ -1,96 +1,233 @@
-# bertopic_ecc
-Master Thesis Project, analyze ECC with BERTopic
+# BERTopic_ECC
 
-Steps to get ready:
+Master Thesis Project: Analysis of Earnings Call Transcripts (ECC) using BERTopic
 
-1) Optional if using github: clone the repository
+## Overview
 
-2) Open repository in your IDE of choice
+This project utilizes BERTopic to analyze Earnings Call Transcripts (ECC) as part of a Master’s thesis. It includes all necessary code to replicate the results, located in the `src` folder.
 
-3) Install Python >3.9 and create a virtual environment (optional):
-conda create --name myenv
+## Table of Contents
 
-4) Install packages from requirements
-pip install -r "(path)/.requirements.txt"
-if you receive errors here, use the installation script which skips bad lines: package_installations.py 
-by running: python package_installations.py
+- [Overview](#overview)
+- [Table of Contents](#table-of-contents)
+- [Setup](#setup)
+- [Replication Steps](#replication-steps)
+- [Usage](#usage)
+- [Requirements](#requirements)
+- [Notes](#notes)
+- [Additional Resources](#additional-resources)
 
-5) Change the following Variables in the config file:
-folderpath_ecc = "D:/daten_masterarbeit/Transcripts_Masterarbeit_full/"   
-index_file_ecc_folder = "D:/daten_masterarbeit/"
-sample_size = 10 # number of unique companies to be analyzed, max is 1729
+## Setup
 
-Note: If the Config file is not found, you need to set its filepath manually
-in the file which you are attempting to run.
+Follow these steps to set up the project environment:
 
-6) Run the bertopic_training.py script to train and save the BERTopic Model.
+1. **Clone the Repository** *(Optional if using GitHub)*
 
-7) Run bertopic_fitting_visus.py to fit the model on data and generate visualizations + statistics. 
+    ```bash
+    git clone https://github.com/yourusername/bertopic_ecc.git
+    ```
 
-8) Run (TODO Skriptnamen hier noch einfügen) xxx to prepare the final dataset for the analysis. 
+2. **Open in IDE**
 
-9) Run variable_analysis.py to perform statistical analysis and get results.
+    Open the cloned repository in your preferred Integrated Development Environment (IDE).
 
-10) Optional: To create plots and statistics from the dataset, run run_ecc_analysis.py script. Some plots might be computational intensive, 
-    so comment out/ comment in them in the main function before running the script. 
+3. **Install Python & Create Virtual Environment**
 
-#useful videos to get started with bertopic:
-https://www.youtube.com/watch?v=uZxQz87lb84
-https://www.youtube.com/watch?v=5a5Dfft-rWc
+    Ensure you have Python version 3.9 or higher installed. It is recommended to create a virtual environment to manage dependencies:
 
-###Requirements###
-python >3.9
-pandas 
-numpy 
-bertopic 
+    ```bash
+    conda create --name bertopic_env python=3.9
+    conda activate bertopic_env
+    ```
 
-Additionally, for the Named Entity Recognition (NER) function, you'll need to download the Spacy English model:
-python -m spacy download en_core_web_sm
+4. **Install Dependencies**
 
+    Install the required Python packages using `pip`:
 
-###NOTE###
-I used Visual Studio Code as IDE. Some part of the code might not work using another IDE 
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-###splitting methods have been checked manually on a sample###
+    If you encounter errors during installation, use the provided installation script that skips problematic lines:
 
-###BERTopic functioning###
-for every paragraph (default) or sentence a topic is assigned. 
+    ```bash
+    python src/package_installations.py
+    ```
 
+5. **Configure File Paths**
 
-Other things: config:
-// Options: "regular", "iterative", "zeroshot", or "iterative_zeroshot"
+    Update the `config.json` file with your local file paths:
 
-    "embedding_model_choice": "finbert-pretrain",  # Choose between "all-MiniLM-L6-v2", "finbert-local", or "finbert-pretrain"
+    ```json
+    {
+      "index_file_ecc_folder": "D:/daten_masterarbeit/",
+      "folderpath_ecc": "D:/daten_masterarbeit/Transcripts_Masterarbeit_full/",
+      "model_save_path": "D:/daten_masterarbeit/bertopic_model_dir_regular_5000",
+      "model_load_path": "D:/daten_masterarbeit/bertopic_model_dir_zeroshot_10000",
+      "index_file_path": "D:/daten_masterarbeit/list_earnings_call_transcripts.csv"
+    }
+    ```
 
+    If the `config.json` file is not found, manually set its filepath in the relevant scripts by searching for `fallback_config_path`.
 
-neccessary adjustments for zeroshot topic modeling:
+## Replication Steps
 
-min df = 0.01, min cluster size should also be low. 
-also maybe umap n neighbors should be low (2)
+To replicate the results of the study, execute the following scripts in order:
 
-intuition: größeres n neighbors: cluster sollten größer werden
+1. **Train BERTopic Model**
 
+    Trains and saves the BERTopic model.
 
-Install for cuML: 
-!pip install bertopic
-!pip install cudf-cu11 dask-cudf-cu11 --extra-index-url=https://pypi.nvidia.com
-!pip install cuml-cu11 --extra-index-url=https://pypi.nvidia.com
-!pip install cugraph-cu11 --extra-index-url=https://pypi.nvidia.com
-!pip install --upgrade cupy-cuda11x -f https://pip.cupy.dev/aarch64
+    ```bash
+    python src/bertopic_training.py
+    ```
 
+2. **Fit Model and Generate Visualizations**
 
+    Fits the trained model on the data and generates visualizations and topic quality evaluation files.
 
-    "sampling_mode": "full_random",  // Options: "full_random" or "random_company"
+    ```bash
+    python src/bertopic_fitting_visus.py
+    ```
 
-        "topics_to_keep": ["auto"], oder "all" oder topic list []
-    "topic_threshold_percentage": 90,
+    **Outputs:**
+    - Visualizations
+    - Topic Quality Evaluation files
+    - CSV containing topic vectors
 
-"auto" : removes all topics that dont appear in [90%, or other threshold (configurable in config file)] of the companies in atleast 1 call. 
+3. **Prepare Final Dataset**
 
+    Prepares the final dataset, including all dependent, independent, and control variables.
 
+    ```bash
+    python src/create_final_dataset.py
+    ```
 
-evtl müssen fallback pfade in der main Funktion der dateien bertopic_training.py und bertopic_fitting_visus.py angepasst werden
+    **Output:**
+    - Final dataset ready for analysis
 
+4. **Perform Variable Analysis**
 
-recommended: running bertopic_training.py with full_random sampling method -> obtain bertopic model (10,000 transcripts sample size)
-then run bertopic_fitting_visus.py random_company sampling method (neccessary!) (1729 sample size -> all companies)
+    Conducts regression analysis and generates average transition matrices.
+
+    ```bash
+    python src/variable_analysis.py
+    ```
+
+    **Outputs:**
+    - Regression results
+    - Average transition matrices
+
+5. **Optional: Generate Plots and Statistics**
+
+    Generates additional plots and statistics from the dataset.
+
+    ```bash
+    python src/run_ecc_analysis.py
+    ```
+
+    Note: Some plots are computationally intensive. You may need to comment out unnecessary sections in the main function before running the script. Plots are saved in the `plots` folder.
+
+6. **Explore Data and Models**
+
+    Use the Jupyter notebooks in the `exploration` folder to explore data and BERTopic models further.
+
+## Usage
+
+### Configuration Options
+
+- **Sampling Mode:**
+  - `"full_random"`: Trains BERTopic on a lower sample size.
+  - `"random_company"`: Fits the model on all companies.
+
+- **Topics to Keep:**
+  - `"auto"`: Removes topics not appearing in a specified percentage (e.g., 90%) of companies in at least one call.
+  - `"all"` or a specific list of topics.
+
+- **Topic Threshold Percentage:**
+  - Configurable in `config.json` (e.g., `90`).
+
+### Recommended Workflow
+
+1. **Train with Full Random Sampling (Sample Size: 10,000):**
+
+    ```bash
+    python src/bertopic_training.py --sampling_mode full_random
+    ```
+
+2. **Fit with Random Company Sampling (Sample Size: 1,729):**
+
+    ```bash
+    python src/bertopic_fitting_visus.py --sampling_mode random_company
+    ```
+
+3. **Ensure Filepaths are Adjusted:**
+
+    Verify that the file paths in `create_final_dataset.py` and `variable_analysis.py` match your local setup.
+
+## Requirements
+
+- **Python:** Version 3.9 or higher
+
+- **Python Packages:**
+  - pandas
+  - numpy
+  - os
+  - json
+  - time
+  - bertopic
+  - KeyBERT
+  - nltk
+  - re
+  - matplotlib
+  - plotly
+  - seaborn
+  - scikit-learn
+  - wordcloud
+  - openpyxl
+  - textblob
+  - networkx
+  - transformers
+  - torch
+  - sentence_transformers
+  - GPUtil
+  - spacy
+  - tqdm
+
+- **Spacy Model for Named Entity Recognition (NER):**
+
+    ```bash
+    python -m spacy download en_core_web_sm
+    ```
+
+- **cuML Installations for GPU-based HDBSCAN and UMAP:**
+
+    ```bash
+    pip install bertopic
+    pip install cudf-cu11 dask-cudf-cu11 --extra-index-url=https://pypi.nvidia.com
+    pip install cuml-cu11 --extra-index-url=https://pypi.nvidia.com
+    pip install cugraph-cu11 --extra-index-url=https://pypi.nvidia.com
+    pip install --upgrade cupy-cuda11x -f https://pip.cupy.dev/aarch64
+    ```
+
+## Notes
+
+- **IDE Compatibility:**
+  - Developed using Visual Studio Code. Some scripts might require adjustments to work with other IDEs.
+
+- **Data Splitting:**
+  - Methods have been manually verified on sample data to ensure accuracy.
+
+- **BERTopic Functionality:**
+  - Assigns a topic to every sentence in the transcripts.
+
+- **Configuration Modes:**
+  - Supports `"regular"` and `"zeroshot"` modes.
+  - Ensure fallback paths in `bertopic_training.py` and `bertopic_fitting_visus.py` are correctly set if `config.json` is missing.
+
+## Additional Resources
+
+### Useful Videos to Get Started with BERTopic
+
+- [Introduction to BERTopic](https://www.youtube.com/watch?v=uZxQz87lb84)
+- [Advanced BERTopic Usage](https://www.youtube.com/watch?v=5a5Dfft-rWc)
