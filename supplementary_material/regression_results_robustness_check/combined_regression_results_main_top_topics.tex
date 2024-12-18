@@ -1,0 +1,53 @@
+
+\begin{table}[ht]
+    \centering
+    \caption{Combined OLS Regression Results for Return Variables}
+    \label{tab:combined_regression_results_main}
+    \resizebox{\textwidth}{!}{%
+        {\small
+        \begin{tabular}{lcccccc}
+        \hline
+                                & \textit{r_immediate} & \textit{r_short} & \textit{r_medium} & \textit{r_long} & \textit{eps} & \textit{eps_next} \\
+        \hline
+            const
+Name: 0, dtype: object & 0.0046 & -0.0003 & 0.0006 & -0.0018 & 0.371*** & 0.382*** \\
+                            & (1.907) & (-0.209) & (0.188) & (-0.258) & (12.212) & (11.750) \\
+        similarity\_to\_overall\_average
+Name: 1, dtype: object & 0.0005 & -0.0004 & -0.0009 & 0.0035* & -0.039*** & -0.036*** \\
+                            & (0.838) & (-0.985) & (-1.187) & (2.152) & (-5.377) & (-4.611) \\
+        similarity\_to\_industry\_average
+Name: 2, dtype: object & -0.0004 & 0.0000 & 0.0010 & 0.0046* & 0.036*** & 0.035** \\
+                            & (-0.484) & (0.069) & (0.909) & (2.026) & (3.504) & (3.256) \\
+        similarity\_to\_company\_average
+Name: 3, dtype: object & 0.0019* & 0.0003 & 0.0001 & -0.0027 & 0.025** & 0.017 \\
+                            & (2.543) & (0.524) & (0.124) & (-1.308) & (2.653) & (1.678) \\
+        topic\_diversity
+Name: 4, dtype: object & 0.0005 & -0.0003 & 0.0003 & 0.0017 & 0.076*** & 0.085*** \\
+                            & (0.765) & (-0.699) & (0.387) & (0.905) & (9.125) & (9.461) \\
+        market\_cap
+Name: 5, dtype: object & 0.0000 & -0.0000 & -0.0004 & -0.0012 & 0.166*** & 0.177*** \\
+                            & (0.063) & (-0.145) & (-0.635) & (-0.829) & (26.145) & (26.035) \\
+        rolling\_beta
+Name: 6, dtype: object & -0.0011* & 0.0008* & 0.0023*** & 0.0018 & -0.157*** & -0.153*** \\
+                            & (-2.253) & (2.343) & (3.644) & (1.275) & (-25.599) & (-23.280) \\
+        word\_length\_presentation
+Name: 7, dtype: object & -0.0019** & 0.0002 & 0.0003 & -0.0016 & 0.044*** & 0.050*** \\
+                            & (-2.941) & (0.434) & (0.390) & (-0.880) & (5.417) & (5.726) \\
+        ceo\_participates
+Name: 8, dtype: object & -0.0031 & 0.0008 & -0.0003 & -0.0054 & -0.098** & -0.114*** \\
+                            & (-1.266) & (0.490) & (-0.089) & (-0.794) & (-3.223) & (-3.482) \\
+        ceo\_cfo\_change
+Name: 9, dtype: object & -0.0038** & -0.0006 & -0.0027 & -0.0002 & -0.082*** & -0.079*** \\
+                            & (-3.143) & (-0.783) & (-1.699) & (-0.073) & (-5.456) & (-4.866) \\
+\hline
+R-squared & 0.001 & 0.000 & 0.000 & 0.000 & 0.043 & 0.039 \\
+R-squared Adj. & 0.001 & 0.000 & 0.000 & 0.000 & 0.043 & 0.039 \\
+No. Observations & 41490 & 41490 & 41490 & 41490 & 41490 & 41490 \\
+
+    \hline
+    \end{tabular}}
+    }
+    \bigskip
+    \textit{t-values in parentheses.} \ 
+    * p<.1, ** p<.05, ***p<.01
+\end{table}

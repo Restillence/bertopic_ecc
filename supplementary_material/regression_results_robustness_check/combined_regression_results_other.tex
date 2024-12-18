@@ -1,0 +1,53 @@
+
+\begin{table}[ht]
+    \centering
+    \caption{Combined OLS Regression Results for Other Variables}
+    \label{tab:combined_regression_results_other}
+    \resizebox{\textwidth}{!}{%
+        {\small
+        \begin{tabular}{lccc}
+        \hline
+                                & \textit{length_participant_questions} & \textit{length_management_answers} & \textit{difference_questions_answers} \\
+        \hline
+            const
+Name: 0, dtype: object & 27.634*** & 24.718*** & 2.916*** \\
+                            & (74.950) & (74.955) & (23.561) \\
+        similarity\_to\_overall\_average
+Name: 1, dtype: object & -0.656*** & -0.730*** & 0.074* \\
+                            & (-7.520) & (-9.355) & (2.524) \\
+        similarity\_to\_industry\_average
+Name: 2, dtype: object & 0.435*** & 0.516*** & -0.081 \\
+                            & (3.524) & (4.669) & (-1.943) \\
+        similarity\_to\_company\_average
+Name: 3, dtype: object & -1.142*** & -1.117*** & -0.025 \\
+                            & (-10.039) & (-10.982) & (-0.647) \\
+        topic\_diversity
+Name: 4, dtype: object & 0.327** & 0.313*** & 0.014 \\
+                            & (3.224) & (3.447) & (0.419) \\
+        market\_cap
+Name: 5, dtype: object & 0.414*** & 0.075 & 0.339*** \\
+                            & (5.370) & (1.086) & (13.105) \\
+        rolling\_beta
+Name: 6, dtype: object & 1.273*** & 1.060*** & 0.213*** \\
+                            & (17.050) & (15.874) & (8.496) \\
+        word\_length\_presentation
+Name: 7, dtype: object & -0.868*** & -0.787*** & -0.080* \\
+                            & (-8.713) & (-8.840) & (-2.401) \\
+        ceo\_participates
+Name: 8, dtype: object & -1.389*** & -1.196*** & -0.193 \\
+                            & (-3.747) & (-3.608) & (-1.551) \\
+        ceo\_cfo\_change
+Name: 9, dtype: object & 0.271 & -0.119 & 0.390*** \\
+                            & (1.477) & (-0.726) & (6.335) \\
+\hline
+R-squared & 0.019 & 0.020 & 0.007 \\
+R-squared Adj. & 0.019 & 0.019 & 0.007 \\
+No. Observations & 41490 & 41490 & 41490 \\
+
+    \hline
+    \end{tabular}}
+    }
+    \bigskip
+    \textit{t-values in parentheses.} \ 
+    * p<.1, ** p<.05, ***p<.01
+\end{table}

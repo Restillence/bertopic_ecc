@@ -1,0 +1,127 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Combined OLS Regression Results for Return Variables</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 80%;
+            margin: 0 auto;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: center;
+            padding: 12px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        caption {
+            caption-side: top;
+            font-size: 20px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <table>
+        <caption><strong>Combined OLS Regression Results for Return Variables</strong></caption>
+        <tr>
+            <th></th>
+            <th><em>r_immediate</em></th><th><em>r_short</em></th><th><em>r_medium</em></th><th><em>r_long</em></th><th><em>eps</em></th><th><em>eps_next</em></th>
+        </tr>
+<tr>
+    <td>    const
+Name: 0, dtype: object</td><td>0.0045</td><td>-0.0004</td><td>0.0007</td><td>-0.0010</td><td>0.350***</td><td>0.362***</td>
+</tr>
+<tr>
+    <td></td><td>(1.834)</td><td>(-0.216)</td><td>(0.235)</td><td>(-0.145)</td><td>(11.548)</td><td>(11.137)</td>
+</tr>
+<tr>
+    <td>    similarity_to_overall_average
+Name: 1, dtype: object</td><td>-0.0010</td><td>-0.0001</td><td>0.0006</td><td>0.0034*</td><td>-0.092***</td><td>-0.088***</td>
+</tr>
+<tr>
+    <td></td><td>(-1.787)</td><td>(-0.281)</td><td>(0.897)</td><td>(2.174)</td><td>(-13.167)</td><td>(-11.822)</td>
+</tr>
+<tr>
+    <td>    similarity_to_industry_average
+Name: 2, dtype: object</td><td>0.0003</td><td>0.0000</td><td>-0.0000</td><td>0.0014</td><td>0.068***</td><td>0.058***</td>
+</tr>
+<tr>
+    <td></td><td>(0.359)</td><td>(0.102)</td><td>(-0.009)</td><td>(0.696)</td><td>(7.554)</td><td>(6.035)</td>
+</tr>
+<tr>
+    <td>    similarity_to_company_average
+Name: 3, dtype: object</td><td>0.0016*</td><td>0.0004</td><td>0.0007</td><td>-0.0004</td><td>0.039***</td><td>0.036***</td>
+</tr>
+<tr>
+    <td></td><td>(2.230)</td><td>(0.827)</td><td>(0.734)</td><td>(-0.187)</td><td>(4.418)</td><td>(3.704)</td>
+</tr>
+<tr>
+    <td>    topic_diversity
+Name: 4, dtype: object</td><td>0.0006</td><td>0.0002</td><td>0.0011</td><td>0.0030</td><td>0.069***</td><td>0.074***</td>
+</tr>
+<tr>
+    <td></td><td>(0.653)</td><td>(0.399)</td><td>(0.975)</td><td>(1.274)</td><td>(6.508)</td><td>(6.548)</td>
+</tr>
+<tr>
+    <td>    market_cap
+Name: 5, dtype: object</td><td>-0.0000</td><td>-0.0001</td><td>-0.0004</td><td>-0.0014</td><td>0.167***</td><td>0.179***</td>
+</tr>
+<tr>
+    <td></td><td>(-0.000)</td><td>(-0.196)</td><td>(-0.667)</td><td>(-0.966)</td><td>(26.342)</td><td>(26.263)</td>
+</tr>
+<tr>
+    <td>    rolling_beta
+Name: 6, dtype: object</td><td>-0.0010*</td><td>0.0008*</td><td>0.0023***</td><td>0.0020</td><td>-0.154***</td><td>-0.150***</td>
+</tr>
+<tr>
+    <td></td><td>(-2.015)</td><td>(2.385)</td><td>(3.631)</td><td>(1.425)</td><td>(-25.057)</td><td>(-22.823)</td>
+</tr>
+<tr>
+    <td>    word_length_presentation
+Name: 7, dtype: object</td><td>-0.0015</td><td>0.0006</td><td>0.0010</td><td>0.0009</td><td>0.062***</td><td>0.066***</td>
+</tr>
+<tr>
+    <td></td><td>(-1.711)</td><td>(0.981)</td><td>(0.858)</td><td>(0.380)</td><td>(5.759)</td><td>(5.734)</td>
+</tr>
+<tr>
+    <td>    ceo_participates
+Name: 8, dtype: object</td><td>-0.0029</td><td>0.0008</td><td>-0.0005</td><td>-0.0063</td><td>-0.080**</td><td>-0.096**</td>
+</tr>
+<tr>
+    <td></td><td>(-1.201)</td><td>(0.479)</td><td>(-0.158)</td><td>(-0.916)</td><td>(-2.621)</td><td>(-2.921)</td>
+</tr>
+<tr>
+    <td>    ceo_cfo_change
+Name: 9, dtype: object</td><td>-0.0037**</td><td>-0.0005</td><td>-0.0024</td><td>-0.0001</td><td>-0.068***</td><td>-0.066***</td>
+</tr>
+<tr>
+    <td></td><td>(-3.053)</td><td>(-0.610)</td><td>(-1.515)</td><td>(-0.016)</td><td>(-4.480)</td><td>(-4.074)</td>
+</tr>
+
+        <tr>
+            <td><strong>R-squared</strong></td>
+            <td>0.001</td><td>0.000</td><td>0.001</td><td>0.000</td><td>0.047</td><td>0.042</td>
+        </tr>
+    
+        <tr>
+            <td><strong>R-squared Adj.</strong></td>
+            <td>0.001</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.047</td><td>0.042</td>
+        </tr>
+    
+        <tr>
+            <td><strong>No. Observations</strong></td>
+            <td>41500</td><td>41500</td><td>41500</td><td>41500</td><td>41500</td><td>41500</td>
+        </tr>
+    </table>
+
+    <p><em>t-values in parentheses.</em></p>
+    <p>* p&lt;.1, ** p&lt;.05, ***p&lt;.01</p>
+
+</body>
+</html>

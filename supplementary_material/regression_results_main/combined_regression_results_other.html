@@ -1,0 +1,127 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Combined OLS Regression Results for Other Variables</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 80%;
+            margin: 0 auto;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: center;
+            padding: 12px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        caption {
+            caption-side: top;
+            font-size: 20px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <table>
+        <caption><strong>Combined OLS Regression Results for Other Variables</strong></caption>
+        <tr>
+            <th></th>
+            <th><em>length_participant_questions</em></th><th><em>length_management_answers</em></th><th><em>difference_questions_answers</em></th>
+        </tr>
+<tr>
+    <td>    const
+Name: 0, dtype: object</td><td>27.344***</td><td>24.426***</td><td>2.918***</td>
+</tr>
+<tr>
+    <td></td><td>(74.380)</td><td>(74.420)</td><td>(23.558)</td>
+</tr>
+<tr>
+    <td>    similarity_to_overall_average
+Name: 1, dtype: object</td><td>-1.313***</td><td>-1.386***</td><td>0.073*</td>
+</tr>
+<tr>
+    <td></td><td>(-15.574)</td><td>(-18.411)</td><td>(2.563)</td>
+</tr>
+<tr>
+    <td>    similarity_to_industry_average
+Name: 2, dtype: object</td><td>1.414***</td><td>1.395***</td><td>0.019</td>
+</tr>
+<tr>
+    <td></td><td>(12.999)</td><td>(14.367)</td><td>(0.509)</td>
+</tr>
+<tr>
+    <td>    similarity_to_company_average
+Name: 3, dtype: object</td><td>-1.777***</td><td>-1.739***</td><td>-0.038</td>
+</tr>
+<tr>
+    <td></td><td>(-16.406)</td><td>(-17.983)</td><td>(-1.041)</td>
+</tr>
+<tr>
+    <td>    topic_diversity
+Name: 4, dtype: object</td><td>0.256*</td><td>0.457***</td><td>-0.202***</td>
+</tr>
+<tr>
+    <td></td><td>(1.989)</td><td>(3.988)</td><td>(-4.664)</td>
+</tr>
+<tr>
+    <td>    market_cap
+Name: 5, dtype: object</td><td>0.535***</td><td>0.199**</td><td>0.335***</td>
+</tr>
+<tr>
+    <td></td><td>(6.956)</td><td>(2.906)</td><td>(12.946)</td>
+</tr>
+<tr>
+    <td>    rolling_beta
+Name: 6, dtype: object</td><td>1.294***</td><td>1.093***</td><td>0.201***</td>
+</tr>
+<tr>
+    <td></td><td>(17.389)</td><td>(16.450)</td><td>(8.021)</td>
+</tr>
+<tr>
+    <td>    word_length_presentation
+Name: 7, dtype: object</td><td>-1.108***</td><td>-0.858***</td><td>-0.249***</td>
+</tr>
+<tr>
+    <td></td><td>(-8.528)</td><td>(-7.401)</td><td>(-5.699)</td>
+</tr>
+<tr>
+    <td>    ceo_participates
+Name: 8, dtype: object</td><td>-1.057**</td><td>-0.858**</td><td>-0.199</td>
+</tr>
+<tr>
+    <td></td><td>(-2.861)</td><td>(-2.601)</td><td>(-1.598)</td>
+</tr>
+<tr>
+    <td>    ceo_cfo_change
+Name: 9, dtype: object</td><td>0.125</td><td>-0.282</td><td>0.407***</td>
+</tr>
+<tr>
+    <td></td><td>(0.678)</td><td>(-1.719)</td><td>(6.568)</td>
+</tr>
+
+        <tr>
+            <td><strong>R-squared</strong></td>
+            <td>0.027</td><td>0.031</td><td>0.008</td>
+        </tr>
+    
+        <tr>
+            <td><strong>R-squared Adj.</strong></td>
+            <td>0.027</td><td>0.031</td><td>0.008</td>
+        </tr>
+    
+        <tr>
+            <td><strong>No. Observations</strong></td>
+            <td>41500</td><td>41500</td><td>41500</td>
+        </tr>
+    </table>
+
+    <p><em>t-values in parentheses.</em></p>
+    <p>* p&lt;.1, ** p&lt;.05, ***p&lt;.01</p>
+
+</body>
+</html>
