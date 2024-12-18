@@ -15,12 +15,29 @@ import os
 
 class NLPPlotter:
     def __init__(self, config_path):
+        """
+        Initialize the NLPPlotter class.
+
+        Args:
+            config_path (str): Path to the configuration file (JSON format) containing
+                the ECC plots folder path and any other necessary parameters.
+        """
         with open(config_path, "r") as config_file:
             self.config = json.load(config_file)
         self.ecc_plots_folder = self.config["ecc_plots_folder"]
         self.nlp = spacy.load("en_core_web_sm")
 
     def plot_tfidf_top_terms(self, results_df, top_n=20):
+        """
+        Plot the top TF-IDF terms for the given dataframe.
+
+        Args:
+            results_df (pd.DataFrame): Dataframe containing the text data to be analyzed.
+            top_n (int, optional): Number of top terms to plot. Defaults to 20.
+
+        Returns:
+            None
+        """
         print("Computing TF-IDF...")
         vectorizer = TfidfVectorizer(stop_words='english', max_features=top_n)
         X = vectorizer.fit_transform(results_df['text'])
@@ -42,6 +59,19 @@ class NLPPlotter:
         plt.close()
 
     def plot_topics_tsne_pca(self, results_df):
+        """
+        Plot the results of applying PCA and t-SNE to the topics extracted from the ECC.
+
+        The function will compute the PCA and t-SNE transformations of the topics in the given dataframe
+        and then plot the results using seaborn's scatterplot function. The resulting plots will be saved
+        in the ECC plots folder specified in the configuration file.
+
+        Args:
+            results_df (pd.DataFrame): Dataframe containing the topics to be analyzed.
+
+        Returns:
+            None
+        """
         print("Computing PCA and t-SNE...")
         vectorizer = TfidfVectorizer(stop_words='english')
         X = vectorizer.fit_transform(results_df['text'])
@@ -72,6 +102,22 @@ class NLPPlotter:
         plt.close()
 
     def plot_ngram_frequencies(self, results_df, n=2, top_n=20):
+        """
+        Plot the top N-gram frequencies for the given dataframe.
+
+        This function uses a CountVectorizer to extract and count the N-grams
+        from the text data in the dataframe. It then plots the top N most
+        frequent N-grams using a bar plot.
+
+        Args:
+            results_df (pd.DataFrame): Dataframe containing the text data to be analyzed.
+            n (int, optional): The number of words in the N-grams. Defaults to 2 (bigrams).
+            top_n (int, optional): Number of top N-grams to plot. Defaults to 20.
+
+        Returns:
+            None
+        """
+
         print(f"Creating {n}-gram plot...")
         vectorizer = CountVectorizer(ngram_range=(n, n), stop_words='english', max_features=top_n)
         X = vectorizer.fit_transform(results_df['text'])
@@ -93,6 +139,19 @@ class NLPPlotter:
         plt.close()
 
     def plot_sentiment_analysis(self, results_df):
+        """
+        Plot the sentiment analysis of the given dataframe.
+
+        This function uses the TextBlob library to calculate the sentiment
+        polarity of each text in the dataframe. It then plots the distribution
+        of sentiment polarities using a histogram.
+
+        Args:
+            results_df (pd.DataFrame): Dataframe containing the text data to be analyzed.
+
+        Returns:
+            None
+        """
         print("Computing sentiment analysis...")
         results_df['sentiment'] = results_df['text'].apply(lambda x: TextBlob(x).sentiment.polarity)
 
@@ -107,6 +166,21 @@ class NLPPlotter:
         plt.close()
 
     def plot_keyword_cooccurrence(self, results_df, top_n=20):
+        """
+        Plot a keyword co-occurrence network for the given dataframe.
+
+        This function uses a CountVectorizer to extract the top N keywords from the text data
+        in the dataframe and computes a co-occurrence matrix. It then creates a network graph
+        using NetworkX to visualize the relationships between these keywords.
+
+        Args:
+            results_df (pd.DataFrame): Dataframe containing the text data to be analyzed.
+            top_n (int, optional): Number of top keywords to consider for the co-occurrence network. Defaults to 20.
+
+        Returns:
+            None
+        """
+
         print("Computing keyword co-occurrence network...")
         vectorizer = CountVectorizer(max_features=top_n, stop_words='english')
         X = vectorizer.fit_transform(results_df['text'])
@@ -129,6 +203,20 @@ class NLPPlotter:
         plt.close()
 
     def plot_word_length_distribution(self, results_df):
+        """
+        Plot the distribution of word lengths in the given dataframe.
+
+        This function uses a list comprehension to extract the word lengths from
+        the text data in the dataframe and plots the distribution of word lengths
+        using a histogram.
+
+        Args:
+            results_df (pd.DataFrame): Dataframe containing the text data to be analyzed.
+
+        Returns:
+            None
+        """
+
         print("Computing word length distribution...")
         word_lengths = [len(word) for text in results_df['text'] for word in text.split()]
 
@@ -143,6 +231,18 @@ class NLPPlotter:
         plt.close()
 
     def plot_bag_of_words(self, results_df):
+        """
+        Plot the top 20 words in the given dataframe using a barplot.
+
+        This function uses CountVectorizer to compute the word counts in the
+        given dataframe and plots the top 20 words using a barplot.
+
+        Args:
+            results_df (pd.DataFrame): Dataframe containing the text data to be analyzed.
+
+        Returns:
+            None
+        """
         print("Computing bag of words...")
         combined_text = " ".join(results_df['text'].tolist())
         vectorizer = CountVectorizer(max_features=20, stop_words='english')
@@ -165,6 +265,19 @@ class NLPPlotter:
         plt.close()
 
     def plot_wordcloud(self, results_df):
+        """
+        Generate and plot a word cloud from the text data in the given dataframe.
+
+        This function combines text data from the dataframe, creates a word cloud
+        using the WordCloud library, and saves the generated plot as an image.
+
+        Args:
+            results_df (pd.DataFrame): Dataframe containing the text data to be analyzed.
+
+        Returns:
+            None
+        """
+
         print("Computing wordcloud...")
         chunk_size = 1000
         combined_text = " ".join(results_df['text'].iloc[:chunk_size].tolist())
@@ -180,6 +293,23 @@ class NLPPlotter:
         plt.close()
 
     def plot_ner(self, results_df, chunk_size=50):
+        """
+        Analyze and plot the distribution of named entities in the text data.
+
+        This function processes chunks of text data from the given dataframe using
+        a pre-trained NLP model to perform named entity recognition (NER). It
+        counts the frequency of each named entity type and visualizes the distribution
+        using a bar plot.
+
+        Args:
+            results_df (pd.DataFrame): Dataframe containing the text data to be analyzed.
+            chunk_size (int, optional): Number of text entries to process in each chunk.
+                                        Defaults to 50.
+
+        Returns:
+            None
+        """
+
         print("Computing named entity recognition (NER)...")
         all_ents = []
         num_chunks = len(results_df) // chunk_size + 1
@@ -204,6 +334,19 @@ class NLPPlotter:
         plt.close()
 
     def plot_pos_tagging_distribution(self, results_df):
+        """
+        Analyze and plot the distribution of POS tags in the text data.
+
+        This function processes chunks of text data from the given dataframe using
+        a pre-trained NLP model to perform POS tagging. It counts the frequency of
+        each POS tag and visualizes the distribution using a bar plot.
+
+        Args:
+            results_df (pd.DataFrame): Dataframe containing the text data to be analyzed.
+
+        Returns:
+            None
+        """
         print("Computing POS tagging distribution...")
         pos_tags = [token.pos_ for doc in self.nlp.pipe(results_df['text'], batch_size=50) for token in doc]
         pos_counts = Counter(pos_tags)

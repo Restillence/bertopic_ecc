@@ -230,6 +230,23 @@ df_crsp_monthly.reset_index(drop=True, inplace=True)
 print("Creating 'epsfxq_next' in df_crsp_monthly...")
 
 def get_epsfxq_next(group):
+    """
+    Create 'epsfxq_next' column in df_crsp_monthly for each GVKEY group.
+
+    The 'epsfxq_next' column is the 'epsfxq' value of the next quarter's data point (based on 'datadate').
+    To ensure that 'epsfxq_next' is the next quarter's value, the difference in days between the current and next 'datadate' must be between 60 and 120 days (inclusive).
+
+    Parameters
+    ----------
+    group : pd.DataFrame
+        A DataFrame group with columns 'gvkey', 'datadate', and 'epsfxq'.
+
+    Returns
+    -------
+    pd.DataFrame
+        The DataFrame group with an additional column 'epsfxq_next' and two helper columns 'datadate_next' and 'days_diff' dropped.
+    """
+
     group = group.sort_values('datadate').reset_index(drop=True)
     group['epsfxq_next'] = group['epsfxq'].shift(-1)
     group['datadate_next'] = group['datadate'].shift(-1)
@@ -390,6 +407,19 @@ if robustness_check == True:
 
     # Define a function to filter topics when the column contains strings
     def filter_topics_str(topics_str, allowed_clusters, delimiter):
+        """
+        Filters a string of topic indices to retain only those present in allowed clusters.
+
+        Parameters:
+        - topics_str (str): A string of topic indices separated by a specified delimiter.
+        - allowed_clusters (list or set): A collection of cluster numbers to retain.
+        - delimiter (str): The delimiter used to separate topic indices in the input string.
+
+        Returns:
+        - str: A string of filtered topic indices, rejoined using the specified delimiter.
+            Returns an empty string if an error occurs during parsing.
+        """
+
         try:
             # Split the string into topic indices
             topics = [int(topic.strip()) for topic in topics_str.split(delimiter) if topic.strip().isdigit()]
@@ -539,6 +569,19 @@ df_crsp_daily = df_crsp_daily.sort_values(['permco', 'date']).reset_index(drop=T
 def compute_rolling_beta(group):
     # group is the data for one 'permco'
     # Set the window size, e.g., 252 days
+    """
+    Compute the rolling beta for each stock using a window size of 252 days.
+
+    Parameters
+    ----------
+    group : pandas.DataFrame
+        The data for one 'permco', sorted by 'date' and with columns 'ret' and 'market_ret'
+
+    Returns
+    -------
+    pandas.DataFrame
+        The data with a new column 'rolling_beta' containing the rolling beta values
+    """
     window = 252
     # Compute rolling covariance and variance
     rolling_cov = group['ret'].rolling(window).cov(group['market_ret'])
@@ -554,6 +597,21 @@ print("Computing future returns...")
 df_crsp_daily = df_crsp_daily.sort_values(['permco', 'date']).reset_index(drop=True)
 
 def compute_future_returns(group):
+    """
+    Compute future returns for each row in a group.
+
+    Parameters
+    ----------
+    group : pd.DataFrame
+        The data for one 'permco' with columns 'date', 'ret', and 'market_ret'.
+        The function assumes that 'date' is sorted in ascending order.
+
+    Returns
+    -------
+    pd.DataFrame
+        The input DataFrame with additional columns 'ret_immediate', 'ret_short_term', 'ret_medium_term', 'ret_long_term',
+        'excess_ret_immediate', 'excess_ret_short_term', 'excess_ret_medium_term', and 'excess_ret_long_term'.
+    """
     group = group.sort_values('date').reset_index(drop=True)
     n = len(group)
     ret_values = group['ret'].values
@@ -685,6 +743,10 @@ merged_df['prev_cfo_names'] = merged_df.groupby('gvkey')['cfo_names'].shift(1)
 # Define function to compare lists
 def lists_are_different(list1, list2):
     # Handle cases where one or both lists are empty or NaN
+    """Compares two lists and returns True if they are different, False otherwise.
+
+    If either list is empty or NaN, it is treated as an empty list.
+    """
     if not isinstance(list1, list):
         list1 = []
     if not isinstance(list2, list):

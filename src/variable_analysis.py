@@ -78,7 +78,7 @@ variables = [
     'permco',
     'siccd'
 ]
-
+# Ensure all variables exist in the DataFrame   
 missing_vars = [var for var in variables if var not in df.columns]
 if missing_vars:
     raise KeyError(f"The following required columns are missing from the DataFrame: {missing_vars}")
@@ -88,6 +88,18 @@ print(f"Number of observations after dropping NaNs: {len(analysis_df)}")
 
 # Parse Topic Columns
 def parse_topics(topics):
+    """Parses a topic column into a list of integers.
+
+    Args:
+        topics: A string or list of topics, where each topic is an integer.
+
+    Returns:
+        A list of integers representing the topics.
+
+    Raises:
+        ValueError: If the input string cannot be parsed as a list of integers.
+        SyntaxError: If the input string has invalid syntax.
+    """
     if isinstance(topics, str):
         try:
             parsed = ast.literal_eval(topics)
@@ -103,6 +115,20 @@ def parse_topics(topics):
         return []
 
 def flatten_topics(topics):
+    """
+    Flattens a list of topics into a single list.
+
+    Args:
+        topics: A list of topics, where each topic may be a list itself.
+
+    Returns:
+        A single list containing all topics. If a topic is a list, its elements
+        are added individually to the returned list.
+
+    Example:
+        flatten_topics([[1, 2], 3, [4, 5]]) returns [1, 2, 3, 4, 5]
+    """
+
     if not isinstance(topics, list):
         return []
     flattened = []
@@ -114,6 +140,21 @@ def flatten_topics(topics):
     return flattened
 
 def convert_topics_to_int(topics):
+    """
+    Converts a list of topics into a list of integers.
+
+    Args:
+        topics: A list of topics, where each topic may be an integer, string, or list.
+
+    Returns:
+        A list of integers representing the topics. If a topic is a list, its elements
+        are added individually to the returned list. If a topic is a string and cannot
+        be parsed as an integer, it is ignored.
+
+    Example:
+        convert_topics_to_int([[1, 2], '3', [4, '5']]) returns [1, 2, 3, 4, 5]
+    """
+
     if not isinstance(topics, list):
         return []
     flattened = flatten_topics(topics)
@@ -125,20 +166,30 @@ def convert_topics_to_int(topics):
         except (ValueError, TypeError):
             continue
     return int_topics
-
+# Apply the functions
 topic_columns = ['filtered_presentation_topics', 'participant_question_topics', 'management_answer_topics']
 for col in topic_columns:
     analysis_df[col] = analysis_df[col].apply(parse_topics)
     analysis_df[col] = analysis_df[col].apply(convert_topics_to_int)
 
 def verify_topics_are_int(topics):
-    return all(isinstance(topic, int) for topic in topics)
+    """
+    Verifies that all elements in a list are integers.
 
+    Args:
+        topics (list): The list of topics to verify.
+
+    Returns:
+        bool: True if all elements in the list are integers, False otherwise.
+    """
+    return all(isinstance(topic, int) for topic in topics)
+# Verify that all topics are integers
 verification = analysis_df[topic_columns].applymap(verify_topics_are_int).all(axis=1)
 if not verification.all():
     problematic_rows = verification[verification == False].index.tolist()
     print(f"Warning: The following rows have non-integer topics and will be excluded: {problematic_rows}")
     analysis_df = analysis_df[verification]
+# Check if all topic columns are correctly formatted as lists of integers
 else:
     print("All topic columns are correctly formatted as lists of integers.")
 
@@ -148,18 +199,36 @@ print(analysis_df['filtered_presentation_topics'].head())
 print("\nNumber of topics per row:")
 print(analysis_df['filtered_presentation_topics'].apply(len).describe())
 
+# Count unique topics
 unique_topics = analysis_df['filtered_presentation_topics'].explode().unique()
 print(f"\nNumber of unique topics after parsing: {len(unique_topics)}")
 print(f"Unique topics: {unique_topics}")
 
 # Create 'topic_diversity' Variable
 def calculate_topic_diversity(topics):
+    """
+    Calculates the topic diversity of a list of topics.
+
+    Topic diversity is defined as the number of unique topics divided by the total number of topics.
+
+    Args:
+        topics (list): A list of topics, where each topic is an integer.
+
+    Returns:
+        float: The topic diversity of the list of topics. If the input is not a list or is empty, returns NaN.
+
+    Example:
+        calculate_topic_diversity([1, 2, 3]) returns 1.0
+    """
+
+
     if not isinstance(topics, list) or len(topics) == 0:
         return np.nan
     unique_topics = set(topics)
     diversity = len(unique_topics) / len(topics)
     return diversity
 
+# Apply the function to create the 'topic_diversity' variable
 analysis_df['topic_diversity'] = analysis_df['filtered_presentation_topics'].apply(calculate_topic_diversity)
 mean_diversity = analysis_df['topic_diversity'].mean()
 analysis_df['topic_diversity'] = analysis_df['topic_diversity'].fillna(mean_diversity)
@@ -173,6 +242,7 @@ if not os.path.exists(descriptive_stats_folder):
 else:
     print(f"Folder for descriptive statistics already exists: {descriptive_stats_folder}")
 
+# Numerical Descriptive Statistics
 numerical_cols = analysis_df.select_dtypes(include=[np.number]).columns.tolist()
 numerical_summary = analysis_df[numerical_cols].describe().transpose()
 numerical_summary['skew'] = analysis_df[numerical_cols].skew()
@@ -190,6 +260,7 @@ numerical_summary_latex = numerical_summary.to_latex(
 
 numerical_latex_path = os.path.join(descriptive_stats_folder, "descriptive_statistics_numerical.tex")
 
+# Save LaTeX table
 with open(numerical_latex_path, 'w') as f:
     f.write(numerical_summary_latex)
 
@@ -211,6 +282,7 @@ control_vars = [
     'ceo_cfo_change'
 ]
 
+# Standardize independent and control variables
 variables_to_scale = independent_vars + ['market_cap', 'rolling_beta', 'word_length_presentation']
 
 scaler = StandardScaler()
@@ -218,6 +290,20 @@ analysis_df[variables_to_scale] = scaler.fit_transform(analysis_df[variables_to_
 print(f"Standardized variables: {', '.join(variables_to_scale)}")
 
 def calculate_vif(vars_list, df):
+    """
+    Calculates the Variance Inflation Factor (VIF) for a given list of variables.
+
+    VIF is a measure used to detect multicollinearity in a set of multiple regression variables. 
+    A high VIF indicates that the associated variable is highly collinear with other variables.
+
+    Args:
+        vars_list (list): A list of strings representing the variable names for which to calculate VIF.
+        df (pandas.DataFrame): The DataFrame containing the variables.
+
+    Returns:
+        pandas.DataFrame: A DataFrame containing the variable names and their corresponding VIF values.
+    """
+
     X = df[vars_list]
     X = sm.add_constant(X)
     vif_data = pd.DataFrame()
@@ -260,6 +346,21 @@ captions = {
 print("Defined captions for regression tables.")
 
 def clean_variable(var):
+    """
+    Clean a variable name by removing newline characters, the 'Name: x, dtype: object' prefix, and any leading/trailing whitespace.
+    
+    This is necessary because pandas sometimes returns variable names with the above format, and it's not desirable to display this in LaTeX output.
+    
+    Parameters
+    ----------
+    var : str or object
+        The variable to clean. If not a string, will be converted to one with str() and then cleaned.
+    
+    Returns
+    -------
+    str
+        The cleaned variable name.
+    """
     if isinstance(var, str):
         var = var.split('\n')[0]
         var = re.sub(r'Name:\s*\d+,\s*dtype:\s*object', '', var)
@@ -269,8 +370,30 @@ def clean_variable(var):
         return str(var).strip()
 
 def create_regression_latex_table(regression_stats, r_squared_stats, adj_r_squared_stats, n_observations_stats, caption, label, output_path):
+    """
+        Generate a LaTeX table for regression results.
+
+        This function creates a LaTeX formatted table from regression statistics, including coefficients, 
+        t-values, R-squared, adjusted R-squared, and the number of observations. The table is saved to the 
+        specified output path.
+
+        Args:
+            regression_stats (dict): A dictionary where the keys are model names and the values are DataFrames
+                containing regression statistics such as coefficients and t-values.
+            r_squared_stats (dict): A dictionary containing R-squared values for each model.
+            adj_r_squared_stats (dict): A dictionary containing adjusted R-squared values for each model.
+            n_observations_stats (dict): A dictionary containing the number of observations for each model.
+            caption (str): The caption for the LaTeX table.
+            label (str): The label for the LaTeX table, used for referencing.
+            output_path (str): The file path where the LaTeX table will be saved.
+
+        Writes:
+            A LaTeX file containing the regression table to the specified output path.
+    """
+
     combined_df = pd.DataFrame()
 
+    # Concatenate DataFrames for each model
     for model_name, stats in regression_stats.items():
         stats = stats.copy()
         stats.columns = pd.MultiIndex.from_product([[model_name], stats.columns])
@@ -304,6 +427,7 @@ def create_regression_latex_table(regression_stats, r_squared_stats, adj_r_squar
 
     column_alignment = 'l' + 'c' * len(regression_stats.keys())
 
+    # Generate LaTeX content
     latex_content = f"""
 \\begin{{table}}[ht]
     \\centering
@@ -355,17 +479,49 @@ def create_regression_latex_table(regression_stats, r_squared_stats, adj_r_squar
     print(f"Saved LaTeX regression table to {output_path}")
 
 def create_regression_html_table(regression_stats, r_squared_stats, adj_r_squared_stats, n_observations_stats, caption, label, output_path):
+    """
+    Generate an HTML table for regression results.
+
+    This function creates an HTML table from regression statistics, including coefficients, 
+    t-values, R-squared, adjusted R-squared, and the number of observations. The table is saved to the 
+    specified output path.
+
+    Parameters
+    ----------
+    regression_stats : dict
+        A dictionary where the keys are model names and the values are DataFrames
+        containing regression statistics such as coefficients and t-values.
+    r_squared_stats : dict
+        A dictionary containing R-squared values for each model.
+    adj_r_squared_stats : dict
+        A dictionary containing adjusted R-squared values for each model.
+    n_observations_stats : dict
+        A dictionary containing the number of observations for each model.
+    caption : str
+        The caption for the HTML table.
+    label : str
+        The label for the HTML table, used for referencing.
+    output_path : str
+        The file path where the HTML table will be saved.
+
+    Writes
+    ------
+    An HTML file containing the regression table to the specified output path.
+    """
     combined_df = pd.DataFrame()
 
+    # Concatenate DataFrames for each model
     for model_name, stats in regression_stats.items():
         stats = stats.copy()
         stats.columns = pd.MultiIndex.from_product([[model_name], stats.columns])
         combined_df = pd.concat([combined_df, stats], axis=1)
-
+    
+    # Reset index
     combined_df.reset_index(inplace=True)
     combined_df.rename(columns={'index': 'Variable'}, inplace=True)
     combined_df['Variable'] = combined_df['Variable'].apply(clean_variable)
 
+    # Generate HTML content
     rows = []
     for index, row in combined_df.iterrows():
         variable = row['Variable']
@@ -472,6 +628,42 @@ def create_regression_html_table(regression_stats, r_squared_stats, adj_r_square
     print(f"Saved HTML regression table to {output_path}")
 
 def perform_combined_regressions(regression_groups, analysis_df, independent_vars, control_vars, captions):
+    """
+    Perform a set of regressions with multiple dependent variables and multiple groups, and return the results.
+
+    Parameters
+    ----------
+    regression_groups : dict
+        A dictionary where the keys are the group names and the values are lists of dependent variable names.
+    analysis_df : pandas.DataFrame
+        The DataFrame containing the data to be analyzed.
+    independent_vars : list
+        A list of independent variable names to include in the regression.
+    control_vars : list
+        A list of control variable names to include in the regression.
+    captions : list
+        A list of captions to be used for the HTML table.
+
+    Returns
+    -------
+    main_results_stats : dict
+        A dictionary where the keys are the dependent variable names and the values are the regression results.
+    other_results_stats : dict
+        A dictionary where the keys are the dependent variable names and the values are the regression results.
+    main_r_squared_stats : dict
+        A dictionary where the keys are the dependent variable names and the values are the R-squared values.
+    main_adj_r_squared_stats : dict
+        A dictionary where the keys are the dependent variable names and the values are the adjusted R-squared values.
+    main_n_observations_stats : dict
+        A dictionary where the keys are the dependent variable names and the values are the number of observations.
+    other_r_squared_stats : dict
+        A dictionary where the keys are the dependent variable names and the values are the R-squared values.
+    other_adj_r_squared_stats : dict
+        A dictionary where the keys are the dependent variable names and the values are the adjusted R-squared values.
+    other_n_observations_stats : dict
+        A dictionary where the keys are the dependent variable names and the values are the number of observations.
+    """
+    # Initialize dictionaries to hold the results
     main_results_stats = {}
     other_results_stats = {}
     
@@ -492,6 +684,7 @@ def perform_combined_regressions(regression_groups, analysis_df, independent_var
         'epsfxq_next': 'eps_next'
     }
     
+    # List of models to return
     return_models = ['r_immediate', 'r_short', 'r_medium', 'r_long']
     
     rename_mapping_other = {
@@ -499,6 +692,7 @@ def perform_combined_regressions(regression_groups, analysis_df, independent_var
         'length_management_answers': 'length_management_answers'
     }
     
+    # Perform regressions
     for group_name, dep_vars in regression_groups.items():
         for dep_var in dep_vars:
             independent_vars_combined = independent_vars + control_vars
@@ -523,7 +717,7 @@ def perform_combined_regressions(regression_groups, analysis_df, independent_var
                     't-value': 'stat_value',
                     'P>|t|': 'p_value'
                 })
-
+                # Add significance stars
                 def add_significance_stars(p):
                     if p < 0.001:
                         return '***'
@@ -533,14 +727,14 @@ def perform_combined_regressions(regression_groups, analysis_df, independent_var
                         return '*'
                     else:
                         return ''
-
+                # Rename dependent variable
                 if dep_var in rename_mapping_main_latex:
                     short_name_latex = rename_mapping_main_latex[dep_var]
                     format_decimal = 4 if short_name_latex in return_models else 3
                 else:
                     short_name_latex = rename_mapping_other.get(dep_var, dep_var)
                     format_decimal = 3
-
+                # Format the values
                 if short_name_latex in return_models:
                     summary_df['Coefficient'] = summary_df.apply(
                         lambda row: f"{row['Coefficient']:.4f}{add_significance_stars(row['p_value'])}", axis=1
@@ -549,10 +743,11 @@ def perform_combined_regressions(regression_groups, analysis_df, independent_var
                     summary_df['Coefficient'] = summary_df.apply(
                         lambda row: f"{row['Coefficient']:.3f}{add_significance_stars(row['p_value'])}", axis=1
                     )
-
+                # Format the t-value
                 summary_df['stat_value'] = summary_df['stat_value'].apply(lambda x: f"({x:.3f})")
                 summary_df = summary_df[['Coefficient', 'stat_value']]
-
+                
+                # Save the results
                 if group_name == 'return_vars' and dep_var in rename_mapping_main_latex:
                     main_results_stats[short_name_latex] = summary_df
                     main_r_squared_stats[short_name_latex] = model.rsquared
@@ -573,11 +768,12 @@ def perform_combined_regressions(regression_groups, analysis_df, independent_var
             except Exception as e:
                 print(f"An error occurred while processing {dep_var}: {e}")
                 continue
-
+    # Return the results
     return (main_results_stats, other_results_stats,
             main_r_squared_stats, main_adj_r_squared_stats, main_n_observations_stats,
             other_r_squared_stats, other_adj_r_squared_stats, other_n_observations_stats)
 
+# Perform combined regressions
 print("Performing combined regressions...")
 (main_results_stats, other_results_stats,
  main_r_squared_stats, main_adj_r_squared_stats, main_n_observations_stats,
@@ -590,6 +786,30 @@ def generate_tables(main_stats, other_stats,
                     main_r2, main_adj_r2, main_nobs, 
                     other_r2, other_adj_r2, other_nobs,
                     output_folder, captions):
+    # LaTeX Tables for Main
+    """
+    Generate LaTeX and HTML tables for regression results.
+
+    This function creates LaTeX and HTML tables for both main and other regression
+    models using the provided statistics. The tables are saved to the specified
+    output folder.
+
+    Parameters:
+    - main_stats: Dictionary of main regression statistics.
+    - other_stats: Dictionary of other regression statistics.
+    - main_r2: Dictionary of R-squared values for main regressions.
+    - main_adj_r2: Dictionary of adjusted R-squared values for main regressions.
+    - main_nobs: Dictionary of the number of observations for main regressions.
+    - other_r2: Dictionary of R-squared values for other regressions.
+    - other_adj_r2: Dictionary of adjusted R-squared values for other regressions.
+    - other_nobs: Dictionary of the number of observations for other regressions.
+    - output_folder: Path to the folder where the tables will be saved.
+    - captions: Dictionary containing captions for the tables.
+
+    The function attempts to create both LaTeX and HTML tables for the main and
+    other regression models. If an error occurs during table generation, an error
+    message is printed.
+    """
     # LaTeX Tables for Main
     if main_stats:
         try:
@@ -674,6 +894,7 @@ def generate_tables(main_stats, other_stats,
     else:
         print("No other regression models to generate HTML table.\n")
 
+# Generate LaTeX and HTML tables
 generate_tables(
     main_results_stats, other_results_stats, 
     main_r_squared_stats, main_adj_r_squared_stats, main_n_observations_stats,
@@ -691,39 +912,77 @@ num_topics = int(max_topic) + 1 if pd.notnull(max_topic) else 0
 print(f"Number of unique topics: {num_topics}")
 
 def is_valid_topic(topic, max_topic):
+    """
+    Check if a topic is valid, i.e., if it is an integer between 0 and max_topic-1.
+
+    Parameters
+    ----------
+    topic : int or any
+        The topic to check.
+    max_topic : int
+        The maximum number of topics.
+
+    Returns
+    -------
+    bool
+        True if the topic is valid, False otherwise.
+    """
     return isinstance(topic, int) and 0 <= topic < max_topic
 
+# Count the total number of topics
 total_topics_before = analysis_df['filtered_presentation_topics'].apply(len).sum()
 
+# Filter out invalid topics
 analysis_df['filtered_presentation_topics'] = analysis_df['filtered_presentation_topics'].apply(
     lambda topics: [topic for topic in topics if is_valid_topic(topic, num_topics)]
 )
-
+# Count the remaining number of topics
 total_topics_after = analysis_df['filtered_presentation_topics'].apply(len).sum()
 topics_removed = total_topics_before - total_topics_after
 print(f"Removed {topics_removed} invalid topics from 'filtered_presentation_topics'.")
 
+# Filter out topic lists with fewer than two topics
 valid_topic_lists = analysis_df['filtered_presentation_topics'].apply(lambda x: len(x) >= 2)
 excluded_topic_lists = (~valid_topic_lists).sum()
 if excluded_topic_lists > 0:
     print(f"Excluded {excluded_topic_lists} topic lists with fewer than two topics.")
 analysis_df = analysis_df[valid_topic_lists]
 
+# Count the remaining number of topics
 overall_topics = analysis_df['filtered_presentation_topics'].tolist()
 print(f"Number of topic sequences: {len(overall_topics)}")
 print(f"Sample topic sequences: {overall_topics[:5]}")
 
+# Create Transition Matrices
 overall_transition_matrix = create_transition_matrix(overall_topics, num_topics)
 print("Created overall transition matrix.")
 
 def export_transition_matrix(matrix, filename, output_folder):
+    
+    """
+    Export a transition matrix to a CSV file, an Excel file, and a heatmap PNG file.
+
+    Parameters
+    ----------
+    matrix : numpy.ndarray
+        The transition matrix to export.
+    filename : str
+        The filename to use for the exported files (without extension).
+    output_folder : str
+        The folder to which the files should be exported.
+
+    Returns
+    -------
+    None
+    """
+    # Convert matrix to DataFrame
     matrix = np.array(matrix)
     print(f"Transition Matrix Type: {type(matrix)}")
     print(f"Transition Matrix Shape: {matrix.shape}")
-
+    # Check if matrix is 2D
     if matrix.ndim != 2:
         raise ValueError(f"Transition matrix must be 2D. Got {matrix.ndim}D.")
-
+    # Convert matrix to DataFrame
     matrix_df = pd.DataFrame(matrix, 
                              columns=[f"To_{i}" for i in range(matrix.shape[1])], 
                              index=[f"From_{i}" for i in range(matrix.shape[0])])
@@ -731,12 +990,14 @@ def export_transition_matrix(matrix, filename, output_folder):
     csv_path = os.path.join(output_folder, f"{filename}.csv")
     excel_path = os.path.join(output_folder, f"{filename}.xlsx")
 
+    # Export
     matrix_df.to_csv(csv_path)
     print(f"Exported {filename} to {csv_path}")
 
     matrix_df.to_excel(excel_path)
     print(f"Exported {filename} to {excel_path}")
-
+    
+    # Heatmap
     plt.figure(figsize=(20, 16))
     sns.heatmap(matrix_df, cmap='viridis', linewidths=.5, annot=False)
     plt.title(f'{filename} Heatmap', fontsize=20)

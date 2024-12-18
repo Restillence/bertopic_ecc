@@ -97,12 +97,14 @@ class BertopicFitting:
         """
         Save the results to a CSV file and store the DataFrame.
         """
+        # Initialize a dictionary to store the results
         result_dict = {}
         topic_idx_sections = 0
         topic_idx_questions = 0
         topic_idx_answers = 0
-
+        # Iterate over the sample and save the results
         for permco, calls in ecc_sample.items():
+            # Iterate over each call
             for call_id, value in calls.items():
                 sections = value.get('presentation_text', [])
                 num_sections = len(sections)
@@ -186,7 +188,7 @@ class BertopicFitting:
                 'ceo_names': json.dumps(call_data['ceo_names']),
                 'cfo_names': json.dumps(call_data['cfo_names'])
             })
-
+        # Save the DataFrame
         results_df = pd.DataFrame(records)
         results_output_path = os.path.join(self.index_file_ecc_folder, 'topics_output_zero_300.csv')
         results_df.to_csv(results_output_path, index=False)
